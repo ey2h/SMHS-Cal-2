@@ -1,0 +1,73 @@
+@page "/transom"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">横梁计算</h1>
+    <p class="page-subtitle">铝合金横梁强度与挠度验算</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">horizontal_rule</span> 横梁参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">跨度 B (mm)</label>
+                <input class="input-field" type="number" @bind="_span" />
+            </div>
+            <div class="form-group">
+                <label class="label">分格高 H (mm)</label>
+                <input class="input-field" type="number" @bind="_spacing" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+            <div class="form-group">
+                <label class="label">型材规格</label>
+                <select class="input-field" @bind="_profileSpec">
+                    <option value="40/60系列">40/60系列</option>
+                    <option value="50/70系列">50/70系列</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">铝合金牌号</label>
+                <select class="input-field" @bind="_aluminumGrade">
+                    <option value="6063-T5">6063-T5</option>
+                    <option value="6063-T6">6063-T6</option>
+                    <option value="6061-T6">6061-T6</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _span = 1200, _spacing = 1500, _windLoad = 1.37;
+    private string _profileSpec = "40/60系列", _aluminumGrade = "6063-T5";
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcAluminumRafterAsync(new
+            {
+                span = _span, spacing = _spacing, profileSpec = _profileSpec,
+                windLoad = _windLoad, aluminumGrade = _aluminumGrade
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

@@ -1,0 +1,276 @@
+@page "/glass"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">玻璃计算</h1>
+    <p class="page-subtitle">支持单片/夹胶/单中空/双中空任意组合</p>
+
+    <div class="card">
+        <!-- 面板类别切换 -->
+        <div class="chip-group">
+            <button class="chip @(_panelCategory == 0 ? "active" : "")" @onclick="() => _panelCategory = 0">单片/夹胶</button>
+            <button class="chip @(_panelCategory == 1 ? "active" : "")" @onclick="() => _panelCategory = 1">单中空</button>
+            <button class="chip @(_panelCategory == 2 ? "active" : "")" @onclick="() => _panelCategory = 2">双中空</button>
+        </div>
+
+        <!-- 板块尺寸 -->
+        <div class="section-title">
+            <span class="material-symbols-outlined">aspect_ratio</span> 板块尺寸
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">短边 (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">长边 (mm)</label>
+                <input class="input-field" type="number" @bind="_longSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+            <div class="form-group">
+                <label class="label">海拔差 (m)</label>
+                <input class="input-field" type="number" @bind="_altitudeDiff" />
+            </div>
+            <div class="form-group">
+                <label class="label">温差 (℃)</label>
+                <input class="input-field" type="number" @bind="_tempDiff" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 外片配置 -->
+        <div class="section-title">
+            <span class="material-symbols-outlined">layers</span> 外片配置
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">是否夹胶</label>
+                <select class="input-field" @bind="_outerIsLam">
+                    <option value="false">否 - 单片</option>
+                    <option value="true">是 - 夹胶</option>
+                </select>
+            </div>
+            @if (!_outerIsLam)
+            {
+                <div class="form-group">
+                    <label class="label">厚度 (mm)</label>
+                    <select class="input-field" @bind="_outerThickness">
+                        @foreach (var t in _thicknessOpts) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">钢化类型</label>
+                    <select class="input-field" @bind="_outerTempered">
+                        <option value="0">浮法</option>
+                        <option value="1">半钢化</option>
+                        <option value="2">全钢化</option>
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="label">片数</label>
+                    <select class="input-field" @bind="_outerLamCount">
+                        <option value="2">2片</option>
+                        <option value="3">3片</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">每片厚度 (mm)</label>
+                    <select class="input-field" @bind="_outerLamThickness">
+                        @foreach (var t in _thicknessOpts) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">胶片类型</label>
+                    <select class="input-field" @bind="_outerFilmType">
+                        <option value="0">PVB</option>
+                        <option value="1">SGP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">胶片厚度 (mm)</label>
+                    <select class="input-field" @bind="_outerFilmThickness">
+                        <option value="0.76">0.76</option>
+                        <option value="1.14">1.14</option>
+                        <option value="1.52">1.52</option>
+                        <option value="2.28">2.28</option>
+                    </select>
+                </div>
+            }
+        </div>
+
+        @if (_panelCategory >= 1)
+        {
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">space_bar</span> 间隔层 1
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="label">间隔厚度 (mm)</label>
+                    <select class="input-field" @bind="_gap1Thickness">
+                        @foreach (var t in new[] { 6, 9, 12, 15, 16 }) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">填充气体</label>
+                    <select class="input-field" @bind="_gap1Gas">
+                        <option value="0">空气</option>
+                        <option value="1">氩气</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">layers</span> 内片配置
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="label">是否夹胶</label>
+                    <select class="input-field" @bind="_innerIsLam">
+                        <option value="false">否 - 单片</option>
+                        <option value="true">是 - 夹胶</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">厚度 (mm)</label>
+                    <select class="input-field" @bind="_innerThickness">
+                        @foreach (var t in _thicknessOpts) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">钢化类型</label>
+                    <select class="input-field" @bind="_innerTempered">
+                        <option value="0">浮法</option>
+                        <option value="1">半钢化</option>
+                        <option value="2">全钢化</option>
+                    </select>
+                </div>
+            </div>
+        }
+
+        @if (_panelCategory == 2)
+        {
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">layers</span> 中间片配置
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="label">厚度 (mm)</label>
+                    <select class="input-field" @bind="_middleThickness">
+                        @foreach (var t in _thicknessOpts) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">钢化类型</label>
+                    <select class="input-field" @bind="_middleTempered">
+                        <option value="0">浮法</option>
+                        <option value="1">半钢化</option>
+                        <option value="2">全钢化</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">space_bar</span> 间隔层 2
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="label">间隔厚度 (mm)</label>
+                    <select class="input-field" @bind="_gap2Thickness">
+                        @foreach (var t in new[] { 6, 9, 12, 15, 16 }) { <option value="@t">@t mm</option> }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">填充气体</label>
+                    <select class="input-field" @bind="_gap2Gas">
+                        <option value="0">空气</option>
+                        <option value="1">氩气</option>
+                    </select>
+                </div>
+            </div>
+        }
+
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private int _panelCategory;
+    private double _shortSide = 1200, _longSide = 1500, _windLoad = 1.37;
+    private double _altitudeDiff, _tempDiff;
+    private bool _outerIsLam, _innerIsLam;
+    private int _outerThickness = 6, _outerTempered = 2;
+    private int _outerLamCount = 2, _outerLamThickness = 6, _outerFilmType = 0;
+    private double _outerFilmThickness = 1.52;
+    private int _innerThickness = 6, _innerTempered = 2;
+    private int _middleThickness = 6, _middleTempered = 2;
+    private int _gap1Thickness = 12, _gap1Gas = 0;
+    private int _gap2Thickness = 12, _gap2Gas = 0;
+    private int[] _thicknessOpts = [5, 6, 8, 10, 12, 15, 19, 20];
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private object BuildOuterPane()
+    {
+        if (!_outerIsLam)
+            return new { isLaminated = false, thickness = _outerThickness, temperedType = _outerTempered };
+        var sheets = Enumerable.Range(0, _outerLamCount).Select(_ => new { thickness = _outerLamThickness, temperedType = _outerTempered }).ToArray();
+        var layers = Enumerable.Range(0, _outerLamCount - 1).Select(_ => new { filmType = _outerFilmType, filmThickness = _outerFilmThickness }).ToArray();
+        return new { isLaminated = true, thickness = _outerLamThickness, temperedType = _outerTempered, laminatedSheets = sheets, laminatedLayers = layers };
+    }
+
+    private object BuildInnerPane()
+    {
+        if (!_innerIsLam)
+            return new { isLaminated = false, thickness = _innerThickness, temperedType = _innerTempered };
+        return new { isLaminated = false, thickness = _innerThickness, temperedType = _innerTempered };
+    }
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            var req = new Dictionary<string, object?>
+            {
+                ["shortSide"] = _shortSide,
+                ["longSide"] = _longSide,
+                ["windLoad"] = _windLoad,
+                ["altitudeDifference"] = _altitudeDiff,
+                ["temperatureDifference"] = _tempDiff,
+                ["loadDuration"] = 3,
+                ["supportCondition"] = "FourSides",
+                ["glassConfig"] = new Dictionary<string, object?>
+                {
+                    ["panelCategory"] = _panelCategory,
+                    ["outerPane"] = BuildOuterPane(),
+                    ["innerPane"] = _panelCategory >= 1 ? BuildInnerPane() : null,
+                    ["firstGap"] = _panelCategory >= 1 ? new { thickness = _gap1Thickness, gasType = _gap1Gas } : null,
+                    ["middlePane"] = _panelCategory == 2 ? new { isLaminated = false, thickness = _middleThickness, temperedType = _middleTempered } : null,
+                    ["secondGap"] = _panelCategory == 2 ? new { thickness = _gap2Thickness, gasType = _gap2Gas } : null,
+                }
+            };
+            _result = await Api.CalcUnifiedGlassAsync(req);
+        }
+        catch { }
+        _loading = false;
+    }
+}

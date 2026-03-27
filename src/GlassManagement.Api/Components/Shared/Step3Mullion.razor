@@ -1,0 +1,1111 @@
+@using System.Text.Json
+@using static GlassManagement.Api.Components.Pages.Wizard
+@inject GlassApiClient GlassApi
+
+<!-- 标题条 -->
+<div class="hb-title-bar">@CurtainWallType 幕墙计算 - 立柱计算</div>
+
+<div style="display:flex;gap:10px;align-items:flex-start">
+    <!-- ====== 左侧参数区 ====== -->
+    <div style="flex:1;min-width:0">
+
+        <!-- 力学模型 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">力学模型</legend>
+            <div class="hb-radio-card-group" style="grid-template-columns:repeat(3,1fr)">
+                @for (int i = 1; i <= 6; i++)
+                {
+                    var model = i;
+                    <label class="hb-radio-card">
+                        <input type="radio" name="mechModel" value="@model"
+                               checked="@(Input.MechanicalModel == model)"
+                               @onchange="() => { Input.MechanicalModel = model; Recalc(); }" />
+                        @RenderModelSvg(model)
+                        <div style="font-size:10px;font-weight:600;margin-top:2px">@GetModelName(model)</div>
+                    </label>
+                }
+            </div>
+            <!-- 力学模型红色提示文字 -->
+            <div style="margin-top:6px;font-size:11px;color:red;line-height:1.5">
+                @GetModelHint(Input.MechanicalModel)
+            </div>
+            @if (Input.MechanicalModel == 3)
+            {
+                <div style="margin-top:4px;font-size:11px;color:darkorange;font-weight:600">
+                    ⚠ 注意：连续梁模型要求连接点具有足够刚度，请确认端戊惯性矩 ≥ 立柱惯性矩且插入足够深。
+                </div>
+            }
+        </fieldset>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <!-- 跨度 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">跨度参数</legend>
+                <div class="param-row">
+                    <span class="param-label">立柱跨度</span>
+                    <input class="hb-input" style="width:70px" type="number" @bind="Input.Span" step="1" @bind:after="Recalc"/>
+                    <span class="param-unit">mm</span>
+                </div>
+                @if (Input.MechanicalModel >= 3)
+                {
+                    <div class="param-row" style="margin-top:4px">
+                        <span class="param-label">短跨长</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.ShortSpan" step="1" @bind:after="Recalc"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    @if (Input.MechanicalModel == 5 && Input.ShortSpan < 500 && Input.ShortSpan > 0)
+                    {
+                        <div style="margin-top:4px;font-size:11px;color:red;font-weight:600">
+                            ⚠ 短跨长小于500mm，作用不大且性价比不高
+                        </div>
+                    }
+                }
+            </fieldset>
+
+            <!-- 龙骨挠度执行规范 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">龙骨挠度执行规范（横梁同）</legend>
+                <select class="hb-input" style="width:100%" @bind="Input.DeflectionStandard" @bind:after="Recalc">
+                    <option value="JGJ133-2001">JGJ133-2001</option>
+                    <option value="JGJ102-2003">JGJ102-2003</option>
+                    <option value="JGJ336-2016">JGJ336-2016</option>
+                    <option value="GB/T21086-2007">GB/T 21086-2007</option>
+                    <option value="上海规范">上海规范</option>
+                </select>
+                <div class="param-row" style="margin-top:4px">
+                    <label class="hb-checkbox" title="不选此项表示为按单跨计算的多跨结构，选中则表示只有一跨的结构">
+                        <input type="checkbox" @bind="Input.AbsoluteSpan" @bind:after="Recalc" />绝对单跨
+                    </label>
+                </div>
+                <div style="margin-top:4px">
+                    <button class="hb-btn" style="height:22px;padding:0 8px;font-size:11px" type="button">帮助</button>
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- 玻璃配置 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">玻璃配置</legend>
+            <div style="display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px;align-items:center">
+                <span class="param-label">外片</span>
+                <select class="hb-input" @bind="Input.OuterGlassThickness" @bind:after="Recalc">
+                    @foreach (var t in _glassThicknesses)
+                    {
+                        <option value="@t">@t mm</option>
+                    }
+                </select>
+                <span class="param-label">内片</span>
+                <select class="hb-input" @bind="Input.InnerGlassThickness" @bind:after="Recalc">
+                    @foreach (var t in _glassThicknesses)
+                    {
+                        <option value="@t">@t mm</option>
+                    }
+                </select>
+            </div>
+        </fieldset>
+
+        <!-- 立柱选材 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">立柱选材</legend>
+            <!-- 铝合金牌号组 -->
+            <div class="hb-radio-group horizontal" style="margin-bottom:4px">
+                @foreach (var g in new[] { "6063-T5", "6063-T6", "6061-T4", "6061-T6", "6063A-T5", "6063A-T6" })
+                {
+                    var grade = g;
+                    <label><input type="radio" name="materialGrade3" checked="@(Input.Material=="铝合金" && Input.AluminumGrade==grade)" @onchange="() => SelectAluGrade(grade)" />@grade</label>
+                }
+            </div>
+            <!-- 钢材牌号组 -->
+            <div class="hb-radio-group horizontal" style="margin-bottom:4px">
+                @foreach (var g in new[] { "Q235", "Q355" })
+                {
+                    var grade = g;
+                    <label><input type="radio" name="materialGrade3" checked="@(Input.Material=="钢材" && Input.SteelGrade==grade)" @onchange="() => SelectSteelGrade(grade)" />@grade</label>
+                }
+                <!-- 其它材质 radio -->
+                <label><input type="radio" name="materialGrade3" checked="@(Input.Material=="其它")" @onchange="() => SelectOtherMaterial()" />其它材质</label>
+            </div>
+
+            <!-- 其它材质输入区 -->
+            @if (Input.Material == "其它")
+            {
+                <fieldset class="groupbox" style="margin-top:4px;background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">其它材质参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto auto 1fr auto;gap:4px;align-items:center;font-size:11px">
+                        <span class="param-label">名称</span>
+                        <input class="hb-input" style="width:100%" @bind="Input.OtherMaterialName" />
+                        <span class="param-label">弹性模量</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.ElasticModulus" step="100" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                        <span></span>
+                        <span class="param-label">类别</span>
+                        <select class="hb-input" @bind="Input.MaterialCategory">
+                            <option>铝</option><option>钢</option>
+                        </select>
+                        <span class="param-label">抗弯强度</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.AllowableStress" step="1" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span class="param-label">抗剪强度</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.AllowableShear" step="1" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                        <span></span>
+                    </div>
+                </fieldset>
+            }
+
+            <!-- 条件选项 -->
+            <div style="margin-top:4px;display:flex;gap:12px;flex-wrap:wrap">
+                @if (IsAluminum)
+                {
+                    <label class="hb-checkbox"><input type="checkbox" @bind="Input.IsThermalBreak" @bind:after="Recalc" />断热</label>
+                }
+                @if (IsSteel)
+                {
+                    <label class="hb-checkbox"><input type="checkbox" @bind="Input.ColdFormedSteel" @bind:after="Recalc" />冷弯薄壁型钢</label>
+                }
+                <label class="hb-checkbox"><input type="checkbox" @bind="Input.SteelAlumComposite" @bind:after="OnSteelAlumChanged" />钢铝结合</label>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- ====== 中间：型材表格 / 钢铝结合面板 ====== -->
+    @if (Input.SteelAlumComposite)
+    {
+        <!-- 钢铝结合专用面板 -->
+        <div style="flex:1.2;min-width:0">
+            <!-- 铝框型材 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">铝框型材（钢铝结合）</legend>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索铝框型材..." @bind="_saAluSearch" @bind:event="oninput" @bind:after="FilterSaAluProfiles"/>
+                </div>
+                @if (_saLoading)
+                {
+                    <div style="text-align:center;padding:12px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:200px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead><tr><th>型材代号</th><th>Ix</th><th>Iy</th><th>Wx1</th><th>Wx2</th><th>壁厚</th><th>截面积</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in _filteredSaAluProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == _selectedSaAluCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => SelectSaAluProfile(p)">
+                                        <td style="font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);text-align:right">共 @(_allSaAluProfiles?.Count ?? 0) 条</div>
+                }
+            </fieldset>
+
+            <!-- 钢框型材 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">钢框型材（钢铝结合）</legend>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索钢框型材..." @bind="_saSteelSearch" @bind:event="oninput" @bind:after="FilterSaSteelProfiles"/>
+                </div>
+                @if (_saLoading)
+                {
+                    <div style="text-align:center;padding:12px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:200px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead><tr><th>型材代号</th><th>Ix</th><th>Iy</th><th>Wx1</th><th>Wx2</th><th>壁厚</th><th>截面积</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in _filteredSaSteelProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == _selectedSaSteelCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => SelectSaSteelProfile(p)">
+                                        <td style="font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);text-align:right">共 @(_allSaSteelProfiles?.Count ?? 0) 条</div>
+                }
+            </fieldset>
+        </div>
+    }
+    else
+    {
+        <!-- 普通型材表格 -->
+        <div style="flex:1.2;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">立柱选材</legend>
+                <div style="margin-bottom:4px;font-size:11px;color:var(--text-muted)">
+                    快速查找型材 → 请在此处输入待查找型材代号或其关键字
+                    <span style="float:right;color:var(--primary);font-weight:600;cursor:pointer" @onclick="() => _showUnitModal = true">单位说明</span>
+                </div>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索型材代号..." @bind="_profileSearch" @bind:event="oninput" @bind:after="FilterProfiles"/>
+                </div>
+                @if (_loading)
+                {
+                    <div style="text-align:center;padding:20px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:420px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead>
+                                <tr>
+                                    <th style="min-width:90px">型材代号</th>
+                                    <th>Ix惯性矩</th><th>Iy惯性矩</th><th>Wx1抵抗矩</th><th>Wx2抵抗矩</th>
+                                    <th>壁厚</th><th>截面积</th><th>面积矩</th><th>翼缘宽度</th><th>备</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in _filteredProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == Input.ProfileCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => SelectProfile(p)">
+                                        <td style="text-align:left;font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                        <td>@GetNum(p,"staticMoment")</td><td>@GetNum(p,"shearWebWidth")</td><td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;text-align:right">
+                        共 @(_allProfiles?.Count ?? 0) 条型材 · 显示 @_filteredProfiles.Count 条
+                    </div>
+                }
+            </fieldset>
+        </div>
+    }
+
+    <!-- ====== 右侧：实时验算结果 ====== -->
+    <div style="flex:0.8;min-width:220px">
+        <fieldset class="groupbox" style="background:var(--bg-page)">
+            <legend class="groupbox-title">立柱验算结果</legend>
+            <div style="font-size:11px;line-height:1.8;font-family:'Consolas','Microsoft YaHei UI',monospace">
+                <div style="border:2px dashed var(--primary);padding:6px;margin-bottom:6px;background:var(--bg-white)">
+                    <div>风荷载标准值为：<b>@(Input.WindLoadStd.ToString("F3")) kPa</b></div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>抗弯矩标选：<b>@(Input.MomentRequired.ToString("F0")) mm²</b></div>
+                    <div>选用型材的抗弯矩设计值为：<b>@(Input.Wx1.ToString("F0")) cm³</b></div>
+                    <div class="@(Input.BendingMomentPass ? "result-pass" : "result-fail")">
+                        @(Input.BendingMomentPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>惯性矩标选：<b>@(Input.InertiaRequired.ToString("F0")) mm⁴</b></div>
+                    <div>选用型材的惯性矩设计值为：<b>@(Input.Ix.ToString("F0")) cm⁴</b></div>
+                    <div class="@(Input.InertiaPass ? "result-pass" : "result-fail")">
+                        @(Input.InertiaPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>实际挠度计算值为：<b>@(Input.ActualDeflection.ToString("F3")) mm</b></div>
+                    <div>规范要求的挠度值为：<b>@(Input.DeflectionLimit.ToString("F3")) mm</b></div>
+                    <div class="@(Input.DeflectionPass ? "result-pass" : "result-fail")">
+                        @(Input.DeflectionPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>抗弯强度计算值：<b>@(Input.BendingStress.ToString("F3")) MPa</b></div>
+                    <div>选用型材的抗弯强度设计值为：<b>@(Input.AllowableStress.ToString("F0")) MPa</b></div>
+                    <div class="@(Input.BendingPass ? "result-pass" : "result-fail")">
+                        @(Input.BendingPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>抗剪强度计算值：<b>@(Input.ShearStress.ToString("F3")) MPa</b></div>
+                    <div>选用型材的抗剪强度设计值为：<b>@(Input.AllowableShear.ToString("F0")) MPa</b></div>
+                    <div class="@(Input.ShearPass ? "result-pass" : "result-fail")">
+                        @(Input.ShearPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="border-top:1px solid var(--border-color);padding-top:6px;margin-top:8px">
+                    <div>支反力：<b>@(Input.ReactionForce.ToString("F3")) kN</b></div>
+                </div>
+            </div>
+        </fieldset>
+
+        @if (Input.SteelAlumComposite)
+        {
+            <fieldset class="groupbox" style="background:var(--bg-page);margin-top:8px">
+                <legend class="groupbox-title">钢铝结合验算</legend>
+                <div style="font-size:11px;line-height:1.6">
+                    <div><b>铝框：</b>@(_selectedSaAluCode != "" ? _selectedSaAluCode : "未选择")</div>
+                    <div><b>钢框：</b>@(_selectedSaSteelCode != "" ? _selectedSaSteelCode : "未选择")</div>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+<!-- ====== 力学模型 SVG 图 ====== -->
+<fieldset class="groupbox" style="margin-top:10px">
+    <legend class="groupbox-title">📐 力学模型图 — @GetModelName(Input.MechanicalModel)</legend>
+    <div style="display:flex;justify-content:center">
+        @if (Input.MechanicalModel == 1)
+        {
+            @* ① 双端简支-均布荷载 *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs>
+                    <marker id="arrD1" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker>
+                    <marker id="arrB1" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--primary,#007AFF)"/></marker>
+                </defs>
+                <!-- Panel 1: Structural Model -->
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <line x1="80" y1="61" x2="420" y2="61" stroke="var(--primary,#007AFF)" stroke-width="0.5" stroke-dasharray="4,3"/>
+                <!-- pin A -->
+                <polygon points="80,69 70,87 90,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="65" y1="89" x2="95" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="67" y1="89" x2="63" y2="94"/><line x1="73" y1="89" x2="69" y2="94"/><line x1="79" y1="89" x2="75" y2="94"/><line x1="85" y1="89" x2="81" y2="94"/><line x1="91" y1="89" x2="87" y2="94"/></g>
+                <!-- roller B -->
+                <polygon points="420,69 410,84 430,84" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <circle cx="416" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/><circle cx="424" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/>
+                <line x1="408" y1="91" x2="436" y2="91" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <!-- UDL arrows -->
+                <line x1="95" y1="28" x2="405" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrD1)">
+                    @for(int x=100;x<=400;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}
+                </g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <!-- dimension -->
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="80" y1="97" x2="80" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="420" y1="97" x2="420" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <text x="80" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">A</text>
+                <text x="420" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">B</text>
+
+                <!-- Panel 2: Shear V -->
+                <line x1="20" y1="130" x2="480" y2="130" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="145" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="185" x2="420" y2="185" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,185 80,160 250,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="160" x2="250" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <polygon points="250,185 420,210 420,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="250" y1="185" x2="420" y2="210" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="163" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+qL/2</text>
+                <text x="432" y="213" font-size="9" fill="#FF9500" font-weight="600">−qL/2</text>
+                <text x="30" y="188" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Panel 3: Moment M -->
+                <line x1="20" y1="230" x2="480" y2="230" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="245" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="265" x2="420" y2="265" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,265 Q170,320 250,325 Q330,320 420,265" fill="#FF3B30" opacity="0.08" stroke="none"/>
+                <path d="M80,265 Q170,320 250,325 Q330,320 420,265" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="250" cy="325" r="3" fill="#FF3B30" opacity="0.7"/>
+                <line x1="250" y1="265" x2="250" y2="325" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="262" y="328" font-size="9" fill="#FF3B30" font-weight="600">Mmax = qL²/8</text>
+                <text x="30" y="295" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Panel 4: Deflection δ -->
+                <line x1="20" y1="345" x2="480" y2="345" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="360" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="380" x2="420" y2="380" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,380 C140,380 180,418 250,422 C320,418 360,380 420,380" fill="#34C759" opacity="0.08"/>
+                <path d="M80,380 C140,380 180,418 250,422 C320,418 360,380 420,380" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="422" r="3" fill="#34C759" opacity="0.7"/>
+                <line x1="250" y1="380" x2="250" y2="422" stroke="#34C759" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="262" y="425" font-size="9" fill="#34C759" font-weight="600">δmax = 5qL⁴/384EI</text>
+                <text x="30" y="405" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <!-- Formula -->
+                <rect x="60" y="450" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="468" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="484" font-size="10" fill="var(--text-primary,#333)">R = qL/2　　M = qL²/8　　V = qL/2</text>
+                <text x="75" y="498" font-size="10" fill="var(--text-primary,#333)">δ = 5qL⁴/(384EI)　　σ = M/W</text>
+            </svg>
+        }
+        else if (Input.MechanicalModel == 2)
+        {
+            @* ② 一端固定一端简支-均布荷载 *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrD2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型（固定-简支）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- fixed A -->
+                <rect x="68" y="40" width="12" height="50" fill="var(--text-muted,#888)" opacity="0.3"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="68" y1="42" x2="58" y2="52"/><line x1="68" y1="50" x2="58" y2="60"/><line x1="68" y1="58" x2="58" y2="68"/><line x1="68" y1="66" x2="58" y2="76"/><line x1="68" y1="74" x2="58" y2="84"/></g>
+                <!-- pin B -->
+                <polygon points="420,69 410,87 430,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="405" y1="89" x2="435" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="407" y1="89" x2="403" y2="94"/><line x1="413" y1="89" x2="409" y2="94"/><line x1="419" y1="89" x2="415" y2="94"/><line x1="425" y1="89" x2="421" y2="94"/><line x1="431" y1="89" x2="427" y2="94"/></g>
+                <!-- UDL -->
+                <line x1="95" y1="28" x2="405" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrD2)">@for(int x=100;x<=400;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}</g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="80" y1="97" x2="80" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="420" y1="97" x2="420" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <text x="80" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">A（固定）</text>
+                <text x="420" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">B（简支）</text>
+
+                <!-- Shear V: RA=5qL/8 top, drops to 0 at 5L/8, then -3qL/8 -->
+                <line x1="20" y1="130" x2="480" y2="130" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="145" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="185" x2="420" y2="185" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,185 80,157 293,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="157" x2="293" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <polygon points="293,185 420,206 420,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="293" y1="185" x2="420" y2="206" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="160" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+5qL/8</text>
+                <text x="432" y="209" font-size="9" fill="#FF9500" font-weight="600">−3qL/8</text>
+                <text x="30" y="188" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Moment M: parabola, max at 5L/8, negative at A (fixed end moment = -qL²/8) -->
+                <line x1="20" y1="230" x2="480" y2="230" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="245" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="275" x2="420" y2="275" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,258 Q180,310 293,312 Q370,305 420,275" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,258 Q180,310 293,312 Q370,305 420,275" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <line x1="80" y1="275" x2="80" y2="258" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="60" y="256" font-size="8" fill="#FF3B30" font-weight="600" text-anchor="end">−qL²/8</text>
+                <circle cx="293" cy="312" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="305" y="318" font-size="9" fill="#FF3B30" font-weight="600">Mmax = 9qL²/128</text>
+                <text x="30" y="290" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Deflection δ -->
+                <line x1="20" y1="335" x2="480" y2="335" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="350" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="375" x2="420" y2="375" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,375 C160,375 220,410 290,413 C350,410 400,380 420,375" fill="#34C759" opacity="0.08"/>
+                <path d="M80,375 C160,375 220,410 290,413 C350,410 400,380 420,375" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="290" cy="413" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="302" y="416" font-size="9" fill="#34C759" font-weight="600">δmax</text>
+                <text x="30" y="398" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="440" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="458" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="474" font-size="10" fill="var(--text-primary,#333)">RA = 5qL/8　　RB = 3qL/8　　MA = −qL²/8</text>
+                <text x="75" y="488" font-size="10" fill="var(--text-primary,#333)">Mmax = 9qL²/128（x=5L/8处）</text>
+            </svg>
+        }
+        else if (Input.MechanicalModel == 3)
+        {
+            @* ③ 双端固定-均布荷载 *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrD3" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型（双端固定）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- fixed A -->
+                <rect x="68" y="40" width="12" height="50" fill="var(--text-muted,#888)" opacity="0.3"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="68" y1="42" x2="58" y2="52"/><line x1="68" y1="50" x2="58" y2="60"/><line x1="68" y1="58" x2="58" y2="68"/><line x1="68" y1="66" x2="58" y2="76"/><line x1="68" y1="74" x2="58" y2="84"/></g>
+                <!-- fixed B -->
+                <rect x="420" y="40" width="12" height="50" fill="var(--text-muted,#888)" opacity="0.3"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="432" y1="42" x2="442" y2="52"/><line x1="432" y1="50" x2="442" y2="60"/><line x1="432" y1="58" x2="442" y2="68"/><line x1="432" y1="66" x2="442" y2="76"/><line x1="432" y1="74" x2="442" y2="84"/></g>
+                <!-- UDL -->
+                <line x1="95" y1="28" x2="405" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrD3)">@for(int x=100;x<=400;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}</g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="80" y1="97" x2="80" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="420" y1="97" x2="420" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <text x="80" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">A（固定）</text>
+                <text x="420" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">B（固定）</text>
+
+                <!-- Shear V: symmetric, +qL/2 to -qL/2 linear -->
+                <line x1="20" y1="130" x2="480" y2="130" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="145" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="185" x2="420" y2="185" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,185 80,160 250,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="160" x2="250" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <polygon points="250,185 420,210 420,185" fill="#FF9500" opacity="0.12"/>
+                <line x1="250" y1="185" x2="420" y2="210" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="163" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+qL/2</text>
+                <text x="432" y="213" font-size="9" fill="#FF9500" font-weight="600">−qL/2</text>
+                <text x="30" y="188" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Moment M: negative at ends (-qL²/12), positive at center (+qL²/24) -->
+                <line x1="20" y1="230" x2="480" y2="230" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="245" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="285" x2="420" y2="285" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <!-- negative at ends, positive at center -->
+                <path d="M80,268 Q130,300 165,285 Q250,310 335,285 Q370,300 420,268" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,268 Q130,300 165,285 Q250,310 335,285 Q370,300 420,268" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <line x1="80" y1="285" x2="80" y2="268" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <line x1="420" y1="285" x2="420" y2="268" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="55" y="266" font-size="8" fill="#FF3B30" font-weight="600" text-anchor="end">−qL²/12</text>
+                <text x="435" y="266" font-size="8" fill="#FF3B30" font-weight="600">−qL²/12</text>
+                <circle cx="250" cy="310" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="262" y="316" font-size="9" fill="#FF3B30" font-weight="600">+qL²/24</text>
+                <text x="30" y="290" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Deflection δ -->
+                <line x1="20" y1="335" x2="480" y2="335" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="350" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="375" x2="420" y2="375" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,375 C150,375 200,398 250,400 C300,398 350,375 420,375" fill="#34C759" opacity="0.08"/>
+                <path d="M80,375 C150,375 200,398 250,400 C300,398 350,375 420,375" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="400" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="262" y="403" font-size="9" fill="#34C759" font-weight="600">δmax = qL⁴/384EI</text>
+                <text x="30" y="392" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="430" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="448" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="464" font-size="10" fill="var(--text-primary,#333)">R = qL/2　　MA = MB = −qL²/12</text>
+                <text x="75" y="478" font-size="10" fill="var(--text-primary,#333)">Mc = +qL²/24　　δ = qL⁴/(384EI)</text>
+            </svg>
+        }
+        else if (Input.MechanicalModel == 4)
+        {
+            @* ④ 悬臂-均布荷载 *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrD4" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型（悬臂梁）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- fixed A -->
+                <rect x="68" y="40" width="12" height="50" fill="var(--text-muted,#888)" opacity="0.3"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="68" y1="42" x2="58" y2="52"/><line x1="68" y1="50" x2="58" y2="60"/><line x1="68" y1="58" x2="58" y2="68"/><line x1="68" y1="66" x2="58" y2="76"/><line x1="68" y1="74" x2="58" y2="84"/></g>
+                <!-- free end B - no support -->
+                <!-- UDL -->
+                <line x1="95" y1="28" x2="405" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrD4)">@for(int x=100;x<=400;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}</g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <line x1="80" y1="95" x2="420" y2="95" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="80" y1="90" x2="80" y2="100" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="420" y1="90" x2="420" y2="100" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="93" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <text x="80" y="112" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">A（固定）</text>
+                <text x="420" y="112" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">B（自由端）</text>
+
+                <!-- Shear V: max at A = qL, linear to 0 at B -->
+                <line x1="20" y1="125" x2="480" y2="125" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="140" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="180" x2="420" y2="180" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,180 80,152 420,180" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="152" x2="420" y2="180" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="155" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">qL</text>
+                <text x="425" y="178" font-size="9" fill="#FF9500" font-weight="600">0</text>
+                <text x="30" y="178" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Moment M: parabola, max at A = -qL²/2, 0 at B -->
+                <line x1="20" y1="200" x2="480" y2="200" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="215" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="240" x2="420" y2="240" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,280 Q200,260 320,248 Q380,242 420,240" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,280 Q200,260 320,248 Q380,242 420,240" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <line x1="80" y1="240" x2="80" y2="280" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <circle cx="80" cy="280" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="92" y="284" font-size="9" fill="#FF3B30" font-weight="600">Mmax = qL²/2</text>
+                <text x="30" y="260" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Deflection δ: max at free end -->
+                <line x1="20" y1="300" x2="480" y2="300" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="315" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="340" x2="420" y2="340" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,340 C150,340 250,358 350,375 Q390,382 420,388" fill="#34C759" opacity="0.08"/>
+                <path d="M80,340 C150,340 250,358 350,375 Q390,382 420,388" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="420" cy="388" r="3" fill="#34C759" opacity="0.7"/>
+                <line x1="420" y1="340" x2="420" y2="388" stroke="#34C759" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="430" y="370" font-size="9" fill="#34C759" font-weight="600">δmax = qL⁴/8EI</text>
+                <text x="30" y="365" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="410" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="428" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="444" font-size="10" fill="var(--text-primary,#333)">R = qL　　M = qL²/2　　V = qL</text>
+                <text x="75" y="458" font-size="10" fill="var(--text-primary,#333)">δ = qL⁴/(8EI)　　σ = M/W</text>
+            </svg>
+        }
+        else if (Input.MechanicalModel == 5)
+        {
+            @* ⑤ 简支+悬臂-均布荷载（外伸梁） *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrD5" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型（简支+悬臂）</text>
+                <rect x="60" y="55" width="380" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- pin A -->
+                <polygon points="100,69 90,87 110,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="85" y1="89" x2="115" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="87" y1="89" x2="83" y2="94"/><line x1="93" y1="89" x2="89" y2="94"/><line x1="99" y1="89" x2="95" y2="94"/><line x1="105" y1="89" x2="101" y2="94"/><line x1="111" y1="89" x2="107" y2="94"/></g>
+                <!-- pin B -->
+                <polygon points="380,69 370,87 390,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="365" y1="89" x2="395" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="367" y1="89" x2="363" y2="94"/><line x1="373" y1="89" x2="369" y2="94"/><line x1="379" y1="89" x2="375" y2="94"/><line x1="385" y1="89" x2="381" y2="94"/><line x1="391" y1="89" x2="387" y2="94"/></g>
+                <!-- overhang left + right -->
+                <!-- UDL across full length -->
+                <line x1="70" y1="28" x2="430" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrD5)">@for(int x=75;x<=425;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}</g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <!-- dimensions -->
+                <line x1="60" y1="105" x2="100" y2="105" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="80" y="103" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">a</text>
+                <line x1="100" y1="105" x2="380" y2="105" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="240" y="103" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <line x1="380" y1="105" x2="440" y2="105" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="410" y="103" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">b</text>
+
+                <!-- Shear V -->
+                <line x1="20" y1="125" x2="480" y2="125" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="140" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="60" y1="185" x2="440" y2="185" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <!-- V jumps at supports -->
+                <line x1="60" y1="185" x2="100" y2="190" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="100" y1="190" x2="100" y2="165" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="100" y1="165" x2="280" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="280" y1="185" x2="380" y2="200" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="380" y1="200" x2="380" y2="178" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="380" y1="178" x2="440" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="30" y="188" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Moment M -->
+                <line x1="20" y1="220" x2="480" y2="220" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="235" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="60" y1="260" x2="440" y2="260" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M60,260 Q80,266 100,270 Q200,290 280,285 Q340,280 380,270 Q410,266 440,260" fill="#FF3B30" opacity="0.08"/>
+                <path d="M60,260 Q80,266 100,270 Q200,290 280,285 Q340,280 380,270 Q410,266 440,260" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <text x="30" y="278" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Deflection δ -->
+                <line x1="20" y1="310" x2="480" y2="310" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="325" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="60" y1="350" x2="440" y2="350" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M60,355 Q80,356 100,350 C180,350 220,370 280,372 C340,370 360,350 380,350 Q420,356 440,358" fill="#34C759" opacity="0.08"/>
+                <path d="M60,355 Q80,356 100,350 C180,350 220,370 280,372 C340,370 360,350 380,350 Q420,356 440,358" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="240" cy="372" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="252" y="375" font-size="9" fill="#34C759" font-weight="600">δmax</text>
+                <text x="30" y="365" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="400" width="380" height="45" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="418" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="434" font-size="10" fill="var(--text-primary,#333)">外伸梁：需根据 a、L、b 具体计算弯矩和挠度</text>
+            </svg>
+        }
+        else if (Input.MechanicalModel == 6)
+        {
+            @* ⑥ 双端简支-集中荷载 *@
+            <svg width="100%" viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrD6" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 结构模型（简支-集中力）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- pin A -->
+                <polygon points="80,69 70,87 90,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="65" y1="89" x2="95" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="67" y1="89" x2="63" y2="94"/><line x1="73" y1="89" x2="69" y2="94"/><line x1="79" y1="89" x2="75" y2="94"/><line x1="85" y1="89" x2="81" y2="94"/><line x1="91" y1="89" x2="87" y2="94"/></g>
+                <!-- roller B -->
+                <polygon points="420,69 410,84 430,84" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <circle cx="416" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/><circle cx="424" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/>
+                <line x1="408" y1="91" x2="436" y2="91" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <!-- Point load at center -->
+                <line x1="250" y1="20" x2="250" y2="50" stroke="var(--accent-red,#e74c3c)" stroke-width="2" marker-end="url(#arrD6)"/>
+                <text x="260" y="30" font-size="11" fill="var(--accent-red,#e74c3c)" font-weight="700">P</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="80" y1="97" x2="80" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="420" y1="97" x2="420" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <line x1="250" y1="97" x2="250" y2="107" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="165" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L/2</text>
+                <text x="335" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L/2</text>
+                <text x="80" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">A</text>
+                <text x="420" y="116" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">B</text>
+
+                <!-- Shear V: +P/2 left, -P/2 right, step at center -->
+                <line x1="20" y1="130" x2="480" y2="130" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="145" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="185" x2="420" y2="185" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <rect x="80" y="165" width="170" height="20" fill="#FF9500" opacity="0.1"/>
+                <line x1="80" y1="165" x2="250" y2="165" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="80" y1="165" x2="80" y2="185" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="250" y1="165" x2="250" y2="205" stroke="#FF9500" stroke-width="1.5"/>
+                <rect x="250" y="185" width="170" height="20" fill="#FF9500" opacity="0.1"/>
+                <line x1="250" y1="205" x2="420" y2="205" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="420" y1="185" x2="420" y2="205" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="168" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+P/2</text>
+                <text x="432" y="208" font-size="9" fill="#FF9500" font-weight="600">−P/2</text>
+                <text x="30" y="188" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- Moment M: triangle, peak at center = PL/4 -->
+                <line x1="20" y1="225" x2="480" y2="225" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="240" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="260" x2="420" y2="260" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,260 250,310 420,260" fill="#FF3B30" opacity="0.08"/>
+                <line x1="80" y1="260" x2="250" y2="310" stroke="#FF3B30" stroke-width="1.5"/>
+                <line x1="250" y1="310" x2="420" y2="260" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="250" cy="310" r="3" fill="#FF3B30" opacity="0.7"/>
+                <line x1="250" y1="260" x2="250" y2="310" stroke="#FF3B30" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="262" y="314" font-size="9" fill="#FF3B30" font-weight="600">Mmax = PL/4</text>
+                <text x="30" y="285" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- Deflection δ -->
+                <line x1="20" y1="330" x2="480" y2="330" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="345" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="365" x2="420" y2="365" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,365 C140,365 190,400 250,405 C310,400 360,365 420,365" fill="#34C759" opacity="0.08"/>
+                <path d="M80,365 C140,365 190,400 250,405 C310,400 360,365 420,365" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="405" r="3" fill="#34C759" opacity="0.7"/>
+                <line x1="250" y1="365" x2="250" y2="405" stroke="#34C759" stroke-width="0.6" stroke-dasharray="3,2" opacity="0.4"/>
+                <text x="262" y="408" font-size="9" fill="#34C759" font-weight="600">δmax = PL³/48EI</text>
+                <text x="30" y="390" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="430" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.1" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="448" font-size="9" fill="var(--text-muted,#888)" font-weight="600">关键公式</text>
+                <text x="75" y="464" font-size="10" fill="var(--text-primary,#333)">R = P/2　　M = PL/4　　V = P/2</text>
+                <text x="75" y="478" font-size="10" fill="var(--text-primary,#333)">δ = PL³/(48EI)　　σ = M/W</text>
+            </svg>
+        }
+    </div>
+</fieldset>
+
+<!-- 单位说明弹窗 -->
+@if (_showUnitModal)
+{
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center" @onclick="() => _showUnitModal = false">
+        <div style="background:var(--bg-white);border-radius:8px;padding:24px;min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.2)" @onclick:stopPropagation>
+            <h3 style="margin:0 0 12px;font-size:15px">📏 单位说明</h3>
+            <table class="hb-table" style="font-size:12px">
+                <tbody>
+                    <tr><td style="text-align:left;font-weight:600">惯性矩</td><td>cm⁴</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">抵抗矩</td><td>cm³</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">壁厚</td><td>mm</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">截面积</td><td>mm²</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">面积矩</td><td>cm³</td></tr>
+                </tbody>
+            </table>
+            <div style="text-align:right;margin-top:12px">
+                <button class="hb-btn" @onclick="() => _showUnitModal = false">关闭</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Step3Data Input { get; set; } = new();
+    [Parameter] public string CurtainWallType { get; set; } = "全隐框玻璃";
+    [Parameter] public Step2Data? Step2Input { get; set; }
+
+    private List<JsonElement>? _allProfiles;
+    private List<JsonElement> _filteredProfiles = new();
+    private string _profileSearch = "";
+    private bool _loading = true;
+    private bool _showUnitModal;
+    private static readonly int[] _glassThicknesses = { 3, 4, 5, 6, 8, 10, 12, 15, 19 };
+
+    // 钢铝结合
+    private List<JsonElement>? _allSaAluProfiles;
+    private List<JsonElement> _filteredSaAluProfiles = new();
+    private string _saAluSearch = "";
+    private string _selectedSaAluCode = "";
+    private List<JsonElement>? _allSaSteelProfiles;
+    private List<JsonElement> _filteredSaSteelProfiles = new();
+    private string _saSteelSearch = "";
+    private string _selectedSaSteelCode = "";
+    private bool _saLoading;
+
+    // 材质分类判断
+    private bool IsAluminum => Input.Material == "铝合金";
+    private bool IsSteel => Input.Material == "钢材";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        _allProfiles = await GlassApi.GetProfileColumnsAsync();
+        _loading = false;
+        FilterProfiles();
+        Recalc();
+    }
+
+    private void FilterProfiles()
+    {
+        if (_allProfiles == null) { _filteredProfiles = new(); return; }
+        if (string.IsNullOrWhiteSpace(_profileSearch))
+            _filteredProfiles = _allProfiles;
+        else
+            _filteredProfiles = _allProfiles
+                .Where(p => GetStr(p,"code").Contains(_profileSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void SelectProfile(JsonElement p)
+    {
+        Input.ProfileCode = GetStr(p, "code");
+        Input.Ix = GetDbl(p, "ix");
+        Input.Iy = GetDbl(p, "iy");
+        Input.Wx1 = GetDbl(p, "wx1");
+        Input.Wx2 = GetDbl(p, "wx2");
+        Input.WallThickness = GetDbl(p, "wallThickness");
+        Input.Area = GetDbl(p, "area");
+        Input.Sx = GetDbl(p, "staticMoment");
+        Input.Tw = GetDbl(p, "shearWebWidth");
+        if (Input.Tw <= 0) Input.Tw = Input.WallThickness * 2;
+        Recalc();
+    }
+
+    private void SelectAluGrade(string g)
+    {
+        Input.AluminumGrade = g;
+        Input.Material = "铝合金";
+        Input.IsThermalBreak = false;
+        Input.ColdFormedSteel = false;
+        Recalc();
+    }
+
+    private void SelectSteelGrade(string g)
+    {
+        Input.SteelGrade = g;
+        Input.Material = "钢材";
+        Input.IsThermalBreak = false;
+        Recalc();
+    }
+
+    private void SelectOtherMaterial()
+    {
+        Input.Material = "其它";
+        Input.IsThermalBreak = false;
+        Input.ColdFormedSteel = false;
+        Recalc();
+    }
+
+    private async Task OnSteelAlumChanged()
+    {
+        if (Input.SteelAlumComposite && _allSaAluProfiles == null)
+        {
+            _saLoading = true;
+            _allSaAluProfiles = await GlassApi.GetSteelAlumAluColumnsAsync();
+            _allSaSteelProfiles = await GlassApi.GetSteelAlumSteelColumnsAsync();
+            _saLoading = false;
+            FilterSaAluProfiles();
+            FilterSaSteelProfiles();
+        }
+        Recalc();
+    }
+
+    private void FilterSaAluProfiles()
+    {
+        if (_allSaAluProfiles == null) { _filteredSaAluProfiles = new(); return; }
+        _filteredSaAluProfiles = string.IsNullOrWhiteSpace(_saAluSearch)
+            ? _allSaAluProfiles
+            : _allSaAluProfiles.Where(p => GetStr(p,"code").Contains(_saAluSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void FilterSaSteelProfiles()
+    {
+        if (_allSaSteelProfiles == null) { _filteredSaSteelProfiles = new(); return; }
+        _filteredSaSteelProfiles = string.IsNullOrWhiteSpace(_saSteelSearch)
+            ? _allSaSteelProfiles
+            : _allSaSteelProfiles.Where(p => GetStr(p,"code").Contains(_saSteelSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void SelectSaAluProfile(JsonElement p) { _selectedSaAluCode = GetStr(p, "code"); }
+    private void SelectSaSteelProfile(JsonElement p) { _selectedSaSteelCode = GetStr(p, "code"); }
+
+    private static string GetStr(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.GetString() ?? "" : "";
+    private static double GetDbl(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.GetDouble() : 0;
+    private static string GetNum(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.ToString() : "—";
+
+    private string GetModelHint(int m) => m switch
+    {
+        1 => "单跨是：幕墙立柱每层一处连接件与主体结构连接，受拉是上面固定、下面可活动的形式。□ 单跨",
+        2 => "单跨是：幕墙立柱每层一处连接件与主体结构连接，受压是上面活动、下面固定的形式，尽量避免采用此模型。",
+        3 => "这种结构要求连接点具有足够刚度，也就是端戊惯性矩大于或等于立柱惯性矩且插入足够深。常规铝合金幕墙一般无法达到此要求。",
+        4 => "选中该项后一些参数会变成灰色，不必理会，点<下一步>按钮，会有图示，可供理解参考。",
+        5 => "双跨梁是：立柱每层有两处转接件和主体连接的形式，长短跨比不宜大于10。",
+        6 => "同④：选中该项后一些参数会变成灰色，不必理会，点<下一步>按钮，会有图示，可供理解参考。",
+        _ => ""
+    };
+
+    /// <summary>
+    /// 立柱验算 — JGJ102-2003 §5.3
+    /// 抗弯验算: σ = M/W ≤ [σ]  (§5.3.2)
+    /// 挠度验算: δ = deflCoeff·q·L⁴/(EI) ≤ L/180  (§5.3.3)
+    /// 抗剪验算: τ = V·S/(I·b) ≤ [τ]  (§5.3.4)
+    /// </summary>
+    private void Recalc()
+    {
+        // 材料参数
+        double E;
+        if (Input.Material == "铝合金")
+        {
+            E = 70000;
+            Input.AllowableStress = Input.AluminumGrade switch
+            {
+                "6063-T5" => 85, "6063-T6" => 100, "6061-T4" => 55, "6061-T6" => 135,
+                "6063A-T5" => 85, "6063A-T6" => 100, _ => 85
+            };
+            Input.AllowableShear = Input.AluminumGrade switch
+            {
+                "6063-T5" => 50, "6063-T6" => 60, "6061-T4" => 32, "6061-T6" => 80,
+                "6063A-T5" => 50, "6063A-T6" => 60, _ => 50
+            };
+        }
+        else if (Input.Material == "钢材")
+        {
+            E = 206000;
+            Input.AllowableStress = Input.SteelGrade == "Q355" ? 310 : 215;
+            Input.AllowableShear = Input.SteelGrade == "Q355" ? 180 : 125;
+        }
+        else
+        {
+            E = Input.ElasticModulus > 0 ? Input.ElasticModulus : 70000;
+        }
+
+        if (Input.Wx1 <= 0 || Input.Ix <= 0) return;
+
+        double L = Input.Span;
+        double wk = Input.WindLoadStd > 0 ? Input.WindLoadStd : 1.0;
+        double B = Input.TributaryWidth > 0 ? Input.TributaryWidth : 1200;
+        double q = wk * B / 1000.0;
+
+        // 力学模型系数 — 按力学模型区分弯矩/挠度系数
+        // ①②单跨简支: M=qL²/8, δ=5qL⁴/(384EI)
+        // ③连续梁(四点三跨): M=qL²/10, δ≈qL⁴/(145EI)
+        // ④多跨铰接静定梁: M=qL²/8(每跨简支), δ=5qL⁴/(384EI)
+        // ⑤双跨梁: M=9qL²/128, δ≈qL⁴/(185EI)
+        // ⑥多跨超静定: M=qL²/12(中间跨), δ≈qL⁴/(384EI)
+        double momentCoeff = Input.MechanicalModel switch
+        {
+            1 or 2 => 1.0 / 8.0,           // qL²/8
+            3 => 1.0 / 10.0,               // qL²/10
+            4 => 1.0 / 8.0,                // qL²/8 (每跨简支)
+            5 => 9.0 / 128.0,              // 9qL²/128
+            6 => 1.0 / 12.0,               // qL²/12
+            _ => 1.0 / 8.0
+        };
+        double deflCoeff = Input.MechanicalModel switch
+        {
+            1 or 2 => 5.0 / 384.0,         // 5/(384)
+            3 => 1.0 / 145.0,              // 1/145
+            4 => 5.0 / 384.0,              // 同单跨简支
+            5 => 1.0 / 185.0,              // 1/185
+            6 => 1.0 / 384.0,              // 1/384
+            _ => 5.0 / 384.0
+        };
+
+        double M = momentCoeff * q * L * L;
+        Input.MomentRequired = Math.Round(M / (Input.AllowableStress * 1000), 0);
+
+        bool isSteel = Input.Material == "钢材";
+        double defLimit;
+        switch (Input.DeflectionStandard)
+        {
+            case "JGJ133-2001":
+                defLimit = L <= 7500
+                    ? (isSteel ? Math.Min(L / 300.0, 15.0) : Math.Min(L / 180.0, 20.0))
+                    : L / 250.0;
+                break;
+            case "JGJ102-2003":
+                defLimit = isSteel ? L / 250.0 : L / 180.0;
+                break;
+            case "JGJ336-2016":
+                defLimit = L <= 4500 ? L / 180.0 : L <= 7000 ? L / 250.0 + 7.0 : L / 200.0;
+                break;
+            case "GB/T21086-2007":
+                defLimit = isSteel ? L / 250.0 : L / 180.0;
+                double absMax = L <= 4500 ? 20.0 : 30.0;
+                defLimit = Math.Min(defLimit, absMax);
+                break;
+            case "上海规范":
+                defLimit = L / 200.0;
+                break;
+            default:
+                defLimit = L / 180.0;
+                break;
+        }
+        Input.DeflectionLimit = Math.Round(defLimit, 3);
+        Input.InertiaRequired = Input.DeflectionLimit > 0
+            ? Math.Round(deflCoeff * q * Math.Pow(L, 3) / (E * Input.DeflectionLimit) / 10, 0) : 0;
+
+        double IxMm4 = Input.Ix * 1e4;
+        Input.InertiaPass = Input.Ix >= Input.InertiaRequired / 1e4;
+        Input.BendingMomentPass = Input.Wx1 >= Input.MomentRequired / 1e3;
+        Input.ActualDeflection = Math.Round(deflCoeff * q * Math.Pow(L, 4) / (E * IxMm4), 3);
+        Input.DeflectionPass = Input.ActualDeflection <= Input.DeflectionLimit;
+        Input.BendingStress = Math.Round(M / (Input.Wx1 * 1e3), 3);
+        Input.BendingPass = Input.BendingStress <= Input.AllowableStress;
+
+        double V = q * L / 2.0;
+        double SxVal = Input.Sx > 0 ? Input.Sx * 1e3 : Input.Wx1 * 1e3 * 0.5;
+        Input.ShearStress = Math.Round(V * SxVal / (IxMm4 * (Input.Tw > 0 ? Input.Tw : 3)), 3);
+        Input.ShearPass = Input.ShearStress <= Input.AllowableShear;
+        Input.ReactionForce = Math.Round(q * L / 2.0 / 1e3, 3);
+    }
+
+    private string GetModelName(int m) => m switch
+    {
+        1=>"单跨简支(受拉)",2=>"单跨简支(受压)",3=>"连续梁(四点三跨)",
+        4=>"多跨铰接连续静定梁",5=>"双跨梁",6=>"多跨铰接连续一次超静定梁",_=>""
+    };
+
+    private RenderFragment RenderModelSvg(int model) => model switch
+    {
+        1 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="20" y1="50" x2="140" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="20,50 14,65 26,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="140,50 134,65 146,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <circle cx="140" cy="68" r="3" fill="none" stroke="var(--primary)" stroke-width="1"/>
+                @for(int x=30;x<=130;x+=15){<line x1="@x" y1="20" x2="@x" y2="45" stroke="var(--accent-red)" stroke-width="1"/><polygon points="@(x),45 @(x-3),38 @(x+3),38" fill="var(--accent-red)"/>}
+                <line x1="30" y1="20" x2="130" y2="20" stroke="var(--accent-red)" stroke-width="1"/>
+            </svg>,
+        2 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="20" y1="50" x2="140" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="20,50 14,65 26,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="140,50 134,65 146,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <line x1="5" y1="50" x2="18" y2="50" stroke="var(--accent-red)" stroke-width="2"/>
+                <polygon points="18,50 12,47 12,53" fill="var(--accent-red)"/>
+                <line x1="155" y1="50" x2="142" y2="50" stroke="var(--accent-red)" stroke-width="2"/>
+                <polygon points="142,50 148,47 148,53" fill="var(--accent-red)"/>
+            </svg>,
+        3 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="10" y1="50" x2="150" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="10,50 4,65 16,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="80,50 74,65 86,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="150,50 144,65 156,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                @for(int x=20;x<=140;x+=15){<line x1="@x" y1="20" x2="@x" y2="45" stroke="var(--accent-red)" stroke-width="1"/><polygon points="@(x),45 @(x-3),38 @(x+3),38" fill="var(--accent-red)"/>}
+                <line x1="20" y1="20" x2="140" y2="20" stroke="var(--accent-red)" stroke-width="1"/>
+            </svg>,
+        4 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="5" y1="50" x2="155" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="5,50 -1,65 11,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="55,50 49,65 61,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="105,50 99,65 111,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="155,50 149,65 161,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                @for(int x=15;x<=145;x+=15){<line x1="@x" y1="22" x2="@x" y2="45" stroke="var(--accent-red)" stroke-width="1"/><polygon points="@(x),45 @(x-3),38 @(x+3),38" fill="var(--accent-red)"/>}
+                <line x1="15" y1="22" x2="145" y2="22" stroke="var(--accent-red)" stroke-width="1"/>
+            </svg>,
+        5 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="5" y1="50" x2="155" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="5,50 -1,65 11,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="80,50 74,65 86,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="155,50 149,65 161,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <circle cx="40" cy="50" r="4" fill="var(--bg-white)" stroke="#ff9800" stroke-width="1.5"/>
+                <circle cx="120" cy="50" r="4" fill="var(--bg-white)" stroke="#ff9800" stroke-width="1.5"/>
+            </svg>,
+        6 => @<svg viewBox="0 0 160 80" width="100" height="50">
+                <line x1="5" y1="50" x2="155" y2="50" stroke="var(--text-primary)" stroke-width="2"/>
+                <polygon points="5,50 -1,65 11,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="40,50 34,65 46,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="80,50 74,65 86,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="120,50 114,65 126,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <polygon points="155,50 149,65 161,65" fill="none" stroke="var(--primary)" stroke-width="1.5"/>
+                <circle cx="60" cy="50" r="4" fill="var(--bg-white)" stroke="#ff9800" stroke-width="1.5"/>
+                <circle cx="100" cy="50" r="4" fill="var(--bg-white)" stroke="#ff9800" stroke-width="1.5"/>
+            </svg>,
+        _ => @<text>—</text>
+    };
+}

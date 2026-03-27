@@ -1,0 +1,93 @@
+@page "/report"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">计算书生成</h1>
+    <p class="page-subtitle">自动生成各类幕墙计算书（PDF格式）</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">edit_document</span> 项目信息
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">项目名称</label>
+                <input class="input-field" type="text" @bind="_projectName" />
+            </div>
+            <div class="form-group">
+                <label class="label">项目编号</label>
+                <input class="input-field" type="text" @bind="_projectCode" />
+            </div>
+            <div class="form-group">
+                <label class="label">计算人</label>
+                <input class="input-field" type="text" @bind="_calculator" />
+            </div>
+            <div class="form-group">
+                <label class="label">审核人</label>
+                <input class="input-field" type="text" @bind="_reviewer" />
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title" style="padding:0 4px">
+        <span class="material-symbols-outlined">description</span> 选择计算书模板
+    </div>
+
+    <div class="report-grid">
+        @foreach (var tpl in _templates)
+        {
+            <div class="report-card" @onclick="() => Generate(tpl)">
+                <div class="report-icon">
+                    <span class="material-symbols-outlined">@tpl.Icon</span>
+                </div>
+                <div class="report-name">@tpl.Name</div>
+                <div class="report-desc">@tpl.Desc</div>
+                @if (_generating == tpl.Type)
+                {
+                    <div style="margin-top:8px;display:flex;align-items:center;gap:6px;color:var(--blue);font-size:12px">
+                        <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> 生成中...
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string _projectName = "幕墙工程计算", _projectCode = "MW-2026";
+    private string _calculator = "设计师", _reviewer = "审核人";
+    private string? _generating;
+
+    private record ReportTemplate(string Type, string Icon, string Name, string Desc);
+
+    private readonly ReportTemplate[] _templates =
+    [
+        new("glass", "grid_view", "单片玻璃计算书", "单片玻璃强度挠度验算"),
+        new("insulating-glass", "window", "中空玻璃计算书", "中空玻璃强度挠度验算"),
+        new("glass-rib", "straighten", "玻璃肋计算书", "玻璃肋强度挠度验算"),
+        new("aluminum-rafter", "horizontal_rule", "横梁计算书", "铝合金横梁验算"),
+        new("aluminum-mullion", "view_column", "立柱计算书", "铝合金立柱验算"),
+        new("stone-bracket", "landscape", "石材挂件计算书", "石材挂件承载力验算"),
+        new("embed-part", "settings_input_component", "预埋件计算书", "预埋件承载力验算"),
+        new("aluminum-plate", "crop_square", "铝板计算书", "铝板面板验算"),
+        new("stone-panel", "dashboard", "石材面板计算书", "石材面板弯曲验算"),
+        new("silicone", "water_drop", "结构胶计算书", "结构胶粘接验算"),
+    ];
+
+    private async Task Generate(ReportTemplate tpl)
+    {
+        _generating = tpl.Type;
+        try
+        {
+            await Api.GenerateReportAsync(tpl.Type, new
+            {
+                projectName = _projectName, projectCode = _projectCode,
+                calculator = _calculator, reviewer = _reviewer,
+                outputFormat = "PDF"
+            });
+        }
+        catch { }
+        _generating = null;
+    }
+}

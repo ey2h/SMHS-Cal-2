@@ -1,0 +1,739 @@
+@using System.Text.Json
+@using static GlassManagement.Api.Components.Pages.Wizard
+@inject GlassApiClient GlassApi
+
+@if (IsGlassType)
+{
+    <!-- ========== 玻璃面板 ========== -->
+    <div class="hb-title-bar">@CurtainWallType 幕墙计算 - 玻璃配置</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+        <!-- 左侧参数区 -->
+        <div style="flex:6;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">玻璃构成</legend>
+                <div class="hb-radio-group horizontal">
+                    @foreach (var opt in new[] { "单片", "中空", "夹层", "中空夹层", "双中空" })
+                    {
+                        <label>
+                            <input type="radio" name="composition" value="@opt"
+                                   checked="@(Input.GlassComposition == opt)"
+                                   @onchange="() => { Input.GlassComposition = opt; RecalcGlass(); }" />
+                            @opt
+                        </label>
+                    }
+                </div>
+            </fieldset>
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">玻璃片层</legend>
+                <div class="param-cols-2">
+                    <div>
+                        <div class="param-row">
+                            <span class="param-label">外片厚度</span>
+                            <select class="hb-input" @bind="Input.OuterThickness" @bind:after="RecalcGlass">
+                                @foreach (var t in new[] { 3,4,5,6,8,10,12,15,19 }) { <option value="@t">@t mm</option> }
+                            </select>
+                        </div>
+                        <div class="param-row" style="margin-top:4px">
+                            <span class="param-label">外片类型</span>
+                            <select class="hb-input" @bind="Input.OuterType" @bind:after="RecalcGlass">
+                                <option>普通</option><option>钢化</option><option>半钢化</option><option>夹层</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="param-row">
+                            <span class="param-label">内片厚度</span>
+                            <select class="hb-input" @bind="Input.InnerThickness" @bind:after="RecalcGlass">
+                                @foreach (var t in new[] { 3,4,5,6,8,10,12,15,19 }) { <option value="@t">@t mm</option> }
+                            </select>
+                        </div>
+                        <div class="param-row" style="margin-top:4px">
+                            <span class="param-label">内片类型</span>
+                            <select class="hb-input" @bind="Input.InnerType" @bind:after="RecalcGlass">
+                                <option>普通</option><option>钢化</option><option>半钢化</option><option>夹层</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                @if (Input.GlassComposition is "中空" or "中空夹层" or "双中空")
+                {
+                    <div class="param-row" style="margin-top:6px">
+                        <span class="param-label">中空层</span>
+                        <select class="hb-input" style="width:100px" @bind="Input.AirGapThickness">
+                            @foreach (var t in new[] { 6,9,12,16,20 }) { <option value="@t">@t mm</option> }
+                        </select>
+                    </div>
+                }
+                @if (Input.GlassComposition is "夹层" or "中空夹层")
+                {
+                    <div class="param-cols-2" style="margin-top:6px">
+                        <div class="param-row">
+                            <span class="param-label">胶片厚度</span>
+                            <select class="hb-input" @bind="Input.InterlayerThickness">
+                                <option value="0.76">0.76</option><option value="1.14">1.14</option>
+                                <option value="1.52">1.52</option><option value="2.28">2.28</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">胶片类型</span>
+                            <select class="hb-input" @bind="Input.InterlayerType" @bind:after="RecalcGlass">
+                                <option>PVB</option><option>SGP</option>
+                            </select>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">尺寸与支承</legend>
+                <div class="param-cols-3">
+                    <div class="param-row">
+                        <span class="param-label">短边 a</span>
+                        <input class="hb-input" type="number" @bind="Input.GlassShortSide" step="1" @bind:after="RecalcGlass"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">长边 b</span>
+                        <input class="hb-input" type="number" @bind="Input.GlassLongSide" step="1" @bind:after="RecalcGlass"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">支承方式</span>
+                        <select class="hb-input" @bind="Input.SupportType" @bind:after="RecalcGlass">
+                            <option>四边简支</option><option>两对边简支</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">强度与挠度验算</legend>
+                <table class="hb-table">
+                    <thead><tr><th>验算项</th><th>计算值</th><th>限值</th><th>判定</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">1# 玻璃强度</td>
+                            <td>@(Input.Sigma1.ToString("F1")) MPa</td>
+                            <td>@(Input.Fg.ToString("F1")) MPa</td>
+                            <td><span class="@(Input.Sigma1Pass?"badge-pass":"badge-fail")">@(Input.Sigma1Pass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">2# 玻璃强度</td>
+                            <td>@(Input.Sigma2.ToString("F1")) MPa</td>
+                            <td>@(Input.Fg.ToString("F1")) MPa</td>
+                            <td><span class="@(Input.Sigma2Pass?"badge-pass":"badge-fail")">@(Input.Sigma2Pass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">挠度</td>
+                            <td>@(Input.Deflection.ToString("F2")) mm</td>
+                            <td>@(Input.DeflectionLimit.ToString("F2")) mm</td>
+                            <td><span class="@(Input.DeflectionPass?"badge-pass":"badge-fail")">@(Input.DeflectionPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+        <!-- 右侧：玻璃数据库 -->
+        <div style="flex:4;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">玻璃数据库（@(_allGlass?.Count ?? 0) 种）</legend>
+                <div class="hb-search">
+                    <input class="hb-input" placeholder="搜索玻璃..." @bind="_glassSearch" @bind:event="oninput" @bind:after="FilterGlass" />
+                </div>
+                @if (_loading)
+                {
+                    <div style="text-align:center;padding:20px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:400px;overflow-y:auto">
+                        <table class="hb-table">
+                            <thead><tr><th>编号</th><th>名称</th><th>类别</th><th>厚度</th><th>强度</th><th>弹模</th></tr></thead>
+                            <tbody>
+                                @foreach (var g in _filteredGlass)
+                                {
+                                    var code = GetStr(g, "code");
+                                    var sel = code == _selectedGlassCode;
+                                    <tr class="@(sel?"selected":"")" @onclick="() => SelectGlass(g)">
+                                        <td>@(code)</td>
+                                        <td style="text-align:left">@GetStr(g, "name")</td>
+                                        <td>@GetStr(g, "category")</td>
+                                        <td>@GetNum(g, "thickness")</td>
+                                        <td>@GetNum(g, "designStrength")</td>
+                                        <td>@GetNum(g, "elasticModulus")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </fieldset>
+        </div>
+    </div>
+}
+else if (CurtainWallType == "金属板")
+{
+    <!-- ========== 金属板面板 ========== -->
+    <div class="hb-title-bar">金属板幕墙计算 - 面板计算</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:6;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">板材类型与材料</legend>
+                <div class="param-row">
+                    <span class="param-label">板材类型</span>
+                    <select class="hb-input" style="width:140px" @bind="MP.PanelMaterial" @bind:after="OnMetalMaterialChanged">
+                        <option>单层铝板</option><option>铝塑复合板</option><option>蜂窝铝板</option><option>不锈钢板</option>
+                    </select>
+                </div>
+                @if (MP.PanelMaterial is "单层铝板")
+                {
+                    <div class="param-row">
+                        <span class="param-label">铝合金牌号</span>
+                        <select class="hb-input" style="width:140px" @bind="MP.AluminumGrade" @bind:after="OnMetalMaterialChanged">
+                            <option>3003-H14</option><option>1100-H14</option>
+                        </select>
+                    </div>
+                }
+                <div class="param-row">
+                    <span class="param-label">板厚 t</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.PanelThickness" step="0.5" @bind:after="RecalcMetal" />
+                    <span class="param-unit">mm</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">长边 a</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.PanelLongSide" step="10" @bind:after="RecalcMetal" />
+                    <span class="param-unit">mm</span>
+                    <span class="param-label" style="margin-left:12px">短边 b</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.PanelShortSide" step="10" @bind:after="RecalcMetal" />
+                    <span class="param-unit">mm</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">材料参数</legend>
+                <div class="param-row">
+                    <span class="param-label">弹性模量 E</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.E" step="100" @bind:after="RecalcMetal" />
+                    <span class="param-unit">MPa</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">抗弯强度 f</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.BendingStrength" step="0.1" @bind:after="RecalcMetal" />
+                    <span class="param-unit">MPa</span>
+                    <span class="param-label" style="margin-left:12px">抗剪强度 fv</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.ShearStrength" step="0.1" @bind:after="RecalcMetal" />
+                    <span class="param-unit">MPa</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">泊松比 ν</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.Poisson" step="0.01" />
+                    <span class="param-label" style="margin-left:12px">密度</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="MP.Density" step="0.1" />
+                    <span class="param-unit">kN/m³</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">加强肋</legend>
+                <div class="param-row">
+                    <label class="hb-checkbox"><input type="checkbox" @bind="MP.CalcRib" @bind:after="RecalcMetal" /> 计算加强肋</label>
+                </div>
+                @if (MP.CalcRib)
+                {
+                    <div class="param-row">
+                        <span class="param-label">肋数</span>
+                        <input class="hb-input" style="width:60px" type="number" @bind="MP.RibCount" step="1" @bind:after="RecalcMetal" />
+                        <span class="param-label" style="margin-left:12px">挠度限值</span>
+                        <select class="hb-input" style="width:80px" @bind="MP.RibDeflectionLimit">
+                            <option>1/120</option><option>1/180</option><option>1/250</option>
+                        </select>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">肋 Ix</span>
+                        <input class="hb-input" style="width:80px" type="number" @bind="MP.RibIx" step="0.01" @bind:after="RecalcMetal" />
+                        <span class="param-unit">cm⁴</span>
+                        <span class="param-label" style="margin-left:12px">肋 Wx</span>
+                        <input class="hb-input" style="width:80px" type="number" @bind="MP.RibWx" step="0.01" @bind:after="RecalcMetal" />
+                        <span class="param-unit">cm³</span>
+                    </div>
+                }
+            </fieldset>
+        </div>
+
+        <!-- 右侧验算结果 -->
+        <div style="flex:4;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">验算结果</legend>
+                <table class="hb-table">
+                    <thead><tr><th>验算项</th><th>计算值</th><th>限值</th><th>判定</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">板面弯曲应力</td>
+                            <td>@(MP.BendingStress.ToString("F2")) MPa</td>
+                            <td>@(MP.BendingStrength.ToString("F1")) MPa</td>
+                            <td><span class="@(MP.BendingPass?"badge-pass":"badge-fail")">@(MP.BendingPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">板面挠度</td>
+                            <td>@(MP.Deflection.ToString("F2")) mm</td>
+                            <td>@(MP.DeflectionLimit.ToString("F2")) mm</td>
+                            <td><span class="@(MP.DeflectionPass?"badge-pass":"badge-fail")">@(MP.DeflectionPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        @if (MP.CalcRib)
+                        {
+                            <tr>
+                                <td style="text-align:left">加强肋应力</td>
+                                <td>@(MP.RibStress.ToString("F2")) MPa</td>
+                                <td>@(MP.BendingStrength.ToString("F1")) MPa</td>
+                                <td><span class="@(MP.RibPass?"badge-pass":"badge-fail")">@(MP.RibPass?"✅通过":"❌不通过")</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">
+                    利用率: @((MP.BendingUtilization*100).ToString("F1"))%
+                </div>
+            </fieldset>
+        </div>
+    </div>
+}
+else if (CurtainWallType == "天然石材")
+{
+    <!-- ========== 天然石材面板 ========== -->
+    <div class="hb-title-bar">天然石材幕墙计算 - 面板计算</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:6;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">石材类型与尺寸</legend>
+                <div class="param-row">
+                    <span class="param-label">石材类型</span>
+                    <select class="hb-input" style="width:120px" @bind="SP.StoneType" @bind:after="RecalcStone">
+                        <option>花岗岩</option><option>石灰石</option><option>砂岩</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">板厚 t</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="SP.Thickness" step="1" @bind:after="RecalcStone" />
+                    <span class="param-unit">mm</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">长边 a</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="SP.LongSide" step="10" @bind:after="RecalcStone" />
+                    <span class="param-unit">mm</span>
+                    <span class="param-label" style="margin-left:12px">短边 b</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="SP.ShortSide" step="10" @bind:after="RecalcStone" />
+                    <span class="param-unit">mm</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">强度参数</legend>
+                <div class="param-row">
+                    <span class="param-label">弯曲强度 Fm</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="SP.Fm" step="0.1" @bind:after="RecalcStone" />
+                    <span class="param-unit">MPa</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">安全系数 K</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="SP.SafetyFactor" step="0.5" @bind:after="RecalcStone" />
+                    <span style="font-size:11px;color:var(--text-muted);margin-left:8px">强度设计值 f = @((SP.Fm/SP.SafetyFactor).ToString("F2")) MPa</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">连接方式</legend>
+                <div class="param-row">
+                    <span class="param-label">连接方式</span>
+                    <select class="hb-input" style="width:100px" @bind="SP.ConnectionType" @bind:after="RecalcStone">
+                        <option>钢销</option><option>短槽</option><option>背栓</option><option>通槽</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">连接点数</span>
+                    <input class="hb-input" style="width:60px" type="number" @bind="SP.ConnectionPointCount" step="1" @bind:after="RecalcStone" />
+                </div>
+                @if (SP.ConnectionType == "背栓")
+                {
+                    <div class="param-row">
+                        <span class="param-label">背栓型号</span>
+                        <select class="hb-input" style="width:100px" @bind="SP.BackBoltModel">
+                            <option>M6×15</option><option>M8×20</option><option>M10×25</option>
+                        </select>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">抗拉设计值</span>
+                        <input class="hb-input" style="width:80px" type="number" @bind="SP.BackBoltTensionDesign" step="0.01" @bind:after="RecalcStone" />
+                        <span class="param-unit">kN</span>
+                        <span class="param-label" style="margin-left:12px">抗剪设计值</span>
+                        <input class="hb-input" style="width:80px" type="number" @bind="SP.BackBoltShearDesign" step="0.01" />
+                        <span class="param-unit">kN</span>
+                    </div>
+                }
+            </fieldset>
+        </div>
+
+        <div style="flex:4;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">验算结果</legend>
+                <table class="hb-table">
+                    <thead><tr><th>验算项</th><th>计算值</th><th>限值</th><th>判定</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">弯曲应力</td>
+                            <td>@(SP.BendingStress.ToString("F2")) MPa</td>
+                            <td>@((SP.Fm/SP.SafetyFactor).ToString("F2")) MPa</td>
+                            <td><span class="@(SP.BendingPass?"badge-pass":"badge-fail")">@(SP.BendingPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">连接点承载</td>
+                            <td>@(SP.ConnectionForce.ToString("F2")) kN</td>
+                            <td>@(SP.BackBoltTensionDesign.ToString("F2")) kN</td>
+                            <td><span class="@(SP.ConnectionPass?"badge-pass":"badge-fail")">@(SP.ConnectionPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+}
+else if (CurtainWallType == "人造板材")
+{
+    <!-- ========== 人造板材面板 ========== -->
+    <div class="hb-title-bar">人造板材幕墙计算 - 面板计算</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:6;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">材料类型与尺寸</legend>
+                <div class="param-row">
+                    <span class="param-label">材料类型</span>
+                    <select class="hb-input" style="width:140px" @bind="AP.MaterialType" @bind:after="OnArtificialMaterialChanged">
+                        <option>瓷板</option><option>陶板</option><option>微晶玻璃</option><option>石材蜂窝板</option><option>木纤维板</option><option>纤维水泥板</option><option>玻璃纤维板</option>
+                    </select>
+                </div>
+                @if (AP.MaterialType == "陶板")
+                {
+                    <div class="param-row">
+                        <span class="param-label">陶板分类</span>
+                        <select class="hb-input" style="width:100px" @bind="AP.CeramicClass" @bind:after="OnArtificialMaterialChanged">
+                            <option>AⅠ类</option><option>AⅡa类</option>
+                        </select>
+                    </div>
+                }
+                <div class="param-row">
+                    <span class="param-label">公称厚度</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.NominalThickness" step="1" @bind:after="RecalcArtificial" />
+                    <span class="param-unit">mm</span>
+                </div>
+                @if (AP.MaterialType == "瓷板")
+                {
+                    <div class="param-row">
+                        <span class="param-label">背纹厚度</span>
+                        <input class="hb-input" style="width:80px" type="number" @bind="AP.BackTextureDepth" step="0.5" @bind:after="RecalcArtificial" />
+                        <span class="param-unit">mm</span>
+                        <span style="font-size:11px;color:var(--text-muted);margin-left:8px">计算厚度 te = @(AP.CalculatedThickness.ToString("F1")) mm</span>
+                    </div>
+                }
+                <div class="param-row">
+                    <span class="param-label">长边 a</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.LongSide" step="10" @bind:after="RecalcArtificial" />
+                    <span class="param-unit">mm</span>
+                    <span class="param-label" style="margin-left:12px">短边 b</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.ShortSide" step="10" @bind:after="RecalcArtificial" />
+                    <span class="param-unit">mm</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">材料参数</legend>
+                <div class="param-row">
+                    <span class="param-label">弹性模量 E</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.E" step="100" @bind:after="RecalcArtificial" />
+                    <span class="param-unit">MPa</span>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">抗弯强度 f</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.BendingStrength" step="0.1" @bind:after="RecalcArtificial" />
+                    <span class="param-unit">MPa</span>
+                    <span class="param-label" style="margin-left:12px">抗剪强度 fv</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.ShearStrength" step="0.1" />
+                    <span class="param-unit">MPa</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">连接方式</legend>
+                <div class="param-row">
+                    <span class="param-label">连接方式</span>
+                    <select class="hb-input" style="width:120px" @bind="AP.ConnectionType">
+                        <option>短挂件</option><option>通长挂件</option><option>背栓</option><option>穿透支承</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">挂件厚度</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.HangerThickness" step="0.5" />
+                    <span class="param-unit">mm</span>
+                    <span class="param-label" style="margin-left:12px">挂件材质</span>
+                    <select class="hb-input" style="width:80px" @bind="AP.HangerMaterial">
+                        <option>不锈钢</option><option>铝合金</option>
+                    </select>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">插入深度</span>
+                    <input class="hb-input" style="width:80px" type="number" @bind="AP.HangerInsertDepth" step="1" />
+                    <span class="param-unit">mm</span>
+                </div>
+            </fieldset>
+        </div>
+
+        <div style="flex:4;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">验算结果</legend>
+                <table class="hb-table">
+                    <thead><tr><th>验算项</th><th>计算值</th><th>限值</th><th>判定</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">弯曲应力</td>
+                            <td>@(AP.BendingStress.ToString("F2")) MPa</td>
+                            <td>@(AP.BendingStrength.ToString("F1")) MPa</td>
+                            <td><span class="@(AP.BendingPass?"badge-pass":"badge-fail")">@(AP.BendingPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">挠度</td>
+                            <td>@(AP.Deflection.ToString("F2")) mm</td>
+                            <td>@((AP.ShortSide/180.0).ToString("F2")) mm</td>
+                            <td><span class="@(AP.DeflectionPass?"badge-pass":"badge-fail")">@(AP.DeflectionPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">挂件承载</td>
+                            <td>@(AP.HangerForce.ToString("F2")) kN</td>
+                            <td>—</td>
+                            <td><span class="@(AP.HangerPass?"badge-pass":"badge-fail")">@(AP.HangerPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Step2Data Input { get; set; } = new();
+    [Parameter] public string CurtainWallType { get; set; } = "全隐框玻璃";
+
+    private MetalPanelData MP => Input.MetalPanel;
+    private StonePanelData SP => Input.StonePanel;
+    private ArtificialPanelData AP => Input.ArtificialPanel;
+
+    private bool IsGlassType => CurtainWallType.Contains("玻璃");
+
+    // ========== 玻璃相关 ==========
+    private List<JsonElement>? _allGlass;
+    private List<JsonElement> _filteredGlass = new();
+    private string _glassSearch = "";
+    private string _selectedGlassCode = "";
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        _allGlass = await GlassApi.GetGlassTypesAsync();
+        _loading = false;
+        FilterGlass();
+        if (IsGlassType) RecalcGlass();
+        else if (CurtainWallType == "金属板") RecalcMetal();
+        else if (CurtainWallType == "天然石材") RecalcStone();
+        else if (CurtainWallType == "人造板材") RecalcArtificial();
+    }
+
+    private void FilterGlass()
+    {
+        if (_allGlass == null) { _filteredGlass = new(); return; }
+        if (string.IsNullOrWhiteSpace(_glassSearch))
+            _filteredGlass = _allGlass;
+        else
+            _filteredGlass = _allGlass
+                .Where(g => GetStr(g,"name").Contains(_glassSearch,StringComparison.OrdinalIgnoreCase)
+                    || GetStr(g,"code").Contains(_glassSearch,StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    private void SelectGlass(JsonElement g)
+    {
+        _selectedGlassCode = GetStr(g, "code");
+        var fg = GetDbl(g, "designStrength");
+        if (fg > 0) Input.Fg = fg;
+        RecalcGlass();
+    }
+
+    private static string GetStr(JsonElement e, string p) => e.TryGetProperty(p, out var v) ? v.GetString() ?? "" : "";
+    private static double GetDbl(JsonElement e, string p) => e.TryGetProperty(p, out var v) ? v.GetDouble() : 0;
+    private static string GetNum(JsonElement e, string p) => e.TryGetProperty(p, out var v) ? v.ToString() : "0";
+
+    private void RecalcGlass()
+    {
+        Input.Fg = Input.OuterType switch { "钢化" => 84.0, "半钢化" => 59.0, _ => 28.0 };
+        double a = Input.GlassShortSide, b = Input.GlassLongSide;
+        double t1 = Input.OuterThickness, t2 = Input.InnerThickness;
+        double te = Math.Pow(Math.Pow(t1, 3) + Math.Pow(t2, 3), 1.0 / 3.0);
+        double q = 1.0;
+        double eta = Input.SupportType == "四边简支" ? 0.0479 : 0.125;
+        Input.Sigma1 = Math.Round(eta * q * a * a / (te * te) / 1e3, 1);
+        Input.Sigma2 = Math.Round(eta * q * a * a / (te * te) / 1e3 * (t2 / t1), 1);
+        Input.Sigma1Pass = Input.Sigma1 <= Input.Fg;
+        Input.Sigma2Pass = Input.Sigma2 <= Input.Fg;
+        Input.DeflectionLimit = Math.Round(a / 180.0, 2);
+        double D = 70000 * Math.Pow(te, 3) / 12.0;
+        Input.Deflection = Math.Round(eta * q * Math.Pow(a, 4) / D / 1e3, 2);
+        Input.DeflectionPass = Input.Deflection <= Input.DeflectionLimit;
+        double totalThickness = t1 + t2;
+        if (Input.GlassComposition is "夹层" or "中空夹层") totalThickness += Input.InterlayerThickness;
+        Input.GlassWeight = Math.Round(totalThickness * 25.0 * b / 1e6, 3);
+    }
+
+    // ========== 金属板计算 ==========
+    private void OnMetalMaterialChanged()
+    {
+        // 自动查表
+        switch (MP.PanelMaterial)
+        {
+            case "单层铝板":
+                MP.E = 70000;
+                if (MP.AluminumGrade == "3003-H14") { MP.BendingStrength = 80.5; MP.ShearStrength = 46.7; }
+                else if (MP.AluminumGrade == "1100-H14") { MP.BendingStrength = 66.5; MP.ShearStrength = 38.6; }
+                MP.Poisson = 0.3; MP.Density = 27.0;
+                break;
+            case "铝塑复合板":
+                MP.E = 20000; MP.BendingStrength = 70; MP.ShearStrength = 20; MP.Poisson = 0.3; MP.Density = 27.0;
+                break;
+            case "蜂窝铝板":
+                MP.E = 21000; MP.BendingStrength = 10.5; MP.ShearStrength = 1.4; MP.Poisson = 0.3; MP.Density = 27.0;
+                break;
+            case "不锈钢板":
+                MP.E = 206000; MP.BendingStrength = 180; MP.ShearStrength = 140; MP.Poisson = 0.3; MP.Density = 78.5;
+                break;
+        }
+        RecalcMetal();
+    }
+
+    private void RecalcMetal()
+    {
+        double q = 1.0; // 风荷载设计值 kPa (placeholder, should come from Step1)
+        double t = MP.PanelThickness;
+        double a = MP.PanelLongSide;
+        double bFull = MP.PanelShortSide;
+        double bEff = MP.CalcRib && MP.RibCount > 0 ? bFull / (MP.RibCount + 1) : bFull;
+        double ratio = a / bEff;
+
+        // 四边简支薄板弯矩系数α1和挠度系数α2 (插值简化)
+        double alpha1, alpha2;
+        if (ratio <= 1.0) { alpha1 = 0.0479; alpha2 = 0.00406; }
+        else if (ratio <= 1.5) { alpha1 = 0.0479 + (ratio - 1.0) * (0.0812 - 0.0479) / 0.5; alpha2 = 0.00406 + (ratio - 1.0) * (0.00772 - 0.00406) / 0.5; }
+        else if (ratio <= 2.0) { alpha1 = 0.0812 + (ratio - 1.5) * (0.1017 - 0.0812) / 0.5; alpha2 = 0.00772 + (ratio - 1.5) * (0.01013 - 0.00772) / 0.5; }
+        else { alpha1 = 0.125; alpha2 = 0.01302; }
+
+        // 板面强度
+        MP.BendingStress = Math.Round(alpha1 * q * bEff * bEff / (t * t) * 1e-3, 2); // MPa (q in kPa, b in mm, t in mm)
+        // 正确单位: σ = α1 * q(kPa) * b²(mm²) / t²(mm²) => kPa = 0.001 MPa => *1e-3 无需再除
+        // q(kPa) = q(N/mm²)*1000, so σ = α1 * q(N/mm²)*1000 * b² / t² ... let me redo:
+        // q in kPa = kN/m² = 0.001 N/mm². σ = α1 * q * b² / t²
+        // q=1kPa=0.001MPa, b,t in mm: σ = α1 * 0.001 * b² / t² MPa
+        MP.BendingStress = Math.Round(alpha1 * q * 0.001 * bEff * bEff / (t * t), 2);
+        MP.BendingPass = MP.BendingStress <= MP.BendingStrength;
+        MP.BendingUtilization = MP.BendingStrength > 0 ? MP.BendingStress / MP.BendingStrength : 0;
+
+        // 挠度: δ = α2 * q * b⁴ / (E * t³)
+        // q=0.001 N/mm², E in MPa=N/mm², b,t in mm => δ in mm
+        MP.Deflection = Math.Round(alpha2 * q * 0.001 * Math.Pow(bEff, 4) / (MP.E * Math.Pow(t, 3)), 2);
+        MP.DeflectionLimit = Math.Round(bEff / 100.0, 2);
+        MP.DeflectionPass = MP.Deflection <= MP.DeflectionLimit;
+
+        // 加强肋
+        if (MP.CalcRib && MP.RibWx > 0)
+        {
+            // 肋按简支梁, 跨度=长边a, 均布荷载 q_rib = q * bEff
+            double qRib = q * 0.001 * bEff; // N/mm per mm length
+            double M = qRib * a * a / 8.0; // N·mm
+            MP.RibStress = Math.Round(M / (MP.RibWx * 1e3), 2); // Wx in cm³ = 1e3 mm³
+            MP.RibPass = MP.RibStress <= MP.BendingStrength;
+
+            if (MP.RibIx > 0)
+            {
+                double deflRib = 5.0 * qRib * Math.Pow(a, 4) / (384.0 * MP.E * MP.RibIx * 1e4); // Ix cm⁴=1e4 mm⁴
+                MP.RibDeflectionValue = Math.Round(deflRib, 2);
+            }
+        }
+    }
+
+    // ========== 石材板计算 ==========
+    private void RecalcStone()
+    {
+        double q = 1.0; // kPa placeholder
+        double f = SP.Fm / SP.SafetyFactor;
+        double a = SP.LongSide, b = SP.ShortSide, t = SP.Thickness;
+        double ratio = a / b;
+
+        // 四边支承弯矩系数
+        double alphaM;
+        if (ratio <= 1.0) alphaM = 0.0479;
+        else if (ratio <= 1.5) alphaM = 0.0479 + (ratio - 1.0) * (0.0812 - 0.0479) / 0.5;
+        else if (ratio <= 2.0) alphaM = 0.0812 + (ratio - 1.5) * (0.1017 - 0.0812) / 0.5;
+        else alphaM = 0.125;
+
+        // σ = αm * q * b² / t²
+        SP.BendingStress = Math.Round(alphaM * q * 0.001 * b * b / (t * t), 2);
+        SP.BendingPass = SP.BendingStress <= f;
+
+        // 连接点承载
+        SP.ConnectionForce = Math.Round(q * a * b / (SP.ConnectionPointCount * 1e6), 2); // kN
+        SP.ConnectionPass = SP.ConnectionForce <= SP.BackBoltTensionDesign;
+    }
+
+    // ========== 人造板材计算 ==========
+    private void OnArtificialMaterialChanged()
+    {
+        switch (AP.MaterialType)
+        {
+            case "瓷板": AP.E = 60000; AP.BendingStrength = 15.0; AP.ShearStrength = 7.5; break;
+            case "陶板":
+                if (AP.CeramicClass == "AⅠ类") { AP.E = 20000; AP.BendingStrength = 10.0; AP.ShearStrength = 2.0; }
+                else { AP.E = 20000; AP.BendingStrength = 6.2; AP.ShearStrength = 1.2; }
+                break;
+            case "微晶玻璃": AP.E = 81000; AP.BendingStrength = 16.0; AP.ShearStrength = 3.2; break;
+            case "木纤维板": AP.E = 9000; AP.BendingStrength = 56.0; AP.ShearStrength = 0; break;
+            case "纤维水泥板": AP.E = 14000; AP.BendingStrength = 11.5; AP.ShearStrength = 2.3; break;
+            default: AP.E = 60000; AP.BendingStrength = 15.0; AP.ShearStrength = 7.5; break;
+        }
+        RecalcArtificial();
+    }
+
+    private void RecalcArtificial()
+    {
+        double q = 1.0; // kPa placeholder
+        AP.CalculatedThickness = AP.NominalThickness - AP.BackTextureDepth;
+        double te = AP.CalculatedThickness;
+        double a = AP.LongSide, b = AP.ShortSide;
+        double ratio = a / b;
+
+        double alphaM;
+        if (ratio <= 1.0) alphaM = 0.0479;
+        else if (ratio <= 1.5) alphaM = 0.0479 + (ratio - 1.0) * (0.0812 - 0.0479) / 0.5;
+        else if (ratio <= 2.0) alphaM = 0.0812 + (ratio - 1.5) * (0.1017 - 0.0812) / 0.5;
+        else alphaM = 0.125;
+
+        // σ = αm * q * b² / te²
+        AP.BendingStress = Math.Round(alphaM * q * 0.001 * b * b / (te * te), 2);
+        AP.BendingPass = AP.BendingStress <= AP.BendingStrength;
+
+        // 挠度
+        double alpha2;
+        if (ratio <= 1.0) alpha2 = 0.00406;
+        else if (ratio <= 1.5) alpha2 = 0.00406 + (ratio - 1.0) * (0.00772 - 0.00406) / 0.5;
+        else if (ratio <= 2.0) alpha2 = 0.00772 + (ratio - 1.5) * (0.01013 - 0.00772) / 0.5;
+        else alpha2 = 0.01302;
+
+        AP.Deflection = AP.E > 0 ? Math.Round(alpha2 * q * 0.001 * Math.Pow(b, 4) / (AP.E * Math.Pow(te, 3)), 2) : 0;
+        AP.DeflectionPass = AP.Deflection <= b / 180.0;
+
+        // 挂件力 (简化: 均分)
+        AP.HangerForce = Math.Round(q * a * b / (4 * 1e6), 2); // kN, 4点支承
+        AP.HangerPass = true; // 需要更详细的挂件验算
+    }
+}

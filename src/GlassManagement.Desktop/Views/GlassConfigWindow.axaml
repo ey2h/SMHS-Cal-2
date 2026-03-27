@@ -1,0 +1,137 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GlassManagement.Desktop.ViewModels"
+        xmlns:local="using:GlassManagement.Desktop"
+        x:Class="GlassManagement.Desktop.Views.GlassConfigWindow"
+        Title="玻璃配置"
+        Width="520" MinHeight="400"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height">
+
+    <Window.DataContext>
+        <vm:GlassConfigViewModel />
+    </Window.DataContext>
+
+    <ScrollViewer Padding="16">
+        <StackPanel Spacing="12">
+            <TextBlock Text="🔧 玻璃配置" FontSize="18" FontWeight="Bold" Foreground="#2563EB"/>
+            <Border Height="1" Background="#E2E8F0"/>
+
+            <!-- 基础类型选择 -->
+            <Border Classes="Section" CornerRadius="8">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="基础类型" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding BasicGlassCategoryOptions}"
+                              SelectedItem="{Binding SelectedBasicCategory}"
+                              Width="200"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 单片玻璃配置 -->
+            <Border Classes="Section" CornerRadius="8"
+                    IsVisible="{Binding IsSingleMode}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="── 单片玻璃 ──" FontWeight="Bold" Foreground="#64748B"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="厚度 (mm):" Margin="0,0,0,4"/>
+                            <ComboBox ItemsSource="{Binding GlassThicknessOptions}"
+                                      SelectedIndex="{Binding SingleThicknessIndex}" Width="120"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <CheckBox Content="按中国规范 (强制全钢化)" IsChecked="{Binding IsChineseStandard}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <RadioButton Content="浮法" GroupName="SingleTempered"
+                                     IsChecked="{Binding SingleTemperedIndex, Converter={x:Static local:IntEqualConverter.Instance}, ConverterParameter=0}"
+                                     IsEnabled="{Binding CanSelectOtherTempered}"/>
+                        <RadioButton Content="半钢化" GroupName="SingleTempered"
+                                     IsChecked="{Binding SingleTemperedIndex, Converter={x:Static local:IntEqualConverter.Instance}, ConverterParameter=1}"
+                                     IsEnabled="{Binding CanSelectOtherTempered}"/>
+                        <RadioButton Content="全钢化" GroupName="SingleTempered"
+                                     IsChecked="{Binding SingleTemperedIndex, Converter={x:Static local:IntEqualConverter.Instance}, ConverterParameter=2}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 夹胶玻璃配置 -->
+            <Border Classes="Section" CornerRadius="8"
+                    IsVisible="{Binding IsLaminatedMode}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="── 夹胶玻璃 ──" FontWeight="Bold" Foreground="#64748B"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="玻璃片数:" Margin="0,0,0,4"/>
+                            <ComboBox ItemsSource="{Binding LaminatedSheetCountOptions}"
+                                      SelectedIndex="{Binding LamSheetCountIndex}" Width="100"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="胶片类型:" Margin="0,0,0,4"/>
+                            <ComboBox ItemsSource="{Binding FilmTypeOptions}"
+                                      SelectedIndex="{Binding LamFilmTypeIndex}" Width="100"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- 各片配置 -->
+                    <TextBlock Text="各片配置:" Foreground="#757575" FontSize="12"/>
+                    <ItemsControl ItemsSource="{Binding LamSheets}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,4" Padding="8" Background="White" CornerRadius="4"
+                                        BorderBrush="#E2E8F0" BorderThickness="1">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding PositionLabel}" VerticalAlignment="Center"
+                                                   Width="40" FontWeight="Bold" Foreground="#2563EB"/>
+                                        <ComboBox Width="80" SelectedIndex="{Binding ThicknessIndex}">
+                                            <ComboBoxItem Content="5"/><ComboBoxItem Content="6"/>
+                                            <ComboBoxItem Content="8"/><ComboBoxItem Content="10"/>
+                                            <ComboBoxItem Content="12"/><ComboBoxItem Content="15"/>
+                                            <ComboBoxItem Content="19"/><ComboBoxItem Content="20"/>
+                                        </ComboBox>
+                                        <ComboBox Width="80" SelectedIndex="{Binding TemperedIndex}">
+                                            <ComboBoxItem Content="浮法"/><ComboBoxItem Content="半钢化"/>
+                                            <ComboBoxItem Content="全钢化"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- 胶片层配置 -->
+                    <TextBlock Text="胶片层:" Foreground="#757575" FontSize="12"/>
+                    <ItemsControl ItemsSource="{Binding LamLayers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,2" Padding="6" Background="#FEF3C7" CornerRadius="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding Order, StringFormat=胶片{0}}"
+                                                   VerticalAlignment="Center" Width="50" Foreground="#F59E0B"/>
+                                        <ComboBox Width="70" SelectedIndex="{Binding FilmTypeIndex}">
+                                            <ComboBoxItem Content="PVB"/><ComboBoxItem Content="SGP"/>
+                                        </ComboBox>
+                                        <ComboBox Width="70" SelectedIndex="{Binding FilmThicknessIndex}">
+                                            <ComboBoxItem Content="0.76"/><ComboBoxItem Content="1.14"/>
+                                            <ComboBoxItem Content="1.52"/><ComboBoxItem Content="2.28"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- 结果显示 -->
+            <Border Classes="ResultArea" CornerRadius="8">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="生成结果:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding ConfigResult}" FontSize="16" FontWeight="Bold"
+                               Foreground="#10B981" TextWrapping="Wrap"/>
+                    <Button Content="✅ 确认" Click="OnConfirm"
+                            Classes="Success" Padding="16,8"
+                            HorizontalAlignment="Right" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

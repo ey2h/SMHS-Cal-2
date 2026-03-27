@@ -1,0 +1,82 @@
+@page "/grc"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">GRC板计算</h1>
+    <p class="page-subtitle">GRC面板强度与挠度验算（背栓支承）</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">dashboard</span> GRC板参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">板块短边 (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">板块长边 (mm)</label>
+                <input class="input-field" type="number" @bind="_longSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">支承短边 (mm)</label>
+                <input class="input-field" type="number" @bind="_supportShortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">支承长边 (mm)</label>
+                <input class="input-field" type="number" @bind="_supportLongSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">有效厚度 te (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="_effectiveThickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">总厚度 t (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="_totalThickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+            <div class="form-group">
+                <label class="label">设计荷载 (kN/m)</label>
+                <input class="input-field" type="number" step="0.0001" @bind="_designLoad" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _shortSide = 1000, _longSide = 1500;
+    private double _supportShortSide = 900, _supportLongSide = 1400;
+    private double _effectiveThickness = 12, _totalThickness = 20;
+    private double _windLoad = 1.37, _designLoad = 0.0018;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcGrcPanelAsync(new
+            {
+                shortSide = _shortSide, longSide = _longSide,
+                supportShortSide = _supportShortSide, supportLongSide = _supportLongSide,
+                effectiveThickness = _effectiveThickness, totalThickness = _totalThickness,
+                windLoad = _windLoad, designLoad = _designLoad
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

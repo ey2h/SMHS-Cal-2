@@ -1,0 +1,142 @@
+@inject NavigationManager Nav
+@using System.Net.Http.Json
+
+<div class="modal-overlay" @onclick="OnCancel">
+    <div class="modal-box" @onclick:stopPropagation="true" style="max-width:640px">
+        <h3 style="margin:0 0 16px;font-size:16px">CSV导入 - @TableName</h3>
+
+        @if (!_imported)
+        {
+            <div style="margin-bottom:16px">
+                <p style="font-size:13px;color:var(--text-2);margin-bottom:12px">
+                    请选择CSV文件。文件第一行为列名，后续行为数据。编码支持UTF-8。
+                </p>
+                <InputFile OnChange="OnFileSelected" accept=".csv"
+                           style="font-size:13px" />
+            </div>
+
+            @if (_preview.Count > 0)
+            {
+                <div style="margin-bottom:16px">
+                    <div style="font-size:13px;font-weight:500;margin-bottom:8px">预览（前5行）：</div>
+                    <div style="overflow-x:auto;max-height:200px">
+                        <table style="font-size:12px">
+                            <thead>
+                                <tr>
+                                    @foreach (var h in _headers)
+                                    {
+                                        <th style="padding:4px 8px;background:var(--bg-input)">@h</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in _preview)
+                                {
+                                    <tr>
+                                        @foreach (var cell in row)
+                                        {
+                                            <td style="padding:4px 8px">@cell</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <div style="color:var(--red);font-size:13px;margin-bottom:12px">@_error</div>
+            }
+
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn-ghost" @onclick="OnCancel">取消</button>
+                <button class="btn-primary" disabled="@(string.IsNullOrEmpty(_csvContent) || _uploading)"
+                        @onclick="DoImport">
+                    @(_uploading ? "导入中..." : "确认导入")
+                </button>
+            </div>
+        }
+        else
+        {
+            <div style="text-align:center;padding:20px 0">
+                <span class="material-symbols-outlined" style="font-size:48px;color:var(--green)">check_circle</span>
+                <p style="margin-top:12px;font-size:15px">导入完成，共 @_importCount 条记录</p>
+                <button class="btn-primary" style="margin-top:16px" @onclick="() => OnImported.InvokeAsync(_importCount)">确定</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string TableName { get; set; } = "";
+    [Parameter] public EventCallback<int> OnImported { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    [Inject] private IHttpClientFactory HttpFactory { get; set; } = default!;
+
+    private string _csvContent = "";
+    private List<string> _headers = [];
+    private List<string[]> _preview = [];
+    private string _error = "";
+    private bool _uploading;
+    private bool _imported;
+    private int _importCount;
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            using var stream = file.OpenReadStream(10 * 1024 * 1024); // 最大10MB
+            using var reader = new StreamReader(stream);
+            _csvContent = await reader.ReadToEndAsync();
+
+            // 解析预览
+            var lines = _csvContent.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length > 0)
+            {
+                _headers = lines[0].Split(',').Select(h => h.Trim().Trim('"')).ToList();
+                _preview = lines.Skip(1).Take(5)
+                    .Select(l => l.Split(',').Select(c => c.Trim().Trim('"')).ToArray())
+                    .ToList();
+            }
+            _error = "";
+        }
+        catch (Exception ex)
+        {
+            _error = $"读取文件失败: {ex.Message}";
+        }
+    }
+
+    private async Task DoImport()
+    {
+        _uploading = true;
+        _error = "";
+        try
+        {
+            var client = HttpFactory.CreateClient();
+            client.BaseAddress = new Uri(Nav.BaseUri);
+
+            // 使用multipart form上传
+            var content = new MultipartFormDataContent();
+            var fileContent = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(_csvContent));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/csv");
+            content.Add(fileContent, "file", "import.csv");
+
+            var resp = await client.PostAsync($"/api/MaterialDatabase/{TableName}/import", content);
+            resp.EnsureSuccessStatusCode();
+            var result = await resp.Content.ReadFromJsonAsync<ImportResult>();
+            _importCount = result?.Imported ?? 0;
+            _imported = true;
+        }
+        catch (Exception ex)
+        {
+            _error = $"导入失败: {ex.Message}";
+        }
+        _uploading = false;
+    }
+
+    private class ImportResult { public int Imported { get; set; } }
+}

@@ -1,0 +1,135 @@
+@page "/data"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+@using System.Text.Json
+
+<div class="page-enter">
+    <h1 class="page-title">数据管理</h1>
+    <p class="page-subtitle">玻璃材料、铝型材、技术规范等基础数据维护</p>
+
+    <!-- 分类标签 -->
+    <div class="chip-group">
+        @foreach (var tab in _tabs)
+        {
+            <button class="chip @(_activeTab == tab.Key ? "active" : "")"
+                    @onclick="() => SwitchTab(tab.Key)">
+                @tab.Label
+            </button>
+        }
+    </div>
+
+    <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:0">
+                <span class="material-symbols-outlined">database</span> @(_tabs.FirstOrDefault(t => t.Key == _activeTab)?.Label ?? _activeTab)
+            </div>
+            <span style="font-size:13px;color:var(--text-3)">共 @_rows.Count 条记录</span>
+        </div>
+
+        @if (_columns.Count > 0 && _rows.Count > 0)
+        {
+            <div style="overflow-x:auto">
+                <table>
+                    <thead>
+                        <tr>
+                            @foreach (var col in _columns)
+                            {
+                                <th>@col</th>
+                            }
+                            <th style="width:80px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _rows)
+                        {
+                            <tr>
+                                @foreach (var col in _columns)
+                                {
+                                    <td>@GetCellValue(row, col)</td>
+                                }
+                                <td>
+                                    <button class="btn-ghost danger" style="height:28px;padding:0 6px;font-size:12px"
+                                            @onclick="() => DeleteRow(row)">
+                                        <span class="material-symbols-outlined" style="font-size:16px">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div style="text-align:center;padding:40px 0;color:var(--text-3)">
+                <span class="material-symbols-outlined" style="font-size:48px;display:block;margin-bottom:8px">inbox</span>
+                暂无数据
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private record TabInfo(string Key, string Label);
+    private readonly TabInfo[] _tabs =
+    [
+        new("GlassMaterials", "玻璃材料"),
+        new("SingleGlass", "单片玻璃"),
+        new("InsulatingGlass", "中空玻璃"),
+        new("LaminatedGlass", "夹胶玻璃"),
+        new("AluminumProfiles", "铝型材"),
+        new("StoneMaterials", "石材"),
+        new("SiliconeParameters", "结构胶"),
+        new("EmbedPartSpecs", "预埋件"),
+        new("Standards", "技术规范"),
+    ];
+
+    private string _activeTab = "GlassMaterials";
+    private List<JsonElement> _rows = [];
+    private List<string> _columns = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SwitchTab("GlassMaterials");
+    }
+
+    private async Task SwitchTab(string key)
+    {
+        _activeTab = key;
+        _rows = [];
+        _columns = [];
+        try
+        {
+            _rows = await Api.GetDataAsync(key);
+            if (_rows.Count > 0)
+            {
+                _columns = _rows[0].EnumerateObject()
+                    .Where(p => p.Name != "id" && !p.Name.StartsWith("_"))
+                    .Take(6)
+                    .Select(p => p.Name)
+                    .ToList();
+            }
+        }
+        catch { }
+    }
+
+    private string GetCellValue(JsonElement row, string col)
+    {
+        if (row.TryGetProperty(col, out var val))
+            return val.ToString();
+        // try camelCase
+        var camel = char.ToLower(col[0]) + col[1..];
+        if (row.TryGetProperty(camel, out val))
+            return val.ToString();
+        return "";
+    }
+
+    private async Task DeleteRow(JsonElement row)
+    {
+        if (row.TryGetProperty("id", out var idEl))
+        {
+            await Api.DeleteDataAsync(_activeTab, idEl.ToString());
+            await SwitchTab(_activeTab);
+        }
+    }
+}

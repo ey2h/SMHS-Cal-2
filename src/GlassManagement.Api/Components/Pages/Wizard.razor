@@ -1,0 +1,737 @@
+@page "/wizard"
+@rendermode InteractiveServer
+@inject WizardApiClient Api
+@inject IJSRuntime JS
+
+<div class="page-enter">
+    <h1 class="page-title">📐 向导式计算</h1>
+    <p class="page-subtitle">按步骤输入参数，自动生成计算书</p>
+
+    <div class="wizard-layout">
+        <!-- 左侧步骤条 -->
+        <div class="wizard-sidebar card">
+            @for (int i = 1; i <= 9; i++)
+            {
+                var step = i;
+                var isActive = step == _currentStep;
+                var isCompleted = _completedSteps.Contains(step);
+                <div class="wizard-step-item @(isActive ? "active" : "") @(isCompleted ? "completed" : "")"
+                     @onclick="() => GoToStep(step)">
+                    <div class="wizard-step-circle">
+                        @if (isCompleted)
+                        {
+                            <span class="material-symbols-outlined" style="font-size:16px">check</span>
+                        }
+                        else
+                        {
+                            @step
+                        }
+                    </div>
+                    <div class="wizard-step-info">
+                        <div class="wizard-step-name">@_stepNames[step - 1]</div>
+                        <div class="wizard-step-desc">@_stepDescs[step - 1]</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="wizard-content">
+            <div class="card" style="min-height:500px">
+                @if (string.IsNullOrEmpty(_sessionId))
+                {
+                    <div style="text-align:center;padding:80px 0">
+                        <button class="btn-primary" @onclick="StartSession" disabled="@_loading">
+                            @if (_loading) { <span class="spinner"></span> }
+                            <span class="material-symbols-outlined">play_arrow</span>
+                            开始新的计算会话
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="section-title">
+                        <span class="material-symbols-outlined">@_stepIcons[_currentStep - 1]</span>
+                        第 @_currentStep 步 · @_stepNames[_currentStep - 1]
+                    </div>
+
+                    @switch (_currentStep)
+                    {
+                        case 1: <Step1Basic Input="_step1" />; break;
+                        case 2: <Step2Glass Input="_step2" CurtainWallType="@_step1.CurtainWallType" />; break;
+                        case 3: <Step3Mullion Input="_step3" CurtainWallType="@_step1.CurtainWallType" Step2Input="_step2" />; break;
+                        case 4: <Step4Transom Input="_step4" CurtainWallType="@_step1.CurtainWallType" Step2Input="_step2" />; break;
+                        case 5: <Step5Connection Input="_step5" Step3Input="_step3" Step4Input="_step4" CurtainWallType="@_step1.CurtainWallType" />; break;
+                        case 6: <Step6Embedded Input="_step6" Step3Input="_step3" CurtainWallType="@_step1.CurtainWallType" Step2Input="_step2" />; break;
+                        case 7: <Step7Sealant Input="_step7" Step2Input="_step2" Step3Input="_step3" CurtainWallType="@_step1.CurtainWallType" />; break;
+                        case 8: <Step7Summary Step1="@_step1" Step2="@_step2" Step3="@_step3" Step4="@_step4" Step5="@_step5" Step6="@_step6" Step7="@_step7" OnJumpToStep="GoToStep" />; break;
+                        case 9: <Step8Report SessionId="@_sessionId" Api="Api" Step1="@_step1" />; break;
+                    }
+
+                    @if (!string.IsNullOrEmpty(_error))
+                    {
+                        <div class="config-banner" style="background:var(--red-light);margin-top:16px">
+                            <span class="material-symbols-outlined" style="color:var(--red)">error</span>
+                            <span style="color:var(--red);font-size:13px">@_error</span>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- 底部按钮 -->
+            @if (!string.IsNullOrEmpty(_sessionId))
+            {
+                <div class="wizard-actions">
+                    <button class="btn-soft" @onclick="PrevStep" disabled="@(_currentStep <= 1 || _loading)">
+                        <span class="material-symbols-outlined">arrow_back</span> 上一步
+                    </button>
+                    <div style="flex:1"></div>
+                    @if (_currentStep < 9)
+                    {
+                        <button class="btn-primary" @onclick="NextStep" disabled="@_loading">
+                            @if (_loading) { <span class="spinner"></span> }
+                            下一步 <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn-primary" style="background:var(--green)" @onclick="NextStep" disabled="@_loading">
+                            @if (_loading) { <span class="spinner"></span> }
+                            <span class="material-symbols-outlined">description</span> 生成计算书
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private int _currentStep = 1;
+    private HashSet<int> _completedSteps = new();
+    private string _sessionId = "";
+    private bool _loading;
+    private string? _error;
+
+    // 步骤数据
+    private Step1Data _step1 = new();
+    private Step2Data _step2 = new();
+    private Step3Data _step3 = new();
+    private Step4Data _step4 = new();
+    private Step5Data _step5 = new();
+    private Step6Data _step6 = new();
+    private Step7Data _step7 = new();
+
+    private string[] _stepNames => new[] { "基本参数", GetStep2Name(), "立柱计算", "横梁计算", "连接件", "预埋件", "胶类/伸缩/紧固", "结果汇总", "计算书输出" };
+    private string[] _stepDescs => new[] { "环境荷载与分格", GetStep2Desc(), "力学模型与型材", "双向弯曲验算", "节点连接验算", "预埋件验算", "胶类伸缩紧固", "全部验算汇总", "报告生成与下载" };
+
+    private string GetStep2Name() => _step1.CurtainWallType switch
+    {
+        "金属板" => "金属板计算",
+        "天然石材" => "石材板计算",
+        "人造板材" => "人造板材计算",
+        _ => "玻璃配置"
+    };
+    private string GetStep2Desc() => _step1.CurtainWallType switch
+    {
+        "金属板" => "金属板面板验算",
+        "天然石材" => "石材面板验算",
+        "人造板材" => "人造板材验算",
+        _ => "玻璃构成与验算"
+    };
+    private readonly string[] _stepIcons = { "location_city", "grid_view", "view_column", "view_agenda", "settings_input_component", "anchor", "science", "summarize", "description" };
+
+    private async Task StartSession()
+    {
+        _loading = true; _error = null;
+        try { _sessionId = await Api.CreateSessionAsync(); }
+        catch (Exception ex) { _error = $"创建会话失败: {ex.Message}"; }
+        _loading = false;
+    }
+
+    private void GoToStep(int step)
+    {
+        if (step >= 1 && step <= 9)
+        {
+            _currentStep = step;
+            _error = null;
+            StateHasChanged();
+        }
+    }
+
+    private void PrevStep()
+    {
+        if (_currentStep > 1) { _currentStep--; _error = null; }
+    }
+
+    private async Task NextStep()
+    {
+        _loading = true; _error = null;
+        try
+        {
+            object input = _currentStep switch
+            {
+                1 => _step1,
+                2 => _step2,
+                3 => _step3,
+                4 => _step4,
+                5 => _step5,
+                6 => _step6,
+                7 => _step7,
+                8 => new { },
+                9 => new { format = "word" },
+                _ => new { }
+            };
+
+            var (ok, err, _) = await Api.SubmitStepAsync(_sessionId, _currentStep, input);
+            if (ok)
+            {
+                _completedSteps.Add(_currentStep);
+                if (_currentStep < 9) _currentStep++;
+            }
+            else
+            {
+                _error = err ?? "提交失败";
+            }
+        }
+        catch (Exception ex) { _error = ex.Message; }
+        _loading = false;
+    }
+
+    // ======================== 数据模型 ========================
+
+    /// <summary>Step1: 基本参数</summary>
+    public class Step1Data
+    {
+        // 重现期 50/100
+        public int ReturnPeriod { get; set; } = 50;
+        public bool SnowSensitive { get; set; }
+        public double CalcElevation { get; set; } = 100;
+        // 地面粗糙度 A/B/C/D
+        public string TerrainCategory { get; set; } = "B";
+        // 外部局部体型系数
+        public string ExternalShapeMode { get; set; } = "wall_center";
+        public double ExternalShapeValue { get; set; } = 1;
+        // 内部局部体型系数
+        public string InternalShapeMode { get; set; } = "sealed";
+        public double InternalShapeValue { get; set; } = 1;
+        // 风荷载
+        public string WindLoadMode { get; set; } = "code_min";
+        public double WindLoadCustom { get; set; } = 1.0;
+        // 幕墙
+        public string CurtainWallStructure { get; set; } = "构件式";
+        public string TransomStructure { get; set; } = "无中横";
+        public string GlassConfig { get; set; } = "中空玻璃";
+        // 龙骨间距
+        public double LeftPanelWidth { get; set; } = 1100;
+        public double RightPanelWidth { get; set; } = 1100;
+        public double UpperPanelHeight { get; set; } = 1380;
+        public double LowerPanelHeight { get; set; } = 1380;
+        public double UpperMidTransom { get; set; } = 1350;
+        public double LowerMidTransom { get; set; } = 1350;
+        // 修正系数
+        public double TerrainCorrectionFactor { get; set; } = 1.0;
+        public double WindDirectionFactor { get; set; } = 1.0;
+        // 抗震
+        public string SeismicCategory { get; set; } = "标准设防类";
+        public string SiteCategory { get; set; } = "II";
+        // 规范
+        public string StandardCode { get; set; } = "全国荷载规范";
+        public string SelectedRegion { get; set; } = "";
+        // 气象参数（选地区后填入）
+        public double WindPressure50 { get; set; }
+        public double WindPressure100 { get; set; }
+        public int SeismicIntensity { get; set; }
+        public double PeakAcceleration { get; set; }
+        public double AlphaMax { get; set; }
+        public double TemperatureDiff { get; set; }
+        public double SnowPressure50 { get; set; }
+        public double SnowPressure100 { get; set; }
+        // 幕墙类型
+        /// <summary>幕墙类型: 全隐框玻璃/半隐框玻璃/明框玻璃/金属板/天然石材/人造板材</summary>
+        public string CurtainWallType { get; set; } = "全隐框玻璃";
+        // 底部选项
+        public bool AutoGravity { get; set; }
+        public bool TempDiff80 { get; set; }
+
+        // 编制信息（给Step8用）
+        public string ProjectName { get; set; } = "新建项目";
+        public string DesignUnit { get; set; } = "";
+        public string Designer { get; set; } = "";
+        public string Checker { get; set; } = "";
+        public string Approver { get; set; } = "";
+    }
+
+    /// <summary>金属板面板数据</summary>
+    public class MetalPanelData
+    {
+        public string PanelMaterial { get; set; } = "单层铝板";
+        public string AluminumGrade { get; set; } = "3003-H14";
+        public double PanelThickness { get; set; } = 3.0;
+        public double PanelLongSide { get; set; } = 1200;
+        public double PanelShortSide { get; set; } = 800;
+        // 加强肋
+        public bool CalcRib { get; set; } = true;
+        public int RibCount { get; set; } = 1;
+        public string RibDeflectionLimit { get; set; } = "1/180";
+        public double RibIx { get; set; }
+        public double RibWx { get; set; }
+        // 材料参数
+        public double E { get; set; } = 70000;
+        public double BendingStrength { get; set; } = 80.5;
+        public double ShearStrength { get; set; } = 46.7;
+        public double Poisson { get; set; } = 0.3;
+        public double Alpha { get; set; } = 23e-6;
+        public double Density { get; set; } = 27.0;
+        // 验算结果
+        public double BendingStress { get; set; }
+        public double BendingUtilization { get; set; }
+        public bool BendingPass { get; set; }
+        public double Deflection { get; set; }
+        public double DeflectionLimit { get; set; }
+        public bool DeflectionPass { get; set; }
+        public double RibStress { get; set; }
+        public double RibDeflectionValue { get; set; }
+        public bool RibPass { get; set; }
+    }
+
+    /// <summary>天然石材面板数据</summary>
+    public class StonePanelData
+    {
+        public string StoneType { get; set; } = "花岗岩";
+        public double Thickness { get; set; } = 25;
+        public double LongSide { get; set; } = 1000;
+        public double ShortSide { get; set; } = 600;
+        public double Fm { get; set; } = 12.0;
+        public double SafetyFactor { get; set; } = 4.0;
+        public string ConnectionType { get; set; } = "背栓";
+        public int ConnectionPointCount { get; set; } = 4;
+        public string BackBoltModel { get; set; } = "M6×15";
+        public double BackBoltTensionDesign { get; set; } = 4.03;
+        public double BackBoltShearDesign { get; set; } = 5.71;
+        // 验算结果
+        public double BendingStress { get; set; }
+        public bool BendingPass { get; set; }
+        public double ConnectionForce { get; set; }
+        public bool ConnectionPass { get; set; }
+    }
+
+    /// <summary>人造板材面板数据</summary>
+    public class ArtificialPanelData
+    {
+        public string MaterialType { get; set; } = "瓷板";
+        public string CeramicClass { get; set; } = "AⅠ类";
+        public double NominalThickness { get; set; } = 15;
+        public double BackTextureDepth { get; set; } = 0;
+        public double CalculatedThickness { get; set; } = 15;
+        public double LongSide { get; set; } = 900;
+        public double ShortSide { get; set; } = 600;
+        public string ConnectionType { get; set; } = "短挂件";
+        public double HangerThickness { get; set; } = 2.0;
+        public string HangerMaterial { get; set; } = "不锈钢";
+        public double HangerInsertDepth { get; set; } = 10;
+        public double E { get; set; } = 60000;
+        public double BendingStrength { get; set; } = 15.0;
+        public double ShearStrength { get; set; } = 7.5;
+        // 验算结果
+        public double BendingStress { get; set; }
+        public bool BendingPass { get; set; }
+        public double Deflection { get; set; }
+        public bool DeflectionPass { get; set; }
+        public double HangerForce { get; set; }
+        public bool HangerPass { get; set; }
+    }
+
+    /// <summary>Step2: 玻璃配置与验算</summary>
+    public class Step2Data
+    {
+        // 玻璃构成
+        public string GlassComposition { get; set; } = "中空";
+        // 外片
+        public double OuterThickness { get; set; } = 6;
+        public string OuterType { get; set; } = "钢化";
+        // 中空层
+        public double AirGapThickness { get; set; } = 12;
+        // 内片
+        public double InnerThickness { get; set; } = 6;
+        public string InnerType { get; set; } = "钢化";
+        // 夹层胶片
+        public double InterlayerThickness { get; set; } = 1.52;
+        public string InterlayerType { get; set; } = "PVB";
+        // 玻璃短边a / 长边b
+        public double GlassShortSide { get; set; } = 1500;
+        public double GlassLongSide { get; set; } = 2400;
+        // 支承方式
+        public string SupportType { get; set; } = "四边简支";
+
+        // ---- 验算结果 ----
+        public double Sigma1 { get; set; }
+        public double Sigma2 { get; set; }
+        public double Fg { get; set; } = 84;
+        public double Deflection { get; set; }
+        public double DeflectionLimit { get; set; }
+        public bool Sigma1Pass { get; set; } = true;
+        public bool Sigma2Pass { get; set; } = true;
+        public bool DeflectionPass { get; set; } = true;
+        // 玻璃自重 (kN/m)
+        public double GlassWeight { get; set; } = 0.3;
+
+        // 面板数据（非玻璃幕墙时使用）
+        public MetalPanelData MetalPanel { get; set; } = new();
+        public StonePanelData StonePanel { get; set; } = new();
+        public ArtificialPanelData ArtificialPanel { get; set; } = new();
+    }
+
+    /// <summary>Step3: 立柱计算</summary>
+    public class Step3Data
+    {
+        // 力学模型 1-6
+        public int MechanicalModel { get; set; } = 1;
+        // 立柱跨度
+        public double Span { get; set; } = 3000;
+        // 短跨长（双跨/多跨时）
+        public double ShortSpan { get; set; } = 700;
+        // 龙骨挠度执行规范
+        public string DeflectionStandard { get; set; } = "JGJ336-2016";
+        // 绝对单跨
+        public bool AbsoluteSpan { get; set; }
+        // 钢铝组合
+        public bool SteelAlumComposite { get; set; }
+        // 冷弯薄壁型钢
+        public bool ColdFormedSteel { get; set; }
+        // 材质
+        public string Material { get; set; } = "铝合金";
+        // 铝合金牌号
+        public string AluminumGrade { get; set; } = "6063-T5";
+        // 钢材牌号
+        public string SteelGrade { get; set; } = "Q235B";
+        // 是否断热
+        public bool IsThermalBreak { get; set; }
+        // 其它材质
+        public string OtherMaterialName { get; set; } = "";
+        public double ElasticModulus { get; set; } = 70000;
+        public string MaterialCategory { get; set; } = "铝";
+        // 玻璃配置
+        public int OuterGlassThickness { get; set; } = 6;
+        public int InnerGlassThickness { get; set; } = 6;
+        // 型材选择（代号）
+        public string ProfileCode { get; set; } = "";
+        // 型材截面参数
+        public double Ix { get; set; }
+        public double Iy { get; set; }
+        public double Wx1 { get; set; }
+        public double Wx2 { get; set; }
+        public double WallThickness { get; set; }
+        public double Area { get; set; }
+        public double Sx { get; set; }
+        public double Tw { get; set; }
+
+        // ---- 输入来自上一步 ----
+        public double WindLoadStd { get; set; } = 1.285; // 风荷载标准值 kPa
+        public double TributaryWidth { get; set; } = 1200; // 立柱分担宽度 mm
+
+        // ---- 验算结果 ----
+        public double MomentRequired { get; set; }    // 抗弯矩标选
+        public double InertiaRequired { get; set; }   // 惯性矩标选
+        public bool BendingMomentPass { get; set; } = true;
+        public bool InertiaPass { get; set; } = true;
+        public double BendingStress { get; set; }
+        public double AllowableStress { get; set; } = 85;
+        public bool BendingPass { get; set; } = true;
+        public double ActualDeflection { get; set; }
+        public double DeflectionLimit { get; set; }
+        public bool DeflectionPass { get; set; } = true;
+        public double ShearStress { get; set; }
+        public double AllowableShear { get; set; } = 50;
+        public bool ShearPass { get; set; } = true;
+        // 支反力（传给Step5）
+        public double ReactionForce { get; set; }
+    }
+
+    /// <summary>Step4: 横梁计算</summary>
+    public class Step4Data
+    {
+        // 横梁跨度
+        public double Span { get; set; } = 1500;
+        // 荷载模型
+        public string LoadModel { get; set; } = "三角形分布";
+        // 材质
+        public string Material { get; set; } = "铝合金";
+        public string AluminumGrade { get; set; } = "6063-T5";
+        public string SteelGrade { get; set; } = "Q235B";
+        // 其它材质
+        public string OtherMaterialName { get; set; } = "";
+        public double ElasticModulus { get; set; } = 70000;
+        public string MaterialCategory { get; set; } = "铝";
+        // 断热/冷弯
+        public bool IsThermalBreak { get; set; }
+        public bool ColdFormedSteel { get; set; }
+        // 钢铝结合
+        public bool SteelAlumComposite { get; set; }
+        // 横梁特有选项
+        public bool HangingStructure { get; set; }
+        public bool GlassWeightConcentrated { get; set; }
+        public bool ConcentratedForceModel { get; set; }
+        public bool CalculateTorsion { get; set; }
+        public double ForcePointDistance { get; set; } = 150;
+        public bool ShortCantilever { get; set; }
+        public double CantileverSize { get; set; } = 150;
+        // 型材
+        public string ProfileCode { get; set; } = "";
+        public double Ix { get; set; }
+        public double Iy { get; set; }
+        public double Wxx { get; set; }
+        public double Wyy { get; set; }
+        public double Wx1 { get; set; }
+        public double Wx2 { get; set; }
+        public double Wy1 { get; set; }
+        public double Wy2 { get; set; }
+        public double WallThickness { get; set; }
+        public double Area { get; set; }
+        public double StaticMomentSx { get; set; }
+        public double StaticMomentSy { get; set; }
+
+        // ---- 验算结果 ----
+        public double CombinedStress { get; set; }
+        public double AllowableStress { get; set; } = 85;
+        public double AllowableShear { get; set; } = 50;
+        public bool StressPass { get; set; } = true;
+        public double CombinedDeflection { get; set; }
+        public double DeflectionLimit { get; set; }
+        public bool DeflectionPass { get; set; } = true;
+        public double BendingStress { get; set; }
+        public bool BendingPass { get; set; } = true;
+        public double ShearStress { get; set; }
+        public bool ShearPass { get; set; } = true;
+        // 支反力
+        public double ReactionForce { get; set; }
+    }
+
+    /// <summary>Step5: 连接件计算</summary>
+    public class Step5Data
+    {
+        // ===== 顶部连接形式 =====
+        /// <summary>立柱与主体连接: 螺栓连接 / 焊接</summary>
+        public string MullionToMainMethod { get; set; } = "螺栓连接";
+        /// <summary>横框与立柱连接: 螺栓连接 / 焊接 / 半焊接半栓接</summary>
+        public string TransomToMullionMethod { get; set; } = "螺栓连接";
+
+        // ===== 横框与立柱 - 栓接参数 =====
+        /// <summary>角片材质(铝): 6063-T5 / 6063-T6 / 6063A-T5 / 6061-T6</summary>
+        public string AnglePieceMaterial { get; set; } = "6063-T5";
+        /// <summary>角片厚度 (mm)</summary>
+        public double AnglePieceThickness { get; set; } = 5;
+        /// <summary>竖框螺栓数</summary>
+        public int MullionBoltCount { get; set; } = 2;
+        /// <summary>横框螺栓数</summary>
+        public int TransomBoltCount { get; set; } = 2;
+        /// <summary>选中的螺栓1行索引(立柱与角片)</summary>
+        public int SelectedBolt1Index { get; set; } = -1;
+        /// <summary>选中的螺栓2行索引(横框与角片)</summary>
+        public int SelectedBolt2Index { get; set; } = -1;
+
+        // ===== 立柱与主体（钢转接件）- 栓接参数 =====
+        /// <summary>转接件角片材质(钢): Q235 / Q355</summary>
+        public string MainAngleMaterial { get; set; } = "Q235";
+        /// <summary>转接件角片壁厚 (mm)</summary>
+        public double MainAngleThickness { get; set; } = 6;
+        /// <summary>竖框螺栓数(立柱与主体)</summary>
+        public int MainMullionBoltCount { get; set; } = 2;
+        /// <summary>触面面数: 1 / 2</summary>
+        public int ContactSurfaces { get; set; } = 1;
+        /// <summary>单侧角码</summary>
+        public bool SingleSideBracket { get; set; }
+        /// <summary>选中的螺栓4行索引(立柱与主体)</summary>
+        public int SelectedBolt4Index { get; set; } = -1;
+
+        // ===== 横框与立柱 - 焊接参数 =====
+        /// <summary>横梁与立柱角焊缝高度 (mm)</summary>
+        public double TransomWeldHeight { get; set; } = 4;
+        /// <summary>横梁与立柱总角焊缝有效长度 (mm)</summary>
+        public double TransomWeldLength { get; set; } = 100;
+
+        // ===== 立柱与主体 - 焊接参数 =====
+        /// <summary>单侧转接件</summary>
+        public bool SingleSideAdapter { get; set; }
+        /// <summary>立柱与主体角焊缝高度 (mm)</summary>
+        public double MainWeldHeight { get; set; } = 6;
+        /// <summary>每角码总角焊缝有效长 (mm)</summary>
+        public double MainWeldLength { get; set; } = 100;
+
+        // ===== 验算结果 =====
+        // 横框与立柱栓接
+        public bool TransomBoltShearPass { get; set; } = true;
+        public bool TransomBoltBearingPass { get; set; } = true;
+        public double TransomBoltUtilization { get; set; }
+        // 立柱与主体栓接
+        public bool MainBoltShearPass { get; set; } = true;
+        public bool MainBoltBearingPass { get; set; } = true;
+        public double MainBoltUtilization { get; set; }
+        // 焊缝验算
+        public bool TransomWeldPass { get; set; } = true;
+        public double TransomWeldUtilization { get; set; }
+        public bool MainWeldPass { get; set; } = true;
+        public double MainWeldUtilization { get; set; }
+    }
+
+    /// <summary>Step7: 胶类/伸缩/紧固</summary>
+    public class Step7Data
+    {
+        public string BuildingType { get; set; } = "框架";
+        public double ExpansionJoint { get; set; } = 20;
+        public bool CalcSubFrame { get; set; }
+        public bool NoClampCalc { get; set; }
+        public bool OpenStyle { get; set; }
+        public bool NoGravityOnSealant { get; set; }
+        public string StandardChoice { get; set; } = "按JGJ102规范";
+        public double WeatherSealantDisplacement { get; set; } = 0.25;
+        public double WeatherSealantGap { get; set; } = 16;
+        public int FrameSealantThickness { get; set; } = 6;
+        public int FrameSealantWidth { get; set; } = 7;
+        public int HollowSealantThickness { get; set; } = 6;
+        public int HollowSealantWidth { get; set; } = 7;
+        public double SealantDisplacement { get; set; } = 0.125;
+        public double LongTermStrength { get; set; } = 0.01;
+        public double ShortTermStrength { get; set; } = 0.2;
+        public string JointMethod { get; set; } = "玻璃对接";
+        public string HollowGlassForm { get; set; } = "等片";
+        public double ClampLength { get; set; } = 50;
+        public double ClampWidth { get; set; } = 45;
+        public double ClampThickness { get; set; } = 6;
+        public double ClampSpacing { get; set; } = 350;
+        public string ClampMaterial { get; set; } = "6063-T5";
+        public int SelectedScrewIndex { get; set; }
+        public double FrameSealantUtilization { get; set; }
+        public bool FrameSealantPass { get; set; } = true;
+        public double HollowSealantUtilization { get; set; }
+        public bool HollowSealantPass { get; set; } = true;
+        public double WeatherSealantUtilization { get; set; }
+        public bool WeatherSealantPass { get; set; } = true;
+        public double ClampUtilization { get; set; }
+        public bool ClampPass { get; set; } = true;
+        public double ScrewUtilization { get; set; }
+        public bool ScrewPass { get; set; } = true;
+        public double ExpansionJointUtilization { get; set; }
+        public bool ExpansionJointPass { get; set; } = true;
+    }
+
+    /// <summary>Step6: 预埋件与其他验算</summary>
+    public class Step6Data
+    {
+        // 预埋件
+        public double AnchorDiameter { get; set; } = 12;
+        public int AnchorCount { get; set; } = 4;
+        public double AnchorPlateLength { get; set; } = 150;
+        public double AnchorPlateWidth { get; set; } = 100;
+        public double AnchorPlateThickness { get; set; } = 10;
+        public double AnchorUtilization { get; set; }
+        public bool AnchorPass { get; set; } = true;
+
+        // 转接件
+        public string ChannelModel { get; set; } = "10#";
+        public string ChannelLayout { get; set; } = "单片";
+        public double ChannelUtilization { get; set; }
+        public bool ChannelPass { get; set; } = true;
+
+        // 结构胶
+        public double SealantWidth { get; set; } = 12;
+        public double SealantDepth { get; set; } = 6;
+        public double SealantStrength { get; set; } = 0.14;
+        public double SealantUtilization { get; set; }
+        public bool SealantPass { get; set; } = true;
+
+        // 压板
+        public double ClampWidth { get; set; } = 25;
+        public double ClampThickness { get; set; } = 3;
+        public double ClampUtilization { get; set; }
+        public bool ClampPass { get; set; } = true;
+
+        // 受力模式: 梁底吊挂 / 侧埋 / 梁顶埋 / 梁底埋
+        public string ForceMode { get; set; } = "侧埋";
+
+        // 埋件类型: 土建预埋 / 后补锚栓 / 槽型埋件 / 对穿螺栓
+        public string EmbedType { get; set; } = "土建预埋";
+
+        // 锚筋详细参数（土建预埋）
+        public string AnchorMaterial { get; set; } = "HPB300";
+        public double AnchorLength { get; set; } = 200;
+        public int AnchorPerSide { get; set; } = 2;
+        public string ConcreteGrade { get; set; } = "C25";
+        public double AnchorCenterDistance { get; set; } = 110;
+        public string AnchorShape { get; set; } = "L形弯钩";
+        public bool AnchorHasMechanicalAnchor { get; set; }
+
+        // 后补锚栓参数
+        public string PostAnchorSpec { get; set; } = "M12";
+        public string PostAnchorType { get; set; } = "膨胀锚栓";
+        public string PostAnchorMaterial { get; set; } = "碳钢8.8";
+        public int PostAnchorCount { get; set; } = 4;
+        public double PostAnchorDepth { get; set; } = 80;
+
+        // 对穿螺栓参数
+        public string ThroughBoltSpec { get; set; } = "M12";
+        public string ThroughBoltMaterial { get; set; } = "碳钢8.8";
+        public int ThroughBoltCount { get; set; } = 4;
+        public double ThroughBoltMinThickness { get; set; } = 6;
+
+        // 槽型埋件参数
+        public string SlotChannelMaterial { get; set; } = "Q235";
+        public double SlotChannelLength { get; set; } = 300;
+        public double SlotChannelWidth { get; set; } = 52;
+        public double SlotChannelHeight { get; set; } = 34;
+        public string SlotAnchorMaterial { get; set; } = "Q235";
+        public double SlotAnchorArea { get; set; } = 113;
+        public int SlotAnchorCount { get; set; } = 2;
+        public double SlotAnchorSpacing { get; set; } = 100;
+        public double SlotHef { get; set; } = 80;
+        public double SlotThicknessT { get; set; } = 3;
+        public string SlotConcreteGrade { get; set; } = "C25";
+        public string SlotBaseType { get; set; } = "开裂混凝土";
+        public int SlotTBoltCount { get; set; } = 2;
+        public double SlotEdgeC1 { get; set; } = 150;
+        public double SlotEdgeC2 { get; set; } = 200;
+
+        // 转接件参数
+        public string TransferSpec { get; set; } = "10#槽钢";
+        public double TransferWt { get; set; } = 39.7;
+        public double TransferIx { get; set; } = 198;
+        public double TransferArea { get; set; } = 1274.8;
+        public string TransferSteelGrade { get; set; } = "Q235";
+
+        // 焊缝参数
+        public string WeldForm { get; set; } = "L型焊";
+        public double WeldHeight { get; set; } = 6;
+        public double HorizontalWeldLength { get; set; } = 50;
+        public double VerticalWeldLength { get; set; } = 100;
+
+        // 偏心距参数
+        public double ForceE0 { get; set; } = 50;
+        public double ForceE1 { get; set; } = 30;
+        public double ForceE2 { get; set; } = 60;
+        public double ForceE3 { get; set; } = 40;
+
+        // 验算结果明细
+        public bool AnchorTensionPass { get; set; } = true;
+        public bool AnchorShearPass { get; set; } = true;
+        public bool AnchorPlateBendPass { get; set; } = true;
+        public bool ConcreteLocalBearingPass { get; set; } = true;
+        public bool TensionShearCombinedPass { get; set; } = true;
+        public bool WeldPass { get; set; } = true;
+        public bool TransferPass { get; set; } = true;
+
+        // 验算数值
+        public double AnchorTensionRatio { get; set; }
+        public double AnchorShearRatio { get; set; }
+        public double TensionShearCombinedRatio { get; set; }
+        public double AnchorPlateBendRatio { get; set; }
+        public double ConcreteLocalBearingRatio { get; set; }
+        public double WeldRatio { get; set; }
+        public double TransferBendRatio { get; set; }
+
+        // 后补锚栓验算
+        public bool PostAnchorSteelPass { get; set; } = true;
+        public bool PostAnchorConcretePass { get; set; } = true;
+        public double PostAnchorSteelRatio { get; set; }
+        public double PostAnchorConcreteRatio { get; set; }
+    }
+}

@@ -1,0 +1,125 @@
+@using static GlassManagement.Api.Components.Pages.Wizard
+
+<fieldset class="groupbox">
+    <legend class="groupbox-title">全部验算结果汇总</legend>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">❌ 不通过项以红色高亮，点击可跳回对应步骤修改</div>
+
+    <table class="hb-table">
+        <thead>
+            <tr><th>构件</th><th>验算项</th><th>计算值</th><th>限值</th><th>判定</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var r in GetCheckRows())
+            {
+                var row = r;
+                <tr style="background:@(!row.Pass?"#FFEBEE":"transparent")" @onclick="() => OnJumpToStep.InvokeAsync(row.Step)">
+                    <td style="text-align:left">@row.Component</td>
+                    <td style="text-align:left">@row.Item</td>
+                    <td>@row.Actual</td>
+                    <td>@row.Limit</td>
+                    <td><span class="@(row.Pass?"badge-pass":"badge-fail")">@(row.Pass?"✅通过":"❌不通过")</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</fieldset>
+
+@{
+    var allRows = GetCheckRows();
+    int total = allRows.Count;
+    int passed = allRows.Count(r => r.Pass);
+    int failed = total - passed;
+}
+<div class="metric-grid" style="margin-top:8px">
+    <div class="metric-card" style="border-left:3px solid var(--accent-green)">
+        <div class="metric-label">通过项</div>
+        <div class="metric-value" style="color:var(--accent-green)">@passed / @total</div>
+    </div>
+    @if (failed > 0)
+    {
+        <div class="metric-card" style="border-left:3px solid var(--accent-red)">
+            <div class="metric-label">不通过项</div>
+            <div class="metric-value" style="color:var(--accent-red)">@failed</div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Step1Data Step1 { get; set; } = new();
+    [Parameter] public Step2Data Step2 { get; set; } = new();
+    [Parameter] public Step3Data Step3 { get; set; } = new();
+    [Parameter] public Step4Data Step4 { get; set; } = new();
+    [Parameter] public Step5Data Step5 { get; set; } = new();
+    [Parameter] public Step6Data Step6 { get; set; } = new();
+    [Parameter] public Step7Data Step7 { get; set; } = new();
+    [Parameter] public EventCallback<int> OnJumpToStep { get; set; }
+
+    private record CheckRow(string Component, string Item, string Actual, string Limit, bool Pass, int Step);
+
+    private string CurtainWallType => Step1.CurtainWallType;
+    private bool IsGlassType => CurtainWallType.Contains("玻璃");
+    private bool NeedStructuralSealant => CurtainWallType == "全隐框玻璃" || CurtainWallType == "半隐框玻璃";
+    private bool NeedClampPlate => CurtainWallType == "明框玻璃" || CurtainWallType == "半隐框玻璃" || CurtainWallType == "金属板";
+
+    private List<CheckRow> GetCheckRows()
+    {
+        var rows = new List<CheckRow>();
+
+        // Step2 面板验算 — 根据类型不同
+        if (IsGlassType)
+        {
+            rows.Add(new("玻璃", "1#强度", $"{Step2.Sigma1:F1} MPa", $"{Step2.Fg:F1} MPa", Step2.Sigma1Pass, 2));
+            rows.Add(new("玻璃", "2#强度", $"{Step2.Sigma2:F1} MPa", $"{Step2.Fg:F1} MPa", Step2.Sigma2Pass, 2));
+            rows.Add(new("玻璃", "挠度", $"{Step2.Deflection:F2} mm", $"{Step2.DeflectionLimit:F2} mm", Step2.DeflectionPass, 2));
+        }
+        else if (CurtainWallType == "金属板")
+        {
+            rows.Add(new("金属板", "弯曲强度", $"{Step2.MetalPanel.BendingStress:F1} MPa", $"{Step2.MetalPanel.BendingStrength:F1} MPa", Step2.MetalPanel.BendingPass, 2));
+            rows.Add(new("金属板", "挠度", $"{Step2.MetalPanel.Deflection:F2} mm", $"{Step2.MetalPanel.DeflectionLimit:F2} mm", Step2.MetalPanel.DeflectionPass, 2));
+            if (Step2.MetalPanel.CalcRib) rows.Add(new("加强肋", "肋验算", "—", "—", Step2.MetalPanel.RibPass, 2));
+        }
+        else if (CurtainWallType == "天然石材")
+        {
+            rows.Add(new("石材", "弯曲强度", $"{Step2.StonePanel.BendingStress:F1} MPa", $"{Step2.StonePanel.Fm / Step2.StonePanel.SafetyFactor:F1} MPa", Step2.StonePanel.BendingPass, 2));
+            rows.Add(new("石材", "连接承载", "—", "—", Step2.StonePanel.ConnectionPass, 2));
+        }
+        else if (CurtainWallType == "人造板材")
+        {
+            rows.Add(new("人造板材", "弯曲强度", $"{Step2.ArtificialPanel.BendingStress:F1} MPa", $"{Step2.ArtificialPanel.BendingStrength:F1} MPa", Step2.ArtificialPanel.BendingPass, 2));
+            rows.Add(new("人造板材", "挠度", $"{Step2.ArtificialPanel.Deflection:F2} mm", "—", Step2.ArtificialPanel.DeflectionPass, 2));
+            rows.Add(new("人造板材", "挂件", "—", "—", Step2.ArtificialPanel.HangerPass, 2));
+        }
+
+        // Step3 立柱
+        rows.Add(new("立柱", "抗弯强度", $"{Step3.BendingStress:F1} MPa", $"{Step3.AllowableStress:F1} MPa", Step3.BendingPass, 3));
+        rows.Add(new("立柱", "挠度", $"{Step3.ActualDeflection:F2} mm", $"{Step3.DeflectionLimit:F2} mm", Step3.DeflectionPass, 3));
+        rows.Add(new("立柱", "抗剪强度", $"{Step3.ShearStress:F1} MPa", $"{Step3.AllowableShear:F1} MPa", Step3.ShearPass, 3));
+
+        // Step4 横梁
+        rows.Add(new("横梁", "双向弯曲", $"{Step4.CombinedStress:F1} MPa", $"{Step4.AllowableStress:F1} MPa", Step4.StressPass, 4));
+        rows.Add(new("横梁", "合成挠度", $"{Step4.CombinedDeflection:F2} mm", $"{Step4.DeflectionLimit:F2} mm", Step4.DeflectionPass, 4));
+
+        // Step5 连接
+        rows.Add(new("横框与立柱", "螺栓/焊缝", "—", "—", Step5.TransomBoltShearPass && Step5.TransomWeldPass, 5));
+        rows.Add(new("立柱与主体", "螺栓/焊缝", "—", "—", Step5.MainBoltShearPass && Step5.MainWeldPass, 5));
+
+        // Step6 埋件
+        rows.Add(new("预埋件", "锚筋验算", "—", "—", Step6.AnchorPass, 6));
+        rows.Add(new("转接件", "槽钢强度", "—", "—", Step6.ChannelPass, 6));
+
+        // Step7 胶类 — 根据类型
+        if (NeedStructuralSealant)
+        {
+            rows.Add(new("铝框结构胶", "强度验算", $"{Step7.FrameSealantUtilization:F1}%", "≤100%", Step7.FrameSealantPass, 7));
+            rows.Add(new("中空层结构胶", "强度验算", $"{Step7.HollowSealantUtilization:F1}%", "≤100%", Step7.HollowSealantPass, 7));
+        }
+        rows.Add(new("耐候胶", "胶缝验算", $"{Step7.WeatherSealantUtilization:F1}%", "≤100%", Step7.WeatherSealantPass, 7));
+        if (NeedClampPlate)
+        {
+            rows.Add(new("压板", "弯曲验算", $"{Step7.ClampUtilization:F1}%", "≤100%", Step7.ClampPass, 7));
+        }
+        rows.Add(new("伸缩缝", "热胀验算", $"{Step7.ExpansionJointUtilization:F1}%", "≤100%", Step7.ExpansionJointPass, 7));
+
+        return rows;
+    }
+}

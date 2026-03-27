@@ -1,0 +1,983 @@
+@using static GlassManagement.Api.Components.Pages.Wizard
+
+<!-- 标题条 -->
+<div class="hb-title-bar">@CurtainWallType 幕墙计算 - 预埋件与其他验算</div>
+
+<div style="display:flex;gap:12px;align-items:flex-start">
+    <!-- 左侧参数区 -->
+    <div style="flex:5;min-width:0">
+
+        <!-- 受力模式 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">受力模式</legend>
+            <div class="hb-radio-group horizontal">
+                @foreach (var mode in new[] { "梁底吊挂", "侧埋", "梁顶埋", "梁底埋" })
+                {
+                    var m = mode;
+                    var disabled = m == "梁底吊挂" && !_isAbsoluteSpan;
+                    <label style="@(disabled ? "opacity:0.45;cursor:not-allowed" : "")"
+                           title="@(disabled ? "仅在Step3勾选\"绝对单跨\"时可选" : "")">
+                        <input type="radio" name="forceMode" value="@m"
+                               checked="@(Input.ForceMode == m)"
+                               disabled="@disabled"
+                               @onchange="() => { Input.ForceMode = m; RunCalculation(); }" />@m
+                    </label>
+                }
+            </div>
+            <!-- 偏心距参数 -->
+            <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px;margin-top:6px">
+                @if (Input.ForceMode == "梁底吊挂" || Input.ForceMode == "侧埋")
+                {
+                    <span class="param-label">e₀</span>
+                    <div style="display:flex;align-items:center;gap:2px">
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.ForceE0" step="5" @bind:after="RunCalculation"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                }
+                else
+                {
+                    <span class="param-label">e₁</span>
+                    <div style="display:flex;align-items:center;gap:2px">
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.ForceE1" step="5" @bind:after="RunCalculation"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <span class="param-label">e₂</span>
+                    <div style="display:flex;align-items:center;gap:2px">
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.ForceE2" step="5" @bind:after="RunCalculation"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <span class="param-label">e₃</span>
+                    <div style="display:flex;align-items:center;gap:2px">
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.ForceE3" step="5" @bind:after="RunCalculation"/>
+                        <span class="param-unit">mm</span>
+                    </div>
+                    <span></span><span></span>
+                }
+            </div>
+        </fieldset>
+
+        <!-- 埋件类型 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">埋件类型</legend>
+            <div class="hb-radio-group horizontal" style="margin-bottom:6px">
+                @foreach (var t in new[] { "土建预埋", "后补锚栓", "槽型埋件", "对穿螺栓" })
+                {
+                    var et = t;
+                    <label><input type="radio" name="embedType" value="@et"
+                                  checked="@(Input.EmbedType == et)"
+                                  @onchange="() => { Input.EmbedType = et; RunCalculation(); }" />@et</label>
+                }
+            </div>
+
+            @if (Input.EmbedType == "土建预埋")
+            {
+                <!-- 锚筋参数 -->
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">锚筋参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">锚筋材料</span>
+                        <select class="hb-input" @bind="Input.AnchorMaterial" @bind:after="RunCalculation">
+                            <option>HPB300</option><option>HRB335</option><option>HRB400</option>
+                        </select>
+                        <span class="param-label">锚筋直径</span>
+                        <select class="hb-input" @bind="Input.AnchorDiameter" @bind:after="RunCalculation">
+                            <option value="8">8</option><option value="10">10</option><option value="12">12</option>
+                            <option value="14">14</option><option value="16">16</option>
+                        </select>
+                        <span class="param-label">锚筋长度</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorLength" step="10" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+
+                        <span class="param-label">锚筋根数</span>
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorCount" min="2" @bind:after="RunCalculation"/>
+                        <span class="param-label">每面锚筋数</span>
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorPerSide" min="1" @bind:after="RunCalculation"/>
+                        <span class="param-label">混凝土等级</span>
+                        <select class="hb-input" @bind="Input.ConcreteGrade" @bind:after="RunCalculation">
+                            @foreach (var g in new[] { "C20","C25","C30","C35","C40","C45","C50","C55","C60" })
+                            { <option>@g</option> }
+                        </select>
+
+                        <span class="param-label">锚筋中心距</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorCenterDistance" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div style="margin-top:6px">
+                        <span class="param-label" style="margin-right:8px">锚筋形式：</span>
+                        <div class="hb-radio-group horizontal" style="display:inline-flex">
+                            <label><input type="radio" name="anchorShape" value="L形弯钩"
+                                          checked="@(Input.AnchorShape=="L形弯钩")"
+                                          @onchange='() => Input.AnchorShape="L形弯钩"'/>①L形弯钩</label>
+                            <label><input type="radio" name="anchorShape" value="三边围焊"
+                                          checked="@(Input.AnchorShape=="三边围焊")"
+                                          @onchange='() => Input.AnchorShape="三边围焊"'/>②三边围焊</label>
+                        </div>
+                    </div>
+                    <div style="margin-top:4px">
+                        <label class="hb-checkbox">
+                            <input type="checkbox" @bind="Input.AnchorHasMechanicalAnchor" />
+                            锚筋末端有符合规范要求的锚头或机械锚固措施
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- 锚板参数 -->
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">锚板参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">板长</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorPlateLength" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">板宽</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorPlateWidth" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">板厚</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.AnchorPlateThickness" step="1" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+            else if (Input.EmbedType == "后补锚栓")
+            {
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">后补锚栓参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">锚栓型号</span>
+                        <select class="hb-input" @bind="Input.PostAnchorSpec" @bind:after="RunCalculation">
+                            <option>M8</option><option>M10</option><option>M12</option><option>M16</option><option>M20</option>
+                        </select>
+                        <span class="param-label">锚栓类型</span>
+                        <select class="hb-input" @bind="Input.PostAnchorType" @bind:after="RunCalculation">
+                            <option>扩底型锚栓</option><option>扭矩控制膨胀型锚栓</option><option>普通化学锚栓</option>
+                            <option>特殊倒锥形化学锚栓(GB50367)</option><option>特殊倒锥形化学锚栓(JGJ145)</option>
+                        </select>
+                        <span class="param-label">锚栓材质</span>
+                        <select class="hb-input" @bind="Input.PostAnchorMaterial" @bind:after="RunCalculation">
+                            <option>碳钢4.8</option><option>碳钢5.8</option><option>碳钢8.8</option><option>不锈钢A2-70</option>
+                        </select>
+                        <span class="param-label">数量</span>
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.PostAnchorCount" min="2" @bind:after="RunCalculation"/>
+                        <span class="param-label">有效锚固深度</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.PostAnchorDepth" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:4px">
+                        <span class="param-label">混凝土等级：</span>
+                        <select class="hb-input" style="width:80px" @bind="Input.ConcreteGrade" @bind:after="RunCalculation">
+                            @foreach (var g in new[] { "C20","C25","C30","C35","C40","C45","C50","C55","C60","C70","C80" })
+                            { <option>@g</option> }
+                        </select>
+                    </div>
+                </fieldset>
+            }
+            else if (Input.EmbedType == "槽型埋件")
+            {
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">槽型埋件参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">槽体材质</span>
+                        <select class="hb-input" @bind="Input.SlotChannelMaterial" @bind:after="RunCalculation">
+                            <option>Q235</option><option>Q355</option>
+                        </select>
+                        <span class="param-label">槽体长度lch</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotChannelLength" step="10" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">槽体宽度bch</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotChannelWidth" step="1" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+
+                        <span class="param-label">槽体高度hch</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotChannelHeight" step="1" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">锚筋材质</span>
+                        <select class="hb-input" @bind="Input.SlotAnchorMaterial" @bind:after="RunCalculation">
+                            <option>Q235</option><option>Q355</option>
+                        </select>
+                        <span class="param-label">锚筋截面积</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotAnchorArea" step="1" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm²</span>
+                        </div>
+
+                        <span class="param-label">锚筋数量</span>
+                        <select class="hb-input" @bind="Input.SlotAnchorCount" @bind:after="RunCalculation">
+                            <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        </select>
+                        <span class="param-label">锚筋间距s</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotAnchorSpacing" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">有效锚固深度hef</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotHef" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+
+                        <span class="param-label">槽口厚度t</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotThicknessT" step="0.5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">混凝土等级</span>
+                        <select class="hb-input" @bind="Input.SlotConcreteGrade" @bind:after="RunCalculation">
+                            @foreach (var g in new[] { "C20","C25","C30","C35","C40","C45","C50","C55","C60","C70","C80" })
+                            { <option>@g</option> }
+                        </select>
+                        <span class="param-label">基材类型</span>
+                        <select class="hb-input" @bind="Input.SlotBaseType" @bind:after="RunCalculation">
+                            <option>开裂混凝土</option><option>非开裂混凝土</option>
+                        </select>
+
+                        <span class="param-label">T型螺栓数</span>
+                        <select class="hb-input" @bind="Input.SlotTBoltCount" @bind:after="RunCalculation">
+                            <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                        </select>
+                        <span class="param-label">边距c₁</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotEdgeC1" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">边距c₂</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.SlotEdgeC2" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+            else
+            {
+                <!-- 对穿螺栓 -->
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">对穿螺栓参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">螺栓型号</span>
+                        <select class="hb-input" @bind="Input.ThroughBoltSpec" @bind:after="RunCalculation">
+                            <option>M8</option><option>M10</option><option>M12</option><option>M16</option><option>M20</option>
+                        </select>
+                        <span class="param-label">螺栓材质</span>
+                        <select class="hb-input" @bind="Input.ThroughBoltMaterial" @bind:after="RunCalculation">
+                            <option>碳钢4.8</option><option>碳钢8.8</option><option>不锈钢A2-70</option>
+                        </select>
+                        <span class="param-label">数量</span>
+                        <input class="hb-input" style="width:60px" type="number" @bind="Input.ThroughBoltCount" min="2" @bind:after="RunCalculation"/>
+                        <span class="param-label">最薄壁厚</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.ThroughBoltMinThickness" step="0.5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+
+            <!-- 埋件验算结果 -->
+            <fieldset class="groupbox" style="background:var(--bg-page);margin-top:6px">
+                <legend class="groupbox-title" style="font-size:11px">埋件验算结果</legend>
+                <table class="hb-table" style="font-size:12px;width:100%">
+                    <thead><tr><th>验算项目</th><th>利用率</th><th>结果</th></tr></thead>
+                    <tbody>
+                    @if (Input.EmbedType == "土建预埋")
+                    {
+                        <tr>
+                            <td>锚筋抗拉 N/(n·Nt)</td>
+                            <td>@(Input.AnchorTensionRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.AnchorTensionPass?"badge-pass":"badge-fail")">@(Input.AnchorTensionPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td>锚筋抗剪 V/(n·Nv)</td>
+                            <td>@(Input.AnchorShearRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.AnchorShearPass?"badge-pass":"badge-fail")">@(Input.AnchorShearPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td>拉剪联合 √(η²+ξ²)</td>
+                            <td>@(Input.TensionShearCombinedRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.TensionShearCombinedPass?"badge-pass":"badge-fail")">@(Input.TensionShearCombinedPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td>锚板抗弯 σ/f</td>
+                            <td>@(Input.AnchorPlateBendRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.AnchorPlateBendPass?"badge-pass":"badge-fail")">@(Input.AnchorPlateBendPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td>混凝土局部承压 σc/fc</td>
+                            <td>@(Input.ConcreteLocalBearingRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.ConcreteLocalBearingPass?"badge-pass":"badge-fail")">@(Input.ConcreteLocalBearingPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                    }
+                    else if (Input.EmbedType == "后补锚栓")
+                    {
+                        <tr>
+                            <td>钢材破坏 NSd/NRd,s</td>
+                            <td>@(Input.PostAnchorSteelRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.PostAnchorSteelPass?"badge-pass":"badge-fail")">@(Input.PostAnchorSteelPass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                        <tr>
+                            <td>混凝土锥体破坏 NSd/NRd,c</td>
+                            <td>@(Input.PostAnchorConcreteRatio.ToString("F2"))</td>
+                            <td><span class="@(Input.PostAnchorConcretePass?"badge-pass":"badge-fail")">@(Input.PostAnchorConcretePass?"✅通过":"❌不通过")</span></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" style="text-align:center;color:var(--text-muted)">@(Input.EmbedType)验算（参数输入后自动计算）</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div class="metric-grid" style="margin-top:6px">
+                    <div class="metric-card">
+                        <div class="metric-label">最大利用率</div>
+                        <div class="metric-value">@(Input.AnchorUtilization.ToString("F0"))%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">综合判定</div>
+                        <span class="@(Input.AnchorPass?"badge-pass":"badge-fail")">@(Input.AnchorPass?"✅通过":"❌不通过")</span>
+                    </div>
+                </div>
+            </fieldset>
+        </fieldset>
+
+        <!-- 转接件+焊缝参数 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">转接件与焊缝参数</legend>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <!-- 转接件 -->
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">转接件</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">型材号</span>
+                        <select class="hb-input" @bind="Input.TransferSpec" @bind:after="OnTransferSpecChanged">
+                            <option>10#槽钢</option><option>12#槽钢</option><option>14#槽钢</option>
+                        </select>
+                        <span class="param-label">抗扭矩Wt</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:80px;background:#f0f0f0" type="number" value="@Input.TransferWt" readonly/>
+                            <span class="param-unit">cm³</span>
+                        </div>
+                        <span class="param-label">惯性矩Ix</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:80px;background:#f0f0f0" type="number" value="@Input.TransferIx" readonly/>
+                            <span class="param-unit">cm⁴</span>
+                        </div>
+                        <span class="param-label">截面积A</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:80px;background:#f0f0f0" type="number" value="@Input.TransferArea" readonly/>
+                            <span class="param-unit">mm²</span>
+                        </div>
+                        <span class="param-label">钢材材质</span>
+                        <select class="hb-input" @bind="Input.TransferSteelGrade" @bind:after="RunCalculation">
+                            <option>Q235</option><option>Q355</option>
+                        </select>
+                        <span class="param-label">布置方式</span>
+                        <div class="hb-radio-group horizontal">
+                            <label><input type="radio" name="channelLayout" value="单片" checked="@(Input.ChannelLayout=="单片")"
+                                @onchange='() => { Input.ChannelLayout="单片"; RunCalculation(); }'/>单片</label>
+                            <label><input type="radio" name="channelLayout" value="双片" checked="@(Input.ChannelLayout=="双片")"
+                                @onchange='() => { Input.ChannelLayout="双片"; RunCalculation(); }'/>双片</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- 焊缝 -->
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">焊缝参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:center;font-size:12px">
+                        <span class="param-label">焊接形式</span>
+                        <div class="hb-radio-group horizontal">
+                            <label><input type="radio" name="weldForm" value="L型焊" checked="@(Input.WeldForm=="L型焊")"
+                                @onchange='() => { Input.WeldForm="L型焊"; RunCalculation(); }'/>L型焊</label>
+                            <label><input type="radio" name="weldForm" value="三边围焊" checked="@(Input.WeldForm=="三边围焊")"
+                                @onchange='() => { Input.WeldForm="三边围焊"; RunCalculation(); }'/>三边围焊</label>
+                        </div>
+                        <span class="param-label">焊缝高度hf</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.WeldHeight" step="1" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">水平段焊缝长</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.HorizontalWeldLength" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                        <span class="param-label">垂直段焊缝长</span>
+                        <div style="display:flex;align-items:center;gap:2px">
+                            <input class="hb-input" style="width:60px" type="number" @bind="Input.VerticalWeldLength" step="5" @bind:after="RunCalculation"/>
+                            <span class="param-unit">mm</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- 焊缝+转接件验算结果 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">焊缝验算</legend>
+                    <div style="font-size:12px;padding:4px">
+                        <div>角焊缝抗剪: τf = V / (0.7×hf×Σlw)</div>
+                        <div style="margin-top:2px">有效焊缝长 Σlw = @(_calcWeldEffectiveLength.ToString("F0")) mm</div>
+                        <div style="margin-top:2px">τf = @(_calcWeldStress.ToString("F1")) MPa ≤ ffw = @(_calcFfw.ToString("F0")) MPa</div>
+                        <div style="margin-top:4px">利用率: @(Input.WeldRatio.ToString("F2"))
+                            <span class="@(Input.WeldPass?"badge-pass":"badge-fail")" style="margin-left:8px">@(Input.WeldPass?"✅通过":"❌不通过")</span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="groupbox" style="background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">转接件验算</legend>
+                    <div style="font-size:12px;padding:4px">
+                        <div>弯矩: M = V × e = @(_calcTransferM.ToString("F1")) N·mm</div>
+                        <div style="margin-top:2px">应力: σ = M/Wt = @(_calcTransferStress.ToString("F1")) MPa ≤ f = @(_calcTransferF.ToString("F0")) MPa</div>
+                        <div style="margin-top:4px">利用率: @(Input.TransferBendRatio.ToString("F2"))
+                            <span class="@(Input.TransferPass?"badge-pass":"badge-fail")" style="margin-left:8px">@(Input.TransferPass?"✅通过":"❌不通过")</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- 右侧：受力方式计算简图 -->
+    <div style="flex:5;min-width:220px">
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">受力方式简图 - @Input.ForceMode</legend>
+            @if (Input.ForceMode == "梁底吊挂")
+            {
+                <svg viewBox="0 0 240 280" width="220" height="260" style="display:block;margin:auto;background:#fafafa">
+                    <!-- 梁截面 -->
+                    <rect x="40" y="20" width="160" height="50" fill="#B0BEC5" stroke="#37474F" stroke-width="1.5"/>
+                    <text x="120" y="50" text-anchor="middle" font-size="11" fill="#333">混凝土梁</text>
+                    <!-- 吊挂板 -->
+                    <rect x="95" y="70" width="50" height="8" fill="#607D8B" stroke="#37474F" stroke-width="1"/>
+                    <text x="155" y="78" font-size="9" fill="#455A64">锚板</text>
+                    <!-- 螺栓 -->
+                    <circle cx="108" cy="74" r="3" fill="#D32F2F"/><circle cx="132" cy="74" r="3" fill="#D32F2F"/>
+                    <!-- 立柱 -->
+                    <rect x="112" y="78" width="16" height="140" fill="#78909C" stroke="#37474F" stroke-width="1"/>
+                    <text x="140" y="155" font-size="9" fill="#455A64">立柱</text>
+                    <!-- N箭头(向下) -->
+                    <line x1="120" y1="218" x2="120" y2="250" stroke="#1976D2" stroke-width="1.5"/>
+                    <polygon points="120,250 116,242 124,242" fill="#1976D2"/>
+                    <text x="130" y="248" font-size="10" fill="#1976D2" font-weight="bold">N</text>
+                    <!-- V箭头(水平) -->
+                    <line x1="128" y1="150" x2="170" y2="150" stroke="#E65100" stroke-width="1.5"/>
+                    <polygon points="170,150 162,146 162,154" fill="#E65100"/>
+                    <text x="172" y="148" font-size="10" fill="#E65100" font-weight="bold">V</text>
+                    <!-- e0标注 -->
+                    <line x1="120" y1="78" x2="170" y2="78" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <line x1="120" y1="74" x2="120" y2="92" stroke="#9C27B0" stroke-width="0.5"/>
+                    <line x1="170" y1="74" x2="170" y2="92" stroke="#9C27B0" stroke-width="0.5"/>
+                    <text x="145" y="92" text-anchor="middle" font-size="9" fill="#9C27B0">e₀=@(Input.ForceE0)</text>
+                </svg>
+            }
+            else if (Input.ForceMode == "侧埋")
+            {
+                <svg viewBox="0 0 260 280" width="240" height="260" style="display:block;margin:auto;background:#fafafa">
+                    <!-- 梁截面 -->
+                    <rect x="20" y="30" width="80" height="200" fill="#B0BEC5" stroke="#37474F" stroke-width="1.5"/>
+                    <text x="60" y="135" text-anchor="middle" font-size="11" fill="#333">梁</text>
+                    <!-- 预埋板 -->
+                    <rect x="100" y="80" width="8" height="100" fill="#607D8B" stroke="#37474F" stroke-width="1"/>
+                    <!-- 锚筋 -->
+                    <line x1="100" y1="100" x2="55" y2="100" stroke="#D32F2F" stroke-width="2.5"/>
+                    <line x1="100" y1="160" x2="55" y2="160" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- L弯钩 -->
+                    <path d="M55,100 L55,112" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <path d="M55,160 L55,148" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- 立柱 -->
+                    <rect x="108" y="100" width="16" height="130" fill="#78909C" stroke="#37474F" stroke-width="1"/>
+                    <text x="138" y="170" font-size="9" fill="#455A64">立柱</text>
+                    <!-- N箭头 -->
+                    <line x1="116" y1="230" x2="116" y2="260" stroke="#1976D2" stroke-width="1.5"/>
+                    <polygon points="116,260 112,252 120,252" fill="#1976D2"/>
+                    <text x="126" y="258" font-size="10" fill="#1976D2" font-weight="bold">N</text>
+                    <!-- V箭头 -->
+                    <line x1="124" y1="130" x2="180" y2="130" stroke="#E65100" stroke-width="1.5"/>
+                    <polygon points="180,130 172,126 172,134" fill="#E65100"/>
+                    <text x="182" y="128" font-size="10" fill="#E65100" font-weight="bold">V</text>
+                    <!-- e0 -->
+                    <line x1="104" y1="68" x2="180" y2="68" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="142" y="64" text-anchor="middle" font-size="9" fill="#9C27B0">e₀=@(Input.ForceE0)</text>
+                </svg>
+            }
+            else if (Input.ForceMode == "梁顶埋")
+            {
+                <svg viewBox="0 0 260 280" width="240" height="260" style="display:block;margin:auto;background:#fafafa">
+                    <!-- 梁截面 -->
+                    <rect x="50" y="100" width="160" height="60" fill="#B0BEC5" stroke="#37474F" stroke-width="1.5"/>
+                    <text x="130" y="135" text-anchor="middle" font-size="11" fill="#333">混凝土梁</text>
+                    <!-- 预埋板(梁顶) -->
+                    <rect x="80" y="90" width="100" height="10" fill="#607D8B" stroke="#37474F" stroke-width="1"/>
+                    <!-- 锚筋(向下) -->
+                    <line x1="100" y1="100" x2="100" y2="150" stroke="#D32F2F" stroke-width="2.5"/>
+                    <line x1="160" y1="100" x2="160" y2="150" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- L弯钩 -->
+                    <path d="M100,150 L100,155 L112,155" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <path d="M160,150 L160,155 L148,155" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- 立柱(向上) -->
+                    <rect x="122" y="10" width="16" height="80" fill="#78909C" stroke="#37474F" stroke-width="1"/>
+                    <text x="148" y="50" font-size="9" fill="#455A64">立柱</text>
+                    <!-- N -->
+                    <line x1="130" y1="10" x2="130" y2="-5" stroke="#1976D2" stroke-width="1.5"/>
+                    <polygon points="130,-5 126,3 134,3" fill="#1976D2"/>
+                    <text x="140" y="0" font-size="10" fill="#1976D2" font-weight="bold">N</text>
+                    <!-- V -->
+                    <line x1="138" y1="40" x2="190" y2="40" stroke="#E65100" stroke-width="1.5"/>
+                    <polygon points="190,40 182,36 182,44" fill="#E65100"/>
+                    <text x="192" y="38" font-size="10" fill="#E65100" font-weight="bold">V</text>
+                    <!-- e1 e2 e3 标注 -->
+                    <line x1="80" y1="82" x2="122" y2="82" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="101" y="78" text-anchor="middle" font-size="8" fill="#9C27B0">e₁=@(Input.ForceE1)</text>
+                    <line x1="100" y1="170" x2="160" y2="170" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="130" y="180" text-anchor="middle" font-size="8" fill="#9C27B0">e₂=@(Input.ForceE2)</text>
+                    <line x1="138" y1="82" x2="180" y2="82" stroke="#2E7D32" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="159" y="78" text-anchor="middle" font-size="8" fill="#2E7D32">e₃=@(Input.ForceE3)</text>
+                </svg>
+            }
+            else @* 梁底埋 *@
+            {
+                <svg viewBox="0 0 260 280" width="240" height="260" style="display:block;margin:auto;background:#fafafa">
+                    <!-- 梁截面 -->
+                    <rect x="50" y="100" width="160" height="60" fill="#B0BEC5" stroke="#37474F" stroke-width="1.5"/>
+                    <text x="130" y="135" text-anchor="middle" font-size="11" fill="#333">混凝土梁</text>
+                    <!-- 预埋板(梁底) -->
+                    <rect x="80" y="160" width="100" height="10" fill="#607D8B" stroke="#37474F" stroke-width="1"/>
+                    <!-- 锚筋(向上) -->
+                    <line x1="100" y1="160" x2="100" y2="110" stroke="#D32F2F" stroke-width="2.5"/>
+                    <line x1="160" y1="160" x2="160" y2="110" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- L弯钩 -->
+                    <path d="M100,110 L100,105 L112,105" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <path d="M160,110 L160,105 L148,105" fill="none" stroke="#D32F2F" stroke-width="2.5"/>
+                    <!-- 立柱(向下) -->
+                    <rect x="122" y="170" width="16" height="80" fill="#78909C" stroke="#37474F" stroke-width="1"/>
+                    <text x="148" y="215" font-size="9" fill="#455A64">立柱</text>
+                    <!-- N -->
+                    <line x1="130" y1="250" x2="130" y2="268" stroke="#1976D2" stroke-width="1.5"/>
+                    <polygon points="130,268 126,260 134,260" fill="#1976D2"/>
+                    <text x="140" y="266" font-size="10" fill="#1976D2" font-weight="bold">N</text>
+                    <!-- V -->
+                    <line x1="138" y1="215" x2="190" y2="215" stroke="#E65100" stroke-width="1.5"/>
+                    <polygon points="190,215 182,211 182,219" fill="#E65100"/>
+                    <text x="192" y="213" font-size="10" fill="#E65100" font-weight="bold">V</text>
+                    <!-- e1 e2 e3 -->
+                    <line x1="80" y1="178" x2="122" y2="178" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="101" y="190" text-anchor="middle" font-size="8" fill="#9C27B0">e₁=@(Input.ForceE1)</text>
+                    <line x1="100" y1="95" x2="160" y2="95" stroke="#9C27B0" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="130" y="92" text-anchor="middle" font-size="8" fill="#9C27B0">e₂=@(Input.ForceE2)</text>
+                    <line x1="138" y1="178" x2="180" y2="178" stroke="#2E7D32" stroke-width="0.8" stroke-dasharray="3"/>
+                    <text x="159" y="190" text-anchor="middle" font-size="8" fill="#2E7D32">e₃=@(Input.ForceE3)</text>
+                </svg>
+            }
+        </fieldset>
+
+        <!-- 预埋件截面示意图 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">预埋件截面示意图</legend>
+            @if (Input.EmbedType == "土建预埋")
+            {
+                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+                    <div style="text-align:center">
+                        <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">正面视图</div>
+                        <svg viewBox="0 0 180 200" width="150" height="170" style="border:1px solid var(--border-color);background:#fafafa">
+                            <defs>
+                                <marker id="arwL" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6" fill="none" stroke="#333" stroke-width="0.5"/></marker>
+                                <marker id="arwR" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#333" stroke-width="0.5"/></marker>
+                            </defs>
+                            <rect x="30" y="20" width="120" height="12" fill="#607D8B" stroke="#37474F" stroke-width="1.5"/>
+                            <line x1="55" y1="32" x2="55" y2="170" stroke="#D32F2F" stroke-width="3"/>
+                            <line x1="125" y1="32" x2="125" y2="170" stroke="#D32F2F" stroke-width="3"/>
+                            @if (Input.AnchorCount >= 4)
+                            {
+                                <line x1="85" y1="32" x2="85" y2="170" stroke="#D32F2F" stroke-width="3"/>
+                                <line x1="95" y1="32" x2="95" y2="170" stroke="#D32F2F" stroke-width="3"/>
+                            }
+                            @if (Input.AnchorShape == "L形弯钩")
+                            {
+                                <path d="M55,170 L55,180 L70,180" fill="none" stroke="#D32F2F" stroke-width="3"/>
+                                <path d="M125,170 L125,180 L110,180" fill="none" stroke="#D32F2F" stroke-width="3"/>
+                            }
+                            <line x1="30" y1="10" x2="150" y2="10" stroke="#333" stroke-width="0.5" marker-start="url(#arwL)" marker-end="url(#arwR)"/>
+                            <text x="90" y="8" text-anchor="middle" font-size="9" fill="#333">@(Input.AnchorPlateLength)</text>
+                            <line x1="55" y1="195" x2="125" y2="195" stroke="#333" stroke-width="0.5"/>
+                            <text x="90" y="193" text-anchor="middle" font-size="8" fill="#333">e₂=@(Input.AnchorCenterDistance)</text>
+                        </svg>
+                    </div>
+                </div>
+            }
+            else if (Input.EmbedType == "槽型埋件")
+            {
+                <div style="text-align:center">
+                    <svg viewBox="0 0 200 220" width="180" height="200" style="display:block;margin:auto;border:1px solid var(--border-color);background:#fafafa">
+                        <!-- 混凝土 -->
+                        <rect x="20" y="10" width="160" height="120" fill="#E0E0E0" stroke="#757575" stroke-width="1" stroke-dasharray="4"/>
+                        <text x="100" y="30" text-anchor="middle" font-size="9" fill="#757575">混凝土</text>
+                        <!-- 槽体 -->
+                        <rect x="60" y="110" width="80" height="@(Math.Max(Input.SlotChannelHeight * 0.5, 15))" fill="#607D8B" stroke="#37474F" stroke-width="1.5"/>
+                        <text x="100" y="@(115 + Math.Max(Input.SlotChannelHeight*0.25,7))" text-anchor="middle" font-size="8" fill="white">槽体</text>
+                        <!-- 锚筋 -->
+                        <line x1="80" y1="110" x2="80" y2="40" stroke="#D32F2F" stroke-width="2.5"/>
+                        <line x1="120" y1="110" x2="120" y2="40" stroke="#D32F2F" stroke-width="2.5"/>
+                        @if (Input.SlotAnchorCount >= 3)
+                        {
+                            <line x1="100" y1="110" x2="100" y2="40" stroke="#D32F2F" stroke-width="2.5"/>
+                        }
+                        <!-- 标注 hef -->
+                        <line x1="150" y1="40" x2="150" y2="110" stroke="#1976D2" stroke-width="0.5"/>
+                        <text x="165" y="78" font-size="8" fill="#1976D2">hef</text>
+                        <!-- 标注 hch -->
+                        <line x1="45" y1="110" x2="45" y2="@(110 + Math.Max(Input.SlotChannelHeight*0.5,15))" stroke="#9C27B0" stroke-width="0.5"/>
+                        <text x="30" y="@(115 + Math.Max(Input.SlotChannelHeight*0.25,7))" font-size="8" fill="#9C27B0">hch</text>
+                        <!-- 标注 bch -->
+                        <line x1="60" y1="@(115 + Math.Max(Input.SlotChannelHeight*0.5,15))" x2="140" y2="@(115 + Math.Max(Input.SlotChannelHeight*0.5,15))" stroke="#333" stroke-width="0.5"/>
+                        <text x="100" y="@(125 + Math.Max(Input.SlotChannelHeight*0.5,15))" text-anchor="middle" font-size="8" fill="#333">bch=@(Input.SlotChannelWidth)</text>
+                        <!-- T型螺栓 -->
+                        <rect x="85" y="@(110 + Math.Max(Input.SlotChannelHeight*0.5,15))" width="30" height="6" fill="#FF9800" stroke="#E65100" stroke-width="0.5"/>
+                        <text x="100" y="@(125 + Math.Max(Input.SlotChannelHeight*0.5,15) + 10)" text-anchor="middle" font-size="7" fill="#E65100">T型螺栓×@(Input.SlotTBoltCount)</text>
+                        <!-- c1/c2 -->
+                        <line x1="20" y1="135" x2="60" y2="135" stroke="#2E7D32" stroke-width="0.5" stroke-dasharray="2"/>
+                        <text x="40" y="145" text-anchor="middle" font-size="7" fill="#2E7D32">c₁</text>
+                        <line x1="140" y1="135" x2="180" y2="135" stroke="#2E7D32" stroke-width="0.5" stroke-dasharray="2"/>
+                        <text x="160" y="145" text-anchor="middle" font-size="7" fill="#2E7D32">c₂</text>
+                    </svg>
+                </div>
+            }
+            else
+            {
+                <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px">
+                    @(Input.EmbedType)示意图
+                </div>
+            }
+        </fieldset>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Step6Data Input { get; set; } = new();
+    [Parameter] public Step3Data? Step3Input { get; set; }
+    [Parameter] public string CurtainWallType { get; set; } = "全隐框玻璃";
+    [Parameter] public Step2Data? Step2Input { get; set; }
+
+    private bool _isAbsoluteSpan => Step3Input?.AbsoluteSpan == true;
+
+    // 计算中间变量
+    private double _calcWeldEffectiveLength;
+    private double _calcWeldStress;
+    private double _calcFfw;
+    private double _calcTransferM;
+    private double _calcTransferStress;
+    private double _calcTransferF;
+
+    protected override void OnParametersSet()
+    {
+        if (!_isAbsoluteSpan && Input.ForceMode == "梁底吊挂")
+            Input.ForceMode = "侧埋";
+        OnTransferSpecChanged();
+        RunCalculation();
+    }
+
+    /// <summary>转接件型材号变更 → 自动填充截面参数</summary>
+    private void OnTransferSpecChanged()
+    {
+        switch (Input.TransferSpec)
+        {
+            case "10#槽钢":
+                Input.TransferWt = 39.7; Input.TransferIx = 198; Input.TransferArea = 1274.8;
+                Input.ChannelModel = "10#";
+                break;
+            case "12#槽钢":
+                Input.TransferWt = 55.8; Input.TransferIx = 340; Input.TransferArea = 1520.4;
+                Input.ChannelModel = "12#";
+                break;
+            case "14#槽钢":
+                Input.TransferWt = 80.9; Input.TransferIx = 564; Input.TransferArea = 1853.8;
+                Input.ChannelModel = "14#";
+                break;
+        }
+        RunCalculation();
+    }
+
+    /// <summary>获取锚筋屈服强度 fy (MPa)</summary>
+    private double GetFy(string material) => material switch
+    {
+        "HPB300" => 270,
+        "HRB335" => 300,
+        "HRB400" => 360,
+        _ => 270
+    };
+
+    /// <summary>获取混凝土轴心抗压强度 fc (MPa)</summary>
+    private double GetFc(string grade) => grade switch
+    {
+        "C20" => 9.6, "C25" => 11.9, "C30" => 14.3, "C35" => 16.7,
+        "C40" => 19.1, "C45" => 21.1, "C50" => 23.1, "C55" => 25.3,
+        "C60" => 27.5, "C70" => 31.8, "C80" => 35.9,
+        _ => 11.9
+    };
+
+    /// <summary>获取混凝土轴心抗压强度标准值 fck (MPa)</summary>
+    private double GetFck(string grade) => grade switch
+    {
+        "C20" => 13.4, "C25" => 16.7, "C30" => 20.1, "C35" => 23.4,
+        "C40" => 26.8, "C45" => 29.6, "C50" => 32.4, "C55" => 35.5,
+        "C60" => 38.5, "C70" => 44.5, "C80" => 50.2,
+        _ => 16.7
+    };
+
+    /// <summary>获取钢材抗拉/抗弯强度设计值 f (MPa)</summary>
+    private double GetSteelF(string grade) => grade switch
+    {
+        "Q235" => 215,
+        "Q355" => 305,
+        _ => 215
+    };
+
+    /// <summary>获取焊缝抗剪强度 ffw (MPa) — 角焊缝，E43xx系列</summary>
+    private double GetFfw(string grade) => grade switch
+    {
+        "Q235" => 160,
+        "Q355" => 200,
+        _ => 160
+    };
+
+    /// <summary>获取后补锚栓极限抗拉强度 fuk (MPa)</summary>
+    private double GetFuk(string material) => material switch
+    {
+        "碳钢4.8" => 400, "碳钢5.8" => 500, "碳钢8.8" => 800,
+        "不锈钢A2-70" => 700,
+        _ => 400
+    };
+
+    /// <summary>获取螺栓有效截面积 As (mm²)</summary>
+    private double GetBoltAs(string spec) => spec switch
+    {
+        "M8" => 36.6, "M10" => 58.0, "M12" => 84.3, "M16" => 157, "M20" => 245,
+        _ => 84.3
+    };
+
+    /// <summary>运行全部验算</summary>
+    private void RunCalculation()
+    {
+        // V = 风荷载水平剪力 = Step3支反力(kN → N)
+        double V_force = (Step3Input?.ReactionForce ?? 5.0) * 1000; // N
+        // N = 竖向自重 = 面板宽度 × 跨度 × 0.5kN/m²(玻璃25.6kN/m³×6mm≈0.154kN/m²，取0.5含龙骨)
+        double tributaryW = (Step3Input?.TributaryWidth ?? 1200) / 1000.0; // m
+        double spanM = (Step3Input?.Span ?? 3000) / 1000.0; // m
+        double N_force = 0.5 * tributaryW * spanM * 1000; // N (0.5kN/m² × 面积 → N)
+
+        // ===== 土建预埋件验算 =====
+        if (Input.EmbedType == "土建预埋")
+        {
+            double fy = GetFy(Input.AnchorMaterial);
+            double d = Input.AnchorDiameter;
+            double As = Math.PI / 4.0 * d * d; // 单根截面积
+            int n = Input.AnchorCount;
+
+            // 1. 锚筋抗拉: Nt = fy × As
+            double Nt = fy * As;
+            double tensionRatio = N_force / (n * Nt);
+            Input.AnchorTensionRatio = tensionRatio;
+            Input.AnchorTensionPass = tensionRatio <= 1.0;
+
+            // 2. 锚筋抗剪: Nv = 0.4 × fy × As
+            double Nv = 0.4 * fy * As;
+            double shearRatio = V_force / (n * Nv);
+            Input.AnchorShearRatio = shearRatio;
+            Input.AnchorShearPass = shearRatio <= 1.0;
+
+            // 3. 拉剪联合: (η)² + (ξ)² ≤ 1.0
+            double combinedRatio = Math.Sqrt(tensionRatio * tensionRatio + shearRatio * shearRatio);
+            Input.TensionShearCombinedRatio = combinedRatio;
+            Input.TensionShearCombinedPass = combinedRatio <= 1.0;
+
+            // 4. 锚板抗弯
+            double e0 = Input.ForceE0;
+            double e1 = Input.ForceE1 > 0 ? Input.ForceE1 : e0;
+            double e2 = Input.ForceE2;
+            double e3 = Input.ForceE3 > 0 ? Input.ForceE3 : e0;
+            double M_plate;
+            if (Input.ForceMode == "梁底吊挂")
+                M_plate = N_force * e0;                    // 自重产生弯矩
+            else if (Input.ForceMode == "侧埋")
+                M_plate = V_force * e0;                    // 风荷载产生弯矩
+            else if (Input.ForceMode == "梁顶埋")
+                M_plate = V_force * e2 + N_force * e1;    // 双向偏心
+            else // 梁底埋
+                M_plate = V_force * e2 + N_force * e3;    // 双向偏心
+
+            double b_plate = Input.AnchorPlateWidth;
+            double t_plate = Input.AnchorPlateThickness;
+            double W_plate = b_plate * t_plate * t_plate / 6.0; // mm³
+            double f_plate = 215; // Q235
+            double sigma_plate = W_plate > 0 ? M_plate / W_plate : 9999;
+            double plateBendRatio = sigma_plate / f_plate;
+            Input.AnchorPlateBendRatio = plateBendRatio;
+            Input.AnchorPlateBendPass = plateBendRatio <= 1.0;
+
+            // 5. 混凝土局部承压
+            double fc = GetFc(Input.ConcreteGrade);
+            double sigma_c = N_force / (Input.AnchorPlateLength * Input.AnchorPlateWidth);
+            double concRatio = sigma_c / fc;
+            Input.ConcreteLocalBearingRatio = concRatio;
+            Input.ConcreteLocalBearingPass = concRatio <= 1.0;
+
+            // 综合
+            double maxRatio = Math.Max(Math.Max(Math.Max(tensionRatio, shearRatio), Math.Max(combinedRatio, plateBendRatio)), concRatio);
+            Input.AnchorUtilization = maxRatio * 100;
+            Input.AnchorPass = Input.AnchorTensionPass && Input.AnchorShearPass && Input.TensionShearCombinedPass
+                && Input.AnchorPlateBendPass && Input.ConcreteLocalBearingPass;
+        }
+        // ===== 后补锚栓验算 (JGJ145-2013) =====
+        else if (Input.EmbedType == "后补锚栓")
+        {
+            double As_bolt = GetBoltAs(Input.PostAnchorSpec);
+            double fuk = GetFuk(Input.PostAnchorMaterial);
+            int n_bolt = Input.PostAnchorCount;
+            double hef = Input.PostAnchorDepth;
+            double fck = GetFck(Input.ConcreteGrade);
+
+            // 钢材破坏: NRk,s = As × fuk, 分项系数γMs=1.5
+            double NRk_s = As_bolt * fuk;
+            double NRd_s = NRk_s / 1.5;
+            double steelRatio = N_force / (n_bolt * NRd_s);
+            Input.PostAnchorSteelRatio = steelRatio;
+            Input.PostAnchorSteelPass = steelRatio <= 1.0;
+
+            // 混凝土锥体破坏: NRk,c = k × √fck × hef^1.5, k=7.0(开裂), 分项系数γMc=2.16
+            double k = 7.0;
+            double NRk_c = k * Math.Sqrt(fck) * Math.Pow(hef, 1.5);
+            double NRd_c = NRk_c / 2.16;
+            double concRatio = N_force / (n_bolt * NRd_c);
+            Input.PostAnchorConcreteRatio = concRatio;
+            Input.PostAnchorConcretePass = concRatio <= 1.0;
+
+            double maxR = Math.Max(steelRatio, concRatio);
+            Input.AnchorUtilization = maxR * 100;
+            Input.AnchorPass = Input.PostAnchorSteelPass && Input.PostAnchorConcretePass;
+        }
+        // ===== 槽型埋件验算 =====
+        else if (Input.EmbedType == "槽型埋件")
+        {
+            double fck = GetFck(Input.SlotConcreteGrade);
+            double hef = Input.SlotHef;
+            double As_slot = Input.SlotAnchorArea; // 单根锚筋截面积 mm²
+            int nAnchor = Input.SlotAnchorCount;
+            double fuk_slot = Input.SlotAnchorMaterial == "Q355" ? 470.0 : 370.0; // 极限抗拉强度
+            double gammaMs = 1.25;
+            double gammaMc = Input.SlotBaseType == "开裂混凝土" ? 2.16 : 1.8;
+            double k_slot = Input.SlotBaseType == "开裂混凝土" ? 7.0 : 10.0;
+
+            // 钢材破坏: NRk,s = As × fuk / γMs (每根)
+            double NRk_s = As_slot * fuk_slot / gammaMs;
+            double NRd_s_total = nAnchor * NRk_s;
+
+            // 混凝土锥体: NRk,c = k × √fck × hef^1.5 / γMc
+            double NRk_c = k_slot * Math.Sqrt(fck) * Math.Pow(hef, 1.5) / gammaMc;
+
+            // T型螺栓承载力取较小值
+            double NRd = Math.Min(NRd_s_total, NRk_c * Input.SlotTBoltCount);
+
+            // 剪力承载力(简化): VRd = 0.4 × NRd
+            double VRd = 0.4 * NRd;
+
+            // 联合验算: (N/NRd)² + (V/VRd)² ≤ 1.0
+            double tensionR = NRd > 0 ? N_force / NRd : 9999;
+            double shearR = VRd > 0 ? V_force / VRd : 9999;
+            double combined = tensionR * tensionR + shearR * shearR;
+
+            Input.AnchorUtilization = Math.Sqrt(combined) * 100;
+            Input.AnchorPass = combined <= 1.0;
+        }
+        // ===== 对穿螺栓验算 =====
+        else if (Input.EmbedType == "对穿螺栓")
+        {
+            double d_bolt = Input.ThroughBoltSpec switch
+            {
+                "M8" => 8, "M10" => 10, "M12" => 12, "M16" => 16, "M20" => 20, _ => 12
+            };
+            double As_tb = GetBoltAs(Input.ThroughBoltSpec);
+            double fuk_tb = GetFuk(Input.ThroughBoltMaterial);
+            int n_tb = Input.ThroughBoltCount;
+
+            // 抗拉: ftb = 0.8 × fuk (考虑螺纹影响), Nt = ftb × As
+            double ftb = 0.8 * fuk_tb;
+            double Nt = ftb * As_tb * n_tb;
+
+            // 抗剪: fvb = 0.4 × fuk, Nv = fvb × As
+            double fvb = 0.4 * fuk_tb;
+            double Nv = fvb * As_tb * n_tb;
+
+            // 承压: Nc = d × t_min × fc (fc取连接件材料强度，简化取215MPa Q235)
+            double fc_bearing = 215; // MPa
+            double t_min = Input.ThroughBoltMinThickness;
+            double Nc = d_bolt * t_min * fc_bearing * n_tb;
+
+            // 利用率: max(N/Nt, V/Nv, V/Nc)
+            double r1 = Nt > 0 ? N_force / Nt : 9999;
+            double r2 = Nv > 0 ? V_force / Nv : 9999;
+            double r3 = Nc > 0 ? V_force / Nc : 9999;
+            double maxR = Math.Max(Math.Max(r1, r2), r3);
+
+            Input.AnchorUtilization = maxR * 100;
+            Input.AnchorPass = maxR <= 1.0;
+        }
+        else
+        {
+            Input.AnchorUtilization = 0;
+            Input.AnchorPass = true;
+        }
+
+        // ===== 焊缝验算 =====
+        double hf = Input.WeldHeight;
+        double lh = Input.HorizontalWeldLength;
+        double lv = Input.VerticalWeldLength;
+        double sumLw;
+        if (Input.WeldForm == "L型焊")
+            sumLw = 2 * Math.Max(lh - 2 * hf, 0) + Math.Max(lv - 2 * hf, 0);
+        else // 三边围焊
+            sumLw = 2 * Math.Max(lh - 2 * hf, 0) + 2 * Math.Max(lv - 2 * hf, 0);
+
+        _calcWeldEffectiveLength = sumLw;
+        _calcFfw = GetFfw(Input.TransferSteelGrade);
+        double weldArea = 0.7 * hf * sumLw;
+        _calcWeldStress = weldArea > 0 ? V_force / weldArea : 9999;
+        Input.WeldRatio = _calcFfw > 0 ? _calcWeldStress / _calcFfw : 9999;
+        Input.WeldPass = Input.WeldRatio <= 1.0;
+
+        // ===== 转接件验算 =====
+        double ecc = Input.ForceMode switch
+        {
+            "梁底吊挂" or "侧埋" => Input.ForceE0,
+            _ => Input.ForceE2
+        };
+        _calcTransferM = V_force * ecc; // N·mm
+        double Wt_mm3 = Input.TransferWt * 1000; // cm³ → mm³
+        _calcTransferStress = Wt_mm3 > 0 ? _calcTransferM / Wt_mm3 : 9999;
+        _calcTransferF = GetSteelF(Input.TransferSteelGrade);
+        Input.TransferBendRatio = _calcTransferF > 0 ? _calcTransferStress / _calcTransferF : 9999;
+        Input.TransferPass = Input.TransferBendRatio <= 1.0;
+
+        // 转接件综合利用率
+        Input.ChannelUtilization = Input.TransferBendRatio * 100;
+        Input.ChannelPass = Input.TransferPass;
+    }
+}

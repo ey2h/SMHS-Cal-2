@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GlassManagement.Desktop.ViewModels"
+        xmlns:local="using:GlassManagement.Desktop"
+        x:Class="GlassManagement.Desktop.Views.IGUConfigWindow"
+        Title="中空玻璃配置"
+        Width="540" MinHeight="450"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height">
+
+    <Window.DataContext>
+        <vm:IGUConfigViewModel />
+    </Window.DataContext>
+
+    <ScrollViewer Padding="16">
+        <StackPanel Spacing="12">
+            <TextBlock Text="🔧 中空玻璃配置" FontSize="18" FontWeight="Bold" Foreground="#2563EB"/>
+            <Border Height="1" Background="#E2E8F0"/>
+
+            <!-- 中空参数 -->
+            <Border Classes="Section" CornerRadius="8">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="中空参数" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel>
+                            <TextBlock Text="玻璃片数:" Margin="0,0,0,4"/>
+                            <ComboBox ItemsSource="{Binding IGUSheetCountOptions}"
+                                      SelectedIndex="{Binding SheetCountIndex}" Width="100"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="气体类型:" Margin="0,0,0,4"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <RadioButton Content="Air (空气)" GroupName="GasType"
+                                             IsChecked="{Binding GasTypeIndex, Converter={x:Static local:IntEqualConverter.Instance}, ConverterParameter=0}"/>
+                                <RadioButton Content="Ar (氩气)" GroupName="GasType"
+                                             IsChecked="{Binding GasTypeIndex, Converter={x:Static local:IntEqualConverter.Instance}, ConverterParameter=1}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 顺序展示: 片 + 间隔交替 -->
+            <ItemsControl ItemsSource="{Binding Sequence}">
+                <ItemsControl.DataTemplates>
+                    <!-- 玻璃片模板 -->
+                    <DataTemplate DataType="vm:IGUSheetItemVM">
+                        <Border Margin="0,4" Padding="10" Background="White" CornerRadius="6"
+                                BorderBrush="#2563EB" BorderThickness="1">
+                            <StackPanel Spacing="6">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock FontWeight="Bold" Foreground="#2563EB">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="玻璃片 #{0} ({1})">
+                                                <Binding Path="Order"/>
+                                                <Binding Path="PositionLabel"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="厚度/配置:" VerticalAlignment="Center" Width="70"/>
+                                    <TextBlock Text="{Binding DisplayText}" VerticalAlignment="Center"
+                                               Foreground="#333" FontWeight="SemiBold"
+                                               IsVisible="{Binding DisplayText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <ComboBox SelectedIndex="{Binding ThicknessIndex}" Width="80"
+                                              IsVisible="{Binding DisplayText, Converter={x:Static StringConverters.IsNullOrEmpty}}">
+                                        <ComboBoxItem Content="5"/><ComboBoxItem Content="6"/>
+                                        <ComboBoxItem Content="8"/><ComboBoxItem Content="10"/>
+                                        <ComboBoxItem Content="12"/><ComboBoxItem Content="15"/>
+                                        <ComboBoxItem Content="19"/><ComboBoxItem Content="20"/>
+                                    </ComboBox>
+                                    <Button Content="配置..." Click="OnConfigureSheet" Tag="{Binding}"
+                                            Classes="Primary" Padding="8,4"/>
+                                </StackPanel>
+                                <CheckBox Content="Low-E" IsChecked="{Binding IsLowE}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+
+                    <!-- 间隔层模板 -->
+                    <DataTemplate DataType="vm:IGUGapItemVM">
+                        <Border Margin="0,2" Padding="8" Background="#FEF3C7" CornerRadius="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding Order, StringFormat=间隔层 {0}}"
+                                           VerticalAlignment="Center" Width="80" FontWeight="Bold" Foreground="#F59E0B"/>
+                                <TextBlock Text="中空厚度:" VerticalAlignment="Center"/>
+                                <ComboBox SelectedIndex="{Binding ThicknessIndex}" Width="80">
+                                    <ComboBoxItem Content="6"/><ComboBoxItem Content="9"/>
+                                    <ComboBoxItem Content="12"/><ComboBoxItem Content="15"/>
+                                    <ComboBoxItem Content="16"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.DataTemplates>
+            </ItemsControl>
+
+            <!-- 结果显示 -->
+            <Border Classes="ResultArea" CornerRadius="8">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="生成结果:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding ConfigResult}" FontSize="16" FontWeight="Bold"
+                               Foreground="#10B981" TextWrapping="Wrap"/>
+                    <Button Content="✅ 确认" Click="OnConfirm"
+                            Classes="Success" Padding="16,8"
+                            HorizontalAlignment="Right" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -1,0 +1,72 @@
+@page "/stone"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">石材计算</h1>
+    <p class="page-subtitle">石材面板弯曲强度与挠度验算</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">landscape</span> 石材参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">短边 (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">长边 (mm)</label>
+                <input class="input-field" type="number" @bind="_longSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">厚度 (mm)</label>
+                <input class="input-field" type="number" @bind="_thickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">石材类型</label>
+                <select class="input-field" @bind="_stoneType">
+                    <option value="Granite">花岗岩</option>
+                    <option value="Marble">大理石</option>
+                    <option value="Limestone">石灰石</option>
+                    <option value="Sandstone">砂岩</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _shortSide = 600, _longSide = 900, _thickness = 30, _windLoad = 1.37;
+    private string _stoneType = "Granite";
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcStonePanelAsync(new
+            {
+                shortSide = _shortSide, longSide = _longSide, thickness = _thickness,
+                stoneType = _stoneType, windLoad = _windLoad,
+                supportType = "ShortSidePin", bracketCount = 4
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

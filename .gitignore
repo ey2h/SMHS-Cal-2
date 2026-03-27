@@ -1,0 +1,15 @@
+.dotnet/
+.vs/
+**/bin/
+**/obj/
+
+# Generated outputs
+*.docx
+*.zip
+*.log
+
+# Common local artifacts
+*.user
+*.suo
+*.cache
+

@@ -1,0 +1,105 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.App"
+             RequestedThemeVariant="Light">
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+        <!-- ============ 全局基础样式 ============ -->
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="Button.Primary">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="Button.Secondary">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- ============ DEFAULT THEME: Classic ============ -->
+        <Style Selector=":is(Window)">
+            <Style.Resources>
+                <SolidColorBrush x:Key="PageBgBrush" Color="#fbfbfe"/>
+                <SolidColorBrush x:Key="CardBgBrush" Color="#ffffff"/>
+                <SolidColorBrush x:Key="AccentBrush" Color="#2f27ce"/>
+                <SolidColorBrush x:Key="AccentLightBrush" Color="#e8e7fa"/>
+                <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1a1a2e"/>
+                <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6b7280"/>
+                <SolidColorBrush x:Key="BorderBrush" Color="#e5e7eb"/>
+                <SolidColorBrush x:Key="TopBarBgBrush" Color="#ffffff"/>
+                <SolidColorBrush x:Key="TopBarTextBrush" Color="#1a1a2e"/>
+                <SolidColorBrush x:Key="StepDoneBrush" Color="#10b981"/>
+                <SolidColorBrush x:Key="StepFutureBrush" Color="#d1d5db"/>
+                <SolidColorBrush x:Key="StepFutureTextBrush" Color="#9ca3af"/>
+                <SolidColorBrush x:Key="ResultBgBrush" Color="#f0fdf4"/>
+                <SolidColorBrush x:Key="StatusBarBgBrush" Color="#f8fafc"/>
+                <SolidColorBrush x:Key="SuccessBrush" Color="#10B981"/>
+                <SolidColorBrush x:Key="DangerBrush" Color="#EF4444"/>
+                <CornerRadius x:Key="CardRadius">8</CornerRadius>
+            </Style.Resources>
+        </Style>
+
+        <!-- Card style -->
+        <Style Selector="Border.Card">
+            <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #0A000000"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="Border.Section">
+            <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="BoxShadow" Value="0 1 4 0 #08000000"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="Border.ResultArea">
+            <Setter Property="Background" Value="{DynamicResource ResultBgBrush}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
+            <Setter Property="Padding" Value="24"/>
+        </Style>
+        <Style Selector="TextBlock.PageTitle">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.PageSubtitle">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.SectionTitle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+        <Style Selector="TextBlock.FieldLabel">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Application.Styles>
+</Application>

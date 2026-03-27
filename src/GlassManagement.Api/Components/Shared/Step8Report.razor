@@ -1,0 +1,140 @@
+@using static GlassManagement.Api.Components.Pages.Wizard
+@inject IJSRuntime JS
+
+<div style="display:flex;gap:12px;align-items:flex-start">
+    <!-- 左侧：工程信息 -->
+    <div style="flex:6;min-width:0">
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">工程封面信息</legend>
+            <div class="param-cols-2">
+                <div class="param-row">
+                    <span class="param-label">工程名称</span>
+                    <input class="hb-input" @bind="Step1.ProjectName" placeholder="请输入工程名称"/>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">设计单位</span>
+                    <input class="hb-input" @bind="Step1.DesignUnit" placeholder="设计单位名称"/>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">编制人</span>
+                    <input class="hb-input" @bind="Step1.Designer" placeholder="编制人"/>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">审核人</span>
+                    <input class="hb-input" @bind="Step1.Checker" placeholder="审核人"/>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">批准人</span>
+                    <input class="hb-input" @bind="Step1.Approver" placeholder="批准人"/>
+                </div>
+                <div class="param-row">
+                    <span class="param-label">日期</span>
+                    <input class="hb-input" type="date" @bind="_reportDate"/>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">输出格式</legend>
+            <div class="hb-radio-group horizontal">
+                <label><input type="radio" name="format" value="word" checked="@(_format=="word")"
+                    @onchange='() => _format="word"'/> Word 文档</label>
+                <label><input type="radio" name="format" value="pdf" checked="@(_format=="pdf")"
+                    @onchange='() => _format="pdf"'/> PDF 文档</label>
+            </div>
+        </fieldset>
+
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">输出内容</legend>
+            <div class="hb-radio-group horizontal">
+                <label><input type="radio" name="scope" value="全部" checked="@(_contentScope=="全部")"
+                    @onchange='() => _contentScope="全部"'/>全部</label>
+                <label><input type="radio" name="scope" value="仅摘要" checked="@(_contentScope=="仅摘要")"
+                    @onchange='() => _contentScope="仅摘要"'/>仅摘要</label>
+                <label><input type="radio" name="scope" value="选择章节" checked="@(_contentScope=="选择章节")"
+                    @onchange='() => _contentScope="选择章节"'/>选择章节</label>
+            </div>
+        </fieldset>
+
+        @if (_downloading)
+        {
+            <div style="margin-top:8px">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">正在生成计算书...</div>
+                <div class="progress-track"><div class="progress-fill safe" style="width:@(_progress)%"></div></div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(_downloadError))
+        {
+            <div class="error-banner">@_downloadError</div>
+        }
+
+        <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="hb-btn" @onclick="Preview">预览</button>
+            <button class="hb-btn-primary hb-btn" @onclick="Download" disabled="@_downloading">
+                @if (_downloading) { <span class="spinner"></span> }
+                生成并下载
+            </button>
+        </div>
+    </div>
+
+    <!-- 右侧：预览 -->
+    <div style="flex:4;min-width:0">
+        @if (_showPreview)
+        {
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">计算书预览</legend>
+                <div class="result-card">
+                    <div class="result-row"><span class="result-label">工程名称</span><span class="result-value">@Step1.ProjectName</span></div>
+                    <div class="result-row"><span class="result-label">设计单位</span><span class="result-value">@Step1.DesignUnit</span></div>
+                    <div class="result-row"><span class="result-label">基本风压(50年)</span><span class="result-value">@(Step1.WindPressure50) kPa</span></div>
+                    <div class="result-row"><span class="result-label">风荷载取值方式</span><span class="result-value">@(Step1.WindLoadMode)</span></div>
+                    <div class="result-row"><span class="result-label">抗震烈度</span><span class="result-value">@(Step1.SeismicIntensity) 度</span></div>
+                    <div class="result-row"><span class="result-label">地区</span><span class="result-value">@Step1.SelectedRegion</span></div>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:6px">—— 详细内容见下载文件 ——</div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string SessionId { get; set; } = "";
+    [Parameter] public WizardApiClient Api { get; set; } = default!;
+    [Parameter] public Step1Data Step1 { get; set; } = new();
+
+    private string _format = "word";
+    private string _contentScope = "全部";
+    private DateTime _reportDate = DateTime.Today;
+    private bool _downloading;
+    private int _progress;
+    private string? _downloadError;
+    private bool _showPreview;
+
+    private void Preview() { _showPreview = !_showPreview; }
+
+    private async Task Download()
+    {
+        _downloading = true; _downloadError = null; _progress = 10;
+        StateHasChanged();
+        try
+        {
+            _progress = 30; StateHasChanged();
+            await Task.Delay(500);
+            _progress = 60; StateHasChanged();
+            var data = await Api.DownloadAsync(SessionId, _format);
+            _progress = 90; StateHasChanged();
+            if (data != null && data.Length > 0)
+            {
+                _progress = 100;
+                var ext = _format == "pdf" ? "pdf" : "docx";
+                var mime = _format == "pdf" ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                var b64 = Convert.ToBase64String(data);
+                await JS.InvokeVoidAsync("eval", $"{{var a=document.createElement('a');a.href='data:{mime};base64,{b64}';a.download='计算书.{ext}';a.click()}}");
+            }
+            else _downloadError = "下载失败，请检查是否已完成所有步骤";
+        }
+        catch (Exception ex) { _downloadError = $"生成失败: {ex.Message}"; }
+        _downloading = false;
+    }
+}

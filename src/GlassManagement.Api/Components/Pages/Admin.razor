@@ -1,0 +1,518 @@
+@page "/admin"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+
+<div class="admin-page">
+    <div class="admin-header">
+        <h2><span class="material-symbols-outlined">admin_panel_settings</span> 用户管理</h2>
+        <button class="btn-primary" @onclick="ShowAddDialog">
+            <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle">person_add</span> 添加用户
+        </button>
+    </div>
+
+    @if (_loading)
+    {
+        <div style="text-align:center;padding:40px;color:#888">加载中...</div>
+    }
+    else
+    {
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>显示名</th>
+                        <th>公司</th>
+                        <th>角色</th>
+                        <th>API Token</th>
+                        <th>授权开始</th>
+                        <th>授权到期</th>
+                        <th>最后IP</th>
+                        <th>累计时长</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in _users)
+                    {
+                        <tr class="@(u.IsActive ? "" : "row-disabled")">
+                            <td>@u.Id</td>
+                            <td>@u.Username</td>
+                            <td>@u.DisplayName</td>
+                            <td>@u.Company</td>
+                            <td><span class="role-badge role-@u.Role">@u.Role</span></td>
+                            <td class="token-cell">
+                                @if (!string.IsNullOrEmpty(u.ApiToken))
+                                {
+                                    <span class="token-text">@MaskToken(u.ApiToken)</span>
+                                    <button class="btn-xs" @onclick="() => CopyToken(u.ApiToken)" title="复制Token">
+                                        <span class="material-symbols-outlined" style="font-size:14px">content_copy</span>
+                                    </button>
+                                }
+                            </td>
+                            <td>@(u.LicenseStart?.ToString("yyyy-MM-dd") ?? "-")</td>
+                            <td>
+                                @if (u.LicenseExpiry.HasValue)
+                                {
+                                    var days = (int)Math.Ceiling((u.LicenseExpiry.Value - DateTime.UtcNow).TotalDays);
+                                    <span class="@(days <= 0 ? "text-danger" : days <= 30 ? "text-warn" : "")">
+                                        @u.LicenseExpiry.Value.ToString("yyyy-MM-dd")
+                                        @(days <= 0 ? " (已过期)" : $" ({days}天)")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color:#888">永久</span>
+                                }
+                            </td>
+                            <td style="font-size:12px">@(u.LastLoginIp ?? "-")</td>
+                            <td>@FormatMinutes(u.TotalUsageMinutes)</td>
+                            <td>
+                                <span class="status-dot @(u.IsActive ? "active" : "inactive")"></span>
+                                @(u.IsActive ? "启用" : "禁用")
+                            </td>
+                            <td class="action-cell">
+                                <button class="btn-sm" @onclick="() => ShowEditDialog(u)" title="编辑">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="btn-sm" @onclick="() => ShowLicenseDialog(u)" title="授权">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                </button>
+                                <button class="btn-sm" @onclick="() => RegenerateToken(u)" title="重新生成Token">
+                                    <span class="material-symbols-outlined">refresh</span>
+                                </button>
+                                <button class="btn-sm" @onclick="() => ShowUsageDialog(u)" title="使用统计">
+                                    <span class="material-symbols-outlined">bar_chart</span>
+                                </button>
+                                <button class="btn-sm" @onclick="() => ToggleUser(u)" title="@(u.IsActive ? "禁用" : "启用")">
+                                    <span class="material-symbols-outlined">@(u.IsActive ? "block" : "check_circle")</span>
+                                </button>
+                                @if (u.Username != "admin")
+                                {
+                                    <button class="btn-sm btn-danger" @onclick="() => DeleteUser(u)" title="删除">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (_total > _pageSize)
+        {
+            <div class="pagination">
+                <button disabled="@(_page <= 1)" @onclick="() => LoadUsers(_page - 1)">上一页</button>
+                <span>第 @_page / @((int)Math.Ceiling((double)_total / _pageSize)) 页（共 @_total 条）</span>
+                <button disabled="@(_page * _pageSize >= _total)" @onclick="() => LoadUsers(_page + 1)">下一页</button>
+            </div>
+        }
+    }
+</div>
+
+@* ===== 添加用户对话框 ===== *@
+@if (_showAdd)
+{
+    <div class="dialog-overlay" @onclick="CloseDialogs">
+        <div class="dialog" @onclick:stopPropagation="true">
+            <h3>添加用户</h3>
+            @if (!string.IsNullOrEmpty(_dialogError))
+            {
+                <div class="dialog-error">@_dialogError</div>
+            }
+            <div class="form-row"><label>用户名 *</label><input @bind="_addUsername" /></div>
+            <div class="form-row"><label>密码 *</label><input type="password" @bind="_addPassword" /></div>
+            <div class="form-row"><label>显示名</label><input @bind="_addDisplayName" /></div>
+            <div class="form-row"><label>邮箱</label><input @bind="_addEmail" /></div>
+            <div class="form-row"><label>电话</label><input @bind="_addPhone" /></div>
+            <div class="form-row"><label>公司</label><input @bind="_addCompany" /></div>
+            <div class="form-row">
+                <label>角色</label>
+                <select @bind="_addRole"><option value="user">user</option><option value="admin">admin</option></select>
+            </div>
+            <div class="form-row"><label>授权到期</label><input type="date" @bind="_addLicenseExpiry" /></div>
+            <div class="form-row"><label>最大项目数</label><input type="number" @bind="_addMaxProjects" /></div>
+            <div class="dialog-actions">
+                <button class="btn-secondary" @onclick="CloseDialogs">取消</button>
+                <button class="btn-primary" @onclick="DoAddUser">确认添加</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ===== 编辑用户对话框 ===== *@
+@if (_showEdit)
+{
+    <div class="dialog-overlay" @onclick="CloseDialogs">
+        <div class="dialog" @onclick:stopPropagation="true">
+            <h3>编辑用户 — @_editUsername</h3>
+            @if (!string.IsNullOrEmpty(_dialogError))
+            {
+                <div class="dialog-error">@_dialogError</div>
+            }
+            <div class="form-row"><label>显示名</label><input @bind="_editDisplayName" /></div>
+            <div class="form-row"><label>邮箱</label><input @bind="_editEmail" /></div>
+            <div class="form-row"><label>电话</label><input @bind="_editPhone" /></div>
+            <div class="form-row"><label>公司</label><input @bind="_editCompany" /></div>
+            <div class="form-row"><label>备注</label><textarea @bind="_editNotes" rows="2"></textarea></div>
+            <div class="form-row"><label>最大项目数</label><input type="number" @bind="_editMaxProjects" /></div>
+            <div class="dialog-actions">
+                <button class="btn-secondary" @onclick="CloseDialogs">取消</button>
+                <button class="btn-primary" @onclick="DoEditUser">保存</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ===== 设置授权对话框 ===== *@
+@if (_showLicense)
+{
+    <div class="dialog-overlay" @onclick="CloseDialogs">
+        <div class="dialog" @onclick:stopPropagation="true">
+            <h3>设置授权 — @_licenseUsername</h3>
+            <div class="form-row">
+                <label>授权到期日期</label>
+                <input type="date" @bind="_licenseDate" />
+            </div>
+            <div class="form-row" style="font-size:13px;color:#888">留空表示永久授权</div>
+            <div class="dialog-actions">
+                <button class="btn-secondary" @onclick="CloseDialogs">取消</button>
+                <button class="btn-primary" @onclick="DoSetLicense">保存</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ===== 使用统计对话框 ===== *@
+@if (_showUsage)
+{
+    <div class="dialog-overlay" @onclick="CloseDialogs">
+        <div class="dialog dialog-wide" @onclick:stopPropagation="true">
+            <h3>使用统计 — @_usageUsername</h3>
+            @if (_usageStats != null)
+            {
+                <div style="margin-bottom:16px">
+                    <strong>总在线时长：</strong> @FormatMinutes(_usageStats.TotalMinutes)
+                    &nbsp; | &nbsp;
+                    <strong>总登录次数：</strong> @_usageStats.SessionCount
+                </div>
+                @if (_usageStats.DailyStats != null && _usageStats.DailyStats.Count > 0)
+                {
+                    <table class="admin-table" style="font-size:13px">
+                        <thead>
+                            <tr><th>日期</th><th>时长</th><th>次数</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in _usageStats.DailyStats)
+                            {
+                                <tr>
+                                    <td>@d.Date</td>
+                                    <td>@FormatMinutes(d.Minutes)</td>
+                                    <td>@d.SessionCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div style="color:#888;padding:20px;text-align:center">暂无使用记录</div>
+                }
+            }
+            else
+            {
+                <div style="text-align:center;padding:20px;color:#888">加载中...</div>
+            }
+            <div class="dialog-actions">
+                <button class="btn-secondary" @onclick="CloseDialogs">关闭</button>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .admin-page { padding: 24px; max-width: 1400px; margin: 0 auto; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .admin-header h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: #333; }
+    .admin-table-wrap { overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .admin-table th { background: #f0ecf7; color: #5b21b6; padding: 10px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .admin-table td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+    .admin-table .row-disabled td { opacity: 0.5; }
+    .role-badge { padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .role-admin { background: #ede9fe; color: #7c3aed; }
+    .role-user { background: #e0f2fe; color: #0284c7; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+    .status-dot.active { background: #22c55e; }
+    .status-dot.inactive { background: #ef4444; }
+    .text-danger { color: #ef4444; font-weight: 600; }
+    .text-warn { color: #f59e0b; font-weight: 600; }
+    .action-cell { white-space: nowrap; }
+    .btn-sm { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 4px 6px; cursor: pointer; margin-right: 4px; }
+    .btn-sm:hover { background: #f5f3ff; border-color: #7c3aed; }
+    .btn-sm .material-symbols-outlined { font-size: 18px; vertical-align: middle; }
+    .btn-sm.btn-danger:hover { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
+    .btn-xs { background: none; border: none; cursor: pointer; padding: 2px; vertical-align: middle; color: #7c3aed; }
+    .btn-xs:hover { color: #5b21b6; }
+    .token-cell { font-family: monospace; font-size: 12px; white-space: nowrap; }
+    .token-text { margin-right: 4px; }
+    .btn-primary { background: #7c3aed; color: #fff; border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-primary:hover { background: #6d28d9; }
+    .btn-secondary { background: #f5f5f5; color: #333; border: 1px solid #ddd; border-radius: 8px; padding: 8px 20px; font-size: 14px; cursor: pointer; }
+    .pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+    .pagination button { padding: 6px 16px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .dialog-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .dialog { background: #fff; border-radius: 12px; padding: 28px; width: 440px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .dialog-wide { width: 600px; }
+    .dialog h3 { margin: 0 0 20px; color: #333; }
+    .dialog-error { background: #fff3f3; color: #d32f2f; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; border: 1px solid #ffcdd2; }
+    .form-row { margin-bottom: 14px; }
+    .form-row label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 4px; }
+    .form-row input, .form-row select, .form-row textarea { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: #7c3aed; outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+</style>
+
+@code {
+    private List<UserItem> _users = new();
+    private bool _loading = true;
+    private int _page = 1, _pageSize = 20, _total = 0;
+    private string _dialogError = "";
+
+    // Add dialog
+    private bool _showAdd;
+    private string _addUsername = "", _addPassword = "", _addDisplayName = "", _addEmail = "", _addPhone = "", _addCompany = "", _addRole = "user";
+    private DateTime? _addLicenseExpiry;
+    private int _addMaxProjects = 10;
+
+    // Edit dialog
+    private bool _showEdit;
+    private int _editId;
+    private string _editUsername = "", _editDisplayName = "", _editEmail = "", _editPhone = "", _editCompany = "", _editNotes = "";
+    private int _editMaxProjects = 10;
+
+    // License dialog
+    private bool _showLicense;
+    private int _licenseId;
+    private string _licenseUsername = "";
+    private DateTime? _licenseDate;
+
+    // Usage dialog
+    private bool _showUsage;
+    private string _usageUsername = "";
+    private UsageStatsResult? _usageStats;
+
+    private static string MaskToken(string token)
+    {
+        if (string.IsNullOrEmpty(token) || token.Length <= 8) return token ?? "";
+        return token[..4] + "****" + token[^4..];
+    }
+
+    private static string FormatMinutes(int minutes)
+    {
+        if (minutes < 60) return $"{minutes}分钟";
+        var h = minutes / 60;
+        var m = minutes % 60;
+        return m > 0 ? $"{h}小时{m}分" : $"{h}小时";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-user");
+            if (string.IsNullOrEmpty(userJson))
+            {
+                Nav.NavigateTo("/login", forceLoad: true);
+                return;
+            }
+            var role = await JS.InvokeAsync<string>("eval", "JSON.parse(localStorage.getItem('smhs-user')||'{}').role||''");
+            if (role != "admin")
+            {
+                Nav.NavigateTo("/wizard", forceLoad: true);
+                return;
+            }
+            await LoadUsers(1);
+        }
+    }
+
+    private async Task LoadUsers(int page)
+    {
+        _loading = true;
+        StateHasChanged();
+        try
+        {
+            var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+            var result = await JS.InvokeAsync<UserListResult>("smhsAdmin.getUsers", token, page, _pageSize);
+            if (result != null)
+            {
+                _users = result.Items ?? new();
+                _total = result.Total;
+                _page = result.Page;
+            }
+        }
+        catch { }
+        _loading = false;
+        StateHasChanged();
+    }
+
+    private void ShowAddDialog()
+    {
+        _showAdd = true;
+        _addUsername = _addPassword = _addDisplayName = _addEmail = _addPhone = _addCompany = "";
+        _addRole = "user"; _addLicenseExpiry = null; _addMaxProjects = 10; _dialogError = "";
+    }
+
+    private void ShowEditDialog(UserItem u)
+    {
+        _showEdit = true; _editId = u.Id; _editUsername = u.Username;
+        _editDisplayName = u.DisplayName ?? ""; _editEmail = u.Email ?? "";
+        _editPhone = u.Phone ?? ""; _editCompany = u.Company ?? "";
+        _editNotes = u.Notes ?? ""; _editMaxProjects = u.MaxProjects; _dialogError = "";
+    }
+
+    private void ShowLicenseDialog(UserItem u)
+    {
+        _showLicense = true; _licenseId = u.Id; _licenseUsername = u.Username;
+        _licenseDate = u.LicenseExpiry; _dialogError = "";
+    }
+
+    private async Task ShowUsageDialog(UserItem u)
+    {
+        _showUsage = true;
+        _usageUsername = u.DisplayName ?? u.Username;
+        _usageStats = null;
+        StateHasChanged();
+
+        try
+        {
+            var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+            _usageStats = await JS.InvokeAsync<UsageStatsResult>("smhsAdmin.getUserUsage", token, u.Id, null, null);
+        }
+        catch { }
+        StateHasChanged();
+    }
+
+    private async Task CopyToken(string apiToken)
+    {
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", apiToken);
+    }
+
+    private async Task RegenerateToken(UserItem u)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"确定要重新生成 {u.Username} 的 API Token 吗？旧 Token 将立即失效。");
+        if (!confirmed) return;
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        var result = await JS.InvokeAsync<RegenerateResult>("smhsAdmin.regenerateToken", token, u.Id);
+        if (result?.NewToken != null)
+        {
+            await JS.InvokeVoidAsync("alert", $"新 Token: {result.NewToken}");
+        }
+        await LoadUsers(_page);
+    }
+
+    private void CloseDialogs() { _showAdd = _showEdit = _showLicense = _showUsage = false; _dialogError = ""; _usageStats = null; }
+
+    private async Task DoAddUser()
+    {
+        _dialogError = "";
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        var result = await JS.InvokeAsync<ApiResult>("smhsAdmin.createUser", token, _addUsername, _addPassword,
+            _addDisplayName, _addEmail, _addPhone, _addCompany, _addRole,
+            _addLicenseExpiry?.ToString("yyyy-MM-dd"), _addMaxProjects);
+        if (result.Success) { CloseDialogs(); await LoadUsers(_page); }
+        else { _dialogError = result.Error ?? "创建失败"; }
+    }
+
+    private async Task DoEditUser()
+    {
+        _dialogError = "";
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        var result = await JS.InvokeAsync<ApiResult>("smhsAdmin.updateUser", token, _editId,
+            _editDisplayName, _editEmail, _editPhone, _editCompany, _editNotes, _editMaxProjects);
+        if (result.Success) { CloseDialogs(); await LoadUsers(_page); }
+        else { _dialogError = result.Error ?? "更新失败"; }
+    }
+
+    private async Task DoSetLicense()
+    {
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        var result = await JS.InvokeAsync<ApiResult>("smhsAdmin.setLicense", token, _licenseId,
+            _licenseDate?.ToString("yyyy-MM-dd"));
+        if (result.Success) { CloseDialogs(); await LoadUsers(_page); }
+        else { _dialogError = result.Error ?? "设置失败"; }
+    }
+
+    private async Task ToggleUser(UserItem u)
+    {
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        await JS.InvokeAsync<ApiResult>("smhsAdmin.toggleUser", token, u.Id);
+        await LoadUsers(_page);
+    }
+
+    private async Task DeleteUser(UserItem u)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"确定删除用户 {u.Username} 吗？此操作不可恢复。");
+        if (!confirmed) return;
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+        await JS.InvokeAsync<ApiResult>("smhsAdmin.deleteUser", token, u.Id);
+        await LoadUsers(_page);
+    }
+
+    private class UserItem
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = "";
+        public string? DisplayName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string Role { get; set; } = "";
+        public DateTime? LicenseExpiry { get; set; }
+        public DateTime? LicenseStart { get; set; }
+        public string? Company { get; set; }
+        public string? Notes { get; set; }
+        public int MaxProjects { get; set; }
+        public bool IsActive { get; set; } = true;
+        public string? ApiToken { get; set; }
+        public string? LastLoginIp { get; set; }
+        public int TotalUsageMinutes { get; set; }
+    }
+
+    private class UserListResult
+    {
+        public List<UserItem>? Items { get; set; }
+        public int Total { get; set; }
+        public int Page { get; set; }
+    }
+
+    private class ApiResult
+    {
+        public bool Success { get; set; }
+        public string? Error { get; set; }
+    }
+
+    private class RegenerateResult
+    {
+        public string? NewToken { get; set; }
+    }
+
+    private class UsageStatsResult
+    {
+        public int TotalMinutes { get; set; }
+        public int SessionCount { get; set; }
+        public List<DailyUsageItem>? DailyStats { get; set; }
+    }
+
+    private class DailyUsageItem
+    {
+        public string Date { get; set; } = "";
+        public int Minutes { get; set; }
+        public int SessionCount { get; set; }
+    }
+}

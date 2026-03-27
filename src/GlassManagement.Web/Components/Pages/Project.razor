@@ -1,0 +1,201 @@
+@page "/"
+@page "/project"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">项目参数</h1>
+    <p class="page-subtitle">设置项目地区、计算参数，生成风荷载标准值</p>
+
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px">
+        <!-- 左：地区选择 -->
+        <div class="card">
+            <div class="section-title">
+                <span class="material-symbols-outlined">location_city</span> 地区选择
+            </div>
+            <input class="input-field" type="text" placeholder="搜索城市名..."
+                   @bind="_keyword" @bind:event="oninput" @bind:after="SearchRegions" />
+            <div class="region-list" style="margin-top:12px">
+                @foreach (var r in _filteredRegions)
+                {
+                    <div class="region-list-item @(r == _selectedRegion ? "selected" : "")"
+                         @onclick="() => SelectRegion(r)">
+                        <span>@r.Name</span>
+                        <span style="font-size:12px;color:var(--text-3)">@(r.W0 * 1000) kPa</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- 右：参数+结果 -->
+        <div>
+            @if (_selectedRegion != null)
+            {
+                <div class="config-banner">
+                    <span class="material-symbols-outlined" style="color:var(--blue)">place</span>
+                    <div>
+                        <div style="font-size:12px;color:var(--text-2)">已选地区</div>
+                        <div class="config-value">@_selectedRegion.Name · w₀ = @((_selectedRegion.W0 * 1000).ToString("F2")) kPa</div>
+                    </div>
+                </div>
+            }
+
+            <div class="card">
+                <div class="section-title">
+                    <span class="material-symbols-outlined">tune</span> 计算参数
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="label">地面粗糙度类别</label>
+                        <select class="input-field" @bind="_terrainCategory">
+                            <option value="A">A — 海面/湖面</option>
+                            <option value="B">B — 田野/乡村</option>
+                            <option value="C">C — 城市/郊区</option>
+                            <option value="D">D — 密集城区</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label">建筑高度 (m)</label>
+                        <input class="input-field" type="number" @bind="_height" />
+                    </div>
+                    <div class="form-group">
+                        <label class="label">重现期 (年)</label>
+                        <input class="input-field" type="number" @bind="_returnPeriod" />
+                    </div>
+                    <div class="form-group">
+                        <label class="label">建筑体型</label>
+                        <select class="input-field" @bind="_buildingType">
+                            <option value="Closed">封闭式</option>
+                            <option value="Open">开敞式</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label">受荷面积 (m²)</label>
+                        <input class="input-field" type="number" step="0.01" @bind="_structureArea" />
+                    </div>
+                    <div class="form-group">
+                        <label class="label">调整系数 k₁</label>
+                        <input class="input-field" type="number" step="0.1" @bind="_k1" />
+                    </div>
+                    <div class="form-group">
+                        <label class="label">调整系数 k₂</label>
+                        <input class="input-field" type="number" step="0.1" @bind="_k2" />
+                    </div>
+                </div>
+                <div style="margin-top:20px">
+                    <button class="btn-primary" @onclick="CalcWindLoad" disabled="@_loading">
+                        @if (_loading) { <span class="spinner"></span> }
+                        <span class="material-symbols-outlined">calculate</span> 计算风荷载
+                    </button>
+                </div>
+            </div>
+
+            @if (_result != null)
+            {
+                <div class="card page-enter">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                        <div class="section-title" style="margin-bottom:0">
+                            <span class="material-symbols-outlined">air</span> 风荷载结果
+                        </div>
+                        <span class="badge-pass">
+                            <span class="material-symbols-outlined" style="font-size:16px">check_circle</span> 计算完成
+                        </span>
+                    </div>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">面板风荷载</div>
+                            <div class="metric-value">@((_result.WkPanel * 1000).ToString("F3"))</div>
+                            <div class="metric-unit">kPa</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">构件风荷载</div>
+                            <div class="metric-value">@((_result.WkStructure * 1000).ToString("F3"))</div>
+                            <div class="metric-unit">kPa</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">基本风压 w₀</div>
+                            <div class="metric-value">@((_result.W0 * 1000).ToString("F3"))</div>
+                            <div class="metric-unit">kPa</div>
+                        </div>
+                    </div>
+
+                    @if (_result.Steps?.Count > 0)
+                    {
+                        <div class="divider"></div>
+                        <div class="section-title">
+                            <span class="material-symbols-outlined">format_list_numbered</span> 计算步骤
+                        </div>
+                        <div class="step-list">
+                            @foreach (var step in _result.Steps)
+                            {
+                                <div class="step-item">
+                                    <span class="step-badge">@step.StepNo</span>
+                                    <span class="step-name">@step.Name</span>
+                                    <span class="step-result">@step.Result</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _keyword = "";
+    private List<RegionDto> _allRegions = [];
+    private List<RegionDto> _filteredRegions = [];
+    private RegionDto? _selectedRegion;
+    private string _terrainCategory = "C";
+    private double _height = 100;
+    private int _returnPeriod = 50;
+    private string _buildingType = "Closed";
+    private double _structureArea = 4.95;
+    private double _k1 = 1.0;
+    private double _k2 = 1.0;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _allRegions = await Api.SearchRegionsAsync("");
+        _filteredRegions = _allRegions.Take(50).ToList();
+    }
+
+    private Task SearchRegions()
+    {
+        var kw = _keyword.Trim();
+        _filteredRegions = string.IsNullOrEmpty(kw)
+            ? _allRegions.Take(50).ToList()
+            : _allRegions.Where(r => r.Name.Contains(kw)).Take(50).ToList();
+        return Task.CompletedTask;
+    }
+
+    private void SelectRegion(RegionDto r)
+    {
+        _selectedRegion = r;
+        _keyword = "";
+    }
+
+    private async Task CalcWindLoad()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalculateWindLoadAsync(new
+            {
+                regionName = _selectedRegion?.Name,
+                returnPeriod = _returnPeriod,
+                height = _height,
+                terrainCategory = _terrainCategory,
+                buildingType = _buildingType,
+                structureArea = _structureArea,
+                k1 = _k1,
+                k2 = _k2
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

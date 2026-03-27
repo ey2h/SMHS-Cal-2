@@ -1,0 +1,317 @@
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager Nav
+
+<div class="app-shell" data-theme="@_currentTheme">
+    <!-- 顶部菜单栏 — 汇宝风格，两行 -->
+    <div class="top-menubar">
+        <!-- 第一行：13个功能模块 -->
+        <div class="menu-row">
+            <div class="menu-dropdown">
+                <a class="menu-item @IsActive("/wizard", "/project")">玻璃幕墙</a>
+                <div class="dropdown-content">
+                    <a href="/wizard?type=hidden" class="dropdown-item">全隐框</a>
+                    <a href="/wizard?type=semi-col" class="dropdown-item">显框隐竖</a>
+                    <a href="/wizard?type=semi-row" class="dropdown-item">显竖隐横</a>
+                    <a href="/wizard?type=exposed" class="dropdown-item">明框</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <a class="menu-item @IsActive("/alupanel")">金属板幕墙</a>
+                <div class="dropdown-content">
+                    <a href="/alupanel?type=alu" class="dropdown-item">铝单板</a>
+                    <a href="/alupanel?type=perforated" class="dropdown-item">穿孔铝板</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/alupanel?type=composite" class="dropdown-item">铝塑复合板</a>
+                    <a href="/alupanel?type=honeycomb" class="dropdown-item">蜂窝铝板</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/alupanel?type=enamel" class="dropdown-item">单体搪瓷板</a>
+                    <a href="/alupanel?type=enamel-composite" class="dropdown-item">复合搪瓷板</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/alupanel?type=steel" class="dropdown-item">钢板</a>
+                    <a href="/alupanel?type=stainless" class="dropdown-item">不锈钢板</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/alupanel?type=copper" class="dropdown-item">铜板</a>
+                    <a href="/alupanel?type=titanium" class="dropdown-item">钛合金板</a>
+                    <a href="/alupanel?type=almgsi" class="dropdown-item">铝镁硅合金板</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <a class="menu-item @IsActive("/stone")">天然石材幕墙</a>
+                <div class="dropdown-content dropdown-wide">
+                    <a href="/stone?s=granite&c=short" class="dropdown-item">花岗岩：短槽连接</a>
+                    <a href="/stone?s=granite&c=bolt" class="dropdown-item">花岗岩：背栓连接</a>
+                    <a href="/stone?s=granite&c=slot" class="dropdown-item">花岗岩：通槽连接</a>
+                    <a href="/stone?s=granite&c=frame" class="dropdown-item">花岗岩：金属框连接</a>
+                    <a href="/stone?s=granite&c=pin" class="dropdown-item">花岗岩：钢销连接(JGJ133中钢销部分已取消，软件暂保留)</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/stone?s=sand&c=short" class="dropdown-item">天然砂岩：短槽连接</a>
+                    <a href="/stone?s=sand&c=bolt" class="dropdown-item">天然砂岩：背栓连接</a>
+                    <a href="/stone?s=sand&c=slot" class="dropdown-item">天然砂岩：通槽连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/stone?s=lime&c=short" class="dropdown-item">天然石灰石：短槽连接</a>
+                    <a href="/stone?s=lime&c=bolt" class="dropdown-item">天然石灰石：背栓连接</a>
+                    <a href="/stone?s=lime&c=slot" class="dropdown-item">天然石灰石：通槽连接</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <a class="menu-item @IsActive("/grc")">人造板材幕墙</a>
+                <div class="dropdown-content dropdown-wide dropdown-scroll">
+                    <a href="/grc?m=porcelain&c=short" class="dropdown-item">瓷板：短挂件连接</a>
+                    <a href="/grc?m=porcelain&c=bolt" class="dropdown-item">瓷板：背栓连接</a>
+                    <a href="/grc?m=porcelain&c=long" class="dropdown-item">瓷板：通长挂件连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=ceramic&c=short" class="dropdown-item">陶板：短挂件连接</a>
+                    <a href="/grc?m=ceramic&c=long" class="dropdown-item">陶板：通长挂件连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=micro&c=short" class="dropdown-item">微晶玻璃板：短挂件连接</a>
+                    <a href="/grc?m=micro&c=bolt" class="dropdown-item">微晶玻璃板：背栓连接</a>
+                    <a href="/grc?m=micro&c=long" class="dropdown-item">微晶玻璃板：通长挂件连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=fc&c=bolt" class="dropdown-item">纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：背栓连接</a>
+                    <a href="/grc?m=fc&c=long" class="dropdown-item">纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：通长挂件连接</a>
+                    <a href="/grc?m=fc&c=through" class="dropdown-item">纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：穿透支承连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=uhpc&c=bolt" class="dropdown-item">超高性能混凝土板(UHPC板)：背栓连接</a>
+                    <a href="/grc?m=uhpc&c=long" class="dropdown-item">超高性能混凝土板(UHPC板)：通长挂件连接</a>
+                    <a href="/grc?m=uhpc&c=through" class="dropdown-item">超高性能混凝土板(UHPC板)：穿透支撑连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=honeycomb" class="dropdown-item">石材蜂窝板：背面预置螺母连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=wood&c=bolt" class="dropdown-item">木纤维板(千思板)：背栓连接</a>
+                    <a href="/grc?m=wood&c=through" class="dropdown-item">木纤维板(千思板)：穿透支承连接</a>
+                    <a href="/grc?m=wood&c=back" class="dropdown-item">木纤维板(千思板)：背面支承连接</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/grc?m=sandwich&c=flat" class="dropdown-item">金属面夹芯板：平面或浅压型</a>
+                    <a href="/grc?m=sandwich&c=deep" class="dropdown-item">金属面夹芯板：深压型或压型钢板</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <a class="menu-item">背栓式点挂幕墙</a>
+                <div class="dropdown-content dropdown-wide">
+                    <a href="/wizard?m=point&s=granite" class="dropdown-item">花岗岩</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard?m=point&s=porcelain" class="dropdown-item">瓷板</a>
+                    <a href="/wizard?m=point&s=ceramic" class="dropdown-item">陶板</a>
+                    <a href="/wizard?m=point&s=light-ceramic" class="dropdown-item">轻质陶瓷板</a>
+                    <a href="/wizard?m=point&s=micro-crystal" class="dropdown-item">微晶玻璃</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard?m=point&s=honeycomb" class="dropdown-item">石材蜂窝板：背面预置螺母</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard?m=point&s=fc" class="dropdown-item">纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)</a>
+                    <a href="/wizard?m=point&s=wood" class="dropdown-item">木纤维板(千思板)</a>
+                </div>
+            </div>
+            <a class="menu-item" href="/wizard">全玻璃(含吊挂)</a>
+            <a class="menu-item" href="/wizard">点式玻璃幕墙</a>
+            <div class="menu-dropdown">
+                <a class="menu-item">U玻/地板玻璃/水下玻璃</a>
+                <div class="dropdown-content">
+                    <a href="/wizard?type=u-glass" class="dropdown-item">U型玻璃</a>
+                    <a href="/wizard?type=floor-glass" class="dropdown-item">地板玻璃</a>
+                    <a href="/wizard?type=underwater" class="dropdown-item">水下玻璃</a>
+                </div>
+            </div>
+            <div class="menu-dropdown">
+                <a class="menu-item">采光顶</a>
+                <div class="dropdown-content">
+                    <a href="/wizard?roof=single" class="dropdown-item">单坡采光顶</a>
+                    <a href="/wizard?roof=double" class="dropdown-item">双坡采光顶</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard?roof=pyramid4" class="dropdown-item">四角锥采光顶</a>
+                    <a href="/wizard?roof=pyramid5" class="dropdown-item">五角锥采光顶</a>
+                    <a href="/wizard?roof=pyramid6" class="dropdown-item">六角锥采光顶</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard?roof=semi-circle" class="dropdown-item">半圆采光顶</a>
+                    <a href="/wizard?roof=quarter" class="dropdown-item">1/4圆采光顶</a>
+                    <a href="/wizard?roof=parabola" class="dropdown-item">抛物线采光顶</a>
+                </div>
+            </div>
+            <a class="menu-item" href="/wizard">门窗</a>
+            <a class="menu-item" href="/wizard">雨篷</a>
+            <a class="menu-item" href="/wizard">栏杆/吊顶/格栅/百叶</a>
+            <a class="menu-item" href="/wizard">节能(热工)</a>
+            <a class="menu-item" href="/wizard">空气声隔声</a>
+            <a class="menu-item" href="/wizard">物理性能</a>
+            <div class="menu-dropdown">
+                <a class="menu-item @IsActive("/connection", "/weld", "/static-calc")">其它计算</a>
+                <div class="dropdown-content">
+                    <a href="/connection" class="dropdown-item">连接件验算</a>
+                    <a href="/weld" class="dropdown-item">焊缝验算</a>
+                    <a href="/static-calc" class="dropdown-item">静力分析</a>
+                </div>
+            </div>
+        </div>
+        <!-- 第二行：型材优化 / 工具及设置 / 帮助 / 退出 -->
+        <div class="menu-row menu-row-secondary">
+            <a class="menu-item" href="/wizard">型材优化</a>
+            <div class="menu-dropdown">
+                <a class="menu-item">工具及设置</a>
+                <div class="dropdown-content">
+                    <a href="/data" class="dropdown-item">参数数据库</a>
+                    <a href="/params" class="dropdown-item">参数管理</a>
+                    <a href="/section-tool" class="dropdown-item">截面工具箱</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/wizard" class="dropdown-item">系统设置</a>
+                </div>
+            </div>
+            <a class="menu-item" href="/wizard">帮助</a>
+            <a class="menu-item" href="/" @onclick="Logout" @onclick:preventDefault>退出登录</a>
+            <div style="flex:1"></div>
+            @if (!string.IsNullOrEmpty(_displayName))
+            {
+                <span class="status-item" style="color:rgba(255,255,255,0.85);font-size:12px;padding:0 12px">
+                    <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">person</span>
+                    @_displayName
+                </span>
+            }
+            <span class="status-item" style="color:rgba(255,255,255,0.6);font-size:11px;padding:0 12px">
+                <span class="api-dot" style="background:@(_apiOnline ? "#28A745" : "#DC3545")"></span>
+                API @(_apiOnline ? "在线" : "离线")
+            </span>
+            <div class="menu-dropdown">
+                <button class="theme-toggle" title="切换主题风格">
+                    <span class="material-symbols-outlined" style="font-size:16px">palette</span>
+                </button>
+                <div class="dropdown-content" style="right:0;left:auto;min-width:160px;">
+                    <div style="padding:4px 14px;font-size:11px;font-weight:600;color:#999;">主题风格</div>
+                    <a class="dropdown-item" style="@(_currentTheme == "classic" ? "background:#0078d4;color:#fff" : "")" @onclick='() => SetTheme("classic")'>📐 经典</a>
+                    <a class="dropdown-item" style="@(_currentTheme == "apple" ? "background:#0078d4;color:#fff" : "")" @onclick='() => SetTheme("apple")'>🍎 苹果</a>
+                    <a class="dropdown-item" style="@(_currentTheme == "xkool" ? "background:#0078d4;color:#fff" : "")" @onclick='() => SetTheme("xkool")'>🔮 紫光</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:auto">
+        @Body
+    </div>
+
+    <!-- 底部状态栏 -->
+    <div class="statusbar">
+        <span class="status-item">
+            <span class="material-symbols-outlined" style="font-size:13px">help</span>
+            帮助（有问题点这里）
+        </span>
+        <span class="statusbar-sep"></span>
+        <span class="status-item" style="color:#FFD700">幕墙结构计算系统 V2.0 — 做最专业的幕墙计算软件</span>
+        <span class="spacer"></span>
+        <span class="status-item">
+            <span class="material-symbols-outlined" style="font-size:13px">calendar_today</span>
+            @DateTime.Now.ToString("yyyy/M/d")
+        </span>
+        <span class="statusbar-sep"></span>
+        <span class="status-item">
+            <span class="api-dot" style="width:6px;height:6px;background:@(_apiOnline ? "#28A745" : "#DC3545")"></span>
+            @(_apiOnline ? "服务就绪" : "服务离线")
+        </span>
+    </div>
+</div>
+
+@code {
+    private string _currentTheme = "classic";
+    private bool _apiOnline;
+    private string _displayName = "";
+
+    [Inject] private GlassApiClient Api { get; set; } = default!;
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _apiOnline = await Api.CheckHealthAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var saved = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-theme");
+                if (!string.IsNullOrEmpty(saved) && saved is "classic" or "apple" or "xkool")
+                {
+                    _currentTheme = saved;
+                }
+            }
+            catch { }
+
+            // 检查登录状态
+            try
+            {
+                var token = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-token");
+                if (string.IsNullOrEmpty(token))
+                {
+                    // 未登录，如果不在login页面则重定向
+                    var uri = "/" + Nav.ToBaseRelativePath(Nav.Uri);
+                    if (!uri.StartsWith("/login"))
+                    {
+                        Nav.NavigateTo("/login", forceLoad: false);
+                        return;
+                    }
+                }
+                else
+                {
+                    // 读取用户信息
+                    var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "smhs-user");
+                    if (!string.IsNullOrEmpty(userJson))
+                    {
+                        var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson,
+                            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        _displayName = user?.DisplayName ?? user?.Username ?? "";
+                    }
+
+                    // 启动脉冲检测
+                    _dotNetRef = DotNetObjectReference.Create(this);
+                    await JS.InvokeVoidAsync("smhsAuth.startPulse", _dotNetRef);
+
+                    // 启动脉冲检测
+                    _dotNetRef = DotNetObjectReference.Create(this);
+                    await JS.InvokeVoidAsync("smhsAuth.startPulse", _dotNetRef);
+                }
+            }
+            catch { }
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task Logout()
+    {
+        try { await JS.InvokeVoidAsync("smhsAuth.logout"); } catch { }
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+
+    private DotNetObjectReference<MainLayout>? _dotNetRef;
+
+    [JSInvokable]
+    public void OnPulseExpired(string message)
+    {
+        // JS 端已处理跳转，这里可做额外清理
+    }
+
+    public void Dispose()
+    {
+        try { JS.InvokeVoidAsync("smhsAuth.stopPulse"); } catch { }
+        _dotNetRef?.Dispose();
+    }
+
+    private class UserInfo
+    {
+        public string? Username { get; set; }
+        public string? DisplayName { get; set; }
+    }
+
+    private async Task SetTheme(string theme)
+    {
+        _currentTheme = theme;
+        try { await JS.InvokeVoidAsync("localStorage.setItem", "smhs-theme", theme); } catch { }
+    }
+
+    private string IsActive(params string[] paths)
+    {
+        var uri = "/" + Nav.ToBaseRelativePath(Nav.Uri);
+        if (uri == "/" && paths.Contains("/project")) return "active";
+        return paths.Any(p => uri.StartsWith(p)) ? "active" : "";
+    }
+}

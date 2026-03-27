@@ -1,0 +1,794 @@
+@using System.Text.Json
+@using static GlassManagement.Api.Components.Pages.Wizard
+@inject GlassApiClient GlassApi
+
+<!-- 标题条 -->
+<div class="hb-title-bar">@CurtainWallType 幕墙计算 - 横梁计算</div>
+
+<div style="display:flex;gap:10px;align-items:flex-start">
+    <!-- ====== 左侧参数区 ====== -->
+    <div style="flex:1;min-width:0">
+
+        <!-- 横梁参数 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">横梁参数</legend>
+            <div class="param-row">
+                <span class="param-label">横梁跨度 L</span>
+                <input class="hb-input" style="width:70px" type="number" @bind="Input.Span" step="1" @bind:after="Recalc"/>
+                <span class="param-unit">mm</span>
+            </div>
+            <div class="param-row" style="margin-top:4px">
+                <span class="param-label">荷载模型</span>
+                <div class="hb-radio-group horizontal">
+                    <label><input type="radio" name="loadmodel" value="三角形分布" checked="@(Input.LoadModel=="三角形分布")"
+                        @onchange='() => { Input.LoadModel="三角形分布"; Recalc(); }'/>三角形</label>
+                    <label><input type="radio" name="loadmodel" value="均布" checked="@(Input.LoadModel=="均布")"
+                        @onchange='() => { Input.LoadModel="均布"; Recalc(); }'/>均布</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- 横梁选材 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">横梁选材</legend>
+            <div class="hb-radio-group horizontal" style="margin-bottom:4px">
+                @foreach (var g in new[] { "6063-T5", "6063-T6", "6061-T4", "6061-T6", "6063A-T5", "6063A-T6" })
+                {
+                    var grade = g;
+                    <label><input type="radio" name="materialGrade4" checked="@(Input.Material=="铝合金" && Input.AluminumGrade==grade)" @onchange="() => SelectAluGrade(grade)" />@grade</label>
+                }
+            </div>
+            <div class="hb-radio-group horizontal" style="margin-bottom:4px">
+                @foreach (var g in new[] { "Q235", "Q355" })
+                {
+                    var grade = g;
+                    <label><input type="radio" name="materialGrade4" checked="@(Input.Material=="钢材" && Input.SteelGrade==grade)" @onchange="() => SelectSteelGrade(grade)" />@grade</label>
+                }
+                <label><input type="radio" name="materialGrade4" checked="@(Input.Material=="其它")" @onchange="() => SelectOtherMaterial()" />其它材质</label>
+            </div>
+
+            @if (Input.Material == "其它")
+            {
+                <fieldset class="groupbox" style="margin-top:4px;background:var(--bg-page)">
+                    <legend class="groupbox-title" style="font-size:11px">其它材质参数</legend>
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto;gap:4px;align-items:center;font-size:11px">
+                        <span class="param-label">名称</span>
+                        <input class="hb-input" @bind="Input.OtherMaterialName" />
+                        <span class="param-label">弹性模量</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.ElasticModulus" step="100" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                        <span class="param-label">类别</span>
+                        <select class="hb-input" @bind="Input.MaterialCategory"><option>铝</option><option>钢</option></select>
+                        <span class="param-label">抗弯强度</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.AllowableStress" step="1" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                        <span></span><span></span>
+                        <span class="param-label">抗剪强度</span>
+                        <input class="hb-input" style="width:70px" type="number" @bind="Input.AllowableShear" step="1" @bind:after="Recalc" />
+                        <span class="param-unit">MPa</span>
+                    </div>
+                </fieldset>
+            }
+
+            <div style="margin-top:4px;display:flex;gap:12px;flex-wrap:wrap">
+                @if (IsAluminum)
+                {
+                    <label class="hb-checkbox"><input type="checkbox" @bind="Input.IsThermalBreak" />断热</label>
+                }
+                @if (IsSteel)
+                {
+                    <label class="hb-checkbox"><input type="checkbox" @bind="Input.ColdFormedSteel" />冷弯薄壁型钢</label>
+                }
+            </div>
+        </fieldset>
+
+        <!-- 横梁特有选项 -->
+        <fieldset class="groupbox">
+            <legend class="groupbox-title">横梁选项</legend>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px">
+                <label class="hb-checkbox"><input type="checkbox" @bind="Input.SteelAlumComposite" @bind:after="OnSteelAlumChanged" />钢铝结合</label>
+                <label class="hb-checkbox" title="挂式结构的横龙骨承受的自重是下分格施加的，非挂式结构则反之。">
+                    <input type="checkbox" @bind="Input.HangingStructure" @bind:after="Recalc" />挂式结构
+                </label>
+                <label class="hb-checkbox" title="对于玻璃下面有2个托块的明框、半隐显横等结构请选中此项，这种模式对横框受力非常有力。">
+                    <input type="checkbox" @bind="Input.GlassWeightConcentrated" @bind:after="Recalc" />玻璃自重为集中力
+                </label>
+                <label class="hb-checkbox"><input type="checkbox" @bind="Input.ConcentratedForceModel" @bind:after="Recalc" />按集中力模型</label>
+                <label class="hb-checkbox"><input type="checkbox" @bind="Input.CalculateTorsion" @bind:after="Recalc" />计算抗扭</label>
+            </div>
+
+            <div class="param-row" style="margin-top:6px">
+                <span class="param-label">受力点到横梁与立柱连接点距离</span>
+                <input class="hb-input" style="width:70px" type="number" @bind="Input.ForcePointDistance" step="1"
+                       disabled="@(!Input.GlassWeightConcentrated)" @bind:after="Recalc"/>
+                <span class="param-unit">mm</span>
+                @if (!Input.GlassWeightConcentrated)
+                {
+                    <span style="font-size:10px;color:var(--text-muted);margin-left:4px">（勾选"玻璃自重为集中力"后启用）</span>
+                }
+            </div>
+
+            <div style="margin-top:4px;display:flex;gap:8px;align-items:center">
+                <label class="hb-checkbox"><input type="checkbox" @bind="Input.ShortCantilever" @bind:after="Recalc" />短悬臂结构</label>
+                @if (Input.ShortCantilever)
+                {
+                    <span class="param-label">悬臂总尺寸</span>
+                    <input class="hb-input" style="width:70px" type="number" @bind="Input.CantileverSize" step="1" @bind:after="Recalc"/>
+                    <span class="param-unit">mm</span>
+                }
+            </div>
+
+            <div style="margin-top:6px">
+                <button class="hb-btn" style="height:24px;padding:0 10px;font-size:11px" type="button" disabled="@(!Input.CalculateTorsion)">
+                    &gt;&gt;完善抗扭参数&lt;&lt;
+                </button>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- ====== 中间：型材表格 / 钢铝结合面板 ====== -->
+    @if (Input.SteelAlumComposite)
+    {
+        <div style="flex:1.4;min-width:0">
+            <!-- 铝框型材 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">铝框型材（钢铝结合）</legend>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索铝框型材..." @bind="_saAluSearch" @bind:event="oninput" @bind:after="FilterSaAluProfiles"/>
+                </div>
+                @if (_saLoading)
+                {
+                    <div style="text-align:center;padding:12px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:200px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead><tr><th>型材代号</th><th>Ix</th><th>Iy</th><th>Wx1</th><th>Wx2</th><th>壁厚</th><th>截面积</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in _filteredSaAluProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == _selectedSaAluCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => { _selectedSaAluCode = pCode; }">
+                                        <td style="font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);text-align:right">共 @(_allSaAluProfiles?.Count ?? 0) 条</div>
+                }
+            </fieldset>
+            <!-- 钢框型材 -->
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">钢框型材（钢铝结合）</legend>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索钢框型材..." @bind="_saSteelSearch" @bind:event="oninput" @bind:after="FilterSaSteelProfiles"/>
+                </div>
+                @if (_saLoading)
+                {
+                    <div style="text-align:center;padding:12px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:200px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead><tr><th>型材代号</th><th>Ix</th><th>Iy</th><th>Wx1</th><th>Wx2</th><th>壁厚</th><th>截面积</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in _filteredSaSteelProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == _selectedSaSteelCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => { _selectedSaSteelCode = pCode; }">
+                                        <td style="font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);text-align:right">共 @(_allSaSteelProfiles?.Count ?? 0) 条</div>
+                }
+            </fieldset>
+        </div>
+    }
+    else
+    {
+        <div style="flex:1.4;min-width:0">
+            <fieldset class="groupbox">
+                <legend class="groupbox-title">横梁型材库（@(_allProfiles?.Count ?? 0) 条）</legend>
+                <div style="margin-bottom:4px;font-size:11px;color:var(--text-muted)">
+                    快速查找型材 → 请在此处输入待查找型材代号或其关键字
+                    <span style="float:right;color:var(--primary);font-weight:600;cursor:pointer" @onclick="() => _showUnitModal = true">单位说明</span>
+                </div>
+                <div class="hb-search" style="margin-bottom:4px">
+                    <input class="hb-input" style="width:100%" placeholder="搜索型材代号..." @bind="_profileSearch" @bind:event="oninput" @bind:after="FilterProfiles"/>
+                </div>
+                @if (_loading)
+                {
+                    <div style="text-align:center;padding:20px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+                }
+                else
+                {
+                    <div style="max-height:420px;overflow:auto">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead>
+                                <tr>
+                                    <th style="min-width:90px">型材代号</th>
+                                    <th>Ix惯性矩</th><th>Iy惯性矩</th><th>Wx1抵抗矩</th><th>Wx2抵抗矩</th>
+                                    <th>Wy1抵抗矩</th><th>Wy2抵抗矩</th><th>连接面壁厚</th><th>截面积</th>
+                                    <th>面积矩Sx</th><th>面积矩Sy</th><th>备</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in _filteredProfiles)
+                                {
+                                    var pCode = GetStr(p, "code");
+                                    var sel = pCode == Input.ProfileCode;
+                                    <tr class="@(sel?"selected":"")" style="cursor:pointer" @onclick="() => SelectProfile(p)">
+                                        <td style="text-align:left;font-weight:600">@pCode</td>
+                                        <td>@GetNum(p,"ix")</td><td>@GetNum(p,"iy")</td>
+                                        <td>@GetNum(p,"wx1")</td><td>@GetNum(p,"wx2")</td>
+                                        <td>@GetNum(p,"wy1")</td><td>@GetNum(p,"wy2")</td>
+                                        <td>@GetNum(p,"wallThickness")</td><td>@GetNum(p,"area")</td>
+                                        <td>@GetNum(p,"staticMomentSx")</td><td>@GetNum(p,"staticMomentSy")</td><td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;text-align:right">
+                        共 @(_allProfiles?.Count ?? 0) 条型材 · 显示 @_filteredProfiles.Count 条
+                    </div>
+                }
+            </fieldset>
+        </div>
+    }
+
+    <!-- ====== 右侧：验算结果 ====== -->
+    <div style="flex:0.8;min-width:220px">
+        <fieldset class="groupbox" style="background:var(--bg-page)">
+            <legend class="groupbox-title">横梁验算结果</legend>
+            <div style="font-size:11px;line-height:1.8;font-family:'Consolas','Microsoft YaHei UI',monospace">
+
+                <div style="margin-bottom:4px">
+                    <div>双向弯曲应力：<b>@(Input.CombinedStress.ToString("F1")) MPa</b></div>
+                    <div>容许应力：<b>@(Input.AllowableStress.ToString("F1")) MPa</b></div>
+                    <div class="@(Input.StressPass ? "result-pass" : "result-fail")">
+                        @(Input.StressPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:4px">
+                    <div>合成挠度：<b>@(Input.CombinedDeflection.ToString("F2")) mm</b></div>
+                    <div>挠度限值：<b>@(Input.DeflectionLimit.ToString("F2")) mm</b></div>
+                    <div class="@(Input.DeflectionPass ? "result-pass" : "result-fail")">
+                        @(Input.DeflectionPass ? "满足要求(√)" : "● 不满足要求(✗)")
+                    </div>
+                </div>
+
+                <div style="border-top:1px solid var(--border-color);padding-top:6px;margin-top:8px">
+                    <div>支反力：<b>@(Input.ReactionForce.ToString("F3")) kN</b></div>
+                </div>
+            </div>
+        </fieldset>
+
+        @if (Input.SteelAlumComposite)
+        {
+            <fieldset class="groupbox" style="background:var(--bg-page);margin-top:8px">
+                <legend class="groupbox-title">钢铝结合验算</legend>
+                <div style="font-size:11px;line-height:1.6">
+                    <div><b>铝框：</b>@(_selectedSaAluCode != "" ? _selectedSaAluCode : "未选择")</div>
+                    <div><b>钢框：</b>@(_selectedSaSteelCode != "" ? _selectedSaSteelCode : "未选择")</div>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+<!-- ====== 横梁力学模型 SVG 图 ====== -->
+<fieldset class="groupbox" style="margin-top:10px">
+    <legend class="groupbox-title">📐 横梁力学模型图 — @Input.LoadModel@(Input.ShortCantilever ? "（短悬臂）" : "")@(Input.ConcentratedForceModel ? "（集中力）" : "")</legend>
+    <div style="display:flex;justify-content:center">
+        @if (Input.ShortCantilever)
+        {
+            @* 短悬臂横梁 *@
+            <svg width="100%" viewBox="0 0 500 480" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrT1" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 短悬臂横梁</text>
+                <rect x="80" y="55" width="280" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- fixed at wall -->
+                <rect x="348" y="35" width="12" height="55" fill="var(--text-muted,#888)" opacity="0.3"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="360" y1="38" x2="370" y2="48"/><line x1="360" y1="46" x2="370" y2="56"/><line x1="360" y1="54" x2="370" y2="64"/><line x1="360" y1="62" x2="370" y2="72"/><line x1="360" y1="70" x2="370" y2="80"/></g>
+                <!-- UDL (self weight downward) -->
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrT1)">@for(int x=95;x<=345;x+=25){<line x1="@x" y1="75" x2="@x" y2="95"/>}</g>
+                <line x1="95" y1="75" x2="345" y2="75" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <text x="220" y="72" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q (自重)</text>
+                <line x1="80" y1="110" x2="360" y2="110" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="220" y="108" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+                <text x="80" y="124" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">自由端</text>
+                <text x="360" y="124" font-size="8" fill="var(--text-muted,#888)" text-anchor="middle">固定端</text>
+
+                <!-- V -->
+                <line x1="20" y1="138" x2="480" y2="138" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="153" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="190" x2="360" y2="190" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,190 360,170 360,190" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="190" x2="360" y2="170" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="365" y="173" font-size="9" fill="#FF9500" font-weight="600">qL</text>
+                <text x="30" y="193" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- M -->
+                <line x1="20" y1="215" x2="480" y2="215" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="230" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="250" x2="360" y2="250" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,250 Q220,252 360,290" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,250 Q220,252 360,290" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="360" cy="290" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="370" y="294" font-size="9" fill="#FF3B30" font-weight="600">M = qL²/2</text>
+                <text x="30" y="270" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- δ -->
+                <line x1="20" y1="310" x2="480" y2="310" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="325" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="350" x2="360" y2="350" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M360,350 C300,350 200,370 80,390" fill="#34C759" opacity="0.08"/>
+                <path d="M360,350 C300,350 200,370 80,390" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="80" cy="390" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="90" y="393" font-size="9" fill="#34C759" font-weight="600">δmax = qL⁴/8EI</text>
+                <text x="30" y="375" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="415" width="380" height="45" rx="6" fill="var(--primary,#007AFF)" opacity="0.08" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="433" font-size="9" fill="var(--text-muted,#888)" font-weight="600">短悬臂公式</text>
+                <text x="75" y="449" font-size="10" fill="var(--text-primary,#333)">M = qL²/2　　δ = qL⁴/(8EI)　　V = qL</text>
+            </svg>
+        }
+        else if (Input.ConcentratedForceModel)
+        {
+            @* 简支梁-集中荷载 *@
+            <svg width="100%" viewBox="0 0 500 480" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrT2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 横梁（集中力）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- pin A -->
+                <polygon points="80,69 70,87 90,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="65" y1="89" x2="95" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="67" y1="89" x2="63" y2="94"/><line x1="73" y1="89" x2="69" y2="94"/><line x1="79" y1="89" x2="75" y2="94"/><line x1="85" y1="89" x2="81" y2="94"/><line x1="91" y1="89" x2="87" y2="94"/></g>
+                <!-- roller B -->
+                <polygon points="420,69 410,84 430,84" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <circle cx="416" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/><circle cx="424" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/>
+                <line x1="408" y1="91" x2="436" y2="91" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <!-- Point load at center -->
+                <line x1="250" y1="20" x2="250" y2="50" stroke="var(--accent-red,#e74c3c)" stroke-width="2" marker-end="url(#arrT2)"/>
+                <text x="260" y="30" font-size="11" fill="var(--accent-red,#e74c3c)" font-weight="700">P (自重)</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+
+                <!-- V -->
+                <line x1="20" y1="120" x2="480" y2="120" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="135" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="175" x2="420" y2="175" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <rect x="80" y="158" width="170" height="17" fill="#FF9500" opacity="0.1"/>
+                <line x1="80" y1="158" x2="250" y2="158" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="80" y1="158" x2="80" y2="175" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="250" y1="158" x2="250" y2="192" stroke="#FF9500" stroke-width="1.5"/>
+                <rect x="250" y="175" width="170" height="17" fill="#FF9500" opacity="0.1"/>
+                <line x1="250" y1="192" x2="420" y2="192" stroke="#FF9500" stroke-width="1.5"/>
+                <line x1="420" y1="175" x2="420" y2="192" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="161" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+P/2</text>
+                <text x="432" y="195" font-size="9" fill="#FF9500" font-weight="600">−P/2</text>
+                <text x="30" y="178" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- M -->
+                <line x1="20" y1="210" x2="480" y2="210" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="225" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="245" x2="420" y2="245" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,245 250,295 420,245" fill="#FF3B30" opacity="0.08"/>
+                <line x1="80" y1="245" x2="250" y2="295" stroke="#FF3B30" stroke-width="1.5"/>
+                <line x1="250" y1="295" x2="420" y2="245" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="250" cy="295" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="262" y="299" font-size="9" fill="#FF3B30" font-weight="600">Mmax = PL/4</text>
+                <text x="30" y="270" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- δ -->
+                <line x1="20" y1="315" x2="480" y2="315" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="330" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="350" x2="420" y2="350" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,350 C140,350 190,385 250,390 C310,385 360,350 420,350" fill="#34C759" opacity="0.08"/>
+                <path d="M80,350 C140,350 190,385 250,390 C310,385 360,350 420,350" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="390" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="262" y="393" font-size="9" fill="#34C759" font-weight="600">δmax = PL³/48EI</text>
+                <text x="30" y="375" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="415" width="380" height="45" rx="6" fill="var(--primary,#007AFF)" opacity="0.08" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="433" font-size="9" fill="var(--text-muted,#888)" font-weight="600">集中力公式</text>
+                <text x="75" y="449" font-size="10" fill="var(--text-primary,#333)">R = P/2　　M = PL/4　　δ = PL³/(48EI)</text>
+            </svg>
+        }
+        else if (Input.LoadModel == "三角形分布")
+        {
+            @* 简支梁-三角形分布荷载 *@
+            <svg width="100%" viewBox="0 0 500 480" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrT3" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 横梁（三角形分布荷载）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- pin A -->
+                <polygon points="80,69 70,87 90,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="65" y1="89" x2="95" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="67" y1="89" x2="63" y2="94"/><line x1="73" y1="89" x2="69" y2="94"/><line x1="79" y1="89" x2="75" y2="94"/><line x1="85" y1="89" x2="81" y2="94"/><line x1="91" y1="89" x2="87" y2="94"/></g>
+                <!-- roller B -->
+                <polygon points="420,69 410,84 430,84" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <circle cx="416" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/><circle cx="424" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/>
+                <line x1="408" y1="91" x2="436" y2="91" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <!-- Triangular load: 0 at ends, max at center -->
+                <polygon points="80,52 250,22 420,52" fill="var(--accent-red,#e74c3c)" opacity="0.06" stroke="none"/>
+                <line x1="80" y1="52" x2="250" y2="22" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <line x1="250" y1="22" x2="420" y2="52" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.5" marker-end="url(#arrT3)">
+                    <line x1="100" y1="49" x2="100" y2="53"/><line x1="130" y1="44" x2="130" y2="53"/>
+                    <line x1="160" y1="39" x2="160" y2="53"/><line x1="190" y1="33" x2="190" y2="53"/>
+                    <line x1="220" y1="27" x2="220" y2="53"/><line x1="250" y1="22" x2="250" y2="53"/>
+                    <line x1="280" y1="27" x2="280" y2="53"/><line x1="310" y1="33" x2="310" y2="53"/>
+                    <line x1="340" y1="39" x2="340" y2="53"/><line x1="370" y1="44" x2="370" y2="53"/>
+                    <line x1="400" y1="49" x2="400" y2="53"/>
+                </g>
+                <text x="255" y="18" font-size="10" fill="var(--accent-red,#e74c3c)" font-weight="600">q₀</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+
+                <!-- V: cubic, RA=qL/4 -->
+                <line x1="20" y1="120" x2="480" y2="120" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="135" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="175" x2="420" y2="175" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,155 Q200,175 250,175 Q300,175 420,195" fill="#FF9500" opacity="0.08"/>
+                <path d="M80,155 Q200,175 250,175 Q300,175 420,195" fill="none" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="158" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+q₀L/4</text>
+                <text x="432" y="198" font-size="9" fill="#FF9500" font-weight="600">−q₀L/4</text>
+                <text x="30" y="178" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- M: parabola, max at center = q₀L²/12 -->
+                <line x1="20" y1="210" x2="480" y2="210" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="225" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="245" x2="420" y2="245" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,245 Q170,288 250,295 Q330,288 420,245" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,245 Q170,288 250,295 Q330,288 420,245" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="250" cy="295" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="262" y="299" font-size="9" fill="#FF3B30" font-weight="600">Mmax = q₀L²/12</text>
+                <text x="30" y="270" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- δ -->
+                <line x1="20" y1="315" x2="480" y2="315" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="330" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="350" x2="420" y2="350" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,350 C140,350 190,380 250,384 C310,380 360,350 420,350" fill="#34C759" opacity="0.08"/>
+                <path d="M80,350 C140,350 190,380 250,384 C310,380 360,350 420,350" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="384" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="262" y="387" font-size="9" fill="#34C759" font-weight="600">δmax = q₀L⁴/120EI</text>
+                <text x="30" y="372" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="410" width="380" height="55" rx="6" fill="var(--primary,#007AFF)" opacity="0.08" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="428" font-size="9" fill="var(--text-muted,#888)" font-weight="600">三角形荷载公式</text>
+                <text x="75" y="444" font-size="10" fill="var(--text-primary,#333)">R = q₀L/4　　M = q₀L²/12</text>
+                <text x="75" y="458" font-size="10" fill="var(--text-primary,#333)">δ = q₀L⁴/(120EI)　　σ = M/W</text>
+            </svg>
+        }
+        else
+        {
+            @* 简支梁-均布荷载（默认） *@
+            <svg width="100%" viewBox="0 0 500 480" xmlns="http://www.w3.org/2000/svg" style="max-width:600px" font-family="'Segoe UI','Microsoft YaHei UI',sans-serif">
+                <defs><marker id="arrT4" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><polygon points="0,0 6,2 0,4" fill="var(--accent-red,#e74c3c)"/></marker></defs>
+                <text x="20" y="16" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">STRUCTURAL MODEL · 横梁（均布荷载）</text>
+                <rect x="80" y="55" width="340" height="12" rx="2" fill="var(--primary,#007AFF)" opacity="0.15" stroke="var(--primary,#007AFF)" stroke-width="1"/>
+                <!-- pin A -->
+                <polygon points="80,69 70,87 90,87" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <line x1="65" y1="89" x2="95" y2="89" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <g stroke="var(--text-muted,#888)" stroke-width="0.6"><line x1="67" y1="89" x2="63" y2="94"/><line x1="73" y1="89" x2="69" y2="94"/><line x1="79" y1="89" x2="75" y2="94"/><line x1="85" y1="89" x2="81" y2="94"/><line x1="91" y1="89" x2="87" y2="94"/></g>
+                <!-- roller B -->
+                <polygon points="420,69 410,84 430,84" fill="none" stroke="var(--text-primary,#333)" stroke-width="1.2"/>
+                <circle cx="416" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/><circle cx="424" cy="88" r="2.5" fill="none" stroke="var(--text-primary,#333)" stroke-width="0.8"/>
+                <line x1="408" y1="91" x2="436" y2="91" stroke="var(--text-primary,#333)" stroke-width="1"/>
+                <!-- UDL -->
+                <line x1="95" y1="28" x2="405" y2="28" stroke="var(--accent-red,#e74c3c)" stroke-width="1" opacity="0.6"/>
+                <g stroke="var(--accent-red,#e74c3c)" stroke-width="0.8" opacity="0.6" marker-end="url(#arrT4)">@for(int x=100;x<=400;x+=25){<line x1="@x" y1="30" x2="@x" y2="50"/>}</g>
+                <text x="250" y="24" font-size="10" fill="var(--accent-red,#e74c3c)" text-anchor="middle" font-weight="600">q</text>
+                <line x1="80" y1="102" x2="420" y2="102" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <text x="250" y="100" font-size="9" fill="var(--text-muted,#888)" text-anchor="middle">L</text>
+
+                <!-- V -->
+                <line x1="20" y1="120" x2="480" y2="120" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="135" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">SHEAR FORCE · 剪力图 V(x)</text>
+                <line x1="80" y1="175" x2="420" y2="175" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <polygon points="80,175 80,155 250,175" fill="#FF9500" opacity="0.12"/>
+                <line x1="80" y1="155" x2="250" y2="175" stroke="#FF9500" stroke-width="1.5"/>
+                <polygon points="250,175 420,195 420,175" fill="#FF9500" opacity="0.12"/>
+                <line x1="250" y1="175" x2="420" y2="195" stroke="#FF9500" stroke-width="1.5"/>
+                <text x="68" y="158" font-size="9" fill="#FF9500" font-weight="600" text-anchor="end">+qL/2</text>
+                <text x="432" y="198" font-size="9" fill="#FF9500" font-weight="600">−qL/2</text>
+                <text x="30" y="178" font-size="10" fill="var(--text-muted,#888)" font-weight="600">V</text>
+
+                <!-- M -->
+                <line x1="20" y1="210" x2="480" y2="210" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="225" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">BENDING MOMENT · 弯矩图 M(x)</text>
+                <line x1="80" y1="245" x2="420" y2="245" stroke="var(--text-muted,#888)" stroke-width="0.6"/>
+                <path d="M80,245 Q170,295 250,300 Q330,295 420,245" fill="#FF3B30" opacity="0.08"/>
+                <path d="M80,245 Q170,295 250,300 Q330,295 420,245" fill="none" stroke="#FF3B30" stroke-width="1.5"/>
+                <circle cx="250" cy="300" r="3" fill="#FF3B30" opacity="0.7"/>
+                <text x="262" y="304" font-size="9" fill="#FF3B30" font-weight="600">Mmax = qL²/8</text>
+                <text x="30" y="270" font-size="10" fill="var(--text-muted,#888)" font-weight="600">M</text>
+
+                <!-- δ -->
+                <line x1="20" y1="315" x2="480" y2="315" stroke="var(--border-color,#ddd)" stroke-width="0.5"/>
+                <text x="20" y="330" font-size="10" font-weight="600" fill="var(--text-muted,#888)" letter-spacing="0.6">DEFLECTION · 挠度曲线 δ(x)</text>
+                <line x1="80" y1="350" x2="420" y2="350" stroke="var(--text-muted,#888)" stroke-width="0.6" stroke-dasharray="4,3"/>
+                <path d="M80,350 C140,350 190,388 250,392 C310,388 360,350 420,350" fill="#34C759" opacity="0.08"/>
+                <path d="M80,350 C140,350 190,388 250,392 C310,388 360,350 420,350" fill="none" stroke="#34C759" stroke-width="1.5"/>
+                <circle cx="250" cy="392" r="3" fill="#34C759" opacity="0.7"/>
+                <text x="262" y="395" font-size="9" fill="#34C759" font-weight="600">δmax = 5qL⁴/384EI</text>
+                <text x="30" y="375" font-size="10" fill="var(--text-muted,#888)" font-weight="600">δ</text>
+
+                <rect x="60" y="415" width="380" height="45" rx="6" fill="var(--primary,#007AFF)" opacity="0.08" stroke="var(--primary,#007AFF)" stroke-width="0.5"/>
+                <text x="75" y="433" font-size="9" fill="var(--text-muted,#888)" font-weight="600">均布荷载公式</text>
+                <text x="75" y="449" font-size="10" fill="var(--text-primary,#333)">R = qL/2　　M = qL²/8　　δ = 5qL⁴/(384EI)</text>
+            </svg>
+        }
+    </div>
+</fieldset>
+
+<!-- 单位说明弹窗 -->
+@if (_showUnitModal)
+{
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center" @onclick="() => _showUnitModal = false">
+        <div style="background:var(--bg-white);border-radius:8px;padding:24px;min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.2)" @onclick:stopPropagation>
+            <h3 style="margin:0 0 12px;font-size:15px">📏 单位说明</h3>
+            <table class="hb-table" style="font-size:12px">
+                <tbody>
+                    <tr><td style="text-align:left;font-weight:600">惯性矩</td><td>cm⁴</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">抵抗矩</td><td>cm³</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">壁厚</td><td>mm</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">截面积</td><td>mm²</td></tr>
+                    <tr><td style="text-align:left;font-weight:600">面积矩</td><td>cm³</td></tr>
+                </tbody>
+            </table>
+            <div style="text-align:right;margin-top:12px">
+                <button class="hb-btn" @onclick="() => _showUnitModal = false">关闭</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Step4Data Input { get; set; } = new();
+    [Parameter] public string CurtainWallType { get; set; } = "全隐框玻璃";
+    [Parameter] public Step2Data? Step2Input { get; set; }
+
+    private List<JsonElement>? _allProfiles;
+    private List<JsonElement> _filteredProfiles = new();
+    private string _profileSearch = "";
+    private bool _loading = true;
+    private bool _showUnitModal;
+
+    // 钢铝结合
+    private List<JsonElement>? _allSaAluProfiles;
+    private List<JsonElement> _filteredSaAluProfiles = new();
+    private string _saAluSearch = "";
+    private string _selectedSaAluCode = "";
+    private List<JsonElement>? _allSaSteelProfiles;
+    private List<JsonElement> _filteredSaSteelProfiles = new();
+    private string _saSteelSearch = "";
+    private string _selectedSaSteelCode = "";
+    private bool _saLoading;
+
+    private bool IsAluminum => Input.Material == "铝合金";
+    private bool IsSteel => Input.Material == "钢材";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        _allProfiles = await GlassApi.GetProfileBeamsAsync();
+        _loading = false;
+        FilterProfiles();
+    }
+
+    private void FilterProfiles()
+    {
+        if (_allProfiles == null) { _filteredProfiles = new(); return; }
+        if (string.IsNullOrWhiteSpace(_profileSearch))
+            _filteredProfiles = _allProfiles;
+        else
+            _filteredProfiles = _allProfiles
+                .Where(p => GetStr(p,"code").Contains(_profileSearch,StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void SelectProfile(JsonElement p)
+    {
+        Input.ProfileCode = GetStr(p, "code");
+        Input.Ix = GetDbl(p, "ix");
+        Input.Iy = GetDbl(p, "iy");
+        Input.Wx1 = GetDbl(p, "wx1");
+        Input.Wx2 = GetDbl(p, "wx2");
+        Input.Wy1 = GetDbl(p, "wy1");
+        Input.Wy2 = GetDbl(p, "wy2");
+        Input.Wxx = GetDbl(p, "wx1");
+        Input.Wyy = GetDbl(p, "wy1");
+        Input.WallThickness = GetDbl(p, "wallThickness");
+        Input.Area = GetDbl(p, "area");
+        Input.StaticMomentSx = GetDbl(p, "staticMomentSx");
+        Input.StaticMomentSy = GetDbl(p, "staticMomentSy");
+        Recalc();
+    }
+
+    private void SelectAluGrade(string g)
+    {
+        Input.AluminumGrade = g;
+        Input.Material = "铝合金";
+        Input.ColdFormedSteel = false;
+        Recalc();
+    }
+
+    private void SelectSteelGrade(string g)
+    {
+        Input.SteelGrade = g;
+        Input.Material = "钢材";
+        Input.IsThermalBreak = false;
+        Recalc();
+    }
+
+    private void SelectOtherMaterial()
+    {
+        Input.Material = "其它";
+        Input.IsThermalBreak = false;
+        Input.ColdFormedSteel = false;
+        Recalc();
+    }
+
+    private async Task OnSteelAlumChanged()
+    {
+        if (Input.SteelAlumComposite && _allSaAluProfiles == null)
+        {
+            _saLoading = true;
+            _allSaAluProfiles = await GlassApi.GetSteelAlumAluBeamsAsync();
+            _allSaSteelProfiles = await GlassApi.GetSteelAlumSteelBeamsAsync();
+            _saLoading = false;
+            FilterSaAluProfiles();
+            FilterSaSteelProfiles();
+        }
+        Recalc();
+    }
+
+    private void FilterSaAluProfiles()
+    {
+        if (_allSaAluProfiles == null) { _filteredSaAluProfiles = new(); return; }
+        _filteredSaAluProfiles = string.IsNullOrWhiteSpace(_saAluSearch)
+            ? _allSaAluProfiles
+            : _allSaAluProfiles.Where(p => GetStr(p,"code").Contains(_saAluSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void FilterSaSteelProfiles()
+    {
+        if (_allSaSteelProfiles == null) { _filteredSaSteelProfiles = new(); return; }
+        _filteredSaSteelProfiles = string.IsNullOrWhiteSpace(_saSteelSearch)
+            ? _allSaSteelProfiles
+            : _allSaSteelProfiles.Where(p => GetStr(p,"code").Contains(_saSteelSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private static string GetStr(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.GetString() ?? "" : "";
+    private static double GetDbl(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.GetDouble() : 0;
+    private static string GetNum(JsonElement e, string prop) => e.TryGetProperty(prop, out var v) ? v.ToString() : "—";
+
+    /// <summary>
+    /// 横梁验算 — JGJ102-2003 §5.4
+    /// 双向弯曲: σ = Mx/Wx + My/Wy ≤ [σ]
+    /// 合成挠度: δ = √(δx² + δy²) ≤ L/180
+    /// </summary>
+    private void Recalc()
+    {
+        if (Input.Wxx <= 0 || Input.Wyy <= 0) return;
+        double L = Input.Span; // mm
+        double E;
+        if (Input.Material == "铝合金")
+        {
+            E = 70000; // MPa
+            Input.AllowableStress = Input.AluminumGrade switch
+            {
+                "6063-T5" => 85, "6063-T6" => 100, "6061-T4" => 55, "6061-T6" => 135,
+                "6063A-T5" => 85, "6063A-T6" => 100, _ => 85
+            };
+            Input.AllowableShear = Input.AluminumGrade switch
+            {
+                "6063-T5" => 50, "6063-T6" => 60, "6061-T4" => 32, "6061-T6" => 80,
+                "6063A-T5" => 50, "6063A-T6" => 60, _ => 50
+            };
+        }
+        else if (Input.Material == "钢材")
+        {
+            E = 206000;
+            Input.AllowableStress = Input.SteelGrade == "Q355" ? 310 : 215;
+            Input.AllowableShear = Input.SteelGrade == "Q355" ? 180 : 125;
+        }
+        else
+        {
+            E = Input.ElasticModulus > 0 ? Input.ElasticModulus : 70000;
+        }
+
+        // ===== 荷载计算 =====
+        // 水平向(x): 风荷载 — 从Step2玻璃短边或上/下分格高取从属高度
+        // qx = Wk(kPa) × H_tributary(mm) / 1000 → N/mm
+        double wk = Step2Input != null ? 1.285 : 1.0; // 默认风荷载 kPa，实际应从Step1传入
+        double H_tributary = Step2Input?.GlassShortSide ?? 1500; // 从属高度 mm(取玻璃短边近似)
+        double qx = wk * H_tributary / 1e6; // kPa × mm = Pa·mm = 1e-3 N/mm² × mm = 1e-3 N/mm → ×1000 → N/mm
+        qx = wk * H_tributary / 1000.0; // N/mm (wk in kPa=N/m²×1e-3/mm × mm)
+        // 实际: wk(kPa) = wk(N/m²)/1000 → wk(N/mm²) = wk(kPa)/1000
+        // qx = wk(N/mm²) × H(mm) = wk(kPa)/1000 × H(mm) → N/mm
+        qx = wk / 1000.0 * H_tributary; // N/mm
+
+        // 竖向(y): 玻璃自重 — 均布荷载
+        // 玻璃单位面积重 ≈ 25.6 kN/m³ × 厚度(m)
+        double glassThick = (Step2Input?.OuterThickness ?? 6) + (Step2Input?.InnerThickness ?? 6); // mm (双片)
+        double glassUnitWeight = 25.6 * glassThick / 1000.0; // kN/m² (25.6kN/m³ × t(m))
+        // 从属宽度取玻璃长边的一半(横梁上下各分担一半)
+        double glassLongSide = Step2Input?.GlassLongSide ?? 2400;
+        double qy_total = glassUnitWeight * (glassLongSide / 2.0) / 1000.0; // kN/m → 转为 N/mm
+        double qy = qy_total; // N/mm (glassUnitWeight(kN/m²) × (mm/2)/1000 = kN/m²×m/2 = kN/m → kN/m / 1000mm/m × 1000N/kN = N/mm)
+        qy = glassUnitWeight * (glassLongSide / 2.0) / 1e6 * 1000; // N/mm
+        // 简化: qy(N/mm) = glassUnitWeight(kN/m²) × tributaryWidth(m) × 1000(N/kN) / 1000(mm/m)
+        qy = glassUnitWeight * (glassLongSide / 2.0 / 1000.0); // kN/m
+        qy = qy * 1000.0 / 1000.0; // N/mm (kN/m → N/mm: ×1000/1000=×1)
+        // kN/m = N/mm，所以 qy(N/mm) = glassUnitWeight(kN/m²) × (glassLongSide/2)(mm) / 1000(mm→m)
+        qy = glassUnitWeight * (glassLongSide / 2.0) / 1000.0; // N/mm
+
+        // ===== 弯矩计算 =====
+        // JGJ102-2003 §5.4: 横梁水平方向(风荷载)
+        // 三角形分布: Mmax = qx·L²/12 (简支梁三角形荷载)
+        // 均布: Mmax = qx·L²/8
+        double Mx = Input.LoadModel == "三角形分布"
+            ? qx * L * L / 12.0   // N·mm
+            : qx * L * L / 8.0;   // N·mm
+
+        // 竖向(自重): 均布荷载 My = qy·L²/8
+        // 若玻璃自重为集中力: My = F·L/4 (中点集中力)
+        double My;
+        if (Input.GlassWeightConcentrated)
+        {
+            double F_gravity = qy * L; // 总自重 N (近似)
+            double a = Input.ForcePointDistance; // 受力点到支座距离 mm
+            My = F_gravity * a * (L - a) / L; // 偏心集中力弯矩
+        }
+        else
+        {
+            My = qy * L * L / 8.0; // N·mm
+        }
+
+        // ===== 双向弯曲应力验算 — JGJ102-2003 §5.4.2 =====
+        // σ = Mx/Wx + My/Wy ≤ [σ]
+        double WxMm3 = Input.Wxx * 1e3; // cm³ → mm³
+        double WyMm3 = Input.Wyy * 1e3;
+        Input.CombinedStress = Math.Round(Mx / WxMm3 + My / WyMm3, 1); // MPa
+        Input.StressPass = Input.CombinedStress <= Input.AllowableStress;
+
+        // ===== 合成挠度验算 — JGJ102-2003 §5.4.3 =====
+        // δ = √(δx² + δy²) ≤ L/180
+        double IxMm4 = Input.Ix * 1e4; // cm⁴ → mm⁴
+        double IyMm4 = Input.Iy * 1e4;
+        // 三角形分布挠度: δ = qx·L⁴/(120·EI)  均布: δ = 5·qx·L⁴/(384·EI)
+        double dfx;
+        if (Input.LoadModel == "三角形分布")
+            dfx = IxMm4 > 0 ? qx * Math.Pow(L, 4) / (120.0 * E * IxMm4) : 0;
+        else
+            dfx = IxMm4 > 0 ? 5.0 * qx * Math.Pow(L, 4) / (384.0 * E * IxMm4) : 0;
+        double dfy = IyMm4 > 0 ? 5.0 * qy * Math.Pow(L, 4) / (384.0 * E * IyMm4) : 0;
+        Input.CombinedDeflection = Math.Round(Math.Sqrt(dfx * dfx + dfy * dfy), 2);
+        Input.DeflectionLimit = Math.Round(L / 180.0, 2);
+        Input.DeflectionPass = Input.CombinedDeflection <= Input.DeflectionLimit;
+
+        // ===== 支反力 =====
+        double Vx = Input.LoadModel == "三角形分布" ? qx * L / 3.0 : qx * L / 2.0;
+        double Vy = qy * L / 2.0;
+        Input.ReactionForce = Math.Round(Math.Sqrt(Vx * Vx + Vy * Vy) / 1000.0, 3); // kN
+    }
+}

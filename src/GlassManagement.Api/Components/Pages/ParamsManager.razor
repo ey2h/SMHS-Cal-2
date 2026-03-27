@@ -1,0 +1,495 @@
+@page "/params"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject NavigationManager Nav
+@using System.Text.Json
+@using System.Net.Http.Json
+
+<div class="page-enter">
+    <h1 class="page-title">🗄️ 参数库管理</h1>
+    <p class="page-subtitle">地区参数、玻璃类型、型材、螺栓、面板材料等基础数据维护</p>
+
+    <!-- 表选择Tab栏 -->
+    <div class="chip-group">
+        @foreach (var tab in _tabs)
+        {
+            <button class="chip @(_activeTab == tab.Key ? "active" : "")"
+                    @onclick="() => SwitchTab(tab.Key)">
+                @tab.Icon @tab.Label
+            </button>
+        }
+    </div>
+
+    <div class="card">
+        <!-- 工具栏 -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+            <div class="section-title" style="margin-bottom:0;flex:0 0 auto">
+                <span class="material-symbols-outlined">database</span> @CurrentTab?.Label
+            </div>
+
+            <!-- 搜索框 -->
+            <div style="flex:1;min-width:200px;max-width:360px;position:relative">
+                <span class="material-symbols-outlined" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:18px">search</span>
+                <input type="text" placeholder="搜索..." value="@_search"
+                       @oninput="OnSearchInput"
+                       style="width:100%;padding:8px 12px 8px 34px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--bg-input);color:var(--text-1);font-size:13px" />
+            </div>
+
+            <span style="font-size:13px;color:var(--text-3)">共 @_totalCount 条</span>
+
+            <!-- 操作按钮 -->
+            <div style="display:flex;gap:8px;margin-left:auto">
+                <button class="btn-primary" style="height:34px;padding:0 14px;font-size:13px" @onclick="ShowAddDialog">
+                    <span class="material-symbols-outlined" style="font-size:16px">add</span> 新增
+                </button>
+                <button class="btn-ghost" style="height:34px;padding:0 14px;font-size:13px" @onclick="ExportCsv">
+                    <span class="material-symbols-outlined" style="font-size:16px">download</span> 导出CSV
+                </button>
+                <button class="btn-ghost" style="height:34px;padding:0 14px;font-size:13px" @onclick="() => _showImport = true">
+                    <span class="material-symbols-outlined" style="font-size:16px">upload</span> 导入CSV
+                </button>
+                <button class="btn-ghost" style="height:34px;padding:0 14px;font-size:13px" @onclick="BackupDb">
+                    <span class="material-symbols-outlined" style="font-size:16px">backup</span> 备份
+                </button>
+            </div>
+        </div>
+
+        <!-- 数据表格 -->
+        @if (_columns.Count > 0 && _rows.Count > 0)
+        {
+            <div style="overflow-x:auto">
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            @foreach (var col in _columns)
+                            {
+                                <th @onclick="() => SortBy(col.Key)" style="cursor:pointer;user-select:none;white-space:nowrap">
+                                    @col.Label
+                                    @if (_sortCol == col.Key)
+                                    {
+                                        <span style="font-size:12px;margin-left:2px">@(_sortAsc ? "▲" : "▼")</span>
+                                    }
+                                </th>
+                            }
+                            <th style="width:100px;text-align:center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _displayRows)
+                        {
+                            <tr class="@(_selectedId == GetRowId(row) ? "selected" : "")"
+                                @onclick="() => SelectRow(row)"
+                                @ondblclick="() => ShowEditDialog(row)">
+                                @foreach (var col in _columns)
+                                {
+                                    <td>@GetCell(row, col.Key)</td>
+                                }
+                                <td style="text-align:center">
+                                    <button class="btn-ghost" style="height:28px;padding:0 6px;font-size:12px"
+                                            @onclick:stopPropagation="true" @onclick="() => ShowEditDialog(row)"
+                                            title="编辑">
+                                        <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+                                    </button>
+                                    <button class="btn-ghost danger" style="height:28px;padding:0 6px;font-size:12px"
+                                            @onclick:stopPropagation="true" @onclick="() => ConfirmDelete(row)"
+                                            title="删除">
+                                        <span class="material-symbols-outlined" style="font-size:16px">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 分页 -->
+            @if (_totalPages > 1)
+            {
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px">
+                    <button class="btn-ghost" disabled="@(_page <= 1)" @onclick="() => GoPage(_page - 1)"
+                            style="height:32px;padding:0 10px;font-size:13px">上一页</button>
+                    @for (int i = Math.Max(1, _page - 2); i <= Math.Min(_totalPages, _page + 2); i++)
+                    {
+                        var p = i;
+                        <button class="@(p == _page ? "btn-primary" : "btn-ghost")"
+                                @onclick="() => GoPage(p)"
+                                style="height:32px;min-width:32px;padding:0 6px;font-size:13px">@p</button>
+                    }
+                    <button class="btn-ghost" disabled="@(_page >= _totalPages)" @onclick="() => GoPage(_page + 1)"
+                            style="height:32px;padding:0 10px;font-size:13px">下一页</button>
+                </div>
+            }
+        }
+        else if (_loading)
+        {
+            <div style="text-align:center;padding:40px 0;color:var(--text-3)">加载中...</div>
+        }
+        else
+        {
+            <div style="text-align:center;padding:40px 0;color:var(--text-3)">
+                <span class="material-symbols-outlined" style="font-size:48px;display:block;margin-bottom:8px">inbox</span>
+                暂无数据
+            </div>
+        }
+    </div>
+
+    <!-- 提示消息 -->
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <div class="toast-msg @(_messageIsError ? "error" : "")">@_message</div>
+    }
+</div>
+
+<!-- 编辑/新增对话框 -->
+@if (_showEdit)
+{
+    <GlassManagement.Api.Components.Shared.ParamEditDialog
+        TableName="@_activeTab"
+        Columns="_columns"
+        EditData="_editData"
+        IsNew="_isNew"
+        OnSave="SaveRecord"
+        OnCancel="() => _showEdit = false" />
+}
+
+<!-- 删除确认 -->
+@if (_showDeleteConfirm)
+{
+    <div class="modal-overlay" @onclick="() => _showDeleteConfirm = false">
+        <div class="modal-box" @onclick:stopPropagation="true" style="max-width:400px">
+            <h3 style="margin:0 0 16px;font-size:16px">确认删除</h3>
+            <p style="color:var(--text-2);margin-bottom:20px">确定要删除此条记录吗？此操作不可撤销。</p>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn-ghost" @onclick="() => _showDeleteConfirm = false">取消</button>
+                <button class="btn-primary" style="background:var(--red)" @onclick="DoDelete">删除</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- CSV导入对话框 -->
+@if (_showImport)
+{
+    <GlassManagement.Api.Components.Shared.CsvImportDialog
+        TableName="@_activeTab"
+        OnImported="OnImported"
+        OnCancel="() => _showImport = false" />
+}
+
+@code {
+    // Tab配置
+    private record TabInfo(string Key, string Label, string Icon);
+    private readonly TabInfo[] _tabs =
+    [
+        new("regions", "地区参数", "🌍"),
+        new("glass", "玻璃类型", "🪟"),
+        new("columns", "立柱型材", "🏗️"),
+        new("beams", "横梁型材", "📏"),
+        new("steelpipes", "钢管", "🔩"),
+        new("bolts", "螺栓", "⚙️"),
+        new("panels", "面板材料", "📦"),
+        new("weights", "幕墙自重", "⚖️"),
+    ];
+
+    // 列定义 - 每张表的显示列
+    private static readonly Dictionary<string, List<ColDef>> TableColumns = new()
+    {
+        ["regions"] = [
+            new("name","地区名"), new("windPressure50","风压50年"), new("windPressure100","风压100年"),
+            new("seismicIntensity","抗震烈度"), new("peakAcceleration","峰值加速度"),
+            new("alphaMax","αmax"), new("temperatureDiff","温差"), new("snowPressure50","雪压50年"), new("snowPressure100","雪压100年")
+        ],
+        ["glass"] = [
+            new("code","编码"), new("name","名称"), new("category","分类"), new("thickness","厚度mm"),
+            new("designStrength","设计强度"), new("bendingStrength","弯曲强度"),
+            new("elasticModulus","弹性模量"), new("poissonRatio","泊松比"), new("density","密度"), new("remark","备注")
+        ],
+        ["columns"] = [
+            new("code","型号"), new("ix","Ix"), new("iy","Iy"), new("wx1","Wx1"), new("wx2","Wx2"),
+            new("wallThickness","壁厚"), new("area","面积"), new("staticMoment","静矩"), new("shearWebWidth","腹板宽"), new("remark","备注")
+        ],
+        ["beams"] = [
+            new("code","型号"), new("ix","Ix"), new("iy","Iy"), new("wx1","Wx1"), new("wx2","Wx2"),
+            new("wy1","Wy1"), new("wy2","Wy2"), new("area","面积"),
+            new("staticMomentSx","Sx"), new("staticMomentSy","Sy"), new("webWidthTx","Tx"), new("webWidthTy","Ty"), new("remark","备注")
+        ],
+        ["steelpipes"] = [
+            new("code","型号"), new("area","面积"), new("wx","Wx"), new("wy","Wy"), new("ix","Ix"), new("iy","Iy")
+        ],
+        ["bolts"] = [
+            new("model","型号"), new("material","材质"), new("diameter","直径"), new("effectiveDiameter","有效直径"),
+            new("shearStress","抗剪"), new("tensileStress","抗拉"), new("category","类别"), new("remark","备注")
+        ],
+        ["panels"] = [
+            new("category","分类"), new("model","型号"), new("thickness","厚度"),
+            new("bendingStrength","抗弯强度"), new("shearStrength","抗剪强度"), new("remark","备注")
+        ],
+        ["weights"] = [
+            new("category","类型"), new("columnWeight","立柱自重"), new("beamWeight","横梁自重"), new("scope","适用范围")
+        ],
+    };
+
+    public record ColDef(string Key, string Label);
+
+    private string _activeTab = "regions";
+    private TabInfo? CurrentTab => _tabs.FirstOrDefault(t => t.Key == _activeTab);
+    private List<ColDef> _columns = [];
+    private List<JsonElement> _rows = [];
+    private List<JsonElement> _displayRows = [];
+    private string _search = "";
+    private string _sortCol = "";
+    private bool _sortAsc = true;
+    private int _page = 1;
+    private int _pageSize = 20;
+    private int _totalCount;
+    private int _totalPages;
+    private int _selectedId = -1;
+    private bool _loading;
+    private string _message = "";
+    private bool _messageIsError;
+
+    // 对话框状态
+    private bool _showEdit;
+    private bool _isNew;
+    private Dictionary<string, string> _editData = new();
+    private bool _showDeleteConfirm;
+    private int _deleteId;
+    private bool _showImport;
+
+    [Inject] private IHttpClientFactory HttpFactory { get; set; } = default!;
+
+    private HttpClient GetClient()
+    {
+        var client = HttpFactory.CreateClient();
+        client.BaseAddress = new Uri(Nav.BaseUri);
+        return client;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SwitchTab("regions");
+    }
+
+    private async Task SwitchTab(string key)
+    {
+        _activeTab = key;
+        _columns = TableColumns.TryGetValue(key, out var cols) ? cols : [];
+        _page = 1;
+        _search = "";
+        _sortCol = "";
+        _selectedId = -1;
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _loading = true;
+        _rows = [];
+        _displayRows = [];
+        try
+        {
+            using var client = GetClient();
+            var url = $"/api/MaterialDatabase/{_activeTab}";
+            if (!string.IsNullOrWhiteSpace(_search))
+                url += $"?search={Uri.EscapeDataString(_search)}";
+            _rows = await client.GetFromJsonAsync<List<JsonElement>>(url) ?? [];
+            _totalCount = _rows.Count;
+            ApplySortAndPage();
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"加载失败: {ex.Message}", true);
+        }
+        _loading = false;
+    }
+
+    private void ApplySortAndPage()
+    {
+        var sorted = _rows.AsEnumerable();
+        if (!string.IsNullOrEmpty(_sortCol))
+        {
+            sorted = sorted.OrderBy(r =>
+            {
+                var val = GetCell(r, _sortCol);
+                return double.TryParse(val, out var d) ? d : (object)val;
+            });
+            if (!_sortAsc) sorted = sorted.Reverse();
+        }
+        var all = sorted.ToList();
+        _totalCount = all.Count;
+        _totalPages = Math.Max(1, (int)Math.Ceiling(_totalCount / (double)_pageSize));
+        if (_page > _totalPages) _page = _totalPages;
+        _displayRows = all.Skip((_page - 1) * _pageSize).Take(_pageSize).ToList();
+    }
+
+    private async void OnSearchInput(ChangeEventArgs e)
+    {
+        _search = e.Value?.ToString() ?? "";
+        _page = 1;
+        await LoadData();
+        StateHasChanged();
+    }
+
+    private void SortBy(string col)
+    {
+        if (_sortCol == col) _sortAsc = !_sortAsc;
+        else { _sortCol = col; _sortAsc = true; }
+        ApplySortAndPage();
+    }
+
+    private void GoPage(int p)
+    {
+        _page = Math.Max(1, Math.Min(p, _totalPages));
+        ApplySortAndPage();
+    }
+
+    private int GetRowId(JsonElement row) =>
+        row.TryGetProperty("id", out var v) ? v.GetInt32() : -1;
+
+    private void SelectRow(JsonElement row) => _selectedId = GetRowId(row);
+
+    private string GetCell(JsonElement row, string key)
+    {
+        if (row.TryGetProperty(key, out var v)) return FormatValue(v);
+        // 尝试PascalCase
+        var pascal = char.ToUpper(key[0]) + key[1..];
+        if (row.TryGetProperty(pascal, out v)) return FormatValue(v);
+        return "";
+    }
+
+    private static string FormatValue(JsonElement v)
+    {
+        if (v.ValueKind == JsonValueKind.Number)
+        {
+            if (v.TryGetDouble(out var d))
+                return d == Math.Floor(d) && Math.Abs(d) < 1e10 ? ((long)d).ToString() : d.ToString("G6");
+        }
+        return v.ToString();
+    }
+
+    // ===== 新增 =====
+    private void ShowAddDialog()
+    {
+        _isNew = true;
+        _editData = new Dictionary<string, string>();
+        foreach (var col in _columns)
+            _editData[col.Key] = "";
+        _showEdit = true;
+    }
+
+    // ===== 编辑 =====
+    private void ShowEditDialog(JsonElement row)
+    {
+        _isNew = false;
+        _editData = new Dictionary<string, string> { ["id"] = GetRowId(row).ToString() };
+        foreach (var col in _columns)
+            _editData[col.Key] = GetCell(row, col.Key);
+        _showEdit = true;
+    }
+
+    // ===== 保存 =====
+    private async Task SaveRecord(Dictionary<string, string> data)
+    {
+        try
+        {
+            using var client = GetClient();
+            // 构建JSON对象
+            var dict = new Dictionary<string, object?>();
+            foreach (var kv in data)
+            {
+                if (kv.Key == "id") continue;
+                // 尝试解析为数值
+                if (double.TryParse(kv.Value, out var d))
+                    dict[kv.Key] = d;
+                else if (int.TryParse(kv.Value, out var i))
+                    dict[kv.Key] = i;
+                else
+                    dict[kv.Key] = kv.Value;
+            }
+
+            if (_isNew)
+            {
+                var resp = await client.PostAsJsonAsync($"/api/MaterialDatabase/{_activeTab}", dict);
+                resp.EnsureSuccessStatusCode();
+                ShowMessage("新增成功");
+            }
+            else
+            {
+                var id = data["id"];
+                var resp = await client.PutAsJsonAsync($"/api/MaterialDatabase/{_activeTab}/{id}", dict);
+                resp.EnsureSuccessStatusCode();
+                ShowMessage("修改成功");
+            }
+            _showEdit = false;
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"保存失败: {ex.Message}", true);
+        }
+        StateHasChanged();
+    }
+
+    // ===== 删除 =====
+    private void ConfirmDelete(JsonElement row)
+    {
+        _deleteId = GetRowId(row);
+        _showDeleteConfirm = true;
+    }
+
+    private async Task DoDelete()
+    {
+        try
+        {
+            using var client = GetClient();
+            var resp = await client.DeleteAsync($"/api/MaterialDatabase/{_activeTab}/{_deleteId}");
+            resp.EnsureSuccessStatusCode();
+            ShowMessage("删除成功");
+            _showDeleteConfirm = false;
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"删除失败: {ex.Message}", true);
+        }
+        StateHasChanged();
+    }
+
+    // ===== 导出 =====
+    private void ExportCsv()
+    {
+        Nav.NavigateTo($"/api/MaterialDatabase/{_activeTab}/export", true);
+    }
+
+    // ===== 导入完成 =====
+    private async Task OnImported(int count)
+    {
+        _showImport = false;
+        ShowMessage($"成功导入 {count} 条记录");
+        await LoadData();
+        StateHasChanged();
+    }
+
+    // ===== 备份 =====
+    private async Task BackupDb()
+    {
+        try
+        {
+            using var client = GetClient();
+            var resp = await client.PostAsync("/api/MaterialDatabase/backup", null);
+            resp.EnsureSuccessStatusCode();
+            ShowMessage("数据库备份成功");
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"备份失败: {ex.Message}", true);
+        }
+    }
+
+    private void ShowMessage(string msg, bool isError = false)
+    {
+        _message = msg;
+        _messageIsError = isError;
+        _ = Task.Delay(3000).ContinueWith(_ => { _message = ""; InvokeAsync(StateHasChanged); });
+    }
+}

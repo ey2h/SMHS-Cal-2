@@ -1,0 +1,1377 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GlassManagement.Desktop.ViewModels"
+        xmlns:local="using:GlassManagement.Desktop"
+        x:Class="GlassManagement.Desktop.Views.MainWindow"
+        x:CompileBindings="False"
+        Title="SMHS 涉幕画算 - 玻璃幕墙计算系统"
+        Width="1260" Height="700"
+        Background="{DynamicResource PageBgBrush}"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <DockPanel>
+        <!-- ═══ 顶部导航栏 56px ═══ -->
+        <Border DockPanel.Dock="Top" Height="56" Background="{DynamicResource TopBarBgBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+            <DockPanel Margin="20,0">
+                <!-- 左: Logo -->
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="◆" FontSize="22" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text="SMHS 涉幕画算" FontSize="18" FontWeight="Bold"
+                               Foreground="{DynamicResource TopBarTextBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- 右: 设置/用户 -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <!-- 主题切换 -->
+                    <ComboBox AutomationProperties.AutomationId="ThemeSelector" SelectedIndex="{Binding ThemeIndex}" Width="100" FontSize="12">
+                        <ComboBoxItem Content="经典"/>
+                        <ComboBoxItem Content="苹果"/>
+                        <ComboBoxItem Content="紫光"/>
+                    </ComboBox>
+                    <!-- 连接 -->
+                    <TextBox AutomationProperties.AutomationId="ServerUrlInput" Text="{Binding ServerUrl}" Width="200" FontSize="12" Watermark="服务器地址"/>
+                    <Button AutomationProperties.AutomationId="ConnectButton" Content="连接" Click="OnTestConnection" Classes="Primary" Padding="12,6" FontSize="12"/>
+                    <Border Background="{DynamicResource AccentLightBrush}" CornerRadius="6" Padding="8,4">
+                        <TextBlock Text="{Binding ConnectionStatus}" FontSize="12"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                    </Border>
+                    <!-- 用户头像 -->
+                    <Border Width="32" Height="32" CornerRadius="16" Background="{DynamicResource AccentLightBrush}">
+                        <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- 中间: 菜单 -->
+                <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="计算模块 ▾" FontSize="14" Foreground="{DynamicResource TopBarTextBrush}" Cursor="Hand"/>
+                    <TextBlock Text="项目管理 ▾" FontSize="14" Foreground="{DynamicResource TopBarTextBrush}" Cursor="Hand"/>
+                    <TextBlock Text="工具 ▾" FontSize="14" Foreground="{DynamicResource TopBarTextBrush}" Cursor="Hand"/>
+                    <TextBlock Text="帮助" FontSize="14" Foreground="{DynamicResource TopBarTextBrush}" Cursor="Hand"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ 底部状态栏 ═══ -->
+        <Border DockPanel.Dock="Bottom" Background="{DynamicResource StatusBarBgBrush}" Padding="16,6"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+        </Border>
+
+        <!-- ═══ 底部按钮栏 ═══ -->
+        <Border DockPanel.Dock="Bottom" Padding="24,12" Background="{DynamicResource CardBgBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+            <DockPanel>
+                <Button AutomationProperties.AutomationId="PrevStepButton" DockPanel.Dock="Left" Content="◀ 上一步" Click="OnPrevStep" Classes="Secondary"
+                        IsVisible="{Binding CanGoPrev}"/>
+                <Button AutomationProperties.AutomationId="NextStepButton" DockPanel.Dock="Right" Content="下一步 ▶" Click="OnNextStep" Classes="Primary"
+                        IsVisible="{Binding CanGoNext}"/>
+                <Button AutomationProperties.AutomationId="GenerateReportButton" DockPanel.Dock="Right" Content="生成计算书" Click="OnGenerateReport" Classes="Primary"
+                        IsVisible="{Binding IsLastStep}" Margin="0,0,12,0"/>
+                <Panel/>
+            </DockPanel>
+        </Border>
+
+        <!-- ═══ 步骤条 ═══ -->
+        <Border DockPanel.Dock="Top" Padding="24,12" Background="{DynamicResource CardBgBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+            <ItemsControl ItemsSource="{Binding Steps}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="4"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <!-- Step circle + label -->
+                            <StackPanel Orientation="Horizontal" Spacing="6" Cursor="Hand">
+                                <!-- Circle -->
+                                <Border Width="28" Height="28" CornerRadius="14"
+                                        Background="{Binding CircleBg}"
+                                        BorderBrush="{Binding CircleBorder}" BorderThickness="2">
+                                    <TextBlock Text="{Binding CircleText}" FontSize="12" FontWeight="Bold"
+                                               Foreground="{Binding CircleFg}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{Binding Name}" FontSize="12"
+                                           Foreground="{Binding LabelFg}" FontWeight="{Binding LabelWeight}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <!-- Connector line (hidden for last) -->
+                            <Border Width="24" Height="2" Background="{DynamicResource StepFutureBrush}"
+                                    VerticalAlignment="Center" Margin="4,0"
+                                    IsVisible="{Binding !IsLast}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <!-- ═══ 内容区 ═══ -->
+        <ScrollViewer Padding="28">
+            <Panel>
+                <!-- Step 0: 基本参数 (对齐Blazor Step1Basic.razor) -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=0}">
+
+                    <!-- 标题条 -->
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step1Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <!-- 幕墙类型选择 -->
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="幕墙类型" FontWeight="Bold" FontSize="12"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="幕墙类型" VerticalAlignment="Center" FontSize="12"/>
+                                <ComboBox ItemsSource="{Binding CurtainWallTypes}" SelectedIndex="{Binding CurtainWallTypeIndex}" Width="160" FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 上部参数区：5列 -->
+                    <Grid ColumnDefinitions="*,*,*,*,*">
+                        <!-- 第1列：重现期 -->
+                        <Border Grid.Column="0" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="重现期 (?)" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="50年" IsChecked="{Binding ReturnPeriod50}" GroupName="Period" FontSize="11"/>
+                                <RadioButton Content="100年" IsChecked="{Binding ReturnPeriod100}" GroupName="Period" FontSize="11"/>
+                                <CheckBox Content="雪荷载敏感结构" IsChecked="{Binding SnowSensitive}" FontSize="11" Margin="0,4,0,0"/>
+                                <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                                    <TextBlock Text="计算标高" VerticalAlignment="Center" FontSize="11"/>
+                                    <TextBox Text="{Binding CalcElevation}" Width="60" FontSize="11"/>
+                                    <TextBlock Text="m" VerticalAlignment="Center" FontSize="11"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第2列：地面类型 -->
+                        <Border Grid.Column="1" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="地面类型 (?)" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="A类地形" IsChecked="{Binding TerrainA}" GroupName="Terrain" FontSize="11"/>
+                                <RadioButton Content="B类地形" IsChecked="{Binding TerrainB}" GroupName="Terrain" FontSize="11"/>
+                                <RadioButton Content="C类地形" IsChecked="{Binding TerrainC}" GroupName="Terrain" FontSize="11"/>
+                                <RadioButton Content="D类地形" IsChecked="{Binding TerrainD}" GroupName="Terrain" FontSize="11"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第3列：外部局部体型系数 -->
+                        <Border Grid.Column="2" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="外部局部体型系数 (?)" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="墙面区" IsChecked="{Binding ExtWallCenter}" GroupName="ExtShape" FontSize="11"/>
+                                <RadioButton Content="墙角边区" IsChecked="{Binding ExtWallCorner}" GroupName="ExtShape" FontSize="11"/>
+                                <Button Content="帮助" FontSize="10" Padding="6,2" Margin="0,2,0,2"/>
+                                <RadioButton Content="人工给定" IsChecked="{Binding ExtCustom}" GroupName="ExtShape" FontSize="11"/>
+                                <TextBox Text="{Binding ExternalShapeValue}" Width="60" FontSize="11" IsVisible="{Binding ExtCustom}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第4列：内部局部体型系数 -->
+                        <Border Grid.Column="3" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="内部局部体型系数 (?)" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="封闭式建筑物" IsChecked="{Binding IntSealed}" GroupName="IntShape" FontSize="10"/>
+                                <RadioButton FontSize="10" IsChecked="{Binding IntOpen002}" GroupName="IntShape">
+                                    <TextBlock Text="仅一面墙有主导洞口,&#x0a;0.10>开孔率>0.02" FontSize="10" TextWrapping="Wrap"/>
+                                </RadioButton>
+                                <RadioButton FontSize="10" IsChecked="{Binding IntOpen010}" GroupName="IntShape">
+                                    <TextBlock Text="仅一面墙有主导洞口,&#x0a;0.30>开孔率>0.10" FontSize="10" TextWrapping="Wrap"/>
+                                </RadioButton>
+                                <RadioButton FontSize="10" IsChecked="{Binding IntOpen030}" GroupName="IntShape">
+                                    <TextBlock Text="仅一面墙有主导洞口,&#x0a;开孔率>0.30" FontSize="10" TextWrapping="Wrap"/>
+                                </RadioButton>
+                                <RadioButton Content="其它情况(人工给定)" IsChecked="{Binding IntCustom}" GroupName="IntShape" FontSize="10"/>
+                                <TextBox Text="{Binding InternalShapeValue}" Width="60" FontSize="11" IsVisible="{Binding IntCustom}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第5列：风荷载标准值取值 -->
+                        <Border Grid.Column="4" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2" VerticalAlignment="Stretch">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="风荷载标准值取值 (?)" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="按规范不小于1kPa" IsChecked="{Binding WindModeCodeMin}" GroupName="WindMode" FontSize="10"/>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <RadioButton Content="人工给定" IsChecked="{Binding WindModeCustom}" GroupName="WindMode" FontSize="10"/>
+                                    <TextBox Text="{Binding WindLoadCustomValue}" Width="50" FontSize="10" IsVisible="{Binding WindModeCustom}"/>
+                                    <TextBlock Text="kPa" FontSize="10" VerticalAlignment="Center" IsVisible="{Binding WindModeCustom}"/>
+                                </StackPanel>
+                                <RadioButton Content="按实际计算结果" IsChecked="{Binding WindModeActual}" GroupName="WindMode" FontSize="10"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 下部参数区：3列 (幕墙结构/横框结构/玻璃配置) -->
+                    <Grid ColumnDefinitions="*,*,*">
+                        <Border Grid.Column="0" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="幕墙结构" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="构件式（框架式）幕墙" IsChecked="{Binding CwStructComponent}" GroupName="CwStruct" FontSize="10"/>
+                                <RadioButton Content="单元式幕墙" IsChecked="{Binding CwStructUnit}" GroupName="CwStruct" FontSize="10"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="幕墙横框结构" FontWeight="Bold" FontSize="11"/>
+                                <RadioButton Content="无中横结构" IsChecked="{Binding TransomNone}" GroupName="Transom" FontSize="10"/>
+                                <RadioButton Content="有中横结构" IsChecked="{Binding TransomHas}" GroupName="Transom" FontSize="10"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="玻璃配置" FontWeight="Bold" FontSize="11"/>
+                                <ComboBox ItemsSource="{Binding GlassConfigOptions}" SelectedIndex="{Binding GlassConfigIndex}" FontSize="10" Width="150"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 中部参数区 -->
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <!-- 龙骨间距 -->
+                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,6" CornerRadius="2">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="龙骨间距" FontWeight="Bold" FontSize="11"/>
+                                <Grid ColumnDefinitions="Auto,70,Auto,12,Auto,70,Auto" RowDefinitions="Auto,Auto,Auto">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="立柱左分格宽度" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,2"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding LeftPanelWidth}" FontSize="11" Margin="0,0,0,2"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,2"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="横框上分格高度" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,2"/>
+                                    <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding UpperPanelHeight}" FontSize="11" Margin="0,0,0,2"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="6" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="立柱右分格宽度" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,2"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RightPanelWidth}" FontSize="11" Margin="0,0,0,2"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,2"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="4" Text="横框下分格高度" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,2"/>
+                                    <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding LowerPanelHeight}" FontSize="11" Margin="0,0,0,2"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="6" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="中横框上分格高" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding UpperMidTransom}" FontSize="11"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="中横框下分格高" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBox Grid.Row="2" Grid.Column="5" Text="{Binding LowerMidTransom}" FontSize="11"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="6" Text="mm" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 修正参数 -->
+                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,6" CornerRadius="2">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="修正参数" FontWeight="Bold" FontSize="11"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="地形修正系数" FontSize="11" VerticalAlignment="Center"/>
+                                    <TextBox Text="{Binding TerrainCorrectionFactor}" Width="50" FontSize="11"/>
+                                    <TextBlock Text="风向影响系数" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                    <TextBox Text="{Binding WindDirectionFactor}" Width="50" FontSize="11"/>
+                                </StackPanel>
+                                <TextBlock Text="抗震设防分类" FontSize="11" FontWeight="Bold" Margin="0,4,0,2"/>
+                                <WrapPanel Orientation="Horizontal">
+                                    <RadioButton Content="标准设防类" IsChecked="{Binding SeismicCat0}" GroupName="Seismic" FontSize="10" Margin="0,0,6,2"/>
+                                    <RadioButton Content="重点设防类" IsChecked="{Binding SeismicCat1}" GroupName="Seismic" FontSize="10" Margin="0,0,6,2"/>
+                                    <RadioButton Content="特殊设防类" IsChecked="{Binding SeismicCat2}" GroupName="Seismic" FontSize="10" Margin="0,0,6,2"/>
+                                    <RadioButton Content="适度设防类" IsChecked="{Binding SeismicCat3}" GroupName="Seismic" FontSize="10" Margin="0,0,6,2"/>
+                                </WrapPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                                    <TextBlock Text="场地类型" FontSize="11" VerticalAlignment="Center"/>
+                                    <ComboBox ItemsSource="{Binding SiteCategories}" SelectedIndex="{Binding SiteCategoryIndex}" FontSize="11" Width="100"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- 地区参数区 -->
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,6" CornerRadius="2">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="地区参数" FontWeight="Bold" FontSize="11"/>
+                            <TextBlock Text="地区参数(新版GB18306-2015中，抗震参数细分到街道与乡镇...)" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Button Content="查找并定位地区" FontSize="10" Padding="6,2" Click="OnSearchRegion"/>
+                                <TextBox AutomationProperties.AutomationId="RegionSearch" Text="{Binding RegionSearch}" Width="250" FontSize="11" Watermark="→请在此处输入待查找城市名(或城市名关键字)→"/>
+                                <TextBlock Text="★按" FontSize="12" Foreground="Orange" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding StandardCodes}" SelectedIndex="{Binding StandardCodeIndex}" FontSize="10" Width="200"/>
+                                <Button Content="计算荷载" FontSize="10" Padding="6,2"/>
+                                <Button Content="帮助" FontSize="10" Padding="6,2"/>
+                            </StackPanel>
+                            <!-- 数据表格 -->
+                            <DataGrid ItemsSource="{Binding RegionRows}" SelectedItem="{Binding SelectedRegionRow}"
+                                      Height="180" FontSize="11" IsReadOnly="True" AutoGenerateColumns="False"
+                                      GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="地区名称" Binding="{Binding Name}" Width="120"/>
+                                    <DataGridTextColumn Header="50年基本风压" Binding="{Binding WindPressure50}" Width="90"/>
+                                    <DataGridTextColumn Header="100年基本风压" Binding="{Binding WindPressure100}" Width="95"/>
+                                    <DataGridTextColumn Header="抗震烈度" Binding="{Binding SeismicIntensity}" Width="70"/>
+                                    <DataGridTextColumn Header="峰值加速度" Binding="{Binding PeakAcceleration}" Width="80"/>
+                                    <DataGridTextColumn Header="αmax" Binding="{Binding AlphaMax}" Width="60"/>
+                                    <DataGridTextColumn Header="极限温差" Binding="{Binding TemperatureDiff}" Width="70"/>
+                                    <DataGridTextColumn Header="50年雪压" Binding="{Binding SnowPressure50}" Width="75"/>
+                                    <DataGridTextColumn Header="100年雪压" Binding="{Binding SnowPressure100}" Width="75"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 底部 -->
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Button Content="{Binding AutoGravity, StringFormat='参数预置{0}'}" FontSize="11" Padding="8,4" Click="OnOpenGravityDialog"/>
+                        <CheckBox Content="按幕墙规范考虑80℃极限温差" IsChecked="{Binding TempDiff80}" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Step 1: 玻璃配置 (对齐Blazor Step2Glass.razor) -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=1}">
+                    <!-- 标题条 -->
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step2Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="6*,4*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,6,0">
+                            <!-- 玻璃构成 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="玻璃构成" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <RadioButton Content="单片" IsChecked="{Binding GcSingle}" GroupName="GlassComp" FontSize="11"/>
+                                        <RadioButton Content="中空" IsChecked="{Binding GcInsulating}" GroupName="GlassComp" FontSize="11"/>
+                                        <RadioButton Content="夹层" IsChecked="{Binding GcLaminated}" GroupName="GlassComp" FontSize="11"/>
+                                        <RadioButton Content="中空夹层" IsChecked="{Binding GcInsLam}" GroupName="GlassComp" FontSize="11"/>
+                                        <RadioButton Content="双中空" IsChecked="{Binding GcDoubleIns}" GroupName="GlassComp" FontSize="11"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 玻璃片层 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="玻璃片层" FontWeight="Bold" FontSize="11"/>
+                                    <Grid ColumnDefinitions="*,*">
+                                        <StackPanel Grid.Column="0" Spacing="3">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="外片厚度" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                                <ComboBox SelectedIndex="{Binding S2OuterThicknessIndex}" FontSize="11" Width="90">
+                                                    <ComboBoxItem Content="3 mm"/><ComboBoxItem Content="4 mm"/><ComboBoxItem Content="5 mm"/>
+                                                    <ComboBoxItem Content="6 mm"/><ComboBoxItem Content="8 mm"/><ComboBoxItem Content="10 mm"/>
+                                                    <ComboBoxItem Content="12 mm"/><ComboBoxItem Content="15 mm"/><ComboBoxItem Content="19 mm"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="外片类型" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                                <ComboBox SelectedIndex="{Binding S2OuterTypeIndex}" FontSize="11" Width="90">
+                                                    <ComboBoxItem Content="普通"/><ComboBoxItem Content="钢化"/><ComboBoxItem Content="半钢化"/><ComboBoxItem Content="夹层"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="3">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="内片厚度" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                                <ComboBox SelectedIndex="{Binding S2InnerThicknessIndex}" FontSize="11" Width="90">
+                                                    <ComboBoxItem Content="3 mm"/><ComboBoxItem Content="4 mm"/><ComboBoxItem Content="5 mm"/>
+                                                    <ComboBoxItem Content="6 mm"/><ComboBoxItem Content="8 mm"/><ComboBoxItem Content="10 mm"/>
+                                                    <ComboBoxItem Content="12 mm"/><ComboBoxItem Content="15 mm"/><ComboBoxItem Content="19 mm"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="内片类型" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                                <ComboBox SelectedIndex="{Binding S2InnerTypeIndex}" FontSize="11" Width="90">
+                                                    <ComboBoxItem Content="普通"/><ComboBoxItem Content="钢化"/><ComboBoxItem Content="半钢化"/><ComboBoxItem Content="夹层"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- 中空层 (条件显示) -->
+                                    <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding S2ShowAirGap}">
+                                        <TextBlock Text="中空层" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                        <ComboBox SelectedIndex="{Binding S2AirGapIndex}" FontSize="11" Width="90">
+                                            <ComboBoxItem Content="6 mm"/><ComboBoxItem Content="9 mm"/><ComboBoxItem Content="12 mm"/>
+                                            <ComboBoxItem Content="16 mm"/><ComboBoxItem Content="20 mm"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <!-- 胶片 (条件显示) -->
+                                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding S2ShowInterlayer}">
+                                        <TextBlock Text="胶片厚度" FontSize="11" VerticalAlignment="Center" Width="60"/>
+                                        <ComboBox SelectedIndex="{Binding S2InterlayerThicknessIndex}" FontSize="11" Width="80">
+                                            <ComboBoxItem Content="0.76"/><ComboBoxItem Content="1.14"/><ComboBoxItem Content="1.52"/><ComboBoxItem Content="2.28"/>
+                                        </ComboBox>
+                                        <TextBlock Text="胶片类型" FontSize="11" VerticalAlignment="Center"/>
+                                        <ComboBox SelectedIndex="{Binding S2InterlayerTypeIndex}" FontSize="11" Width="80">
+                                            <ComboBoxItem Content="PVB"/><ComboBoxItem Content="SGP"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 尺寸与支承 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="尺寸与支承" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="短边 a" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding GlassShortSide}" Width="70" FontSize="11"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBlock Text="长边 b" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                        <TextBox Text="{Binding GlassLongSide}" Width="70" FontSize="11"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBlock Text="支承方式" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                        <ComboBox SelectedIndex="{Binding S2SupportTypeIndex}" FontSize="11" Width="110">
+                                            <ComboBoxItem Content="四边简支"/><ComboBoxItem Content="两对边简支"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 强度与挠度验算 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="强度与挠度验算" FontWeight="Bold" FontSize="11"/>
+                                    <DataGrid ItemsSource="{Binding S2CheckResults}" AutoGenerateColumns="False"
+                                              IsReadOnly="True" FontSize="11" Height="100"
+                                              GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="验算项" Binding="{Binding Item}" Width="120"/>
+                                            <DataGridTextColumn Header="计算值" Binding="{Binding CalcValue}" Width="100"/>
+                                            <DataGridTextColumn Header="限值" Binding="{Binding LimitValue}" Width="100"/>
+                                            <DataGridTextColumn Header="判定" Binding="{Binding Verdict}" Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 右侧: 玻璃数据库 -->
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" Margin="6,0,0,0" CornerRadius="2">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="玻璃数据库" FontWeight="Bold" FontSize="11"/>
+                                <TextBox Text="{Binding S2GlassSearch}" Watermark="搜索玻璃..." FontSize="11"/>
+                                <DataGrid ItemsSource="{Binding S2GlassDatabase}" AutoGenerateColumns="False"
+                                          IsReadOnly="True" FontSize="10" Height="380"
+                                          GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="编号" Binding="{Binding Code}" Width="60"/>
+                                        <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="100"/>
+                                        <DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="60"/>
+                                        <DataGridTextColumn Header="厚度" Binding="{Binding Thickness}" Width="50"/>
+                                        <DataGridTextColumn Header="强度" Binding="{Binding DesignStrength}" Width="50"/>
+                                        <DataGridTextColumn Header="弹模" Binding="{Binding ElasticModulus}" Width="50"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Step 2: 立柱计算 (对齐Blazor Step3Mullion.razor) -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=2}">
+                    <!-- 标题条 -->
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step3Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,1.2*,0.8*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,4,0">
+                            <!-- 力学模型 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="力学模型" FontWeight="Bold" FontSize="11"/>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Content="①单跨简支(受拉)" IsChecked="{Binding S3Model1}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                        <RadioButton Content="②单跨简支(受压)" IsChecked="{Binding S3Model2}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                        <RadioButton Content="③连续梁(四点三跨)" IsChecked="{Binding S3Model3}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                        <RadioButton Content="④多跨铰接静定" IsChecked="{Binding S3Model4}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                        <RadioButton Content="⑤双跨梁" IsChecked="{Binding S3Model5}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                        <RadioButton Content="⑥多跨超静定" IsChecked="{Binding S3Model6}" GroupName="MechModel" FontSize="10" Margin="0,0,8,2"/>
+                                    </WrapPanel>
+                                    <TextBlock Text="{Binding S3ModelHint}" FontSize="10" Foreground="Red" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 跨度 + 挠度规范 -->
+                            <Grid ColumnDefinitions="*,*">
+                                <Border Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" Margin="0,0,2,0" CornerRadius="2">
+                                    <StackPanel Spacing="3">
+                                        <TextBlock Text="跨度参数" FontWeight="Bold" FontSize="11"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="立柱跨度" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding S3Span}" Width="70" FontSize="11"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="短跨长" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding S3ShortSpan}" Width="70" FontSize="11"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" Margin="2,0,0,0" CornerRadius="2">
+                                    <StackPanel Spacing="3">
+                                        <TextBlock Text="龙骨挠度执行规范（横梁同）" FontWeight="Bold" FontSize="10"/>
+                                        <ComboBox SelectedIndex="{Binding S3DeflStdIndex}" FontSize="10" HorizontalAlignment="Stretch">
+                                            <ComboBoxItem Content="JGJ133-2001"/><ComboBoxItem Content="JGJ102-2003"/>
+                                            <ComboBoxItem Content="JGJ336-2016"/><ComboBoxItem Content="GB/T 21086-2007"/>
+                                            <ComboBoxItem Content="上海规范"/>
+                                        </ComboBox>
+                                        <CheckBox Content="绝对单跨" IsChecked="{Binding S3AbsoluteSpan}" FontSize="10"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- 玻璃配置 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="玻璃配置" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="外片" FontSize="11" VerticalAlignment="Center"/>
+                                        <ComboBox SelectedIndex="{Binding S3OuterGlassIdx}" FontSize="11" Width="80">
+                                            <ComboBoxItem Content="3 mm"/><ComboBoxItem Content="4 mm"/><ComboBoxItem Content="5 mm"/>
+                                            <ComboBoxItem Content="6 mm"/><ComboBoxItem Content="8 mm"/><ComboBoxItem Content="10 mm"/>
+                                            <ComboBoxItem Content="12 mm"/><ComboBoxItem Content="15 mm"/><ComboBoxItem Content="19 mm"/>
+                                        </ComboBox>
+                                        <TextBlock Text="内片" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                        <ComboBox SelectedIndex="{Binding S3InnerGlassIdx}" FontSize="11" Width="80">
+                                            <ComboBoxItem Content="3 mm"/><ComboBoxItem Content="4 mm"/><ComboBoxItem Content="5 mm"/>
+                                            <ComboBoxItem Content="6 mm"/><ComboBoxItem Content="8 mm"/><ComboBoxItem Content="10 mm"/>
+                                            <ComboBoxItem Content="12 mm"/><ComboBoxItem Content="15 mm"/><ComboBoxItem Content="19 mm"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 立柱选材 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="立柱选材" FontWeight="Bold" FontSize="11"/>
+                                    <!-- 铝合金牌号 -->
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Content="6063-T5" IsChecked="{Binding S3Alu6063T5}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063-T6" IsChecked="{Binding S3Alu6063T6}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6061-T4" IsChecked="{Binding S3Alu6061T4}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6061-T6" IsChecked="{Binding S3Alu6061T6}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063A-T5" IsChecked="{Binding S3Alu6063AT5}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063A-T6" IsChecked="{Binding S3Alu6063AT6}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                    </WrapPanel>
+                                    <!-- 钢材牌号 -->
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Content="Q235" IsChecked="{Binding S3Q235}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="Q355" IsChecked="{Binding S3Q355}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="其它材质" IsChecked="{Binding S3OtherMat}" GroupName="S3Mat" FontSize="10" Margin="0,0,6,2"/>
+                                    </WrapPanel>
+                                    <!-- 条件选项 -->
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <CheckBox Content="断热" IsChecked="{Binding S3ThermalBreak}" FontSize="10"/>
+                                        <CheckBox Content="冷弯薄壁型钢" IsChecked="{Binding S3ColdFormed}" FontSize="10"/>
+                                        <CheckBox Content="钢铝结合" IsChecked="{Binding S3SteelAlum}" FontSize="10"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 中间: 型材表格 -->
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" Margin="4,0" CornerRadius="2">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="立柱选材" FontWeight="Bold" FontSize="11"/>
+                                <TextBlock Text="快速查找型材 → 请在此处输入待查找型材代号或其关键字" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBox Text="{Binding S3ProfileSearch}" Watermark="搜索型材代号..." FontSize="11"/>
+                                <DataGrid ItemsSource="{Binding S3ProfileList}" AutoGenerateColumns="False"
+                                          SelectedItem="{Binding S3SelectedProfile}"
+                                          IsReadOnly="True" FontSize="10" Height="360"
+                                          GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="型材代号" Binding="{Binding Code}" Width="90"/>
+                                        <DataGridTextColumn Header="Ix惯性矩" Binding="{Binding Ix}" Width="70"/>
+                                        <DataGridTextColumn Header="Iy惯性矩" Binding="{Binding Iy}" Width="70"/>
+                                        <DataGridTextColumn Header="Wx1抵抗矩" Binding="{Binding Wx1}" Width="75"/>
+                                        <DataGridTextColumn Header="Wx2抵抗矩" Binding="{Binding Wx2}" Width="75"/>
+                                        <DataGridTextColumn Header="壁厚" Binding="{Binding WallThickness}" Width="50"/>
+                                        <DataGridTextColumn Header="截面积" Binding="{Binding Area}" Width="60"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 右侧: 验算结果 -->
+                        <Border Grid.Column="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,6" CornerRadius="2"
+                                Background="{DynamicResource PageBgBrush}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="立柱验算结果" FontWeight="Bold" FontSize="11"/>
+                                <Border BorderBrush="{DynamicResource AccentBrush}" BorderThickness="2" Padding="6" CornerRadius="2"
+                                        Background="{DynamicResource CardBgBrush}" Margin="0,4">
+                                    <TextBlock FontSize="11">
+                                        <Run Text="风荷载标准值为："/><Run Text="{Binding S3WindLoadStd}" FontWeight="Bold"/><Run Text=" kPa"/>
+                                    </TextBlock>
+                                </Border>
+                                <!-- 抗弯矩 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="抗弯矩标选："/><Run Text="{Binding S3MomentRequired}" FontWeight="Bold"/><Run Text=" mm²"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="选用型材抗弯矩："/><Run Text="{Binding S3Wx1Val}" FontWeight="Bold"/><Run Text=" cm³"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S3BendingMomentVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 惯性矩 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="惯性矩标选："/><Run Text="{Binding S3InertiaRequired}" FontWeight="Bold"/><Run Text=" mm⁴"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="选用型材惯性矩："/><Run Text="{Binding S3IxVal}" FontWeight="Bold"/><Run Text=" cm⁴"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S3InertiaVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 挠度 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="实际挠度："/><Run Text="{Binding S3ActualDeflection}" FontWeight="Bold"/><Run Text=" mm"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="规范挠度限值："/><Run Text="{Binding S3DeflectionLimit}" FontWeight="Bold"/><Run Text=" mm"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S3DeflectionVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 抗弯强度 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="抗弯强度计算值："/><Run Text="{Binding S3BendingStress}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="抗弯强度设计值："/><Run Text="{Binding S3AllowableStress}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S3BendingVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 抗剪强度 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="抗剪强度计算值："/><Run Text="{Binding S3ShearStress}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="抗剪强度设计值："/><Run Text="{Binding S3AllowableShear}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S3ShearVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 支反力 -->
+                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,4,0,0" Margin="0,4,0,0">
+                                    <TextBlock FontSize="10">
+                                        <Run Text="支反力："/><Run Text="{Binding S3ReactionForce}" FontWeight="Bold"/><Run Text=" kN"/>
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Step 3: 横梁计算 (对齐Blazor Step4Transom.razor) -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=3}">
+                    <!-- 标题条 -->
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step4Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,1.4*,0.8*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,4,0">
+                            <!-- 横梁参数 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="横梁参数" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="横梁跨度 L" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding S4Span}" Width="70" FontSize="11"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="荷载模型" FontSize="11" VerticalAlignment="Center"/>
+                                        <RadioButton Content="三角形" IsChecked="{Binding S4LoadTriangle}" GroupName="S4Load" FontSize="10"/>
+                                        <RadioButton Content="均布" IsChecked="{Binding S4LoadUniform}" GroupName="S4Load" FontSize="10"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 横梁选材 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="横梁选材" FontWeight="Bold" FontSize="11"/>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Content="6063-T5" IsChecked="{Binding S4Alu6063T5}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063-T6" IsChecked="{Binding S4Alu6063T6}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6061-T4" IsChecked="{Binding S4Alu6061T4}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6061-T6" IsChecked="{Binding S4Alu6061T6}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063A-T5" IsChecked="{Binding S4Alu6063AT5}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="6063A-T6" IsChecked="{Binding S4Alu6063AT6}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                    </WrapPanel>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Content="Q235" IsChecked="{Binding S4Q235}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="Q355" IsChecked="{Binding S4Q355}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                        <RadioButton Content="其它材质" IsChecked="{Binding S4OtherMat}" GroupName="S4Mat" FontSize="10" Margin="0,0,6,2"/>
+                                    </WrapPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <CheckBox Content="断热" IsChecked="{Binding S4ThermalBreak}" FontSize="10"/>
+                                        <CheckBox Content="冷弯薄壁型钢" IsChecked="{Binding S4ColdFormed}" FontSize="10"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 横梁选项 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="横梁选项" FontWeight="Bold" FontSize="11"/>
+                                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto">
+                                        <CheckBox Grid.Row="0" Grid.Column="0" Content="钢铝结合" IsChecked="{Binding S4SteelAlum}" FontSize="10"/>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="挂式结构" IsChecked="{Binding S4Hanging}" FontSize="10"/>
+                                        <CheckBox Grid.Row="1" Grid.Column="0" Content="玻璃自重为集中力" IsChecked="{Binding S4GlassConcentrated}" FontSize="10"/>
+                                        <CheckBox Grid.Row="1" Grid.Column="1" Content="按集中力模型" IsChecked="{Binding S4ConcentratedModel}" FontSize="10"/>
+                                        <CheckBox Grid.Row="2" Grid.Column="0" Content="计算抗扭" IsChecked="{Binding S4CalcTorsion}" FontSize="10"/>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                                        <TextBlock Text="受力点距离" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding S4ForcePointDist}" Width="60" FontSize="10"/>
+                                        <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <CheckBox Content="短悬臂结构" IsChecked="{Binding S4ShortCantilever}" FontSize="10"/>
+                                        <TextBox Text="{Binding S4CantileverSize}" Width="60" FontSize="10" IsVisible="{Binding S4ShortCantilever}"/>
+                                        <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center" IsVisible="{Binding S4ShortCantilever}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 中间: 横梁型材库 -->
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" Margin="4,0" CornerRadius="2">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="横梁型材库" FontWeight="Bold" FontSize="11"/>
+                                <TextBlock Text="快速查找型材 → 请在此处输入待查找型材代号或其关键字" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBox Text="{Binding S4ProfileSearch}" Watermark="搜索型材代号..." FontSize="11"/>
+                                <DataGrid ItemsSource="{Binding S4ProfileList}" AutoGenerateColumns="False"
+                                          SelectedItem="{Binding S4SelectedProfile}"
+                                          IsReadOnly="True" FontSize="10" Height="360"
+                                          GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="型材代号" Binding="{Binding Code}" Width="90"/>
+                                        <DataGridTextColumn Header="Ix惯性矩" Binding="{Binding Ix}" Width="65"/>
+                                        <DataGridTextColumn Header="Iy惯性矩" Binding="{Binding Iy}" Width="65"/>
+                                        <DataGridTextColumn Header="Wx1" Binding="{Binding Wx1}" Width="55"/>
+                                        <DataGridTextColumn Header="Wx2" Binding="{Binding Wx2}" Width="55"/>
+                                        <DataGridTextColumn Header="Wy1" Binding="{Binding Wy1}" Width="55"/>
+                                        <DataGridTextColumn Header="Wy2" Binding="{Binding Wy2}" Width="55"/>
+                                        <DataGridTextColumn Header="壁厚" Binding="{Binding WallThickness}" Width="45"/>
+                                        <DataGridTextColumn Header="截面积" Binding="{Binding Area}" Width="55"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 右侧: 验算结果 -->
+                        <Border Grid.Column="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,6" CornerRadius="2"
+                                Background="{DynamicResource PageBgBrush}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="横梁验算结果" FontWeight="Bold" FontSize="11"/>
+                                <!-- 双向弯曲应力 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="双向弯曲应力："/><Run Text="{Binding S4CombinedStress}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="容许应力："/><Run Text="{Binding S4AllowableStress}" FontWeight="Bold"/><Run Text=" MPa"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S4StressVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 合成挠度 -->
+                                <TextBlock FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0">
+                                    <Run Text="合成挠度："/><Run Text="{Binding S4CombinedDeflection}" FontWeight="Bold"/><Run Text=" mm"/>
+                                </TextBlock>
+                                <TextBlock FontSize="10" TextWrapping="Wrap">
+                                    <Run Text="挠度限值："/><Run Text="{Binding S4DeflectionLimit}" FontWeight="Bold"/><Run Text=" mm"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding S4DeflectionVerdict}" FontSize="10" FontWeight="Bold"/>
+                                <!-- 支反力 -->
+                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,4,0,0" Margin="0,4,0,0">
+                                    <TextBlock FontSize="10">
+                                        <Run Text="支反力："/><Run Text="{Binding S4ReactionForce}" FontWeight="Bold"/><Run Text=" kN"/>
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ═══ Step 4: 连接件验算 (对齐Blazor Step5Connection) ═══ -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=4}">
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step5Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="6*,4*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,6,0">
+                            <!-- 连接形式 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="连接形式" FontWeight="Bold" FontSize="11"/>
+                                    <Grid ColumnDefinitions="*,*">
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="立柱与主体" FontSize="11" VerticalAlignment="Center"/>
+                                            <ComboBox ItemsSource="{Binding S5MullionToMainOptions}" SelectedIndex="{Binding S5MullionToMainIdx}" FontSize="11" Width="110"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="横框与立柱" FontSize="11" VerticalAlignment="Center"/>
+                                            <ComboBox ItemsSource="{Binding S5TransomToMullionOptions}" SelectedIndex="{Binding S5TransomToMullionIdx}" FontSize="11" Width="120"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 横框与立柱连接 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock FontSize="11" FontWeight="Bold">
+                                        <Run Text="横框与立柱连接 — "/><Run Text="{Binding S5TransomToMullionOptions[S5TransomToMullionIdx]}"/>
+                                    </TextBlock>
+                                    <!-- 栓接参数 -->
+                                    <StackPanel IsVisible="{Binding S5TransomIsBolt}" Spacing="3">
+                                        <Grid ColumnDefinitions="Auto,*,8,Auto,*,8,Auto,*,8,Auto,*">
+                                            <TextBlock Grid.Column="0" Text="角片材质" FontSize="11" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding S5AngleMaterials}" SelectedIndex="{Binding S5AngleMaterialIdx}" FontSize="11"/>
+                                            <TextBlock Grid.Column="3" Text="角片厚度" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="4" Text="{Binding S5AngleThickness}" FontSize="11" Width="60"/>
+                                            <TextBlock Grid.Column="6" Text="竖框螺栓数" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="7" Text="{Binding S5MullionBoltCount}" FontSize="11" Width="50"/>
+                                            <TextBlock Grid.Column="9" Text="横框螺栓数" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="10" Text="{Binding S5TransomBoltCount}" FontSize="11" Width="50"/>
+                                        </Grid>
+                                    </StackPanel>
+                                    <!-- 焊缝参数 -->
+                                    <StackPanel IsVisible="{Binding S5TransomIsWeld}" Spacing="3">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="角焊缝高度 hf" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding S5TransomWeldHeight}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBlock Text="总有效长度" FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                            <TextBox Text="{Binding S5TransomWeldLength}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!-- 验算结果 -->
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2" Margin="0,4,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock FontSize="11"><Run Text="验算: "/><Run Text="{Binding S5TransomBoltVerdict}" FontWeight="Bold"/></TextBlock>
+                                            <TextBlock FontSize="11"><Run Text="利用率: "/><Run Text="{Binding S5TransomUtilization}" FontWeight="Bold"/></TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 立柱与主体连接 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="立柱与主体连接（钢转接件）" FontSize="11" FontWeight="Bold"/>
+                                    <!-- 螺栓连接模式 -->
+                                    <StackPanel IsVisible="{Binding S5MainIsBolt}" Spacing="3">
+                                        <Grid ColumnDefinitions="Auto,*,8,Auto,*,8,Auto,*,8,Auto,*">
+                                            <TextBlock Grid.Column="0" Text="角片材质" FontSize="11" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding S5MainAngleMaterials}" SelectedIndex="{Binding S5MainAngleMaterialIdx}" FontSize="11"/>
+                                            <TextBlock Grid.Column="3" Text="角片壁厚" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="4" Text="{Binding S5MainAngleThickness}" FontSize="11" Width="60"/>
+                                            <TextBlock Grid.Column="6" Text="竖框螺栓数" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="7" Text="{Binding S5MainMullionBoltCount}" FontSize="11" Width="50"/>
+                                            <TextBlock Grid.Column="9" Text="触面面数" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="10" Text="{Binding S5ContactSurfaces}" FontSize="11" Width="50"/>
+                                        </Grid>
+                                        <CheckBox Content="单侧角码（角部处理或单臂型材立柱时使用）" IsChecked="{Binding S5SingleSideBracket}" FontSize="10"/>
+                                    </StackPanel>
+                                    <!-- 焊接模式 -->
+                                    <StackPanel IsVisible="{Binding S5MainIsWeld}" Spacing="3">
+                                        <CheckBox Content="单侧转接件" IsChecked="{Binding S5SingleSideAdapter}" FontSize="10"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="角焊缝高度" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding S5MainWeldHeight}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBlock Text="每角码总焊缝有效长" FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                            <TextBox Text="{Binding S5MainWeldLength}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!-- 验算结果 -->
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2" Margin="0,4,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock FontSize="11"><Run Text="验算: "/><Run Text="{Binding S5MainBoltVerdict}" FontWeight="Bold"/></TextBlock>
+                                            <TextBlock FontSize="11"><Run Text="利用率: "/><Run Text="{Binding S5MainUtilization}" FontWeight="Bold"/></TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 右侧 -->
+                        <StackPanel Grid.Column="1" Spacing="6" Margin="6,0,0,0">
+                            <!-- 连接节点示意图 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="连接节点示意图" FontWeight="Bold" FontSize="11"/>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="12" CornerRadius="4" MinHeight="160">
+                                        <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="横框与立柱 — 角码螺栓连接" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="[立柱] ─── [角码] ─── [横梁]" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="● = 螺栓位置    V = 支反力" FontSize="10" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                            <Separator Margin="0,4"/>
+                                            <TextBlock Text="立柱与主体结构 — 转接件连接" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="[主体结构] ─── [转接件] ─── [立柱]" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="Consolas,monospace"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                            <!-- 验算公式 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="验算公式" FontWeight="Bold" FontSize="11"/>
+                                    <TextBlock Text="螺栓抗剪: Nvb = 0.4 × fub × A" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="螺栓承压: Ncb = d × t × fb" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="验算: V ≤ n × min(Nvb, Ncb)" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="焊缝抗剪: τf = V/(he×lw) ≤ ffw" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                                    <TextBlock Text="有效厚度: he = 0.7×hf" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="ffw: Q235=160MPa, Q355=200MPa" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ═══ Step 5: 预埋件 (对齐Blazor Step6Embedded) ═══ -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=5}">
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step6Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="5*,5*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,6,0">
+                            <!-- 受力模式 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="受力模式" FontWeight="Bold" FontSize="11"/>
+                                    <ComboBox ItemsSource="{Binding S6ForceModes}" SelectedIndex="{Binding S6ForceModeIdx}" FontSize="11" Width="160"/>
+                                    <!-- 偏心距 -->
+                                    <StackPanel IsVisible="{Binding S6IsHangOrSide}" Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="e₀" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding S6ForceE0}" FontSize="11" Width="60"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel IsVisible="{Binding S6IsTopOrBottom}" Spacing="3">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="e₁" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding S6ForceE1}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBlock Text="e₂" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                            <TextBox Text="{Binding S6ForceE2}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBlock Text="e₃" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                            <TextBox Text="{Binding S6ForceE3}" FontSize="11" Width="60"/>
+                                            <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 埋件类型 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="埋件类型" FontWeight="Bold" FontSize="11"/>
+                                    <ComboBox ItemsSource="{Binding S6EmbedTypes}" SelectedIndex="{Binding S6EmbedTypeIdx}" FontSize="11" Width="160"/>
+
+                                    <!-- 土建预埋 -->
+                                    <Border IsVisible="{Binding S6EmbedTypeIdx, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=0}"
+                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2" Background="{DynamicResource PageBgBrush}">
+                                        <StackPanel Spacing="3">
+                                            <TextBlock Text="锚筋参数" FontWeight="Bold" FontSize="10"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="锚筋材料" FontSize="10" VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding S6AnchorMaterials}" SelectedIndex="{Binding S6AnchorMaterialIdx}" FontSize="10" Width="90"/>
+                                                <TextBlock Text="直径" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <ComboBox ItemsSource="{Binding S6AnchorDiameters}" SelectedIndex="{Binding S6AnchorDiameterIdx}" FontSize="10" Width="60"/>
+                                                <TextBlock Text="长度" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6AnchorLength}" FontSize="10" Width="55"/>
+                                                <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="根数" FontSize="10" VerticalAlignment="Center"/>
+                                                <TextBox Text="{Binding S6AnchorCount}" FontSize="10" Width="40"/>
+                                                <TextBlock Text="每面" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6AnchorPerSide}" FontSize="10" Width="40"/>
+                                                <TextBlock Text="混凝土" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <ComboBox ItemsSource="{Binding S6ConcreteGrades}" SelectedIndex="{Binding S6ConcreteGradeIdx}" FontSize="10" Width="70"/>
+                                                <TextBlock Text="中心距" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6AnchorCenterDist}" FontSize="10" Width="50"/>
+                                                <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <RadioButton Content="L形弯钩" IsChecked="{Binding S6AnchorLHook}" GroupName="AnchorShape" FontSize="10"/>
+                                                <RadioButton Content="三边围焊" IsChecked="{Binding S6AnchorTriWeld}" GroupName="AnchorShape" FontSize="10"/>
+                                            </StackPanel>
+                                            <CheckBox Content="锚筋末端有机械锚固措施" IsChecked="{Binding S6HasMechanicalAnchor}" FontSize="10"/>
+                                            <TextBlock Text="锚板参数" FontWeight="Bold" FontSize="10" Margin="0,4,0,0"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="板长" FontSize="10" VerticalAlignment="Center"/>
+                                                <TextBox Text="{Binding S6PlateLength}" FontSize="10" Width="55"/>
+                                                <TextBlock Text="板宽" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6PlateWidth}" FontSize="10" Width="55"/>
+                                                <TextBlock Text="板厚" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6PlateThickness}" FontSize="10" Width="55"/>
+                                                <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 后补锚栓 -->
+                                    <Border IsVisible="{Binding S6EmbedTypeIdx, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=1}"
+                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2" Background="{DynamicResource PageBgBrush}">
+                                        <StackPanel Spacing="3">
+                                            <TextBlock Text="后补锚栓参数" FontWeight="Bold" FontSize="10"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="型号" FontSize="10" VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding S6PostSpecs}" SelectedIndex="{Binding S6PostSpecIdx}" FontSize="10" Width="70"/>
+                                                <TextBlock Text="类型" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <ComboBox ItemsSource="{Binding S6PostTypes}" SelectedIndex="{Binding S6PostTypeIdx}" FontSize="10" Width="200"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="材质" FontSize="10" VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding S6PostMaterials}" SelectedIndex="{Binding S6PostMaterialIdx}" FontSize="10" Width="100"/>
+                                                <TextBlock Text="数量" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6PostCount}" FontSize="10" Width="40"/>
+                                                <TextBlock Text="有效锚固深度" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6PostDepth}" FontSize="10" Width="55"/>
+                                                <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="混凝土等级" FontSize="10" VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding S6ConcreteGrades}" SelectedIndex="{Binding S6ConcreteGradeIdx}" FontSize="10" Width="70"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 对穿螺栓 -->
+                                    <Border IsVisible="{Binding S6EmbedTypeIdx, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=3}"
+                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2" Background="{DynamicResource PageBgBrush}">
+                                        <StackPanel Spacing="3">
+                                            <TextBlock Text="对穿螺栓参数" FontWeight="Bold" FontSize="10"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="型号" FontSize="10" VerticalAlignment="Center"/>
+                                                <ComboBox ItemsSource="{Binding S6PostSpecs}" SelectedIndex="{Binding S6ThroughSpecIdx}" FontSize="10" Width="70"/>
+                                                <TextBlock Text="材质" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <ComboBox ItemsSource="{Binding S6ThroughMaterials}" SelectedIndex="{Binding S6ThroughMaterialIdx}" FontSize="10" Width="100"/>
+                                                <TextBlock Text="数量" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6ThroughCount}" FontSize="10" Width="40"/>
+                                                <TextBlock Text="最薄壁厚" FontSize="10" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                <TextBox Text="{Binding S6ThroughMinThickness}" FontSize="10" Width="50"/>
+                                                <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 埋件验算结果 -->
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2" Margin="0,4,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock FontSize="11"><Run Text="埋件验算: "/><Run Text="{Binding S6AnchorVerdict}" FontWeight="Bold"/></TextBlock>
+                                            <TextBlock FontSize="11"><Run Text="最大利用率: "/><Run Text="{Binding S6AnchorUtilization}" FontWeight="Bold"/></TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 转接件与焊缝 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="转接件与焊缝参数" FontWeight="Bold" FontSize="11"/>
+                                    <Grid ColumnDefinitions="*,*">
+                                        <!-- 转接件 -->
+                                        <Border Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" Margin="0,0,4,0" CornerRadius="2" Background="{DynamicResource PageBgBrush}">
+                                            <StackPanel Spacing="3">
+                                                <TextBlock Text="转接件" FontWeight="Bold" FontSize="10"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="型材号" FontSize="10" VerticalAlignment="Center"/>
+                                                    <ComboBox ItemsSource="{Binding S6TransferSpecs}" SelectedIndex="{Binding S6TransferSpecIdx}" FontSize="10" Width="100"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="钢材" FontSize="10" VerticalAlignment="Center"/>
+                                                    <ComboBox ItemsSource="{Binding S5MainAngleMaterials}" SelectedIndex="{Binding S6TransferSteelIdx}" FontSize="10" Width="70"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <RadioButton Content="单片" IsChecked="{Binding S6ChannelSingle}" GroupName="ChLayout" FontSize="10"/>
+                                                    <RadioButton Content="双片" IsChecked="{Binding S6ChannelDouble}" GroupName="ChLayout" FontSize="10"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                        <!-- 焊缝 -->
+                                        <Border Grid.Column="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6,4" CornerRadius="2" Background="{DynamicResource PageBgBrush}">
+                                            <StackPanel Spacing="3">
+                                                <TextBlock Text="焊缝参数" FontWeight="Bold" FontSize="10"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <RadioButton Content="L型焊" IsChecked="{Binding S6WeldL}" GroupName="WeldForm" FontSize="10"/>
+                                                    <RadioButton Content="三边围焊" IsChecked="{Binding S6WeldTri}" GroupName="WeldForm" FontSize="10"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="hf" FontSize="10" VerticalAlignment="Center"/>
+                                                    <TextBox Text="{Binding S6WeldHeight}" FontSize="10" Width="50"/>
+                                                    <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="水平段" FontSize="10" VerticalAlignment="Center"/>
+                                                    <TextBox Text="{Binding S6HorizWeldLen}" FontSize="10" Width="50"/>
+                                                    <TextBlock Text="垂直段" FontSize="10" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                                    <TextBox Text="{Binding S6VertWeldLen}" FontSize="10" Width="50"/>
+                                                    <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <!-- 焊缝+转接件验算 -->
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2" Margin="0,4,0,0">
+                                        <StackPanel Orientation="Horizontal" Spacing="16">
+                                            <TextBlock FontSize="11"><Run Text="焊缝: "/><Run Text="{Binding S6WeldVerdict}" FontWeight="Bold"/></TextBlock>
+                                            <TextBlock FontSize="11"><Run Text="转接件: "/><Run Text="{Binding S6TransferVerdict}" FontWeight="Bold"/></TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 右侧 受力简图 -->
+                        <StackPanel Grid.Column="1" Spacing="6" Margin="6,0,0,0">
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock FontSize="11" FontWeight="Bold">
+                                        <Run Text="受力方式简图 - "/><Run Text="{Binding S6ForceModeLabel}"/>
+                                    </TextBlock>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="16" CornerRadius="4" MinHeight="220">
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+                                            <TextBlock Text="[混凝土梁]" FontSize="14" HorizontalAlignment="Center" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="    │" FontSize="14" HorizontalAlignment="Center" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="  [锚板/锚筋]" FontSize="12" HorizontalAlignment="Center" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="    │" FontSize="14" HorizontalAlignment="Center" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="  [立柱]" FontSize="14" HorizontalAlignment="Center" FontFamily="Consolas,monospace"/>
+                                            <TextBlock Text="    ↓N    →V" FontSize="12" HorizontalAlignment="Center" FontFamily="Consolas,monospace" Foreground="Red"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="预埋件截面示意图" FontWeight="Bold" FontSize="11"/>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="16" CornerRadius="4" MinHeight="120">
+                                        <TextBlock Text="{Binding S6EmbedTypeLabel, StringFormat={}{0} 截面示意}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ═══ Step 6: 胶/紧固 (对齐Blazor Step7Sealant) ═══ -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=6}">
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="{Binding Step7Title}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="6*,4*">
+                        <!-- 左侧参数区 -->
+                        <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,6,0">
+                            <!-- 公用参数 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="公用参数" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="建筑类型" FontSize="11" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding S7BuildingTypes}" SelectedIndex="{Binding S7BuildingTypeIdx}" FontSize="11" Width="150"/>
+                                        <TextBlock Text="立柱伸缩缝" FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                        <TextBox Text="{Binding S7ExpansionJoint}" FontSize="11" Width="60"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <CheckBox Content="计算副框和承托件" IsChecked="{Binding S7CalcSubFrame}" FontSize="10"/>
+                                        <CheckBox Content="不计算压板(耳板)" IsChecked="{Binding S7NoClampCalc}" FontSize="10"/>
+                                        <CheckBox Content="开放式" IsChecked="{Binding S7OpenStyle}" FontSize="10"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 耐候胶胶缝 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="耐候胶胶缝" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="耐候胶位移能力" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding S7WeatherDisplacement}" FontSize="11" Width="60"/>
+                                        <TextBlock Text="耐候胶缝值" FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                        <TextBox Text="{Binding S7WeatherGap}" FontSize="11" Width="60"/>
+                                        <TextBlock Text="mm" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 结构胶参数 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="结构胶参数" FontWeight="Bold" FontSize="11"/>
+                                    <Grid ColumnDefinitions="Auto,60,8,Auto,60,8,Auto,60,8,Auto,60" RowDefinitions="Auto,Auto">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="铝框胶厚" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding S7FrameSealantThickness}" FontSize="10"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="铝框胶宽" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding S7FrameSealantWidth}" FontSize="10"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="6" Text="中空胶厚" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="7" Text="{Binding S7HollowSealantThickness}" FontSize="10"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="9" Text="中空胶宽" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="10" Text="{Binding S7HollowSealantWidth}" FontSize="10"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 压板参数 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="压板参数" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="长度" FontSize="10" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding S7ClampLength}" FontSize="10" Width="55"/>
+                                        <TextBlock Text="宽度" FontSize="10" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                        <TextBox Text="{Binding S7ClampWidth}" FontSize="10" Width="55"/>
+                                        <TextBlock Text="厚度" FontSize="10" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                        <TextBox Text="{Binding S7ClampThickness}" FontSize="10" Width="55"/>
+                                        <TextBlock Text="间距" FontSize="10" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                        <TextBox Text="{Binding S7ClampSpacing}" FontSize="10" Width="55"/>
+                                        <TextBlock Text="mm" FontSize="10" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="材质" FontSize="10" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding S7ClampMaterials}" SelectedIndex="{Binding S7ClampMaterialIdx}" FontSize="10" Width="120"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 右侧验算结果 -->
+                        <StackPanel Grid.Column="1" Spacing="6" Margin="6,0,0,0">
+                            <!-- 伸缩缝 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="伸缩缝验算" FontWeight="Bold" FontSize="11"/>
+                                    <TextBlock Text="Δ = α × L × ΔT" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="α = 23.6×10⁻⁶ /℃（铝合金线膨胀系数）" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2,0,0">
+                                        <TextBlock FontSize="11"><Run Text="利用率: "/><Run Text="{Binding S7ExpansionUtil}" FontWeight="Bold"/></TextBlock>
+                                        <TextBlock Text="{Binding S7ExpansionVerdict}" FontSize="11" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <!-- 结构胶 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="结构胶验算" FontWeight="Bold" FontSize="11"/>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="铝框结构胶" FontWeight="Bold" FontSize="10"/>
+                                            <TextBlock Text="σs = W / (2 × Cs × a)" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock FontSize="10"><Run Text="利用率: "/><Run Text="{Binding S7FrameSealantUtil}" FontWeight="Bold"/></TextBlock>
+                                                <TextBlock Text="{Binding S7FrameSealantVerdict}" FontSize="10" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="中空层结构胶" FontWeight="Bold" FontSize="10"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock FontSize="10"><Run Text="利用率: "/><Run Text="{Binding S7HollowSealantUtil}" FontWeight="Bold"/></TextBlock>
+                                                <TextBlock Text="{Binding S7HollowSealantVerdict}" FontSize="10" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="{DynamicResource PageBgBrush}" Padding="6,4" CornerRadius="2">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="耐候胶验算" FontWeight="Bold" FontSize="10"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock FontSize="10"><Run Text="利用率: "/><Run Text="{Binding S7WeatherUtil}" FontWeight="Bold"/></TextBlock>
+                                                <TextBlock Text="{Binding S7WeatherVerdict}" FontSize="10" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                            <!-- 压板 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="压板验算" FontWeight="Bold" FontSize="11"/>
+                                    <TextBlock Text="简支梁弯曲验算: σ = M/W ≤ f" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock FontSize="10"><Run Text="利用率: "/><Run Text="{Binding S7ClampUtil}" FontWeight="Bold"/></TextBlock>
+                                        <TextBlock Text="{Binding S7ClampVerdict}" FontSize="10" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <!-- 螺钉 -->
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="螺钉验算" FontWeight="Bold" FontSize="11"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock FontSize="10"><Run Text="利用率: "/><Run Text="{Binding S7ScrewUtil}" FontWeight="Bold"/></TextBlock>
+                                        <TextBlock Text="{Binding S7ScrewVerdict}" FontSize="10" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ═══ Step 7: 汇总 (对齐Blazor Step7Summary) ═══ -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=7}">
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="全部验算结果汇总" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="全部验算结果汇总" FontWeight="Bold" FontSize="11"/>
+                            <TextBlock Text="❌ 不通过项以红色高亮，可跳回对应步骤修改" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <DataGrid ItemsSource="{Binding SummaryRows}" AutoGenerateColumns="False"
+                                      IsReadOnly="True" FontSize="11" Height="400"
+                                      GridLinesVisibility="All" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="构件" Binding="{Binding Component}" Width="100"/>
+                                    <DataGridTextColumn Header="验算项" Binding="{Binding Item}" Width="100"/>
+                                    <DataGridTextColumn Header="计算值" Binding="{Binding Actual}" Width="120"/>
+                                    <DataGridTextColumn Header="限值" Binding="{Binding Limit}" Width="100"/>
+                                    <DataGridTextColumn Header="判定" Binding="{Binding Verdict}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ═══ Step 8: 计算书 ═══ -->
+                <StackPanel Spacing="8" IsVisible="{Binding CurrentStep, Converter={x:Static local:NavConverter.Instance}, ConverterParameter=8}">
+                    <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="2">
+                        <TextBlock Text="计算书生成" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16" CornerRadius="2">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="选择需要生成的计算书类型：" FontWeight="Bold" FontSize="12"/>
+                            <WrapPanel Orientation="Horizontal">
+                                <Button Content="玻璃面板" Click="OnReport_Glass" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="中空玻璃" Click="OnReport_InsulatingGlass" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="铝横梁" Click="OnReport_AluRafter" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="石材托件" Click="OnReport_StoneBracket" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="预埋件" Click="OnReport_EmbedPart" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="铝板" Click="OnReport_AluPlate" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="石材面板" Click="OnReport_StonePanel" Classes="Primary" Margin="4" Padding="16,8"/>
+                                <Button Content="硅酮胶" Click="OnReport_Silicone" Classes="Primary" Margin="4" Padding="16,8"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8,4" CornerRadius="2"
+                            IsVisible="{Binding ReportText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <TextBlock Text="{Binding ReportText}" FontFamily="Consolas,monospace" FontSize="13" TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+            </Panel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

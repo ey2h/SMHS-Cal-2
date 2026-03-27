@@ -1,0 +1,44 @@
+@if (Check != null)
+{
+    var r = Check.UtilizationRatio;
+    var fillCls = r > 1 ? "danger" : r > 0.8 ? "warn" : "safe";
+    var ratioCls = r > 1 ? "danger" : r > 0.8 ? "warn" : "safe";
+
+    <div class="check-item">
+        <div class="check-header">
+            <span class="material-symbols-outlined">@Icon</span>
+            @Title
+            @if (Check.Passed)
+            {
+                <span class="badge-pass" style="margin-left:auto;height:24px;font-size:12px">通过</span>
+            }
+            else
+            {
+                <span class="badge-fail" style="margin-left:auto;height:24px;font-size:12px">不通过</span>
+            }
+        </div>
+        <div class="check-row">
+            <span>计算值</span>
+            <span class="value">@Check.ActualValue.ToString("F3") @Unit</span>
+        </div>
+        <div class="check-row">
+            <span>限值</span>
+            <span class="value">@Check.AllowableValue.ToString("F3") @Unit</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill @fillCls" style="width:@(Math.Min(r * 100, 100).ToString("F0"))%"></div>
+        </div>
+        <div class="ratio-text @ratioCls">利用率 @((r * 100).ToString("F1"))%</div>
+        @if (!string.IsNullOrEmpty(Check.Description))
+        {
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px">@Check.Description</div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "check";
+    [Parameter] public CheckDto? Check { get; set; }
+    [Parameter] public string Unit { get; set; } = "";
+}

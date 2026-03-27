@@ -1,0 +1,61 @@
+@page "/alupanel"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">铝板计算</h1>
+    <p class="page-subtitle">铝板面板强度与挠度验算</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">crop_square</span> 铝板参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">短边 (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">长边 (mm)</label>
+                <input class="input-field" type="number" @bind="_longSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">板厚 (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="_thickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _shortSide = 600, _longSide = 1200, _thickness = 3, _windLoad = 1.37;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcAluminumPlateAsync(new
+            {
+                shortSide = _shortSide, longSide = _longSide,
+                thickness = _thickness, windLoad = _windLoad
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

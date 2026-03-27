@@ -1,0 +1,103 @@
+@inherits LayoutComponentBase
+@inject NavigationManager Nav
+
+<div class="app-shell" data-theme="@(_isDark ? "dark" : "light")">
+    <!-- 侧栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined" style="color:white;font-size:18px">window</span>
+            </div>
+            <span>GlassCalc</span>
+        </div>
+
+        <div class="sidebar-group-label">计算</div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-item @IsActive("/project")" href="/project">
+                <span class="material-symbols-outlined">location_city</span> 项目参数
+            </a>
+            <a class="sidebar-item @IsActive("/glass")" href="/glass">
+                <span class="material-symbols-outlined">grid_view</span> 玻璃计算
+            </a>
+            <a class="sidebar-item @IsActive("/mullion")" href="/mullion">
+                <span class="material-symbols-outlined">view_column</span> 立柱计算
+            </a>
+            <a class="sidebar-item @IsActive("/transom")" href="/transom">
+                <span class="material-symbols-outlined">horizontal_rule</span> 横梁计算
+            </a>
+            <a class="sidebar-item @IsActive("/alupanel")" href="/alupanel">
+                <span class="material-symbols-outlined">crop_square</span> 铝板计算
+            </a>
+            <a class="sidebar-item @IsActive("/grc")" href="/grc">
+                <span class="material-symbols-outlined">dashboard</span> GRC板
+            </a>
+            <a class="sidebar-item @IsActive("/stone")" href="/stone">
+                <span class="material-symbols-outlined">landscape</span> 石材计算
+            </a>
+            <a class="sidebar-item @IsActive("/connection")" href="/connection">
+                <span class="material-symbols-outlined">settings_input_component</span> 连接件
+            </a>
+            <a class="sidebar-item @IsActive("/weld")" href="/weld">
+                <span class="material-symbols-outlined">construction</span> 焊缝计算
+            </a>
+        </nav>
+
+        <div class="sidebar-group-label">工具</div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-item @IsActive("/report")" href="/report">
+                <span class="material-symbols-outlined">description</span> 计算书
+            </a>
+            <a class="sidebar-item @IsActive("/data")" href="/data">
+                <span class="material-symbols-outlined">database</span> 数据管理
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            GlassCalc v2.0 · 幕墙计算系统
+        </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main-area">
+        <div class="topbar">
+            <div class="search-box">
+                <span class="material-symbols-outlined" style="color:var(--text-3)">search</span>
+                <input type="text" placeholder="搜索功能..." />
+            </div>
+            <div style="flex:1"></div>
+            <div class="api-status" style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3)">
+                <span style="width:8px;height:8px;border-radius:50%;background:@(_apiOnline ? "var(--green)" : "var(--red)")"></span>
+                API @(_apiOnline ? "在线" : "离线")
+            </div>
+            <button class="theme-btn" @onclick="ToggleTheme">
+                <span class="material-symbols-outlined">@(_isDark ? "light_mode" : "dark_mode")</span>
+            </button>
+            <div class="topbar-avatar">G</div>
+        </div>
+
+        <div class="content-scroll">
+            @Body
+        </div>
+    </main>
+</div>
+
+@code {
+    private bool _isDark;
+    private bool _apiOnline;
+
+    [Inject] private GlassApiClient Api { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _apiOnline = await Api.CheckHealthAsync();
+    }
+
+    private void ToggleTheme() => _isDark = !_isDark;
+
+    private string IsActive(string path)
+    {
+        var uri = Nav.ToBaseRelativePath(Nav.Uri);
+        if (string.IsNullOrEmpty(uri) && path == "/project") return "active";
+        return ("/" + uri).StartsWith(path) ? "active" : "";
+    }
+}

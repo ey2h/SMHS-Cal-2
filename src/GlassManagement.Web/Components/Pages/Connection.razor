@@ -1,0 +1,76 @@
+@page "/connection"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">连接件计算</h1>
+    <p class="page-subtitle">横梁-角码-立柱-主结构全链路承载力验算</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">settings_input_component</span> 连接件参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">立柱间距 B (mm)</label>
+                <input class="input-field" type="number" @bind="_mullionSpacing" />
+            </div>
+            <div class="form-group">
+                <label class="label">横梁分格宽 (mm)</label>
+                <input class="input-field" type="number" @bind="_transomWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">横梁分格高 (mm)</label>
+                <input class="input-field" type="number" @bind="_transomHeight" />
+            </div>
+            <div class="form-group">
+                <label class="label">立柱跨度 L (mm)</label>
+                <input class="input-field" type="number" @bind="_mullionSpan" />
+            </div>
+            <div class="form-group">
+                <label class="label">短跨 L₁ (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSpan" />
+            </div>
+            <div class="form-group">
+                <label class="label">长跨 L₂ (mm)</label>
+                <input class="input-field" type="number" @bind="_longSpan" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _mullionSpacing = 1200, _transomWidth = 1200, _transomHeight = 1500;
+    private double _mullionSpan = 3600, _shortSpan = 1500, _longSpan = 2100;
+    private double _windLoad = 1.37;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcConnectionAsync(new
+            {
+                mullionSpacing = _mullionSpacing, transomWidth = _transomWidth,
+                transomHeight = _transomHeight, mullionSpan = _mullionSpan,
+                shortSpan = _shortSpan, longSpan = _longSpan, windLoad = _windLoad
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

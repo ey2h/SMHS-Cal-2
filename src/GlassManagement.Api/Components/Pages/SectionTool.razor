@@ -1,0 +1,389 @@
+@page "/section-tool"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+@inject SectionCalculationService CalcService
+@using GlassManagement.Api.Models
+@using GlassManagement.Api.Services
+
+<div class="page-enter">
+    <h1 class="page-title">截面特性计算工具</h1>
+    <p class="page-subtitle">CAD截面特性计算 · 支持常规截面和断热截面</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; align-items:start;">
+        <!-- 左侧：输入区 -->
+        <div class="card">
+            <div class="section-title">
+                <span class="material-symbols-outlined">settings</span> 截面参数
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+                <label class="label">截面类型</label>
+                <select class="input-field" @bind="_isBreakHeat">
+                    <option value="false">常规截面</option>
+                    <option value="true">断热截面</option>
+                </select>
+            </div>
+
+            <div class="section-title" style="margin-top:16px;">
+                <span class="material-symbols-outlined">polyline</span> 外轮廓顶点
+            </div>
+            <div style="max-height:240px; overflow-y:auto; margin-bottom:8px;">
+                <table class="data-table" style="font-size:12px;">
+                    <thead><tr><th>#</th><th>X (mm)</th><th>Y (mm)</th><th></th></tr></thead>
+                    <tbody>
+                        @for (int i = 0; i < _outerPoints.Count; i++)
+                        {
+                            var idx = i;
+                            <tr>
+                                <td>@(idx + 1)</td>
+                                <td><input type="number" step="0.01" class="input-field" style="width:80px;padding:2px 4px;font-size:12px" value="@_outerPoints[idx].X" @onchange="e => UpdateOuterX(idx, e)" /></td>
+                                <td><input type="number" step="0.01" class="input-field" style="width:80px;padding:2px 4px;font-size:12px" value="@_outerPoints[idx].Y" @onchange="e => UpdateOuterY(idx, e)" /></td>
+                                <td><button class="btn-sm btn-danger" @onclick="() => RemoveOuterPoint(idx)">×</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-secondary" style="font-size:12px;padding:4px 12px;" @onclick="AddOuterPoint">+ 添加顶点</button>
+            <button class="btn btn-secondary" style="font-size:12px;padding:4px 12px;margin-left:4px;" @onclick="LoadSampleData">载入示例</button>
+
+            <!-- 内孔 -->
+            <div class="section-title" style="margin-top:16px;">
+                <span class="material-symbols-outlined">crop_free</span> 内孔 (@_holes.Count 个)
+            </div>
+            @for (int h = 0; h < _holes.Count; h++)
+            {
+                var hIdx = h;
+                <div style="border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="font-size:12px; font-weight:600;">孔 @(hIdx + 1)</span>
+                        <button class="btn-sm btn-danger" @onclick="() => RemoveHole(hIdx)">删除</button>
+                    </div>
+                    <div style="max-height:120px; overflow-y:auto;">
+                        <table class="data-table" style="font-size:11px;">
+                            <thead><tr><th>X</th><th>Y</th><th></th></tr></thead>
+                            <tbody>
+                                @for (int p = 0; p < _holes[hIdx].Count; p++)
+                                {
+                                    var pIdx = p;
+                                    var holeIdx = hIdx;
+                                    <tr>
+                                        <td><input type="number" step="0.01" class="input-field" style="width:70px;padding:2px;font-size:11px" value="@_holes[holeIdx][pIdx].X" @onchange="e => UpdateHoleX(holeIdx, pIdx, e)" /></td>
+                                        <td><input type="number" step="0.01" class="input-field" style="width:70px;padding:2px;font-size:11px" value="@_holes[holeIdx][pIdx].Y" @onchange="e => UpdateHoleY(holeIdx, pIdx, e)" /></td>
+                                        <td><button class="btn-sm btn-danger" @onclick="() => RemoveHolePoint(holeIdx, pIdx)">×</button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-secondary" style="font-size:11px;padding:2px 8px;" @onclick="() => AddHolePoint(hIdx)">+ 顶点</button>
+                </div>
+            }
+            <button class="btn btn-secondary" style="font-size:12px;padding:4px 12px;" @onclick="AddHole">+ 添加内孔</button>
+
+            @if (_isBreakHeat)
+            {
+                <div class="section-title" style="margin-top:16px;">
+                    <span class="material-symbols-outlined">thermostat</span> 断热参数
+                </div>
+                <div class="form-group">
+                    <label class="label">组合弹性值</label>
+                    <select class="input-field" @bind="_compositeElasticity">
+                        <option value="80">穿条式 (80)</option>
+                        <option value="1600">注胶式 (1600)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">跨度 (mm)</label>
+                    <input class="input-field" type="number" @bind="_spanLength" />
+                </div>
+                <p style="font-size:11px; color:var(--text-secondary); margin-top:4px;">
+                    断热截面需分别输入两侧型材区域（在内孔中添加 Side1、Side2 区域坐标）
+                </p>
+            }
+
+            <div class="section-title" style="margin-top:16px;">
+                <span class="material-symbols-outlined">straighten</span> 手动参数
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="label">连接面壁厚 t (mm)</label>
+                    <input class="input-field" type="number" step="0.1" @bind="_wallThickness" />
+                </div>
+                <div class="form-group">
+                    <label class="label">受剪腹板宽度 (mm)</label>
+                    <input class="input-field" type="number" step="0.1" @bind="_shearWebWidth" />
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%; margin-top:16px;" @onclick="Calculate">
+                <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">calculate</span>
+                计算截面特性
+            </button>
+        </div>
+
+        <!-- 中间：SVG预览 -->
+        <div class="card">
+            <div class="section-title">
+                <span class="material-symbols-outlined">preview</span> 截面预览
+            </div>
+            <div style="background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; padding:8px; min-height:360px; display:flex; align-items:center; justify-content:center;">
+                @if (_outerPoints.Count >= 3)
+                {
+                    <svg viewBox="@_svgViewBox" width="100%" height="360" style="max-width:400px;">
+                        <!-- 坐标轴 -->
+                        @if (_result != null)
+                        {
+                            <line x1="@Svx(_result.Cx - 200)" y1="@Svy(_result.Cy)" x2="@Svx(_result.Cx + 200)" y2="@Svy(_result.Cy)" stroke="#999" stroke-width="0.5" stroke-dasharray="4,2" />
+                            <line x1="@Svx(_result.Cx)" y1="@Svy(_result.Cy - 200)" x2="@Svx(_result.Cx)" y2="@Svy(_result.Cy + 200)" stroke="#999" stroke-width="0.5" stroke-dasharray="4,2" />
+                        }
+                        <!-- 外轮廓 -->
+                        <polygon points="@SvgPolygon(_outerPoints)" fill="rgba(0,120,212,0.15)" stroke="#0078d4" stroke-width="1.5" />
+                        <!-- 内孔 -->
+                        @foreach (var hole in _holes)
+                        {
+                            <polygon points="@SvgPolygon(hole)" fill="var(--bg-primary)" stroke="#dc3545" stroke-width="1" />
+                        }
+                        <!-- 质心标记 -->
+                        @if (_result != null)
+                        {
+                            <circle cx="@Svx(_result.Cx)" cy="@Svy(_result.Cy)" r="4" fill="#28a745" stroke="white" stroke-width="1" />
+                            @((MarkupString)$"<text x=\"{Svx(_result.Cx + 8)}\" y=\"{Svy(_result.Cy - 8)}\" font-size=\"10\" fill=\"#28a745\">C</text>")
+                        }
+                    </svg>
+                }
+                else
+                {
+                    <span style="color:var(--text-secondary); font-size:13px;">请输入至少3个外轮廓顶点</span>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(_unit))
+            {
+                <div style="margin-top:8px; text-align:right;">
+                    <label class="label" style="display:inline;">单位：</label>
+                    <select class="input-field" style="width:auto; display:inline; padding:2px 8px; font-size:12px;" @bind="_unit">
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                    </select>
+                </div>
+            }
+        </div>
+
+        <!-- 右侧：计算结果 -->
+        <div class="card">
+            <div class="section-title">
+                <span class="material-symbols-outlined">analytics</span> 计算结果
+            </div>
+
+            @if (_result != null)
+            {
+                var u = _unit == "cm" ? 10.0 : 1.0;
+                var u2 = u * u;
+                var u3 = u2 * u;
+                var u4 = u3 * u;
+                var areaUnit = _unit == "cm" ? "cm²" : "mm²";
+                var ixUnit = _unit == "cm" ? "cm⁴" : "mm⁴";
+                var wxUnit = _unit == "cm" ? "cm³" : "mm³";
+                var lenUnit = _unit;
+
+                <table class="data-table">
+                    <tbody>
+                        <tr><td style="font-weight:600;">面积 A</td><td>@F(_result.Area / u2) @areaUnit</td></tr>
+                        <tr><td style="font-weight:600;">质心 Cx</td><td>@F(_result.Cx / u) @lenUnit</td></tr>
+                        <tr><td style="font-weight:600;">质心 Cy</td><td>@F(_result.Cy / u) @lenUnit</td></tr>
+                        <tr style="background:rgba(0,120,212,0.05)"><td style="font-weight:600;">Ix (X轴惯性矩)</td><td>@F(_result.Ix / u4) @ixUnit</td></tr>
+                        <tr style="background:rgba(0,120,212,0.05)"><td style="font-weight:600;">Iy (Y轴惯性矩)</td><td>@F(_result.Iy / u4) @ixUnit</td></tr>
+                        <tr><td style="font-weight:600;">Wx1 (抗弯矩)</td><td>@F(_result.Wx1 / u3) @wxUnit</td></tr>
+                        <tr><td style="font-weight:600;">Wx2 (抗弯矩)</td><td>@F(_result.Wx2 / u3) @wxUnit</td></tr>
+                        <tr><td style="font-weight:600;">Wy1 (抗弯矩)</td><td>@F(_result.Wy1 / u3) @wxUnit</td></tr>
+                        <tr><td style="font-weight:600;">Wy2 (抗弯矩)</td><td>@F(_result.Wy2 / u3) @wxUnit</td></tr>
+                        <tr style="background:rgba(40,167,69,0.05)"><td style="font-weight:600;">Sx (面积矩)</td><td>@F(_result.Sx / u3) @wxUnit</td></tr>
+                        <tr style="background:rgba(40,167,69,0.05)"><td style="font-weight:600;">Sy (面积矩)</td><td>@F(_result.Sy / u3) @wxUnit</td></tr>
+                        <tr><td style="font-weight:600;">Ymin</td><td>@F(_result.Ymin / u) @lenUnit</td></tr>
+                        <tr><td style="font-weight:600;">Ymax</td><td>@F(_result.Ymax / u) @lenUnit</td></tr>
+                        <tr><td style="font-weight:600;">Xmin</td><td>@F(_result.Xmin / u) @lenUnit</td></tr>
+                        <tr><td style="font-weight:600;">Xmax</td><td>@F(_result.Xmax / u) @lenUnit</td></tr>
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="color:var(--text-secondary); font-size:13px; text-align:center; padding:40px 0;">点击「计算截面特性」查看结果</p>
+            }
+
+            @if (!string.IsNullOrEmpty(_errorMsg))
+            {
+                <div style="color:#dc3545; font-size:12px; margin-top:8px; padding:8px; background:rgba(220,53,69,0.08); border-radius:6px;">@_errorMsg</div>
+            }
+        </div>
+    </div>
+
+    <!-- 底部：导入数据库 -->
+    @if (_result != null)
+    {
+        <div class="card" style="margin-top:16px;">
+            <div class="section-title">
+                <span class="material-symbols-outlined">upload</span> 导入型材数据库
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:end;">
+                <div class="form-group">
+                    <label class="label">型材名称</label>
+                    <input class="input-field" @bind="_profileName" placeholder="例: 100×50×2.0" />
+                </div>
+                <div class="form-group">
+                    <label class="label">型材分类</label>
+                    <select class="input-field" @bind="_selectedCategory">
+                        @foreach (var cat in ProfileCategories.All)
+                        {
+                            <option value="@cat">@cat</option>
+                        }
+                    </select>
+                </div>
+                <button class="btn btn-primary" @onclick="ImportToDb" disabled="@_importing">
+                    @if (_importing) { <span>导入中...</span> } else { <span>导入数据库</span> }
+                </button>
+            </div>
+            @if (!string.IsNullOrEmpty(_importMsg))
+            {
+                <div style="color:#28a745; font-size:12px; margin-top:8px;">@_importMsg</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool _isBreakHeat;
+    private List<PointD> _outerPoints = new();
+    private List<List<PointD>> _holes = new();
+    private double _compositeElasticity = 80;
+    private double _spanLength = 1500;
+    private double _wallThickness = 2.0;
+    private double _shearWebWidth = 50;
+    private string _unit = "mm";
+    private SectionResult? _result;
+    private string _errorMsg = "";
+    private string _profileName = "";
+    private string _selectedCategory = "立柱";
+    private bool _importing;
+    private string _importMsg = "";
+    private string _svgViewBox = "0 0 400 400";
+
+    private readonly SectionCalculationService _localCalc = new();
+
+    private void AddOuterPoint() => _outerPoints.Add(new PointD { X = 0, Y = 0 });
+    private void RemoveOuterPoint(int idx) { if (idx < _outerPoints.Count) _outerPoints.RemoveAt(idx); UpdateSvg(); }
+    private void UpdateOuterX(int idx, ChangeEventArgs e) { if (double.TryParse(e.Value?.ToString(), out var v)) _outerPoints[idx].X = v; UpdateSvg(); }
+    private void UpdateOuterY(int idx, ChangeEventArgs e) { if (double.TryParse(e.Value?.ToString(), out var v)) _outerPoints[idx].Y = v; UpdateSvg(); }
+
+    private void AddHole() => _holes.Add(new List<PointD>());
+    private void RemoveHole(int idx) { if (idx < _holes.Count) _holes.RemoveAt(idx); UpdateSvg(); }
+    private void AddHolePoint(int hIdx) { if (hIdx < _holes.Count) _holes[hIdx].Add(new PointD { X = 0, Y = 0 }); }
+    private void RemoveHolePoint(int hIdx, int pIdx) { if (hIdx < _holes.Count && pIdx < _holes[hIdx].Count) _holes[hIdx].RemoveAt(pIdx); UpdateSvg(); }
+    private void UpdateHoleX(int hIdx, int pIdx, ChangeEventArgs e) { if (double.TryParse(e.Value?.ToString(), out var v)) _holes[hIdx][pIdx].X = v; UpdateSvg(); }
+    private void UpdateHoleY(int hIdx, int pIdx, ChangeEventArgs e) { if (double.TryParse(e.Value?.ToString(), out var v)) _holes[hIdx][pIdx].Y = v; UpdateSvg(); }
+
+    private void LoadSampleData()
+    {
+        // 一个 L 形截面示例
+        _outerPoints = new List<PointD>
+        {
+            new() { X = 0, Y = 0 },
+            new() { X = 100, Y = 0 },
+            new() { X = 100, Y = 20 },
+            new() { X = 20, Y = 20 },
+            new() { X = 20, Y = 80 },
+            new() { X = 0, Y = 80 }
+        };
+        _holes.Clear();
+        _result = null;
+        _errorMsg = "";
+        UpdateSvg();
+    }
+
+    private void Calculate()
+    {
+        _errorMsg = "";
+        _result = null;
+        _importMsg = "";
+        try
+        {
+            if (_outerPoints.Count < 3)
+            {
+                _errorMsg = "外轮廓至少需要3个顶点";
+                return;
+            }
+
+            if (_isBreakHeat)
+            {
+                // 断热截面：需要至少2个内孔作为两侧区域
+                if (_holes.Count < 2 || _holes[0].Count < 3 || _holes[1].Count < 3)
+                {
+                    _errorMsg = "断热截面需要在内孔中添加两个区域(Side1、Side2)，各至少3个顶点";
+                    return;
+                }
+                _result = _localCalc.CalculateBreakHeatSection(
+                    _holes[0], _holes[1], _outerPoints,
+                    _compositeElasticity, _spanLength);
+            }
+            else
+            {
+                _result = _localCalc.CalculateSection(_outerPoints, _holes);
+            }
+            UpdateSvg();
+        }
+        catch (Exception ex)
+        {
+            _errorMsg = ex.Message;
+        }
+    }
+
+    private async Task ImportToDb()
+    {
+        if (_result == null || string.IsNullOrWhiteSpace(_profileName)) return;
+        _importing = true;
+        _importMsg = "";
+        try
+        {
+            var req = new SectionImportRequest
+            {
+                ProfileName = _profileName,
+                Category = _selectedCategory,
+                Result = _result,
+                WallThickness = _wallThickness,
+                ShearWebWidth = _shearWebWidth
+            };
+            var resp = await Api.PostAsync<SectionProfileRecord>("api/section/import", req);
+            _importMsg = resp != null ? $"✓ 已导入: {_profileName} → {_selectedCategory}" : "导入失败";
+        }
+        catch (Exception ex) { _importMsg = $"导入失败: {ex.Message}"; }
+        finally { _importing = false; }
+    }
+
+    private void UpdateSvg()
+    {
+        if (_outerPoints.Count < 3) return;
+        double minX = _outerPoints.Min(p => p.X) - 20;
+        double minY = _outerPoints.Min(p => p.Y) - 20;
+        double maxX = _outerPoints.Max(p => p.X) + 20;
+        double maxY = _outerPoints.Max(p => p.Y) + 20;
+        _svgViewBox = $"{minX} {minY} {maxX - minX} {maxY - minY}";
+    }
+
+    // SVG坐标转换（Y轴翻转）
+    private string Svx(double x) => x.ToString("F1");
+    private string Svy(double y)
+    {
+        if (_outerPoints.Count < 3) return y.ToString("F1");
+        double minY = _outerPoints.Min(p => p.Y);
+        double maxY = _outerPoints.Max(p => p.Y);
+        return (minY + maxY - y).ToString("F1");
+    }
+
+    private string SvgPolygon(List<PointD> points)
+    {
+        return string.Join(" ", points.Select(p => $"{Svx(p.X)},{Svy(p.Y)}"));
+    }
+
+    private static string F(double v) => v.ToString("F4");
+}

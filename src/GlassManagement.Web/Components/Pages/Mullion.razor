@@ -1,0 +1,80 @@
+@page "/mullion"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">立柱计算</h1>
+    <p class="page-subtitle">铝合金立柱强度、挠度和稳定性验算（双跨梁模型）</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">view_column</span> 立柱参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">总跨度 L (mm)</label>
+                <input class="input-field" type="number" @bind="_height" />
+            </div>
+            <div class="form-group">
+                <label class="label">间距 B (mm)</label>
+                <input class="input-field" type="number" @bind="_spacing" />
+            </div>
+            <div class="form-group">
+                <label class="label">短跨 L₁ (mm)</label>
+                <input class="input-field" type="number" @bind="_shortSpan" />
+            </div>
+            <div class="form-group">
+                <label class="label">长跨 L₂ (mm)</label>
+                <input class="input-field" type="number" @bind="_longSpan" />
+            </div>
+            <div class="form-group">
+                <label class="label">风荷载 (kPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="_windLoad" />
+            </div>
+            <div class="form-group">
+                <label class="label">自重荷载 (kN/m)</label>
+                <input class="input-field" type="number" step="0.0001" @bind="_gravityLoad" />
+            </div>
+            <div class="form-group">
+                <label class="label">铝合金牌号</label>
+                <select class="input-field" @bind="_aluminumGrade">
+                    <option value="6063-T5">6063-T5</option>
+                    <option value="6063-T6">6063-T6</option>
+                    <option value="6061-T6">6061-T6</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _height = 3600, _spacing = 1200, _shortSpan = 540, _longSpan = 3060;
+    private double _windLoad = 1.37, _gravityLoad = 0.0005;
+    private string _aluminumGrade = "6063-T5";
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcAluminumMullionAsync(new
+            {
+                height = _height, shortSpan = _shortSpan, longSpan = _longSpan,
+                spacing = _spacing, windLoad = _windLoad, gravityLoad = _gravityLoad,
+                aluminumGrade = _aluminumGrade, profileSpec = "100×50系列"
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

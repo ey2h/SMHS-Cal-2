@@ -1,0 +1,287 @@
+@page "/"
+@page "/project"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<!-- 主面板标题条 -->
+<div class="main-panel">
+    <div class="panel-header">
+        <span class="material-symbols-outlined">window</span>
+        玻璃幕墙计算 — 基本参数输入（Step 1/8）
+    </div>
+    <div class="panel-body page-enter">
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px">
+            <!-- 左：参数输入区 -->
+            <div>
+                <!-- 项目信息 -->
+                <div class="groupbox">
+                    <span class="groupbox-title">项目信息</span>
+                    <div class="param-cols-3">
+                        <div class="param-row">
+                            <span class="param-label">项目名称</span>
+                            <input class="hb-input" @bind="_projectName" placeholder="输入项目名称" />
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">幕墙类型</span>
+                            <select class="hb-input" @bind="_curtainType">
+                                <option>全隐框</option>
+                                <option>半隐框</option>
+                                <option>明框</option>
+                                <option>点式</option>
+                                <option>单元式</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">建筑高度</span>
+                            <input class="hb-input" type="number" @bind="_height" step="0.1" />
+                            <span class="param-unit">m</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 风荷载参数 -->
+                <div class="groupbox">
+                    <span class="groupbox-title">风荷载参数</span>
+                    <div class="param-cols">
+                        <div class="param-row">
+                            <span class="param-label">重现期</span>
+                            <input class="hb-input" type="number" @bind="_returnPeriod" />
+                            <span class="param-unit">年</span>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">基本风压 w₀</span>
+                            <input class="hb-input" type="number" step="0.01" value="@((_selectedRegion?.W0 * 1000)?.ToString("F2") ?? "")" readonly />
+                            <span class="param-unit">kPa</span>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">受荷面积</span>
+                            <input class="hb-input" type="number" step="0.01" @bind="_structureArea" />
+                            <span class="param-unit">m²</span>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">调整系数 k₁</span>
+                            <input class="hb-input" type="number" step="0.1" @bind="_k1" />
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">调整系数 k₂</span>
+                            <input class="hb-input" type="number" step="0.1" @bind="_k2" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地面粗糙度与体型系数 -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="groupbox">
+                        <span class="groupbox-title">地面粗糙度类别</span>
+                        <div class="hb-radio-group">
+                            <label>
+                                <input type="radio" name="terrain" value="A" @onchange="@(() => _terrainCategory = "A")" checked="@(_terrainCategory == "A")" />
+                                A — 近海海面、海岛、海岸
+                            </label>
+                            <label>
+                                <input type="radio" name="terrain" value="B" @onchange="@(() => _terrainCategory = "B")" checked="@(_terrainCategory == "B")" />
+                                B — 田野、乡村、丘陵
+                            </label>
+                            <label>
+                                <input type="radio" name="terrain" value="C" @onchange="@(() => _terrainCategory = "C")" checked="@(_terrainCategory == "C")" />
+                                C — 有密集建筑群的城市市区
+                            </label>
+                            <label>
+                                <input type="radio" name="terrain" value="D" @onchange="@(() => _terrainCategory = "D")" checked="@(_terrainCategory == "D")" />
+                                D — 有密集高层建筑群的大城市
+                            </label>
+                        </div>
+                    </div>
+                    <div class="groupbox">
+                        <span class="groupbox-title">建筑体型系数</span>
+                        <div class="hb-radio-group">
+                            <label>
+                                <input type="radio" name="btype" value="Closed" @onchange="@(() => _buildingType = "Closed")" checked="@(_buildingType == "Closed")" />
+                                封闭式建筑
+                            </label>
+                            <label>
+                                <input type="radio" name="btype" value="Open" @onchange="@(() => _buildingType = "Open")" checked="@(_buildingType == "Open")" />
+                                开敞式建筑
+                            </label>
+                        </div>
+                        <div style="margin-top:8px">
+                            <div class="param-row">
+                                <span class="param-label">龙骨间距</span>
+                                <input class="hb-input" type="number" step="1" @bind="_mullionSpacing" />
+                                <span class="param-unit">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 计算按钮 + 结果 -->
+                @if (_result != null)
+                {
+                    <div class="groupbox page-enter">
+                        <span class="groupbox-title">风荷载计算结果</span>
+                        <div class="metric-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">面板风荷载 Wk</div>
+                                <div class="metric-value">@((_result.WkPanel * 1000).ToString("F3"))</div>
+                                <div class="metric-unit">kPa</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">构件风荷载 Wk</div>
+                                <div class="metric-value">@((_result.WkStructure * 1000).ToString("F3"))</div>
+                                <div class="metric-unit">kPa</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">基本风压 w₀</div>
+                                <div class="metric-value">@((_result.W0 * 1000).ToString("F3"))</div>
+                                <div class="metric-unit">kPa</div>
+                            </div>
+                        </div>
+                        @if (_result.Steps?.Count > 0)
+                        {
+                            <div class="divider"></div>
+                            <table class="hb-table" style="margin-top:4px">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px">序号</th>
+                                        <th>计算步骤</th>
+                                        <th>计算结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var step in _result.Steps)
+                                    {
+                                        <tr>
+                                            <td>@step.StepNo</td>
+                                            <td style="text-align:left">@step.Name</td>
+                                            <td>@step.Result</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- 右：地区选择表格 -->
+            <div>
+                <div class="groupbox">
+                    <span class="groupbox-title">地区选择</span>
+                    <div class="hb-search">
+                        <input class="hb-input" type="text" placeholder="搜索城市名..."
+                               @bind="_keyword" @bind:event="oninput" @bind:after="SearchRegions" />
+                        <button class="hb-btn" @onclick="SearchRegions">搜索</button>
+                    </div>
+                    @if (_selectedRegion != null)
+                    {
+                        <div class="config-banner">
+                            <span class="material-symbols-outlined" style="font-size:14px;color:var(--primary)">place</span>
+                            已选：<span class="config-value">@_selectedRegion.Name</span>
+                            · w₀ = @((_selectedRegion.W0 * 1000).ToString("F2")) kPa
+                        </div>
+                    }
+                    <div style="max-height:360px;overflow-y:auto;border:1px inset var(--border-input)">
+                        <table class="hb-table" style="font-size:11px">
+                            <thead>
+                                <tr>
+                                    <th>城市名</th>
+                                    <th>w₀(kPa)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var r in _filteredRegions)
+                                {
+                                    <tr class="@(r == _selectedRegion ? "selected" : "")"
+                                        @onclick="() => SelectRegion(r)">
+                                        <td style="text-align:left">@r.Name</td>
+                                        <td>@((r.W0 * 1000).ToString("F2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div class="wizard-bottom-bar">
+        <button class="hb-btn" @onclick="CalcWindLoad" disabled="@_loading">
+            @if (_loading) { <span class="spinner"></span> }
+            计算风荷载
+        </button>
+        <button class="hb-btn-primary hb-btn" @onclick="GoNext">
+            下一步 ▶
+        </button>
+    </div>
+</div>
+
+@code {
+    private string _keyword = "";
+    private string _projectName = "新建项目";
+    private string _curtainType = "全隐框";
+    private List<RegionDto> _allRegions = [];
+    private List<RegionDto> _filteredRegions = [];
+    private RegionDto? _selectedRegion;
+    private string _terrainCategory = "C";
+    private double _height = 100;
+    private int _returnPeriod = 50;
+    private string _buildingType = "Closed";
+    private double _structureArea = 4.95;
+    private double _k1 = 1.0;
+    private double _k2 = 1.0;
+    private double _mullionSpacing = 1200;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _allRegions = await Api.SearchRegionsAsync("");
+        _filteredRegions = _allRegions.Take(50).ToList();
+    }
+
+    private Task SearchRegions()
+    {
+        var kw = _keyword.Trim();
+        _filteredRegions = string.IsNullOrEmpty(kw)
+            ? _allRegions.Take(50).ToList()
+            : _allRegions.Where(r => r.Name.Contains(kw)).Take(50).ToList();
+        return Task.CompletedTask;
+    }
+
+    private void SelectRegion(RegionDto r)
+    {
+        _selectedRegion = r;
+        _keyword = "";
+    }
+
+    private async Task CalcWindLoad()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalculateWindLoadAsync(new
+            {
+                regionName = _selectedRegion?.Name,
+                returnPeriod = _returnPeriod,
+                height = _height,
+                terrainCategory = _terrainCategory,
+                buildingType = _buildingType,
+                structureArea = _structureArea,
+                k1 = _k1,
+                k2 = _k2
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+
+    private void GoNext()
+    {
+        Nav.NavigateTo("/wizard");
+    }
+}

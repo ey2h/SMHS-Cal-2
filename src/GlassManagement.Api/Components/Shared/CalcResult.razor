@@ -1,0 +1,96 @@
+@* 通用计算结果展示组件 *@
+
+@if (Result != null)
+{
+    <div class="card page-enter">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:0">
+                <span class="material-symbols-outlined">analytics</span> 计算结果
+            </div>
+            @if (Result.Passed)
+            {
+                <span class="badge-pass">
+                    <span class="material-symbols-outlined" style="font-size:16px">check_circle</span> 验算通过
+                </span>
+            }
+            else
+            {
+                <span class="badge-fail">
+                    <span class="material-symbols-outlined" style="font-size:16px">cancel</span> 验算不通过
+                </span>
+            }
+        </div>
+
+        @if (Result.StrengthCheck != null)
+        {
+            <RenderCheck Title="强度校核" Icon="fitness_center" Check="Result.StrengthCheck" Unit="MPa" />
+        }
+        @if (Result.DeflectionCheck != null)
+        {
+            <RenderCheck Title="挠度校核" Icon="straighten" Check="Result.DeflectionCheck" Unit="mm" />
+        }
+        @if (Result.FlexuralCheck != null)
+        {
+            <RenderCheck Title="抗弯校核" Icon="fitness_center" Check="Result.FlexuralCheck" Unit="MPa" />
+        }
+        @if (Result.ShearCheck != null)
+        {
+            <RenderCheck Title="抗剪校核" Icon="content_cut" Check="Result.ShearCheck" Unit="MPa" />
+        }
+        @if (Result.StabilityCheck != null)
+        {
+            <RenderCheck Title="稳定性校核" Icon="balance" Check="Result.StabilityCheck" Unit="" />
+        }
+        @if (Result.TransomAngleCheck != null)
+        {
+            <RenderCheck Title="横梁-角码" Icon="settings_input_component" Check="Result.TransomAngleCheck" Unit="" />
+        }
+        @if (Result.AngleMullionCheck != null)
+        {
+            <RenderCheck Title="角码-立柱" Icon="settings_input_component" Check="Result.AngleMullionCheck" Unit="" />
+        }
+        @if (Result.MullionStructureCheck != null)
+        {
+            <RenderCheck Title="立柱-主结构" Icon="settings_input_component" Check="Result.MullionStructureCheck" Unit="" />
+        }
+
+        @if (Result.LayerResults?.Count > 0)
+        {
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">layers</span> 逐层结果
+            </div>
+            @foreach (var lr in Result.LayerResults)
+            {
+                <div class="check-item" style="@(lr.StressOk && lr.DeflectionOk ? "" : "border-left:3px solid var(--red)")">
+                    <div style="font-weight:600;margin-bottom:6px">@lr.Description</div>
+                    <div class="check-row"><span>应力 σ</span><span class="value">@lr.Stress.ToString("F2") MPa ≤ @lr.AllowableStress.ToString("F2") MPa</span></div>
+                    <div class="check-row"><span>挠度</span><span class="value">@lr.Deflection.ToString("F2") mm</span></div>
+                    <div class="check-row"><span>荷载分配系数 φ</span><span class="value">@lr.LoadShareFactor.ToString("F3")</span></div>
+                </div>
+            }
+        }
+
+        @if (Result.Steps?.Count > 0)
+        {
+            <div class="divider"></div>
+            <div class="section-title">
+                <span class="material-symbols-outlined">format_list_numbered</span> 计算步骤
+            </div>
+            <div class="step-list">
+                @foreach (var step in Result.Steps)
+                {
+                    <div class="step-item">
+                        <span class="step-badge">@step.StepNo</span>
+                        <span class="step-name">@step.Name</span>
+                        <span class="step-result">@step.Result</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public CalcResultDto? Result { get; set; }
+}

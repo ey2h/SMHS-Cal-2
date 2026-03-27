@@ -1,0 +1,418 @@
+@using System.Text.Json
+@using static GlassManagement.Api.Components.Pages.Wizard
+@inject GlassApiClient Api
+
+<!-- 标题条 -->
+<div class="hb-title-bar">@(Input.CurtainWallType)幕墙计算 - 基本参数输入</div>
+
+<!-- 幕墙类型选择 -->
+<fieldset class="groupbox" style="margin-bottom:8px">
+    <legend class="groupbox-title">幕墙类型</legend>
+    <div class="param-row">
+        <span class="param-label">幕墙类型</span>
+        <select class="hb-input" style="width:160px" @bind="Input.CurtainWallType">
+            <option>全隐框玻璃</option>
+            <option>半隐框玻璃</option>
+            <option>明框玻璃</option>
+            <option>金属板</option>
+            <option>天然石材</option>
+            <option>人造板材</option>
+        </select>
+    </div>
+</fieldset>
+
+<!-- 上部参数区：5列 -->
+<div class="hb-5cols">
+    <!-- 第1列：重现期 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">重现期 (?)</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="period" checked="@(Input.ReturnPeriod==50)" @onchange="() => Input.ReturnPeriod=50" />50年</label>
+            <label><input type="radio" name="period" checked="@(Input.ReturnPeriod==100)" @onchange="() => Input.ReturnPeriod=100" />100年</label>
+        </div>
+        <label class="hb-checkbox" style="margin-top:4px">
+            <input type="checkbox" @bind="Input.SnowSensitive" />雪荷载敏感结构
+        </label>
+        <div class="param-row" style="margin-top:6px">
+            <span class="param-label" style="min-width:50px">计算标高</span>
+            <input class="hb-input" style="width:70px" type="number" @bind="Input.CalcElevation" step="0.1" />
+            <span class="param-unit">m</span>
+        </div>
+    </fieldset>
+
+    <!-- 第2列：地面类型 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">地面类型 (?)</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="terrain" checked="@(Input.TerrainCategory=="A")" @onchange='() => Input.TerrainCategory="A"' />A类地形</label>
+            <label><input type="radio" name="terrain" checked="@(Input.TerrainCategory=="B")" @onchange='() => Input.TerrainCategory="B"' />B类地形</label>
+            <label><input type="radio" name="terrain" checked="@(Input.TerrainCategory=="C")" @onchange='() => Input.TerrainCategory="C"' />C类地形</label>
+            <label><input type="radio" name="terrain" checked="@(Input.TerrainCategory=="D")" @onchange='() => Input.TerrainCategory="D"' />D类地形</label>
+        </div>
+    </fieldset>
+
+    <!-- 第3列：外部局部体型系数 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">外部局部体型系数 (?)</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="extshape" checked="@(Input.ExternalShapeMode=="wall_center")" @onchange='() => Input.ExternalShapeMode="wall_center"' />墙面区</label>
+            <label><input type="radio" name="extshape" checked="@(Input.ExternalShapeMode=="wall_corner")" @onchange='() => Input.ExternalShapeMode="wall_corner"' />墙角边区</label>
+        </div>
+        <div style="margin:3px 0">
+            <button class="hb-btn" style="height:22px;padding:0 8px;font-size:11px" type="button">帮助</button>
+        </div>
+        <label><input type="radio" name="extshape" checked="@(Input.ExternalShapeMode=="custom")" @onchange='() => Input.ExternalShapeMode="custom"' />人工给定</label>
+        @if (Input.ExternalShapeMode == "custom")
+        {
+            <input class="hb-input" style="width:70px;margin-top:2px" type="number" @bind="Input.ExternalShapeValue" step="0.1" />
+        }
+    </fieldset>
+
+    <!-- 第4列：内部局部体型系数 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">内部局部体型系数 (?)</legend>
+        <div class="hb-radio-group" style="font-size:11px">
+            <label><input type="radio" name="intshape" checked="@(Input.InternalShapeMode=="sealed")" @onchange='() => Input.InternalShapeMode="sealed"' />封闭式建筑物</label>
+            <label><input type="radio" name="intshape" checked="@(Input.InternalShapeMode=="open_002")" @onchange='() => Input.InternalShapeMode="open_002"' />仅一面墙有主导洞口,0.10&gt;开孔率&gt;0.02</label>
+            <label><input type="radio" name="intshape" checked="@(Input.InternalShapeMode=="open_010")" @onchange='() => Input.InternalShapeMode="open_010"' />仅一面墙有主导洞口,0.30&gt;开孔率&gt;0.10</label>
+            <label><input type="radio" name="intshape" checked="@(Input.InternalShapeMode=="open_030")" @onchange='() => Input.InternalShapeMode="open_030"' />仅一面墙有主导洞口,开孔率&gt;0.30</label>
+            <label><input type="radio" name="intshape" checked="@(Input.InternalShapeMode=="custom")" @onchange='() => Input.InternalShapeMode="custom"' />其它情况(人工给定)</label>
+        </div>
+        @if (Input.InternalShapeMode == "custom")
+        {
+            <input class="hb-input" style="width:70px;margin-top:2px" type="number" @bind="Input.InternalShapeValue" step="0.1" />
+        }
+    </fieldset>
+
+    <!-- 第5列：风荷载标准值取值 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">风荷载标准值取值 (?)</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="windmode" checked="@(Input.WindLoadMode=="code_min")" @onchange='() => Input.WindLoadMode="code_min"' />按规范不小于1kPa</label>
+            <label>
+                <input type="radio" name="windmode" checked="@(Input.WindLoadMode=="custom")" @onchange='() => Input.WindLoadMode="custom"' />人工给定
+                @if (Input.WindLoadMode == "custom")
+                {
+                    <input class="hb-input" style="width:60px;display:inline" type="number" @bind="Input.WindLoadCustom" step="0.01" />
+                    <span class="param-unit">kPa</span>
+                }
+            </label>
+            <label><input type="radio" name="windmode" checked="@(Input.WindLoadMode=="actual")" @onchange='() => Input.WindLoadMode="actual"' />按实际计算结果</label>
+        </div>
+    </fieldset>
+</div>
+
+<!-- 下部参数区：3列 -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:4px 0">
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">幕墙结构</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="cwstruct" checked="@(Input.CurtainWallStructure=="构件式")" @onchange='() => Input.CurtainWallStructure="构件式"' />构件式（框架式）幕墙</label>
+            <label><input type="radio" name="cwstruct" checked="@(Input.CurtainWallStructure=="单元式")" @onchange='() => Input.CurtainWallStructure="单元式"' />单元式幕墙</label>
+        </div>
+    </fieldset>
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">幕墙横框结构</legend>
+        <div class="hb-radio-group">
+            <label><input type="radio" name="transom" checked="@(Input.TransomStructure=="无中横")" @onchange='() => Input.TransomStructure="无中横"' />无中横结构</label>
+            <label><input type="radio" name="transom" checked="@(Input.TransomStructure=="有中横")" @onchange='() => Input.TransomStructure="有中横"' />有中横结构</label>
+        </div>
+    </fieldset>
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">玻璃配置</legend>
+        <div class="hb-radio-group" style="font-size:11px">
+            @foreach (var g in _glassConfigs)
+            {
+                <label><input type="radio" name="glassconf" checked="@(Input.GlassConfig==g)" @onchange="() => Input.GlassConfig=g" />@g</label>
+            }
+        </div>
+    </fieldset>
+</div>
+
+<!-- 中部参数区 -->
+<div class="hb-mid-area">
+    <!-- 左侧：龙骨间距 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">龙骨间距</legend>
+        <table class="hb-param-table">
+            <tr>
+                <td class="param-label">立柱左分格宽度</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.LeftPanelWidth" step="1" /></td>
+                <td class="param-unit">mm</td>
+                <td class="param-label" style="padding-left:12px">横框上分格高度</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.UpperPanelHeight" step="1" /></td>
+                <td class="param-unit">mm</td>
+            </tr>
+            <tr>
+                <td class="param-label">立柱右分格宽度</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.RightPanelWidth" step="1" /></td>
+                <td class="param-unit">mm</td>
+                <td class="param-label" style="padding-left:12px">横框下分格高度</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.LowerPanelHeight" step="1" /></td>
+                <td class="param-unit">mm</td>
+            </tr>
+            <tr>
+                <td class="param-label">中横框上分格高</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.UpperMidTransom" step="1" /></td>
+                <td class="param-unit">mm</td>
+                <td class="param-label" style="padding-left:12px">中横框下分格高</td>
+                <td><input class="hb-input" style="width:70px" type="number" @bind="Input.LowerMidTransom" step="1" /></td>
+                <td class="param-unit">mm</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <!-- 中间：修正系数+抗震 -->
+    <fieldset class="groupbox">
+        <legend class="groupbox-title">修正参数</legend>
+        <div class="param-row">
+            <span class="param-label">地形修正系数</span>
+            <input class="hb-input" style="width:60px" type="number" @bind="Input.TerrainCorrectionFactor" step="0.1" />
+            <span class="param-label" style="margin-left:12px">风向影响系数</span>
+            <input class="hb-input" style="width:60px" type="number" @bind="Input.WindDirectionFactor" step="0.1" />
+        </div>
+        <div style="margin-top:6px">
+            <span class="param-label" style="display:block;text-align:left;min-width:auto;margin-bottom:3px">抗震设防分类</span>
+            <div class="hb-radio-group">
+                @foreach (var c in new[] { "标准设防类", "重点设防类", "特殊设防类", "适度设防类" })
+                {
+                    <label><input type="radio" name="seismic" checked="@(Input.SeismicCategory==c)" @onchange="() => Input.SeismicCategory=c" />@c</label>
+                }
+            </div>
+        </div>
+        <div class="param-row" style="margin-top:6px">
+            <span class="param-label">场地类型</span>
+            <select class="hb-input" style="width:100px" @bind="Input.SiteCategory">
+                <option value="I">I类场地</option>
+                <option value="II">II类场地</option>
+                <option value="III">III类场地</option>
+                <option value="IV">IV类场地</option>
+            </select>
+        </div>
+    </fieldset>
+</div>
+
+<!-- 地区参数区 -->
+<fieldset class="groupbox">
+    <legend class="groupbox-title">地区参数</legend>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">
+        地区参数(新版GB18306-2015中，抗震参数细分到街道与乡镇...)
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px">
+        <button class="hb-btn" style="height:24px;font-size:11px" type="button" @onclick="SearchRegion">查找并定位地区</button>
+        <input class="hb-input" style="width:280px" placeholder="→请在此处输入待查找城市名(或城市名关键字)→" @bind="_regionSearch" @bind:event="oninput" />
+        <span style="color:var(--accent-orange);font-size:13px">★按</span>
+        <select class="hb-input" style="width:180px" @bind="Input.StandardCode">
+            <option>全国荷载规范</option>
+            <option>建筑荷载规范</option>
+            <option>广东省荷载规范(小于45米的低层建筑)</option>
+            <option>广东省荷载规范(大于45米高层建筑)</option>
+        </select>
+        <button class="hb-btn" style="height:24px;font-size:11px" type="button">计算荷载</button>
+        <button class="hb-btn" style="height:24px;font-size:11px" type="button">帮助</button>
+    </div>
+
+    <!-- 数据库表格 -->
+    <div class="region-list" style="max-height:200px">
+        @if (_loading)
+        {
+            <div style="text-align:center;padding:20px;color:var(--text-muted)"><span class="spinner"></span> 加载中...</div>
+        }
+        else
+        {
+            <table class="hb-table">
+                <thead>
+                    <tr>
+                        <th>地区名称</th>
+                        <th>50年基本风压</th>
+                        <th>100年基本风压</th>
+                        <th>抗震烈度</th>
+                        <th>基本地震动峰值加速度</th>
+                        <th>αmax</th>
+                        <th>极限温差</th>
+                        <th>50年基本雪压</th>
+                        <th>100年基本雪压</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in _filteredRegions)
+                    {
+                        var name = GetStr(r, "name");
+                        var isSelected = name == Input.SelectedRegion;
+                        <tr class="@(isSelected ? "selected" : "")" @onclick="() => SelectRegion(r)">
+                            <td style="text-align:left">@name</td>
+                            <td>@GetNum(r, "windPressure50")</td>
+                            <td>@GetNum(r, "windPressure100")</td>
+                            <td>@GetNum(r, "seismicIntensity")</td>
+                            <td>@GetNum(r, "peakAcceleration")</td>
+                            <td>@GetNum(r, "alphaMax")</td>
+                            <td>@GetNum(r, "temperatureDiff")</td>
+                            <td>@GetNum(r, "snowPressure50")</td>
+                            <td>@GetNum(r, "snowPressure100")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</fieldset>
+
+<!-- 底部 -->
+<div style="display:flex;align-items:center;gap:16px;margin-top:8px;padding:4px 0">
+    <button class="hb-btn" style="height:26px;font-size:12px;padding:0 12px;background:@(Input.AutoGravity?"#4a7c3f":"#6b6b6b");color:#fff" type="button" @onclick="OpenGravityDialog">
+        参数预置@(Input.AutoGravity?"中":"关")
+    </button>
+    <label class="hb-checkbox"><input type="checkbox" @bind="Input.TempDiff80" />按幕墙规范考虑80℃极限温差</label>
+</div>
+
+<!-- 结构自重参数设置弹窗 -->
+@if (_showGravityDialog)
+{
+    <div class="hb-modal-overlay" @onclick="CloseGravityDialog">
+        <div class="hb-modal-dialog" style="width:860px;max-height:80vh" @onclick:stopPropagation>
+            <div class="hb-title-bar" style="margin:-1px -1px 0 -1px;border-radius:3px 3px 0 0">结构自重参数设置</div>
+            <div style="padding:10px;font-size:11px;color:var(--text-secondary);line-height:1.6;background:var(--bg-surface)">
+                软件在立柱计算、横梁计算、埋件计算、连接件计算等情况下，采用的系统自重参数可以在本表中修改。其实情况下的相关自重参数在对应计算界面中改动。<br/>
+                对于常规面板厚度的幕墙等结构来说，软件默认参数已经比较合适，结构自重超过表中给定值的结构，用户需要自行估算结构自重并在本表中修改后再做具体计算，计算完成后请记得回来把参数恢复回默认值。<br/>
+                <b>下表各单位为N/平米</b>
+            </div>
+            <div style="padding:0 10px;overflow-y:auto;max-height:calc(80vh - 180px)">
+                <table class="hb-table" style="font-size:12px">
+                    <thead>
+                        <tr>
+                            <th style="width:36px">序号</th>
+                            <th style="text-align:left">幕墙类型</th>
+                            <th style="width:110px">立柱及主体自重</th>
+                            <th style="width:110px">计算横梁时自重</th>
+                            <th style="text-align:left">软件初始默认值(适用范围)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < _gravityParams.Count; i++)
+                        {
+                            var idx = i;
+                            var p = _gravityParams[idx];
+                            <tr class="@(idx == _selectedGravityRow ? "selected" : "")" @onclick="() => _selectedGravityRow = idx">
+                                <td>@(idx + 1)</td>
+                                <td style="text-align:left">@p.TypeName</td>
+                                <td><input class="hb-input" style="width:80px;text-align:center" type="number" @bind="p.ColumnWeight" step="10" /></td>
+                                <td><input class="hb-input" style="width:80px;text-align:center" type="number" @bind="p.BeamWeight" step="10" /></td>
+                                <td style="text-align:left;font-size:11px;color:var(--text-muted)">@p.DefaultScope</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-top:1px solid var(--border-color)">
+                <button class="hb-btn" style="height:28px;padding:0 16px" type="button" @onclick="RestoreGravityDefaults">恢复系统默认值</button>
+                <button class="hb-btn" style="height:28px;padding:0 20px" type="button" @onclick="CloseGravityDialog">退出</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Step1Data Input { get; set; } = new();
+
+    private string _regionSearch = "";
+    private List<JsonElement>? _allRegions;
+    private List<JsonElement> _filteredRegions = new();
+    private bool _loading = true;
+
+    private static readonly string[] _glassConfigs = { "单片玻璃", "中空+夹层玻璃", "中空玻璃", "双中空玻璃", "夹层玻璃", "双夹层-中空玻璃" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        _allRegions = await Api.GetRegionsAsync();
+        _loading = false;
+        FilterRegions();
+    }
+
+    private void SearchRegion()
+    {
+        FilterRegions();
+        StateHasChanged();
+    }
+
+    private void FilterRegions()
+    {
+        if (_allRegions == null) { _filteredRegions = new(); return; }
+        if (string.IsNullOrWhiteSpace(_regionSearch))
+            _filteredRegions = _allRegions.Take(100).ToList();
+        else
+            _filteredRegions = _allRegions
+                .Where(r => GetStr(r, "name").Contains(_regionSearch, StringComparison.OrdinalIgnoreCase))
+                .Take(100).ToList();
+    }
+
+    private void SelectRegion(JsonElement r)
+    {
+        Input.SelectedRegion = GetStr(r, "name");
+        Input.WindPressure50 = GetDbl(r, "windPressure50");
+        Input.WindPressure100 = GetDbl(r, "windPressure100");
+        Input.SeismicIntensity = (int)GetDbl(r, "seismicIntensity");
+        Input.PeakAcceleration = GetDbl(r, "peakAcceleration");
+        Input.AlphaMax = GetDbl(r, "alphaMax");
+        Input.TemperatureDiff = GetDbl(r, "temperatureDiff");
+        Input.SnowPressure50 = GetDbl(r, "snowPressure50");
+        Input.SnowPressure100 = GetDbl(r, "snowPressure100");
+    }
+
+    // ========== 结构自重参数设置 ==========
+    private bool _showGravityDialog = false;
+    private int _selectedGravityRow = -1;
+    private List<GravityParam> _gravityParams = new();
+
+    private void OpenGravityDialog()
+    {
+        if (_gravityParams.Count == 0) RestoreGravityDefaults();
+        _showGravityDialog = true;
+        Input.AutoGravity = true;
+    }
+
+    private void CloseGravityDialog() => _showGravityDialog = false;
+
+    private void RestoreGravityDefaults()
+    {
+        _gravityParams = GetDefaultGravityParams();
+        StateHasChanged();
+    }
+
+    private static List<GravityParam> GetDefaultGravityParams() => new()
+    {
+        new("单玻璃幕墙", 400, 300, "面板厚度不大于10mm时"),
+        new("中空或夹层玻璃幕墙", 500, 400, "面板总厚度不大于14mm时"),
+        new("中空夹层或双中空玻璃幕墙", 650, 550, "面板总厚度不大于20mm时"),
+        new("双夹层中空（共四片玻璃）玻璃幕墙", 750, 650, "面板总厚度不大于24mm时"),
+        new("金属板、蜂窝石材板、木纤维板幕墙", 400, 300, "常规金属板及木纤维板厚度不大于20mm时"),
+        new("常规石材幕墙", 1100, 1000, "面板厚度不大于35mm时"),
+        new("砂岩、石灰石", 900, 800, "面板厚度不大于25mm时"),
+        new("瓷板、陶板、纤维水泥板幕墙", 650, 550, "面板厚度不大于25mm时"),
+        new("微晶玻璃", 800, 700, "面板厚度不大于25mm时"),
+        new("单玻璃索、杆幕墙", 400, 0, "面板厚度不大于10mm时"),
+        new("双玻璃索、杆幕墙", 500, 0, "面板总厚度不大于14mm时"),
+        new("单玻璃栏杆", 400, 0, "面板厚度不大于15mm时"),
+        new("双玻璃栏杆", 500, 0, "面板总厚度不大于16mm时"),
+        new("单玻璃门窗", 400, 300, "面板厚度不大于10mm时"),
+        new("中空或夹层门窗", 500, 400, "面板总厚度不大于14mm时"),
+        new("中空夹层（或三玻双中空门窗）门窗", 650, 550, "面板总厚度不大于20mm时"),
+        new("双夹层中空（共四片玻璃）门窗", 750, 650, "面板总厚度不大于24mm时"),
+    };
+
+    private class GravityParam
+    {
+        public string TypeName { get; set; }
+        public int ColumnWeight { get; set; }
+        public int BeamWeight { get; set; }
+        public string DefaultScope { get; set; }
+        public GravityParam(string t, int c, int b, string s) { TypeName = t; ColumnWeight = c; BeamWeight = b; DefaultScope = s; }
+    }
+
+    private static string GetStr(JsonElement e, string prop) =>
+        e.TryGetProperty(prop, out var v) ? v.GetString() ?? "" : "";
+    private static double GetDbl(JsonElement e, string prop) =>
+        e.TryGetProperty(prop, out var v) ? v.GetDouble() : 0;
+    private static string GetNum(JsonElement e, string prop) =>
+        e.TryGetProperty(prop, out var v) ? v.ToString() : "0";
+}

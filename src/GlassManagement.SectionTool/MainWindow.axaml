@@ -1,0 +1,216 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:GlassManagement.SectionTool"
+        x:Class="GlassManagement.SectionTool.MainWindow"
+        x:DataType="local:MainViewModel"
+        Title="截面特性计算工具"
+        Width="1400" Height="900"
+        MinWidth="1100" MinHeight="700"
+        Background="#F5F3FF"
+        WindowStartupLocation="CenterScreen">
+
+    <DockPanel>
+        <!-- Top bar -->
+        <Border DockPanel.Dock="Top" Background="#512BD4" Padding="20,12">
+            <DockPanel>
+                <TextBlock Text="截面特性计算工具" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding StatusText}" Foreground="#E8E5F8" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="13"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Bottom: Browse panel (collapsible) -->
+        <Expander DockPanel.Dock="Bottom" Header="📋 型材参数库浏览" IsExpanded="{Binding IsBrowseExpanded}" Margin="12,0,12,12">
+            <Border Classes="Card" Margin="0,8,0,0">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12" Margin="0,0,0,8">
+                        <TextBlock Text="分类筛选:" VerticalAlignment="Center" Classes="FieldLabel"/>
+                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding BrowseCategory}" Width="200"/>
+                        <Button Content="刷新" Command="{Binding RefreshProfilesCommand}" Classes="Secondary"/>
+                        <Button Content="删除选中" Command="{Binding DeleteSelectedProfileCommand}" Classes="Danger"/>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding BrowseProfiles}" SelectedItem="{Binding SelectedBrowseProfile}"
+                              AutoGenerateColumns="False" IsReadOnly="True" Height="180"
+                              GridLinesVisibility="Horizontal" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="名称" Binding="{Binding 名称}" Width="120"/>
+                            <DataGridTextColumn Header="A(cm²)" Binding="{Binding A, StringFormat=F4}" Width="80"/>
+                            <DataGridTextColumn Header="Ix(cm⁴)" Binding="{Binding Ix, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="Iy(cm⁴)" Binding="{Binding Iy, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="Wx1(cm³)" Binding="{Binding Wx1, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="Wx2(cm³)" Binding="{Binding Wx2, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="Wy1(cm³)" Binding="{Binding Wy1, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="Wy2(cm³)" Binding="{Binding Wy2, StringFormat=F4}" Width="90"/>
+                            <DataGridTextColumn Header="壁厚(mm)" Binding="{Binding 壁厚, StringFormat=F2}" Width="80"/>
+                            <DataGridTextColumn Header="腹板(mm)" Binding="{Binding 腹板宽度, StringFormat=F2}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Expander>
+
+        <!-- Main 3-column layout -->
+        <Grid Margin="12" ColumnDefinitions="320,*,300">
+
+            <!-- LEFT: Input panel -->
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12" Margin="0,0,12,0">
+
+                    <!-- Section type -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="截面类型" Classes="SectionTitle"/>
+                            <RadioButton Content="常规截面" IsChecked="{Binding SectionType, Converter={x:Static local:Converters.StringEquals}, ConverterParameter=Normal}" GroupName="SType"/>
+                            <RadioButton Content="断热立柱" IsChecked="{Binding SectionType, Converter={x:Static local:Converters.StringEquals}, ConverterParameter=BreakHeatColumn}" GroupName="SType"/>
+                            <RadioButton Content="断热横梁" IsChecked="{Binding SectionType, Converter={x:Static local:Converters.StringEquals}, ConverterParameter=BreakHeatBeam}" GroupName="SType"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Outer boundary -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <DockPanel>
+                                <TextBlock Text="外轮廓坐标" Classes="SectionTitle" VerticalAlignment="Center"/>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                    <Button Content="+" Command="{Binding AddOuterPointCommand}" Width="32" Height="28" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                    <Button Content="−" Command="{Binding RemoveOuterPointCommand}" Width="32" Height="28" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </DockPanel>
+                            <DataGrid ItemsSource="{Binding OuterPoints}" AutoGenerateColumns="False"
+                                      Height="160" GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                                      CanUserReorderColumns="False" CanUserSortColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="X" Binding="{Binding X}" Width="*"/>
+                                    <DataGridTextColumn Header="Y" Binding="{Binding Y}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Content="📋 从剪贴板粘贴" Click="OnPasteClicked" Classes="Secondary" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Holes -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <DockPanel>
+                                <TextBlock Text="内孔" Classes="SectionTitle" VerticalAlignment="Center"/>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                    <Button Content="+ 内孔" Command="{Binding AddHoleCommand}" Classes="Secondary" Padding="8,4"/>
+                                    <Button Content="− 内孔" Command="{Binding RemoveHoleCommand}" Padding="8,4"/>
+                                </StackPanel>
+                            </DockPanel>
+                            <ItemsControl ItemsSource="{Binding Holes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="local:HoleGroup">
+                                        <StackPanel Spacing="4" Margin="0,4">
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12"/>
+                                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                                    <Button Content="+" Tag="{Binding}" Click="OnAddHolePoint" Width="28" Height="24" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                    <Button Content="−" Tag="{Binding}" Click="OnRemoveHolePoint" Width="28" Height="24" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                </StackPanel>
+                                            </DockPanel>
+                                            <DataGrid ItemsSource="{Binding Points}" AutoGenerateColumns="False"
+                                                      Height="100" GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                                                      CanUserReorderColumns="False" CanUserSortColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="X" Binding="{Binding X}" Width="*"/>
+                                                    <DataGridTextColumn Header="Y" Binding="{Binding Y}" Width="*"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Break heat params -->
+                    <Border Classes="Card" IsVisible="{Binding IsBreakHeat}">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="断热参数" Classes="SectionTitle"/>
+                            <TextBlock Text="组合弹性值 (穿条80/注胶1600)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding CompositeElasticity}"/>
+                            <TextBlock Text="跨度 (mm)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding SpanLength}"/>
+                            <TextBlock Text="侧面1坐标 (X,Y 每行一个)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding Side1Text}" AcceptsReturn="True" Height="80" TextWrapping="Wrap"/>
+                            <TextBlock Text="侧面2坐标 (X,Y 每行一个)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding Side2Text}" AcceptsReturn="True" Height="80" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Calculate button -->
+                    <Button Content="🔢 计算截面特性" Command="{Binding CalculateCommand}" Classes="Primary" HorizontalAlignment="Stretch" Height="40" FontSize="15"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- CENTER: Preview -->
+            <Border Grid.Column="1" Classes="Card" Margin="0,0,12,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="截面预览" Classes="SectionTitle"/>
+                    <Canvas x:Name="PreviewCanvas" Background="#FAFAFA" ClipToBounds="True"/>
+                </DockPanel>
+            </Border>
+
+            <!-- RIGHT: Results + Import -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12">
+
+                    <!-- Results -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="计算结果" Classes="SectionTitle"/>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBlock Text="单位:" VerticalAlignment="Center" Classes="FieldLabel"/>
+                                <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding UnitMode}" Width="80" HorizontalAlignment="Right">
+                                    <ComboBoxItem Content="mm" Tag="mm"/>
+                                    <ComboBoxItem Content="cm" Tag="cm"/>
+                                </ComboBox>
+                            </DockPanel>
+                            <TextBox Text="{Binding ResultText}" IsReadOnly="True" AcceptsReturn="True" Height="300"
+                                     TextWrapping="Wrap" FontFamily="Consolas, Noto Sans SC Mono, monospace" FontSize="12.5"
+                                     BorderThickness="0" Background="#F9FAFB"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Height="1" Background="#E5E7EB"/>
+
+                    <!-- Import to DB -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="导入数据库" Classes="SectionTitle"/>
+
+                            <TextBlock Text="数据库文件" Classes="FieldLabel"/>
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4">
+                                    <Button Content="📂" Click="OnBrowseDb" ToolTip.Tip="浏览..." Width="32" Height="32"/>
+                                    <Button Content="🆕" Click="OnCreateDb" ToolTip.Tip="新建数据库" Width="32" Height="32"/>
+                                </StackPanel>
+                                <ComboBox ItemsSource="{Binding DatabaseFiles}" SelectedItem="{Binding SelectedDatabase}" HorizontalAlignment="Stretch">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" FontSize="11"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </DockPanel>
+
+                            <TextBlock Text="型材名称" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding ProfileName}" Watermark="输入型材名称..."/>
+
+                            <TextBlock Text="型材分类" Classes="FieldLabel"/>
+                            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" HorizontalAlignment="Stretch"/>
+
+                            <TextBlock Text="连接面壁厚 (mm)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding WallThickness}"/>
+
+                            <TextBlock Text="受剪腹板总宽度 (mm)" Classes="FieldLabel"/>
+                            <TextBox Text="{Binding ShearWebWidth}"/>
+
+                            <Button Content="💾 导入到数据库" Command="{Binding ImportCommand}" Classes="Primary" HorizontalAlignment="Stretch" Height="36"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>

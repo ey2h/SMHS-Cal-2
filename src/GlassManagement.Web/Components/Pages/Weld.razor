@@ -1,0 +1,74 @@
+@page "/weld"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+
+<div class="page-enter">
+    <h1 class="page-title">焊缝计算</h1>
+    <p class="page-subtitle">L型角焊缝承载力验算</p>
+
+    <div class="card">
+        <div class="section-title">
+            <span class="material-symbols-outlined">construction</span> 焊缝参数
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">竖向焊缝长 Lv (mm)</label>
+                <input class="input-field" type="number" @bind="_verticalWeldLength" />
+            </div>
+            <div class="form-group">
+                <label class="label">横向焊缝长 Lh (mm)</label>
+                <input class="input-field" type="number" @bind="_horizontalWeldLength" />
+            </div>
+            <div class="form-group">
+                <label class="label">焊角高 hf (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="_filletSize" />
+            </div>
+            <div class="form-group">
+                <label class="label">轴向拉力 N (N)</label>
+                <input class="input-field" type="number" @bind="_tensionForce" />
+            </div>
+            <div class="form-group">
+                <label class="label">剪力 V (N)</label>
+                <input class="input-field" type="number" @bind="_shearForce" />
+            </div>
+            <div class="form-group">
+                <label class="label">弯矩 M (N·mm)</label>
+                <input class="input-field" type="number" @bind="_bendingMoment" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <button class="btn-primary" @onclick="Calculate" disabled="@_loading">
+                @if (_loading) { <span class="spinner"></span> }
+                <span class="material-symbols-outlined">calculate</span> 开始计算
+            </button>
+        </div>
+    </div>
+
+    <CalcResult Result="_result" />
+</div>
+
+@code {
+    private double _verticalWeldLength = 100, _horizontalWeldLength = 80, _filletSize = 6;
+    private double _tensionForce = 5000, _shearForce = 3000, _bendingMoment = 100000;
+    private bool _loading;
+    private CalcResultDto? _result;
+
+    private async Task Calculate()
+    {
+        _loading = true;
+        try
+        {
+            _result = await Api.CalcWeldAsync(new
+            {
+                verticalWeldLength = _verticalWeldLength,
+                horizontalWeldLength = _horizontalWeldLength,
+                filletSize = _filletSize,
+                tensionForce = _tensionForce,
+                shearForce = _shearForce,
+                bendingMoment = _bendingMoment
+            });
+        }
+        catch { }
+        _loading = false;
+    }
+}

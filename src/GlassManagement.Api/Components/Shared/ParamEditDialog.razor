@@ -1,0 +1,66 @@
+@using GlassManagement.Api.Components.Pages
+
+<div class="modal-overlay" @onclick="OnCancel">
+    <div class="modal-box" @onclick:stopPropagation="true" style="max-width:560px">
+        <h3 style="margin:0 0 20px;font-size:16px">@(IsNew ? "新增记录" : "编辑记录") - @TableName</h3>
+
+        <div class="param-edit-form">
+            @foreach (var col in Columns)
+            {
+                <div class="form-row">
+                    <label>@col.Label</label>
+                    <input type="text" value="@GetValue(col.Key)"
+                           @onchange="@(e => SetValue(col.Key, e.Value?.ToString() ?? string.Empty))"
+                           placeholder="@col.Label" />
+                </div>
+            }
+        </div>
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div style="color:var(--red);font-size:13px;margin:12px 0">@_error</div>
+        }
+
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+            <button class="btn-ghost" @onclick="OnCancel">取消</button>
+            <button class="btn-primary" @onclick="DoSave">保存</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string TableName { get; set; } = "";
+    [Parameter] public List<ParamsManager.ColDef> Columns { get; set; } = [];
+    [Parameter] public Dictionary<string, string> EditData { get; set; } = new();
+    [Parameter] public bool IsNew { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private Dictionary<string, string> _data = new();
+    private string _error = "";
+
+    protected override void OnParametersSet()
+    {
+        _data = new Dictionary<string, string>(EditData);
+    }
+
+    private string GetValue(string key) => _data.TryGetValue(key, out var v) ? v : "";
+
+    private void SetValue(string key, string val) => _data[key] = val;
+
+    private async Task DoSave()
+    {
+        // 基本验证：检查必填字段（第一列通常是名称/编码）
+        if (Columns.Count > 0)
+        {
+            var firstKey = Columns[0].Key;
+            if (string.IsNullOrWhiteSpace(GetValue(firstKey)))
+            {
+                _error = $"{Columns[0].Label} 不能为空";
+                return;
+            }
+        }
+        _error = "";
+        await OnSave.InvokeAsync(_data);
+    }
+}

@@ -1,0 +1,16 @@
+/* Minimal Apple Glass style tokens for初版 */
+:root {
+  --apple-bg: rgba(255, 255, 255, 0.75);
+  --apple-text: #1d1d1f;
+  --apple-border: rgba(0,0,0,0.08);
+  --apple-blur: 10px;
+  --apple-radius: 12px;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; color: var(--apple-text); }
+.apple-glass-shell { background: #f5f7fa; }
+.shell-header { font-weight:600; font-size:16px; }
+.nav-menu { background: rgba(255,255,255,.65); backdrop-filter: blur(6px); border-right:1px solid var(--apple-border); }
+.content { padding: 0; }
+
+/* Simple typography helpers for placeholders */
+.title { font-size: 1.25rem; font-weight: 600; }

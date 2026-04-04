@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using GlassManagement.Api.Services;
 
 namespace GlassManagement.Api.Controllers;
@@ -42,7 +42,7 @@ public class CalcBookPdfController : ControllerBase
     {
         try
         {
-            var word = _wordSvc.GenerateGlassCurtainWallReport(input);
+            var word = _wordV2Svc.GenerateGlassCurtainWallReport(input);
             var filename = $"鐜荤拑骞曞璁＄畻涔{input.ProjectName ?? "椤圭洰"}_{DateTime.Now:yyyyMMdd}.docx";
             return File(word, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", filename);
         }
@@ -73,7 +73,7 @@ public class CalcBookPdfController : ControllerBase
     public IActionResult GenerateWordDemo()
     {
         var input = CreateDemoInput();
-        var word = _wordSvc.GenerateGlassCurtainWallReport(input);
+        var word = _wordV2Svc.GenerateGlassCurtainWallReport(input);
         return File(word, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "鐜荤拑骞曞璁＄畻涔绀轰緥.docx");
     }
 
@@ -152,6 +152,3 @@ public class CalcBookPdfController : ControllerBase
         }
     };
 }
-
-
-

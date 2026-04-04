@@ -1,0 +1,49 @@
+@using GlassManagement.Api.Models
+@using Microsoft.AspNetCore.Components
+@inject HttpClient Http
+@using System.Net.Http.Json
+
+<div class="regions-selector" style="margin-bottom:8px;">
+  <label>地区</label>
+  <select class="form-control" value="@SelectedRegion" @onchange="OnRegionChanged">
+    @if (Regions != null)
+    {
+      foreach (var r in Regions)
+      {
+        <option value="@r.RegionId">@r.Name</option>
+      }
+    }
+  </select>
+</div>
+
+@code {
+  [Parameter]
+  public string SelectedRegion { get; set; }
+  [Parameter]
+  public EventCallback<string> SelectedRegionChanged { get; set; }
+
+  private List<RegionInfo> Regions { get; set; } = new List<RegionInfo>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      Regions = await Http.GetFromJsonAsync<List<RegionInfo>>("/api/regions");
+    }
+    catch
+    {
+      Regions = new List<RegionInfo> { new RegionInfo { RegionId = "default", Name = "默认区域" } };
+    }
+    if (string.IsNullOrEmpty(SelectedRegion) && Regions.Count > 0)
+    {
+      SelectedRegion = Regions[0].RegionId;
+      await SelectedRegionChanged.InvokeAsync(SelectedRegion);
+    }
+  }
+
+  private async Task OnRegionChanged(ChangeEventArgs e)
+  {
+    SelectedRegion = e.Value?.ToString();
+    await SelectedRegionChanged.InvokeAsync(SelectedRegion);
+  }
+}

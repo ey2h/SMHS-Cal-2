@@ -2,6 +2,7 @@
 @using GlassManagement.Ui.Shared.Models
 @using GlassManagement.Api.Models
 @inject System.Net.Http.HttpClient Http
+@inject Microsoft.JSInterop.IJSRuntime JS
 @using System.Text.Json
 @using System.Text
 @inherits Microsoft.AspNetCore.Components.ComponentBase
@@ -23,12 +24,16 @@
     }
   </div>
   <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
+  <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="PasteInputJsonAsync">粘贴输入 JSON</button>
+  <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="CopyInputJsonAsync">复制当前输入 JSON</button>
   <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3">提交阶段3</button>
   <CloudVizPane CloudViz="phase3CloudVizUI" />
+  <div class="phase3-status" style="margin-top:8px; color:#555; min-height:20px;">@Phase3Status</div>
 </div>
 
 @code {
   private string SelectedRegion3 { get; set; }
+  private string Phase3Status { get; set; } = string.Empty;
   private bool CanSubmitPhase3 => !string.IsNullOrWhiteSpace(SelectedRegion3) && Panels3.Count > 0;
   private List<PanelUI3> Panels3 { get; set; } = new List<PanelUI3>
   {
@@ -60,9 +65,76 @@
     Panels3.Remove(p);
   }
 
+  private void ResetPanels()
+  {
+    Panels3.Clear();
+    Panels3.Add(new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+  }
+
+  private string BuildPhase3InputJson()
+  {
+    var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
+    foreach (var p in Panels3)
+    {
+      input.Panels.Add(new GlassManagement.Api.Models.GlassPanelInput
+      {
+        PanelId = p.PanelId,
+        Type = (GlassManagement.Api.Models.GlassPanelType)Enum.Parse(typeof(GlassManagement.Api.Models.GlassPanelType), p.Type, true),
+        Width = p.Width,
+        Height = p.Height,
+        Thickness = p.Thickness,
+        Layers = new List<GlassManagement.Api.Models.GlassLayerInput> { new GlassManagement.Api.Models.GlassLayerInput { MaterialId = "default", Thickness = p.Thickness } }
+      });
+    }
+    return System.Text.Json.JsonSerializer.Serialize(input);
+  }
+
+  private async Task CopyInputJsonAsync()
+  {
+    var json = BuildPhase3InputJson();
+    try
+    {
+      await JS.InvokeVoidAsync("navigator.clipboard.writeText", json);
+      Phase3Status = "输入 JSON 已复制到剪贴板";
+    }
+    catch
+    {
+      Phase3Status = "复制失败，请手动复制";
+    }
+  }
+
+  private async Task PasteInputJsonAsync()
+  {
+    try
+    {
+      var json = await JS.InvokeAsync<string>("navigator.clipboard.readText");
+      if (string.IsNullOrWhiteSpace(json))
+      {
+        Phase3Status = "剪贴板没有文本";
+        return;
+      }
+      var input = System.Text.Json.JsonSerializer.Deserialize<GlassManagement.Api.Models.GlassInput>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+      if (input == null) { Phase3Status = "无法解析输入 JSON"; return; }
+      SelectedRegion3 = input.RegionId;
+      Panels3.Clear();
+      if (input.Panels != null && input.Panels.Count > 0)
+      {
+        foreach (var p in input.Panels)
+        {
+          Panels3.Add(new PanelUI3 { PanelId = p.PanelId, Type = p.Type.ToString(), Width = p.Width, Height = p.Height, Thickness = p.Thickness });
+        }
+      }
+      Phase3Status = "从剪贴板粘贴成功";
+    }
+    catch
+    {
+      Phase3Status = "粘贴失败";
+    }
+  }
+
   private async Task SubmitPhase3()
   {
-    if (!CanSubmitPhase3) return;
+    if (!CanSubmitPhase3) { Phase3Status = "请先完成区域选择与 Panel 编辑"; return; }
     var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
     foreach (var p in Panels3)
     {
@@ -97,6 +169,7 @@
         }
         phase3CloudVizUI = new GlassManagement.Ui.Shared.Models.CloudVizData { Points = pts };
       }
+      Phase3Status = "提交成功";
     }
   }
 

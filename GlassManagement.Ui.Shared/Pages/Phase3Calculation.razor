@@ -1,14 +1,109 @@
 @page "/phase3"
+@using GlassManagement.Ui.Shared.Models
+@using GlassManagement.Api.Models
+@inject System.Net.Http.HttpClient Http
+@using System.Text.Json
+@using System.Text
 @inherits Microsoft.AspNetCore.Components.ComponentBase
 
 <div class="phase3" style="padding:16px;">
   <h3>Phase 3 - 草案入口</h3>
-  <p>Phase 3 草案入口，后续扩展为正式实现。</p>
-  <div class="info-banner" style="margin-top:12px; padding:12px; border:1px solid #ccc; border-radius:6px;">
-    这是 Phase 3 草案入口。请在合并后提供进一步的实现指引。
+  <RegionsSelector @bind-SelectedRegion="SelectedRegion3" />
+  <div class="panels-builder" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+    @foreach (var p in Panels3)
+    {
+      <div class="panel-row" style="display:flex; gap:8px; align-items:center;">
+        <input class="form-control" placeholder="PanelId" style="width:120px;" @bind="p.PanelId" />
+        <input class="form-control" placeholder="Type" style="width:140px;" @bind="p.Type" />
+        <input class="form-control" placeholder="Width" style="width:100px;" @bind="p.Width" />
+        <input class="form-control" placeholder="Height" style="width:100px;" @bind="p.Height" />
+        <input class="form-control" placeholder="Thickness" style="width:90px;" @bind="p.Thickness" />
+        <button class="btn btn-secondary" @onclick="() => RemovePanel(p)" title="Remove">-</button>
+      </div>
+    }
   </div>
+  <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
+  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3">提交阶段3</button>
+  <CloudVizPane CloudViz="phase3CloudVizUI" />
 </div>
 
 @code {
-  // scaffold-only
+  private string SelectedRegion3 { get; set; }
+  private List<PanelUI3> Panels3 { get; set; } = new List<PanelUI3>
+  {
+    new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 }
+  };
+  private GlassManagement.Ui.Shared.Models.CloudVizData phase3CloudVizUI;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var regs = await Http.GetFromJsonAsync<List<GlassManagement.Api.Models.RegionInfo>>("/api/regions");
+      if (regs != null && regs.Count > 0)
+      {
+        SelectedRegion3 = regs[0].RegionId;
+      }
+    }
+    catch { /* ignore */ }
+  }
+
+  private void AddPanel()
+  {
+    int next = Panels3.Count + 1;
+    Panels3.Add(new PanelUI3 { PanelId = $"p3-{next}", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+  }
+
+  private void RemovePanel(PanelUI3 p)
+  {
+    Panels3.Remove(p);
+  }
+
+  private async Task SubmitPhase3()
+  {
+    var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
+    foreach (var p in Panels3)
+    {
+      input.Panels.Add(new GlassManagement.Api.Models.GlassPanelInput
+      {
+        PanelId = p.PanelId,
+        Type = (GlassManagement.Api.Models.GlassPanelType)Enum.Parse(typeof(GlassManagement.Api.Models.GlassPanelType), p.Type, true),
+        Width = p.Width,
+        Height = p.Height,
+        Thickness = p.Thickness,
+        Layers = new List<GlassManagement.Api.Models.GlassLayerInput> { new GlassManagement.Api.Models.GlassLayerInput { MaterialId = "default", Thickness = p.Thickness } }
+      });
+    }
+    var json = JsonSerializer.Serialize(input);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
+    var resp = await Http.PostAsync("/api/calculation/phase3", content);
+    if (resp.IsSuccessStatusCode)
+    {
+      var body = await resp.Content.ReadAsStringAsync();
+      var output = JsonSerializer.Deserialize<GlassManagement.Api.Models.GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+      if (output?.CloudViz != null)
+      {
+        var pts = new List<GlassManagement.Ui.Shared.Models.CloudVizPoint>();
+        int idx = 0;
+        foreach (var pr in output.PanelsResults)
+        {
+          double x = idx * 60;
+          double y = Math.Max(0, pr.Metrics.Deflection * 100);
+          double v = pr.Metrics.MaxStress;
+          pts.Add(new GlassManagement.Ui.Shared.Models.CloudVizPoint { X = x, Y = y, Value = v });
+          idx++;
+        }
+        phase3CloudVizUI = new GlassManagement.Ui.Shared.Models.CloudVizData { Points = pts };
+      }
+    }
+  }
+
+  private class PanelUI3
+  {
+    public string PanelId { get; set; } = "p3-1";
+    public string Type { get; set; } = "Single";
+    public int Width { get; set; } = 1200;
+    public int Height { get; set; } = 2400;
+    public int Thickness { get; set; } = 6;
+  }
 }

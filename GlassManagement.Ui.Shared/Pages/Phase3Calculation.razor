@@ -76,10 +76,14 @@
     var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
     foreach (var p in Panels3)
     {
+      if (!Enum.TryParse<GlassManagement.Api.Models.GlassPanelType>(p.Type, true, out var panelType))
+      {
+        continue; // skip invalid types
+      }
       input.Panels.Add(new GlassManagement.Api.Models.GlassPanelInput
       {
         PanelId = p.PanelId,
-        Type = (GlassManagement.Api.Models.GlassPanelType)Enum.Parse(typeof(GlassManagement.Api.Models.GlassPanelType), p.Type, true),
+        Type = panelType,
         Width = p.Width,
         Height = p.Height,
         Thickness = p.Thickness,
@@ -138,10 +142,16 @@
     var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
     foreach (var p in Panels3)
     {
+      if (!Enum.TryParse<GlassManagement.Api.Models.GlassPanelType>(p.Type, true, out var panelType))
+      {
+        // skip invalid panel type entries but keep status informative
+        Phase3Status = $"无效 Panel Type: {p.Type}";
+        continue;
+      }
       input.Panels.Add(new GlassManagement.Api.Models.GlassPanelInput
       {
         PanelId = p.PanelId,
-        Type = (GlassManagement.Api.Models.GlassPanelType)Enum.Parse(typeof(GlassManagement.Api.Models.GlassPanelType), p.Type, true),
+        Type = panelType,
         Width = p.Width,
         Height = p.Height,
         Thickness = p.Thickness,

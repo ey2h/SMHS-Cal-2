@@ -29,6 +29,7 @@
 
 @code {
   private string SelectedRegion3 { get; set; }
+  private bool CanSubmitPhase3 => !string.IsNullOrWhiteSpace(SelectedRegion3) && Panels3.Count > 0;
   private List<PanelUI3> Panels3 { get; set; } = new List<PanelUI3>
   {
     new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 }
@@ -61,6 +62,7 @@
 
   private async Task SubmitPhase3()
   {
+    if (!CanSubmitPhase3) return;
     var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
     foreach (var p in Panels3)
     {

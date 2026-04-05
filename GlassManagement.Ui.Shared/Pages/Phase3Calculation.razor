@@ -24,6 +24,8 @@
     }
   </div>
   <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
+  <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="LoadSample">加载示例面板</button>
+  <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="ClearAll">清空</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="PasteInputJsonAsync">粘贴输入 JSON</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="CopyInputJsonAsync">复制当前输入 JSON</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="LoadSample">加载示例面板</button>
@@ -224,5 +226,13 @@
     Panels3.Add(new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
     SelectedRegion3 = "default";
     Phase3Status = "已加载示例面板";
+  }
+
+  private void ClearAll()
+  {
+    Panels3.Clear();
+    Panels3.Add(new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    SelectedRegion3 = null;
+    Phase3Status = "已清空";
   }
 }

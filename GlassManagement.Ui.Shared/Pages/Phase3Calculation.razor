@@ -26,6 +26,7 @@
   <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="PasteInputJsonAsync">粘贴输入 JSON</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="CopyInputJsonAsync">复制当前输入 JSON</button>
+  <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="LoadSample">加载示例面板</button>
   <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3" disabled="@( !Phase3IsSubmittable )">提交阶段3</button>
   <CloudVizPane CloudViz="phase3CloudVizUI" />
   <div class="phase3-status" style="margin-top:8px; color:#555; min-height:20px;">@Phase3Status</div>
@@ -215,5 +216,13 @@
     public int Width { get; set; } = 1200;
     public int Height { get; set; } = 2400;
     public int Thickness { get; set; } = 6;
+  }
+
+  private void LoadSample()
+  {
+    Panels3.Clear();
+    Panels3.Add(new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    SelectedRegion3 = "default";
+    Phase3Status = "已加载示例面板";
   }
 }

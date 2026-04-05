@@ -26,7 +26,7 @@
   <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="PasteInputJsonAsync">粘贴输入 JSON</button>
   <button class="btn btn-secondary" style="margin-left:8px; margin-top:8px;" @onclick="CopyInputJsonAsync">复制当前输入 JSON</button>
-  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3">提交阶段3</button>
+  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3" disabled="@( !Phase3IsSubmittable )">提交阶段3</button>
   <CloudVizPane CloudViz="phase3CloudVizUI" />
   <div class="phase3-status" style="margin-top:8px; color:#555; min-height:20px;">@Phase3Status</div>
 </div>
@@ -136,8 +136,33 @@
     }
   }
 
+  private bool Phase3InputIsValid()
+  {
+    if (string.IsNullOrWhiteSpace(SelectedRegion3)) return false;
+    if (Panels3 == null || Panels3.Count == 0) return false;
+    foreach (var p in Panels3)
+    {
+      if (!Enum.TryParse<GlassManagement.Api.Models.GlassPanelType>(p.Type, true, out var _)) return false;
+    }
+    return true;
+  }
+
+  private bool ArePanelIdsUnique()
+  {
+    var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    foreach (var p in Panels3)
+    {
+      if (string.IsNullOrWhiteSpace(p.PanelId)) return false;
+      if (!seen.Add(p.PanelId)) return false;
+    }
+    return true;
+  }
+
+  private bool Phase3IsSubmittable => Phase3InputIsValid() && ArePanelIdsUnique();
+
   private async Task SubmitPhase3()
   {
+    if (!Phase3IsSubmittable) { Phase3Status = "输入无效，请检查区域与 Panel 配置（确保 PanelId 唯一且有效）"; return; }
     if (!CanSubmitPhase3) { Phase3Status = "请先完成区域选择与 Panel 编辑"; return; }
     var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase3", RegionId = SelectedRegion3 ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
     foreach (var p in Panels3)

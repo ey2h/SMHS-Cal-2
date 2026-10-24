@@ -42,7 +42,8 @@
 
 | 对象 | 地址 |
 |---|---|
-| V31 立柱函数 `sub_18BD010` | `0x18BD010–0x18E9555`（181,573B / 43,508 指令 / 189 个 rtcRound 定稿点）|
+| ⚠ **立柱函数更正**：`sub_89EA1D`（0x89EA1D–0x8A9F7E，46,433B，72 个 rtcRound）——**执行期未命中验证前仅算强证据**；依据：它引用「抗弯矩预选」`0x4D2318`、「抗弯强度计算值」`0x4D2554`，且是 5 个同构兄弟函数（面板×5）中的第一个 |
+| V31 `sub_18BD010` | `0x18BD010–0x18E9555`（181,573B / 189 rtcRound）——**实机在立柱页点预演时入口与内部 `0x18BD50F` 均未命中**，判定它不在立柱页路径上，极可能是「常用静力计算」那套 45 模型的函数 |
 | V35 对应立柱函数 | `0x1D442DA–0x1D70913`（181,817B，差 244）|
 | V31 跳板 → 立柱 | `vtable+0xA0 = 0x4579DC` → `e9 rel32` → 真函数；方法表 `0x41B40C`（+0x14=跳板）|
 | V31 槽数组 | `ds:[0x1C91168]`，16B/槽 VARIANT，BSTR 长度在 **ptr−4**；`[44]`A `[45]`lgA `[46]`μs1ψ `[47]`μs合 `[76]`g |
@@ -88,6 +89,14 @@
 `v31_attach.ps1`（basicsweep/colbase/psidisc/unitmid/midrig/hold）、`dump_v31_mem.py`、`v31_slot_probe_v2.py`、
 `ida_map.py`（风荷载索引）、`ida_blocks.py`（分块反编译）
 `ida_out/`：`v31_column_insns.txt`（43,508 行）、`v31_roundpoints_full.txt`、`v31_roundpoint_expr.tsv`
+
+## 七之二、调试器（2026-10-25 装）
+
+- 便携 **x64dbg**：`C://code//Glass//.tools//dbg//x64dbg//release//x32//x32dbg.exe`（32 位用 x32）
+  来源 `https://down.52pojie.cn/Tools/Debuggers/x64dbg_2026-05_27.zip`（直连可下，代理会 403）
+- 自建 ctypes 调试器 `local-data/recon/v31_bp_pic.py`（attach + 0xCC 断点 + 读寄存器/内存 + 看门狗强制 detach）
+- **血的教训**：调试器进程被打死时，Windows 会**连带杀掉被调试进程**（V31 因此死了 3 次）。
+  所以：单次运行必须 <15s、自带看门狗、绝不留后台调试器；杀掉 python 前先 detach。
 
 ## 八、踩过的坑（速记）
 

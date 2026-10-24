@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW32_Form32"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 线材优化数据输入 | client 918x568 | 42 nodes (17 labels) | pairs=5 spread=8px dropped=0 declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="线材优化数据输入" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="918" Height="568" Background="#F0F0F0" ClipToBounds="True">
+      <!-- 互斥参数面板（源程序按选项切换显示），共 3 套 -->
+      <TabControl Canvas.Left="6" Canvas.Top="7" Width="910" Height="537">
+        <TabItem Header="参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="905" Height="537" Background="#F0F0F0" ClipToBounds="True">
+          <TextBox Classes="hb" Canvas.Left="448" Canvas.Top="8" Width="449" Height="465" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <DataGrid Classes="hb" Canvas.Left="544" Canvas.Top="64" Width="201" Height="81"/>
+          <TextBox Classes="hb" Canvas.Left="504" Canvas.Top="194" Width="313" Height="25" FontSize="12" Text="北京**大厦**立面**型材套裁优化"/>
+          <TextBox Classes="hb" Canvas.Left="656" Canvas.Top="312" Width="33" Height="33" FontSize="12" Text="否"/>
+          <Button Classes="hb" Canvas.Left="468" Canvas.Top="360" Width="113" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="删除选定项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="236" Canvas.Top="376" Width="90" MinHeight="29" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="左侧表中参数保存到项目中" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="360" Canvas.Top="376" Width="80" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="删除项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="520" Canvas.Top="480" Width="153" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按算法一优化(优选算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="680" Canvas.Top="480" Width="113" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="结果保存到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="808" Canvas.Top="496" Width="73" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="832" Canvas.Top="504" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="520" Canvas.Top="508" Width="153" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按算法二优化" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="680" Canvas.Top="508" Width="113" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="结果保存到文件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="项目管理">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="905" Height="537" Background="#F0F0F0" ClipToBounds="True">
+          <TextBlock Classes="hb" Canvas.Left="256" Canvas.Top="32" Width="72" Height="13" Text="已有项目列表" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="432" Canvas.Top="200" Width="60" Height="13" Text="新建项目名" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Button Classes="hb" Canvas.Left="741" Canvas.Top="324" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="801" Canvas.Top="324" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="600" Canvas.Top="333" Width="113" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="741" Canvas.Top="348" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="801" Canvas.Top="348" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="面板参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="543" Height="368" Background="#F0F0F0" ClipToBounds="True">
+          <DataGrid Classes="hb" Canvas.Left="5" Canvas.Top="13" Width="201" Height="385"/>
+          <Border Classes="hbFrame" Canvas.Left="232" Canvas.Top="24" Width="308" Height="158"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="238" Canvas.Top="15" Text="结构胶参数"/>
+          <ListBox Classes="hb" Canvas.Left="181" Canvas.Top="53" Width="233" Height="462"/>
+          <ComboBox Classes="hb" Canvas.Left="301" Canvas.Top="169" Width="129" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="237" Canvas.Top="173" Width="48" Height="13" Text="优化方式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Button Classes="hb" Canvas.Left="85" Canvas.Top="181" Width="737" MinHeight="113" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="优化进行中，请稍候…… \n \n      优化时间因电脑配置、型材数量以及选用的算法的不同而不同，但是正常的情况下都应在1分钟以内（数据过多的不固定型材长度的套料方式用时会较长），如果等待时间过长，请点本按钮中断优化并检测数据是否过多！" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <TextBox Classes="hb" Canvas.Left="324" Canvas.Top="194" Width="57" Height="18" FontSize="12" Text="6000"/>
+          <TextBlock Classes="hb" Canvas.Left="237" Canvas.Top="197" Width="156" Height="13" Text="原料有效长度            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="301" Canvas.Top="217" Width="41" Height="18" FontSize="12" Text="50"/>
+          <TextBlock Classes="hb" Canvas.Left="237" Canvas.Top="221" Width="114" Height="13" Text="单增步长         mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="301" Canvas.Top="241" Width="57" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="237" Canvas.Top="245" Width="48" Height="13" Text="递增次数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="301" Canvas.Top="266" Width="57" Height="18" FontSize="12" Text="5"/>
+          <TextBlock Classes="hb" Canvas.Left="237" Canvas.Top="269" Width="132" Height="13" Text="切口宽度            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Button Classes="hb" Canvas.Left="221" Canvas.Top="293" Width="127" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="剪切板数据自动输入" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="365" Canvas.Top="293" Width="80" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="新建项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="493" Canvas.Top="325" Width="73" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="新建项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="241" Canvas.Top="333" Width="90" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="左表数据清空" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="365" Canvas.Top="333" Width="80" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="打开项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

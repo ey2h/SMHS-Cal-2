@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW23_AUTOCADCADCAD"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 截面特性计算(支持AUTOCAD、中望CAD、浩辰CAD) | client 854x499 | 54 nodes (20 labels) | pairs=8 spread=0px dropped=0 declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="截面特性计算(支持AUTOCAD、中望CAD、浩辰CAD)" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="854" Height="499" Background="#F0F0F0" ClipToBounds="True">
+      <Border Classes="hbPanel" Canvas.Left="3" Canvas.Top="7" Width="841" Height="465"/>
+      <DataGrid Classes="hb" Canvas.Left="6" Canvas.Top="11" Width="830" Height="142"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="23" Width="48" Height="13" Text="型材代号" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="23" Width="96" Height="13" Text="受剪腹板总宽度tx" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="48" Width="60" Height="13" Text="连接面壁厚" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="48" Width="96" Height="13" Text="受剪腹板总宽度ty" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="87" Width="48" Height="13" Text="惯性矩Ix" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="87" Width="54" Height="13" Text="抗弯矩wy2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="111" Width="48" Height="13" Text="惯性矩Iy" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="112" Width="48" Height="13" Text="面积矩Sx" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="136" Width="54" Height="13" Text="抗弯矩wx1" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="137" Width="48" Height="13" Text="面积矩Sy" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="88" Canvas.Top="155" Width="180" Height="26" Text="单位说明：惯性矩cm ,抗弯矩和面积矩cm ,截面积mm ,其它mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <Button Classes="hb" Canvas.Left="264" Canvas.Top="158" Width="221" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="删除当前行(行前有黑色三角标记)" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="161" Width="54" Height="13" Text="抗弯矩wx2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="171" Canvas.Top="162" Width="42" Height="13" Text="截面积A" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <CheckBox Classes="hb" Canvas.Left="8" Canvas.Top="163" Width="249" Height="21" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="解锁上表使之可手动修改参数及选待删除行" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <Border Classes="hbFrame" Canvas.Left="500" Canvas.Top="175" Width="337" Height="217"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="506" Canvas.Top="166" Text="截面特性计算结果"/>
+      <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="187" Width="54" Height="13" Text="抗弯矩wy1" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBox Classes="hb" Canvas.Left="588" Canvas.Top="188" Width="74" Height="18" FontSize="12" Text="XC001"/>
+      <TextBox Classes="hb" Canvas.Left="772" Canvas.Top="188" Width="53" Height="18" FontSize="12" Text="0"/>
+      <Border Classes="hbFrame" Canvas.Left="3" Canvas.Top="191" Width="353" Height="281"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="9" Canvas.Top="182" Text="操作提示"/>
+      <Button Classes="hb" Canvas.Left="88" Canvas.Top="191" Width="76" MinHeight="15" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="更多截面计算布置说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+      <Border Classes="hbFrame" Canvas.Left="360" Canvas.Top="191" Width="137" Height="69"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="366" Canvas.Top="182" Text="截面组成"/>
+      <RadioButton Classes="hb" Canvas.Left="364" Canvas.Top="203" Width="117" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="常规非断热型材" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <Button Classes="hb" Canvas.Left="195" Canvas.Top="207" Width="147" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="更多截面计算布置说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <TextBox Classes="hb" Canvas.Left="588" Canvas.Top="213" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="772" Canvas.Top="213" Width="53" Height="18" FontSize="12" Text="0"/>
+      <RadioButton Classes="hb" Canvas.Left="364" Canvas.Top="221" Width="129" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="作为立柱的断热型材" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <RadioButton Classes="hb" Canvas.Left="364" Canvas.Top="239" Width="129" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="作为横梁的断热型材" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <TextBox Classes="hb" Canvas.Left="580" Canvas.Top="252" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="252" Width="53" Height="18" FontSize="12" Text="0"/>
+      <Border Classes="hbFrame" Canvas.Left="360" Canvas.Top="263" Width="137" Height="124"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="366" Canvas.Top="254" Text="断热条参数"/>
+      <TextBox Classes="hb" Canvas.Left="580" Canvas.Top="277" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="277" Width="53" Height="18" FontSize="12" Text="0"/>
+      <ComboBox Classes="hb" Canvas.Left="370" Canvas.Top="283" Width="116" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="580" Canvas.Top="302" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="302" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBlock Classes="hb" Canvas.Left="373" Canvas.Top="314" Width="102" Height="13" Text="组合弹性值（MPa）" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBox Classes="hb" Canvas.Left="580" Canvas.Top="327" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="327" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="405" Canvas.Top="329" Width="53" Height="18" FontSize="12" Text="80"/>
+      <TextBlock Classes="hb" Canvas.Left="373" Canvas.Top="350" Width="72" Height="13" Text="梁跨度（mm）" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBox Classes="hb" Canvas.Left="580" Canvas.Top="352" Width="53" Height="18" FontSize="12" Text="0"/>
+      <TextBox Classes="hb" Canvas.Left="405" Canvas.Top="362" Width="53" Height="18" FontSize="12" Text="1500"/>
+      <ComboBox Classes="hb" Canvas.Left="411" Canvas.Top="399" Width="73" Height="20"/>
+      <Button Classes="hb" Canvas.Left="763" Canvas.Top="399" Width="77" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="用法说明1" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <ComboBox Classes="hb" Canvas.Left="526" Canvas.Top="407" Width="221" Height="20"/>
+      <Button Classes="hb" Canvas.Left="403" Canvas.Top="423" Width="61" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="连接CAD" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="763" Canvas.Top="423" Width="77" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="用法说明2" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="517" Canvas.Top="439" Width="238" Height="33" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="添加计算到参数库上面项目中" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="363" Canvas.Top="447" Width="145" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="计算截面特性" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="771" Canvas.Top="447" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="771" Canvas.Top="447" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

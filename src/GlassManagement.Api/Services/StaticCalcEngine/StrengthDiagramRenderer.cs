@@ -1,9 +1,11 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Runtime.Versioning;
 
 namespace GlassManagement.Api.Services.StaticCalcEngine;
 
+[SupportedOSPlatform("windows")]
 public static class StrengthDiagramRenderer
 {
     public static byte[] Render(string title, double actual, double limit, string unit, int width = 900, int height = 220)

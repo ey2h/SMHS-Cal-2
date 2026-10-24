@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.Versioning;
 using GlassManagement.Api.Services.StaticCalcEngine;
 using NPOI.OpenXmlFormats.Wordprocessing;
 using NPOI.Util;
@@ -7,6 +8,7 @@ using NPOI.XWPF.UserModel;
 
 namespace GlassManagement.Api.Services;
 
+[SupportedOSPlatform("windows")]
 public class CalcBookWordV2Service
 {
     private const string MainFont = "Times New Roman";

@@ -1,21 +1,20 @@
 @page "/phase1/wind-load"
 @using GlassManagement.Ui.Shared.Models
-@using GlassManagement.Api.Models
 @inject System.Net.Http.HttpClient Http
-@using System
-@inherits Microsoft.AspNetCore.Components.ComponentBase
+@using System.Text.Json
+@using System.Text
 
-  <div class="phase1-windload" style="padding:16px;">
+<div class="phase1-windload" style="padding:16px;">
   <h3>Phase 1 - 风荷载</h3>
   <RegionsSelector @bind-SelectedRegion="SelectedRegion" />
   <div class="grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px;">
     <div>
       <label>风荷载标准值</label>
-      <input class="form-control" placeholder="标准值" />
+      <input class="form-control" placeholder="标准值" type="number" @bind="WindLoadValue" />
     </div>
     <div>
       <label>局部体型系数</label>
-      <input class="form-control" placeholder="体型系数" />
+      <input class="form-control" placeholder="体型系数" type="number" step="0.01" @bind="ShapeCoeff" />
     </div>
   </div>
   <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitWindLoad">应用</button>
@@ -25,50 +24,62 @@
 
 @code {
   private string SelectedRegion { get; set; }
-  private GlassManagement.Ui.Shared.Models.CloudVizData windCloudVizUI;
+  private double WindLoadValue { get; set; }
+  private double ShapeCoeff { get; set; } = 1.0;
+  private CloudVizData windCloudVizUI;
   private string windStatus = string.Empty;
+
   protected override async Task OnInitializedAsync()
   {
     try
     {
-      var regs = await Http.GetFromJsonAsync<List<GlassManagement.Api.Models.RegionInfo>>("/api/regions");
+      var regs = await Http.GetFromJsonAsync<List<RegionInfo>>("/api/regions");
       if (regs != null && regs.Count > 0)
       {
         SelectedRegion = regs[0].RegionId;
       }
     }
-    catch
-    {
-      // ignore
-    }
+    catch { }
   }
 
   private async Task SubmitWindLoad()
   {
     windStatus = "正在提交...";
-    // Minimal demonstration: post a basic wind-load calculation request to API
-    var panel = new GlassManagement.Api.Models.GlassPanelInput { PanelId = "p1", Type = GlassManagement.Api.Models.GlassPanelType.Single, Width = 1200, Height = 2400, Thickness = 6.0, Layers = new List<GlassManagement.Api.Models.GlassLayerInput> { new GlassManagement.Api.Models.GlassLayerInput { MaterialId = "default", Thickness = 6.0 } } };
-    var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo", RegionId = SelectedRegion ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput> { panel } };
-    var json = System.Text.Json.JsonSerializer.Serialize(input);
-    var content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+    var panel = new GlassPanelInput
+    {
+      PanelId = "p1",
+      Type = GlassPanelType.Single,
+      Width = 1200,
+      Height = 2400,
+      Thickness = 6.0,
+      Layers = new List<GlassLayerInput> { new() { MaterialId = "default", Thickness = 6.0 } }
+    };
+    var input = new GlassInput
+    {
+      ProjectId = "demo",
+      RegionId = SelectedRegion ?? "default",
+      Panels = new List<GlassPanelInput> { panel }
+    };
+    var json = JsonSerializer.Serialize(input);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
     var resp = await Http.PostAsync("/api/calculation/multi", content);
     if (resp.IsSuccessStatusCode)
     {
       var body = await resp.Content.ReadAsStringAsync();
-      var output = System.Text.Json.JsonSerializer.Deserialize<GlassManagement.Api.Models.GlassOutput>(body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+      var output = JsonSerializer.Deserialize<GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
       if (output?.CloudViz != null)
       {
-        var pts = new List<GlassManagement.Ui.Shared.Models.CloudVizPoint>();
+        var pts = new List<CloudVizPoint>();
         int idx = 0;
         foreach (var pr in output.PanelsResults)
         {
           double x = idx * 60;
           double y = Math.Max(0, pr.Metrics.Deflection * 100);
           double v = pr.Metrics.MaxStress;
-          pts.Add(new GlassManagement.Ui.Shared.Models.CloudVizPoint { X = x, Y = y, Value = v });
+          pts.Add(new CloudVizPoint { X = x, Y = y, Value = v });
           idx++;
         }
-        windCloudVizUI = new GlassManagement.Ui.Shared.Models.CloudVizData { Points = pts };
+        windCloudVizUI = new CloudVizData { Points = pts };
         windStatus = "云图已加载";
       }
     }

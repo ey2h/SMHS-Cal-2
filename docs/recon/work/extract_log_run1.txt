@@ -1,0 +1,12 @@
+[09:32:21] FOUND 8 .doc files
+[09:32:21] OPEN GRC板幕墙计算书.DOC
+[09:34:20] DONE GRC板幕墙计算书 paras=3072 tables=20 heads=271 secs=119.3 ok=True
+[09:34:20] OPEN UHPC板幕墙计算书.DOC
+[09:38:09] DONE UHPC板幕墙计算书 paras=2828 tables=20 heads=260 secs=228.5 ok=True
+[09:38:09] OPEN 单元幕墙计算书.DOC
+[09:42:18] DONE 单元幕墙计算书 paras=3318 tables=20 heads=293 secs=249 ok=True
+[09:42:18] OPEN 点式钢管结构计算书.DOC
+[09:43:31] DONE 点式钢管结构计算书 paras=1874 tables=20 heads=148 secs=73.8 ok=True
+[09:43:31] OPEN 节能计算书.DOC
+[09:44:41] DONE 节能计算书 paras=1262 tables=12 heads=116 secs=69.6 ok=True
+[09:44:41] OPEN 铝单板幕墙计算书.DOC

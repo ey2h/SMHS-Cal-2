@@ -1,0 +1,3706 @@
+﻿{
+    "meta":  {
+                 "source_path":  "C:\\code\\Glass\\docs\\recon\\template\\raw\\template_模板.doc",
+                 "sha256":  "19B7FA43308725261E647645A1CD46A297C941927415C59E787BBA0EAF833A4F",
+                 "bytes":  24064,
+                 "opened_readonly":  true,
+                 "word_version":  "16.0",
+                 "doc_full_name":  "C:\\code\\Glass\\docs\\recon\\template\\raw\\template_模板.doc",
+                 "doc_attached_template":  null,
+                 "compatibility_mode":  11,
+                 "has_password":  false,
+                 "has_vb_project":  false,
+                 "read_only_recommended":  false,
+                 "capture_time":  "2026-10-22 08:58:03",
+                 "enum_maps_loaded":  [
+                                          "WdBorderType",
+                                          "WdFieldType",
+                                          "WdLineSpacing",
+                                          "WdLineStyle",
+                                          "WdOrientation",
+                                          "WdOutlineLevel",
+                                          "WdPageNumberStyle",
+                                          "WdPaperSize",
+                                          "WdParagraphAlignment",
+                                          "WdPreferredWidthType",
+                                          "WdSectionStart",
+                                          "WdStatistic",
+                                          "WdStoryType",
+                                          "WdStyleType"
+                                      ]
+             },
+    "page_setup":  [
+                       {
+                           "section_index":  1,
+                           "section_start":  null,
+                           "section_start_name":  null,
+                           "page_width_pt":  595.3,
+                           "page_width_mm":  210.01,
+                           "page_height_pt":  841.9,
+                           "page_height_mm":  297,
+                           "paper_size":  7,
+                           "paper_size_name":  "wdPaperA4",
+                           "orientation":  0,
+                           "orientation_name":  "wdOrientPortrait",
+                           "top_margin_pt":  62.35,
+                           "top_margin_mm":  22,
+                           "bottom_margin_pt":  62.35,
+                           "bottom_margin_mm":  22,
+                           "left_margin_pt":  70.9,
+                           "left_margin_mm":  25.01,
+                           "right_margin_pt":  55.3,
+                           "right_margin_mm":  19.51,
+                           "header_distance_pt":  42.55,
+                           "header_distance_mm":  15.01,
+                           "footer_distance_pt":  49.6,
+                           "footer_distance_mm":  17.5,
+                           "gutter_pt":  0,
+                           "gutter_mm":  0,
+                           "gutter_position":  null,
+                           "mirror_margins":  false,
+                           "different_first_page_header_footer":  false,
+                           "odd_and_even_pages_header_footer":  false,
+                           "default_tab_stop_pt":  null,
+                           "default_tab_stop_mm":  null,
+                           "text_columns_count":  1,
+                           "text_columns_spacing_pt":  null,
+                           "text_columns_evenly_spaced":  true,
+                           "vertical_alignment":  0,
+                           "restart_numbering_at_section":  null,
+                           "starting_page_index":  null,
+                           "page_number_style":  null,
+                           "page_number_style_name":  null,
+                           "page_borders":  [
+
+                                            ],
+                           "paper_dims_match":  "210.01 x 297 mm"
+                       },
+                       {
+                           "section_index":  2,
+                           "section_start":  null,
+                           "section_start_name":  null,
+                           "page_width_pt":  595.3,
+                           "page_width_mm":  210.01,
+                           "page_height_pt":  841.9,
+                           "page_height_mm":  297,
+                           "paper_size":  7,
+                           "paper_size_name":  "wdPaperA4",
+                           "orientation":  0,
+                           "orientation_name":  "wdOrientPortrait",
+                           "top_margin_pt":  72,
+                           "top_margin_mm":  25.4,
+                           "bottom_margin_pt":  72,
+                           "bottom_margin_mm":  25.4,
+                           "left_margin_pt":  70.85,
+                           "left_margin_mm":  24.99,
+                           "right_margin_pt":  31.2,
+                           "right_margin_mm":  11.01,
+                           "header_distance_pt":  42.55,
+                           "header_distance_mm":  15.01,
+                           "footer_distance_pt":  49.6,
+                           "footer_distance_mm":  17.5,
+                           "gutter_pt":  0,
+                           "gutter_mm":  0,
+                           "gutter_position":  null,
+                           "mirror_margins":  false,
+                           "different_first_page_header_footer":  false,
+                           "odd_and_even_pages_header_footer":  false,
+                           "default_tab_stop_pt":  null,
+                           "default_tab_stop_mm":  null,
+                           "text_columns_count":  1,
+                           "text_columns_spacing_pt":  null,
+                           "text_columns_evenly_spaced":  true,
+                           "vertical_alignment":  0,
+                           "restart_numbering_at_section":  null,
+                           "starting_page_index":  null,
+                           "page_number_style":  null,
+                           "page_number_style_name":  null,
+                           "page_borders":  [
+
+                                            ],
+                           "paper_dims_match":  "210.01 x 297 mm"
+                       }
+                   ],
+    "paragraphs":  [
+                       {
+                           "index":  1,
+                           "text":  "工程名称\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  0,
+                           "range_end":  5,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  2,
+                           "text":  "设计计算书\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  5,
+                           "range_end":  11,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  3,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  11,
+                           "range_end":  12,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  4,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  12,
+                           "range_end":  13,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  5,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  13,
+                           "range_end":  14,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  6,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  14,
+                           "range_end":  15,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  7,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  15,
+                           "range_end":  16,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  8,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  16,
+                           "range_end":  17,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  9,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  17,
+                           "range_end":  18,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  10,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  18,
+                           "range_end":  19,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  11,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  19,
+                           "range_end":  20,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  12,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  20,
+                           "range_end":  21,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  13,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  21,
+                           "range_end":  22,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  14,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  22,
+                           "range_end":  23,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  15,
+                           "text":  "设计：            \u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  3,
+                           "alignment_name":  "wdAlignParagraphJustify",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  143.95,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  23,
+                           "range_end":  39,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  16,
+                           "text":  "校对：                \u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  3,
+                           "alignment_name":  "wdAlignParagraphJustify",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  143.95,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  39,
+                           "range_end":  59,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  17,
+                           "text":  "审核：            \u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  3,
+                           "alignment_name":  "wdAlignParagraphJustify",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  143.95,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  59,
+                           "range_end":  75,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  18,
+                           "text":  "批准：                 \u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  3,
+                           "alignment_name":  "wdAlignParagraphJustify",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  143.95,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  75,
+                           "range_end":  96,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  19,
+                           "text":  "公司名称\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  96,
+                           "range_end":  101,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  20,
+                           "text":  "日期\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  101,
+                           "range_end":  104,
+                           "page_physical":  1,
+                           "page_adjusted":  1
+                       },
+                       {
+                           "index":  21,
+                           "text":  "\u003cPAGEBREAK\u003e目录\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  104,
+                           "range_end":  108,
+                           "page_physical":  2,
+                           "page_adjusted":  2
+                       },
+                       {
+                           "index":  22,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  108,
+                           "range_end":  109,
+                           "page_physical":  2,
+                           "page_adjusted":  2
+                       },
+                       {
+                           "index":  23,
+                           "text":  "indexindex\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  109,
+                           "range_end":  120,
+                           "page_physical":  2,
+                           "page_adjusted":  2
+                       },
+                       {
+                           "index":  24,
+                           "text":  "\u003cPAGEBREAK\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  1,
+                           "alignment_name":  "wdAlignParagraphCenter",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  120,
+                           "range_end":  121,
+                           "page_physical":  2,
+                           "page_adjusted":  2
+                       },
+                       {
+                           "index":  25,
+                           "text":  "\u003cPARA\u003e",
+                           "style":  "正文",
+                           "style_internal":  null,
+                           "style_type":  "wdStyleTypeParagraph",
+                           "outline_level":  10,
+                           "outline_level_name":  "wdOutlineLevelBodyText",
+                           "alignment":  3,
+                           "alignment_name":  "wdAlignParagraphJustify",
+                           "font_name":  null,
+                           "font_name_fareast":  null,
+                           "font_name_ascii":  null,
+                           "font_size_pt":  null,
+                           "bold":  null,
+                           "italic":  null,
+                           "space_before_pt":  0,
+                           "space_after_pt":  0,
+                           "space_before_auto":  false,
+                           "space_after_auto":  false,
+                           "line_spacing_rule":  0,
+                           "line_spacing_rule_name":  "wdLineSpaceSingle",
+                           "line_spacing_pt":  12,
+                           "left_indent_pt":  0,
+                           "first_line_indent_pt":  0,
+                           "right_indent_pt":  0,
+                           "keep_with_next":  false,
+                           "keep_together":  false,
+                           "widow_control":  false,
+                           "page_break_before":  false,
+                           "in_table":  false,
+                           "range_start":  121,
+                           "range_end":  122,
+                           "page_physical":  3,
+                           "page_adjusted":  1
+                       }
+                   ],
+    "styles_used":  [
+                        {
+                            "name_local":  "正文",
+                            "name_internal":  null,
+                            "style_type":  "wdStyleTypeParagraph",
+                            "built_in":  true,
+                            "base_style":  "",
+                            "base_style_internal":  null,
+                            "next_paragraph_style":  "正文",
+                            "author":  null,
+                            "font_name":  "Times New Roman",
+                            "font_name_fareast":  "宋体",
+                            "font_name_ascii":  "Times New Roman",
+                            "font_name_other":  "Times New Roman",
+                            "font_size_pt":  10.5,
+                            "bold":  false,
+                            "italic":  false,
+                            "underline":  0,
+                            "color_index":  0,
+                            "color_rgb":  null,
+                            "all_caps":  false,
+                            "small_caps":  false,
+                            "character_spacing_pt":  0,
+                            "scale_percent":  null,
+                            "emboss":  false,
+                            "outline":  false,
+                            "shadow":  false,
+                            "alignment":  3,
+                            "alignment_name":  "wdAlignParagraphJustify",
+                            "space_before_pt":  0,
+                            "space_after_pt":  0,
+                            "space_before_auto":  false,
+                            "space_after_auto":  false,
+                            "line_spacing_rule":  0,
+                            "line_spacing_rule_name":  "wdLineSpaceSingle",
+                            "line_spacing_pt":  12,
+                            "outline_level":  10,
+                            "outline_level_name":  "wdOutlineLevelBodyText",
+                            "left_indent_pt":  0,
+                            "first_line_indent_pt":  0,
+                            "right_indent_pt":  0,
+                            "keep_with_next":  false,
+                            "keep_together":  false,
+                            "widow_control":  false,
+                            "page_break_before":  false,
+                            "paragraph_borders":  [
+
+                                                  ],
+                            "numbering":  "style has no ListFormat member (COM)",
+                            "used_by_paragraphs":  25,
+                            "first_paragraph_index":  1
+                        }
+                    ],
+    "styles_used_count":  1,
+    "styles_total_count":  373,
+    "styles_unused_names":  [
+                                "@他",
+                                "1 / 1.1 / 1.1.1",
+                                "1 / 1.1 / 1.1.1(缩进)",
+                                "HTML 变量",
+                                "HTML 打字机",
+                                "HTML 代码",
+                                "HTML 地址",
+                                "HTML 定义",
+                                "HTML 键盘",
+                                "HTML 缩写",
+                                "HTML 样本",
+                                "HTML 引文",
+                                "HTML 预设格式",
+                                "TOC 1",
+                                "TOC 2",
+                                "TOC 3",
+                                "TOC 4",
+                                "TOC 5",
+                                "TOC 6",
+                                "TOC 7",
+                                "TOC 8",
+                                "TOC 9",
+                                "TOC 标题",
+                                "标题",
+                                "标题 1",
+                                "标题 2",
+                                "标题 3",
+                                "标题 4",
+                                "标题 5",
+                                "标题 6",
+                                "标题 7",
+                                "标题 8",
+                                "标题 9",
+                                "表格主题",
+                                "表三维效果 1",
+                                "表三维效果 2",
+                                "表三维效果 3",
+                                "不明显参考",
+                                "不明显强调",
+                                "彩色底纹",
+                                "彩色底纹 - 着色 1",
+                                "彩色底纹 - 着色 2",
+                                "彩色底纹 - 着色 3",
+                                "彩色底纹 - 着色 4",
+                                "彩色底纹 - 着色 5",
+                                "彩色底纹 - 着色 6",
+                                "彩色列表",
+                                "彩色列表 - 着色 1",
+                                "彩色列表 - 着色 2",
+                                "彩色列表 - 着色 3",
+                                "彩色列表 - 着色 4",
+                                "彩色列表 - 着色 5",
+                                "彩色列表 - 着色 6",
+                                "彩色网格",
+                                "彩色网格 - 着色 1",
+                                "彩色网格 - 着色 2",
+                                "彩色网格 - 着色 3",
+                                "彩色网格 - 着色 4",
+                                "彩色网格 - 着色 5",
+                                "彩色网格 - 着色 6",
+                                "彩色型 1",
+                                "彩色型 2",
+                                "彩色型 3",
+                                "超链接",
+                                "称呼",
+                                "纯文本",
+                                "典雅型",
+                                "电子邮件签名",
+                                "访问过的超链接",
+                                "副标题",
+                                "古典型 1",
+                                "古典型 2",
+                                "古典型 3",
+                                "古典型 4",
+                                "宏文本",
+                                "寄信人地址",
+                                "简明型 1",
+                                "简明型 2",
+                                "简明型 3",
+                                "脚注文本",
+                                "脚注引用",
+                                "结束语",
+                                "精巧型 1",
+                                "精巧型 2",
+                                "井号标签",
+                                "列表",
+                                "列表 2",
+                                "列表 3",
+                                "列表 4",
+                                "列表 5",
+                                "列表编号",
+                                "列表编号 2",
+                                "列表编号 3",
+                                "列表编号 4",
+                                "列表编号 5",
+                                "列表段落",
+                                "列表接续",
+                                "列表接续 2",
+                                "列表接续 3",
+                                "列表接续 4",
+                                "列表接续 5",
+                                "列表项目符号",
+                                "列表项目符号 2",
+                                "列表项目符号 3",
+                                "列表项目符号 4",
+                                "列表项目符号 5",
+                                "列表型 1",
+                                "列表型 2",
+                                "列表型 3",
+                                "列表型 4",
+                                "列表型 5",
+                                "列表型 6",
+                                "列表型 7",
+                                "列表型 8",
+                                "流行型",
+                                "明显参考",
+                                "明显强调",
+                                "明显引用",
+                                "默认段落字体",
+                                "批注框文本",
+                                "批注文字",
+                                "批注引用",
+                                "批注主题",
+                                "普通(网站)",
+                                "普通表格",
+                                "签名",
+                                "浅色底纹",
+                                "浅色底纹 - 着色 1",
+                                "浅色底纹 - 着色 2",
+                                "浅色底纹 - 着色 3",
+                                "浅色底纹 - 着色 4",
+                                "浅色底纹 - 着色 5",
+                                "浅色底纹 - 着色 6",
+                                "浅色列表",
+                                "浅色列表 - 着色 1",
+                                "浅色列表 - 着色 2",
+                                "浅色列表 - 着色 3",
+                                "浅色列表 - 着色 4",
+                                "浅色列表 - 着色 5",
+                                "浅色列表 - 着色 6",
+                                "浅色网格",
+                                "浅色网格 - 着色 1",
+                                "浅色网格 - 着色 2",
+                                "浅色网格 - 着色 3",
+                                "浅色网格 - 着色 4",
+                                "浅色网格 - 着色 5",
+                                "浅色网格 - 着色 6",
+                                "强调",
+                                "清单表 1 浅色",
+                                "清单表 1 浅色 - 着色 1",
+                                "清单表 1 浅色 - 着色 2",
+                                "清单表 1 浅色 - 着色 3",
+                                "清单表 1 浅色 - 着色 4",
+                                "清单表 1 浅色 - 着色 5",
+                                "清单表 1 浅色 - 着色 6",
+                                "清单表 2",
+                                "清单表 2 - 着色 1",
+                                "清单表 2 - 着色 2",
+                                "清单表 2 - 着色 3",
+                                "清单表 2 - 着色 4",
+                                "清单表 2 - 着色 5",
+                                "清单表 2 - 着色 6",
+                                "清单表 3",
+                                "清单表 3 - 着色 1",
+                                "清单表 3 - 着色 2",
+                                "清单表 3 - 着色 3",
+                                "清单表 3 - 着色 4",
+                                "清单表 3 - 着色 5",
+                                "清单表 3 - 着色 6",
+                                "清单表 4",
+                                "清单表 4 - 着色 1",
+                                "清单表 4 - 着色 2",
+                                "清单表 4 - 着色 3",
+                                "清单表 4 - 着色 4",
+                                "清单表 4 - 着色 5",
+                                "清单表 4 - 着色 6",
+                                "清单表 5 深色",
+                                "清单表 5 深色 - 着色 1",
+                                "清单表 5 深色 - 着色 2",
+                                "清单表 5 深色 - 着色 3",
+                                "清单表 5 深色 - 着色 4",
+                                "清单表 5 深色 - 着色 5",
+                                "清单表 5 深色 - 着色 6",
+                                "清单表 6 彩色",
+                                "清单表 6 彩色 - 着色 1",
+                                "清单表 6 彩色 - 着色 2",
+                                "清单表 6 彩色 - 着色 3",
+                                "清单表 6 彩色 - 着色 4",
+                                "清单表 6 彩色 - 着色 5",
+                                "清单表 6 彩色 - 着色 6",
+                                "清单表 7 彩色",
+                                "清单表 7 彩色 - 着色 1",
+                                "清单表 7 彩色 - 着色 2",
+                                "清单表 7 彩色 - 着色 3",
+                                "清单表 7 彩色 - 着色 4",
+                                "清单表 7 彩色 - 着色 5",
+                                "清单表 7 彩色 - 着色 6",
+                                "日期",
+                                "深色列表",
+                                "深色列表 - 着色 1",
+                                "深色列表 - 着色 2",
+                                "深色列表 - 着色 3",
+                                "深色列表 - 着色 4",
+                                "深色列表 - 着色 5",
+                                "深色列表 - 着色 6",
+                                "收信人地址",
+                                "书籍标题",
+                                "书目",
+                                "竖列型 1",
+                                "竖列型 2",
+                                "竖列型 3",
+                                "竖列型 4",
+                                "竖列型 5",
+                                "索引 1",
+                                "索引 2",
+                                "索引 3",
+                                "索引 4",
+                                "索引 5",
+                                "索引 6",
+                                "索引 7",
+                                "索引 8",
+                                "索引 9",
+                                "索引标题",
+                                "题注",
+                                "图表目录",
+                                "网格表 1 浅色",
+                                "网格表 1 浅色 - 着色 1",
+                                "网格表 1 浅色 - 着色 2",
+                                "网格表 1 浅色 - 着色 3",
+                                "网格表 1 浅色 - 着色 4",
+                                "网格表 1 浅色 - 着色 5",
+                                "网格表 1 浅色 - 着色 6",
+                                "网格表 2",
+                                "网格表 2 - 着色 1",
+                                "网格表 2 - 着色 2",
+                                "网格表 2 - 着色 3",
+                                "网格表 2 - 着色 4",
+                                "网格表 2 - 着色 5",
+                                "网格表 2 - 着色 6",
+                                "网格表 3",
+                                "网格表 3 - 着色 1",
+                                "网格表 3 - 着色 2",
+                                "网格表 3 - 着色 3",
+                                "网格表 3 - 着色 4",
+                                "网格表 3 - 着色 5",
+                                "网格表 3 - 着色 6",
+                                "网格表 4",
+                                "网格表 4 - 着色 1",
+                                "网格表 4 - 着色 2",
+                                "网格表 4 - 着色 3",
+                                "网格表 4 - 着色 4",
+                                "网格表 4 - 着色 5",
+                                "网格表 4 - 着色 6",
+                                "网格表 5 深色",
+                                "网格表 5 深色 - 着色 1",
+                                "网格表 5 深色 - 着色 2",
+                                "网格表 5 深色 - 着色 3",
+                                "网格表 5 深色 - 着色 4",
+                                "网格表 5 深色 - 着色 5",
+                                "网格表 5 深色 - 着色 6",
+                                "网格表 6 彩色",
+                                "网格表 6 彩色 - 着色 1",
+                                "网格表 6 彩色 - 着色 2",
+                                "网格表 6 彩色 - 着色 3",
+                                "网格表 6 彩色 - 着色 4",
+                                "网格表 6 彩色 - 着色 5",
+                                "网格表 6 彩色 - 着色 6",
+                                "网格表 7 彩色",
+                                "网格表 7 彩色 - 着色 1",
+                                "网格表 7 彩色 - 着色 2",
+                                "网格表 7 彩色 - 着色 3",
+                                "网格表 7 彩色 - 着色 4",
+                                "网格表 7 彩色 - 着色 5",
+                                "网格表 7 彩色 - 着色 6",
+                                "网格型",
+                                "网格型 1",
+                                "网格型 2",
+                                "网格型 3",
+                                "网格型 4",
+                                "网格型 5",
+                                "网格型 6",
+                                "网格型 7",
+                                "网格型 8",
+                                "网格型浅色",
+                                "网页型 1",
+                                "网页型 2",
+                                "网页型 3",
+                                "尾注文本",
+                                "尾注引用",
+                                "未处理的提及",
+                                "文本块",
+                                "文档结构图",
+                                "文章/节",
+                                "无格式表格 1",
+                                "无格式表格 2",
+                                "无格式表格 3",
+                                "无格式表格 4",
+                                "无格式表格 5",
+                                "无间隔",
+                                "无列表",
+                                "信息标题",
+                                "行号",
+                                "要点",
+                                "页脚",
+                                "页码",
+                                "页眉",
+                                "引文目录",
+                                "引文目录标题",
+                                "引用",
+                                "占位符文本",
+                                "正文缩进",
+                                "正文文本",
+                                "正文文本 2",
+                                "正文文本 3",
+                                "正文文本首行缩进",
+                                "正文文本首行缩进 2",
+                                "正文文本缩进",
+                                "正文文本缩进 2",
+                                "正文文本缩进 3",
+                                "智能超链接",
+                                "智能链接",
+                                "中等深浅底纹 1",
+                                "中等深浅底纹 1 - 着色 1",
+                                "中等深浅底纹 1 - 着色 2",
+                                "中等深浅底纹 1 - 着色 3",
+                                "中等深浅底纹 1 - 着色 4",
+                                "中等深浅底纹 1 - 着色 5",
+                                "中等深浅底纹 1 - 着色 6",
+                                "中等深浅底纹 2",
+                                "中等深浅底纹 2 - 着色 1",
+                                "中等深浅底纹 2 - 着色 2",
+                                "中等深浅底纹 2 - 着色 3",
+                                "中等深浅底纹 2 - 着色 4",
+                                "中等深浅底纹 2 - 着色 5",
+                                "中等深浅底纹 2 - 着色 6",
+                                "中等深浅列表 1",
+                                "中等深浅列表 1 - 着色 1",
+                                "中等深浅列表 1 - 着色 2",
+                                "中等深浅列表 1 - 着色 3",
+                                "中等深浅列表 1 - 着色 4",
+                                "中等深浅列表 1 - 着色 5",
+                                "中等深浅列表 1 - 着色 6",
+                                "中等深浅列表 2",
+                                "中等深浅列表 2 - 着色 1",
+                                "中等深浅列表 2 - 着色 2",
+                                "中等深浅列表 2 - 着色 3",
+                                "中等深浅列表 2 - 着色 4",
+                                "中等深浅列表 2 - 着色 5",
+                                "中等深浅列表 2 - 着色 6",
+                                "中等深浅网格 1",
+                                "中等深浅网格 1 - 着色 1",
+                                "中等深浅网格 1 - 着色 2",
+                                "中等深浅网格 1 - 着色 3",
+                                "中等深浅网格 1 - 着色 4",
+                                "中等深浅网格 1 - 着色 5",
+                                "中等深浅网格 1 - 着色 6",
+                                "中等深浅网格 2",
+                                "中等深浅网格 2 - 着色 1",
+                                "中等深浅网格 2 - 着色 2",
+                                "中等深浅网格 2 - 着色 3",
+                                "中等深浅网格 2 - 着色 4",
+                                "中等深浅网格 2 - 着色 5",
+                                "中等深浅网格 2 - 着色 6",
+                                "中等深浅网格 3",
+                                "中等深浅网格 3 - 着色 1",
+                                "中等深浅网格 3 - 着色 2",
+                                "中等深浅网格 3 - 着色 3",
+                                "中等深浅网格 3 - 着色 4",
+                                "中等深浅网格 3 - 着色 5",
+                                "中等深浅网格 3 - 着色 6",
+                                "注释标题",
+                                "专业型"
+                            ],
+    "styles_unused_count":  372,
+    "styles_all_names":  [
+                             {
+                                 "name_local":  "@他",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "1 / 1.1 / 1.1.1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeList"
+                             },
+                             {
+                                 "name_local":  "1 / 1.1 / 1.1.1(缩进)",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeList"
+                             },
+                             {
+                                 "name_local":  "HTML 变量",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 打字机",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 代码",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 地址",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "HTML 定义",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 键盘",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 缩写",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 样本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 引文",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "HTML 预设格式",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 7",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 8",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 9",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "TOC 标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 7",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 8",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "标题 9",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "表格主题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "表三维效果 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "表三维效果 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "表三维效果 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "不明显参考",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "不明显强调",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "彩色底纹",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色底纹 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色列表 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色网格 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "彩色型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "超链接",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "称呼",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "纯文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "典雅型",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "电子邮件签名",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "访问过的超链接",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "副标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "古典型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "古典型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "古典型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "古典型 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "宏文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "寄信人地址",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "简明型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "简明型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "简明型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "脚注文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "脚注引用",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "结束语",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "精巧型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "精巧型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "井号标签",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "列表",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表编号",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表编号 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表编号 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表编号 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表编号 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表段落",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表接续",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表接续 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表接续 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表接续 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表接续 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表项目符号",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表项目符号 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表项目符号 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表项目符号 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表项目符号 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "列表型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 7",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "列表型 8",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "流行型",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "明显参考",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "明显强调",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "明显引用",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "默认段落字体",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "批注框文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "批注文字",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "批注引用",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "批注主题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "普通(网站)",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "普通表格",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "签名",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "浅色底纹",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色底纹 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色列表 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "浅色网格 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "强调",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 1 浅色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 2 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 3 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 4 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 5 深色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 6 彩色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "清单表 7 彩色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "日期",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "深色列表",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "深色列表 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "收信人地址",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "书籍标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "书目",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "竖列型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "竖列型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "竖列型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "竖列型 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "竖列型 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "索引 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 7",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 8",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引 9",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "索引标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "题注",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "图表目录",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 1 浅色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 2 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 3 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 4 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 5 深色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 6 彩色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格表 7 彩色 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 7",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型 8",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网格型浅色",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网页型 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网页型 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "网页型 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "尾注文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "尾注引用",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "未处理的提及",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "文本块",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "文档结构图",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "文章/节",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeList"
+                             },
+                             {
+                                 "name_local":  "无格式表格 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "无格式表格 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "无格式表格 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "无格式表格 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "无格式表格 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "无间隔",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "无列表",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeList"
+                             },
+                             {
+                                 "name_local":  "信息标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "行号",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "要点",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "页脚",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "页码",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "页眉",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "引文目录",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "引文目录标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "引用",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "占位符文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "正文",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文缩进",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本首行缩进",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本首行缩进 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本缩进",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本缩进 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "正文文本缩进 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "智能超链接",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "智能链接",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeCharacter"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 1 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅底纹 2 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 1 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅列表 2 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 1 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 2 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 1",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 2",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 3",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 4",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 5",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "中等深浅网格 3 - 着色 6",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             },
+                             {
+                                 "name_local":  "注释标题",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeParagraph"
+                             },
+                             {
+                                 "name_local":  "专业型",
+                                 "name":  null,
+                                 "built_in":  true,
+                                 "style_type":  "wdStyleTypeTable"
+                             }
+                         ],
+    "tables":  [
+
+               ],
+    "fields":  [
+
+               ],
+    "errors":  [
+                   "section 1 Headers primary paragraph enumeration failed",
+                   "FATAL: The term \u0027try\u0027 is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again."
+               ]
+}

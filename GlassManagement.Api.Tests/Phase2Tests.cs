@@ -1,170 +1,117 @@
-using System.Collections.Generic;
+using GlassManagement.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
-using GlassManagement.Api.Controllers;
-using GlassManagement.Api.Models;
 
 namespace GlassManagement.Api.Tests
 {
     public class Phase2Tests
     {
         [Fact]
-        public void Phase2_Returns_GlassOutput_With_PanelResult()
+        public void Phase3_Returns_Output_With_Single_Panel()
         {
-            // Arrange
-            var controller = new CalculationController();
-            var input = new GlassInput
+            var controller = new Controllers.Phase3CalculationController();
+            var input = new Phase3GlassInput
             {
                 ProjectId = "P1",
                 RegionId = "R1",
-                Panels = new List<GlassPanelInput>
+                Panels = new List<Phase3GlassPanelInput>
                 {
-                    new GlassPanelInput
+                    new Phase3GlassPanelInput
                     {
                         PanelId = "p2",
-                        Type = GlassPanelType.Single,
+                        Type = Phase3GlassPanelType.Single,
                         Width = 1200,
                         Height = 2400,
                         Thickness = 6.0,
-                        Layers = new List<GlassLayerInput>
+                        Layers = new List<Phase3GlassLayerInput>
                         {
-                            new GlassLayerInput { MaterialId = "mat", Thickness = 6.0 }
-                        }
-                    }
-                    ,
-                    new GlassPanelInput
-                    {
-                        PanelId = "p3",
-                        Type = GlassPanelType.Laminated,
-                        Width = 900,
-                        Height = 1600,
-                        Thickness = 8.0,
-                        Layers = new List<GlassLayerInput>
-                        {
-                            new GlassLayerInput { MaterialId = "mat2", Thickness = 8.0 },
-                            new GlassLayerInput { MaterialId = "interlayer", Thickness = 0.76 }
+                            new Phase3GlassLayerInput { MaterialId = "mat", Thickness = 6.0 }
                         }
                     }
                 }
             };
 
-            // Act
-            var result = controller.Phase2(input) as OkObjectResult;
+            var result = controller.Phase3(input);
             Assert.NotNull(result);
-            var output = result.Value as GlassOutput;
-            Assert.NotNull(output);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var output = Assert.IsType<Phase3GlassOutput>(okResult.Value);
             Assert.NotEmpty(output.PanelsResults);
         }
 
         [Fact]
-        public void Phase2_Returns_GlassOutput_With_Fallback_When_No_Panels()
+        public void Phase3_Returns_Output_With_Fallback_When_No_Panels()
         {
-            // Arrange
-            var controller = new CalculationController();
-            var input = new GlassInput { ProjectId = "P1-NoPanels", RegionId = "R1", Panels = new List<GlassPanelInput>() };
+            var controller = new Controllers.Phase3CalculationController();
+            var input = new Phase3GlassInput { ProjectId = "P1-NoPanels", RegionId = "R1", Panels = new List<Phase3GlassPanelInput>() };
 
-            // Act
-            var result = controller.Phase2(input) as OkObjectResult;
-            // Assert
+            var result = controller.Phase3(input);
             Assert.NotNull(result);
-            var output = result.Value as GlassOutput;
-            Assert.NotNull(output);
-            Assert.NotEmpty(output.PanelsResults);
+            Assert.IsType<BadRequestObjectResult>(result.Result);
         }
 
         [Fact]
-        public void Phase2_Returns_GlassOutput_With_Multiple_Panels()
+        public void Phase3_Returns_Output_With_Multiple_Panels()
         {
-            // Arrange
-            var controller = new CalculationController();
-            var input = new GlassInput
+            var controller = new Controllers.Phase3CalculationController();
+            var input = new Phase3GlassInput
             {
                 ProjectId = "P1-Multi",
                 RegionId = "R1",
-                Panels = new List<GlassPanelInput>
+                Panels = new List<Phase3GlassPanelInput>
                 {
-                    new GlassPanelInput
+                    new Phase3GlassPanelInput
                     {
                         PanelId = "p2-1",
-                        Type = GlassPanelType.Single,
+                        Type = Phase3GlassPanelType.Single,
                         Width = 1200,
                         Height = 2400,
                         Thickness = 6.0,
-                        Layers = new List<GlassLayerInput>
+                        Layers = new List<Phase3GlassLayerInput>
                         {
-                            new GlassLayerInput { MaterialId = "mat", Thickness = 6.0 }
+                            new Phase3GlassLayerInput { MaterialId = "mat", Thickness = 6.0 }
                         }
                     },
-                    new GlassPanelInput
+                    new Phase3GlassPanelInput
                     {
                         PanelId = "p2-2",
-                        Type = GlassPanelType.Laminated,
+                        Type = Phase3GlassPanelType.Laminated,
                         Width = 900,
                         Height = 1600,
                         Thickness = 8.0,
-                        Layers = new List<GlassLayerInput>
+                        Layers = new List<Phase3GlassLayerInput>
                         {
-                            new GlassLayerInput { MaterialId = "mat2", Thickness = 8.0 },
-                            new GlassLayerInput { MaterialId = "interlayer", Thickness = 0.76 }
+                            new Phase3GlassLayerInput { MaterialId = "mat2", Thickness = 8.0 },
+                            new Phase3GlassLayerInput { MaterialId = "interlayer", Thickness = 0.76 }
                         }
                     }
                 }
             };
 
-            // Act
-            var result = controller.Phase2(input) as OkObjectResult;
-            // Assert
+            var result = controller.Phase3(input);
             Assert.NotNull(result);
-            var output = result.Value as GlassOutput;
-            Assert.NotNull(output);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var output = Assert.IsType<Phase3GlassOutput>(okResult.Value);
             Assert.True(output.PanelsResults.Count >= 2);
         }
+
         [Fact]
-        public void Phase2_Returns_GlassOutput_With_Various_Types_2()
+        public void Phase3_Returns_BadRequest_When_Duplicate_PanelIds()
         {
-            // Arrange
-            var controller = new CalculationController();
-            var input = new GlassInput
+            var controller = new Controllers.Phase3CalculationController();
+            var input = new Phase3GlassInput
             {
-                ProjectId = "P1-Mixed2",
+                ProjectId = "P1-Dup",
                 RegionId = "R1",
-                Panels = new List<GlassPanelInput>
+                Panels = new List<Phase3GlassPanelInput>
                 {
-                    new GlassPanelInput
-                    {
-                        PanelId = "p2-mx1",
-                        Type = GlassPanelType.Single,
-                        Width = 1200,
-                        Height = 2400,
-                        Thickness = 6.0,
-                        Layers = new List<GlassLayerInput>
-                        {
-                            new GlassLayerInput { MaterialId = "matA", Thickness = 6.0 }
-                        }
-                    },
-                    new GlassPanelInput
-                    {
-                        PanelId = "p2-mx2",
-                        Type = GlassPanelType.Laminated,
-                        Width = 900,
-                        Height = 900,
-                        Thickness = 8.0,
-                        Layers = new List<GlassLayerInput>
-                        {
-                            new GlassLayerInput { MaterialId = "matB", Thickness = 8.0 },
-                            new GlassLayerInput { MaterialId = "inter", Thickness = 0.76 }
-                        }
-                    }
+                    new Phase3GlassPanelInput { PanelId = "dup", Type = Phase3GlassPanelType.Single, Width = 1200, Height = 2400, Thickness = 6 },
+                    new Phase3GlassPanelInput { PanelId = "dup", Type = Phase3GlassPanelType.Laminated, Width = 900, Height = 1600, Thickness = 8 }
                 }
             };
 
-            // Act
-            var result = controller.Phase2(input) as OkObjectResult;
-            // Assert
+            var result = controller.Phase3(input);
             Assert.NotNull(result);
-            var output = result.Value as GlassOutput;
-            Assert.NotNull(output);
-            Assert.True(output.PanelsResults.Count >= 2);
+            Assert.IsType<BadRequestObjectResult>(result.Result);
         }
     }
 }

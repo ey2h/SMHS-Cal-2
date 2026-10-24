@@ -11,6 +11,19 @@
             <span>GlassCalc</span>
         </div>
 
+        <div class="sidebar-group-label">快速入口</div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-item @IsActive("/phase1/basic")" href="/phase1/basic">
+                <span class="material-symbols-outlined">input</span> Phase 1
+            </a>
+            <a class="sidebar-item @IsActive("/phase2")" href="/phase2">
+                <span class="material-symbols-outlined">view_column</span> Phase 2
+            </a>
+            <a class="sidebar-item @IsActive("/phase3")" href="/phase3">
+                <span class="material-symbols-outlined">cloud</span> Phase 3
+            </a>
+        </nav>
+
         <div class="sidebar-group-label">计算</div>
         <nav class="sidebar-nav">
             <a class="sidebar-item @IsActive("/project")" href="/project">
@@ -44,6 +57,9 @@
 
         <div class="sidebar-group-label">工具</div>
         <nav class="sidebar-nav">
+            <a class="sidebar-item @IsActive("/glass-curtain-wall")" href="/glass-curtain-wall">
+                <span class="material-symbols-outlined">library_books</span> 全隐框幕墙计算书
+            </a>
             <a class="sidebar-item @IsActive("/report")" href="/report">
                 <span class="material-symbols-outlined">description</span> 计算书
             </a>

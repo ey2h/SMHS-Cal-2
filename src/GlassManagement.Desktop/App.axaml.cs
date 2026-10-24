@@ -21,7 +21,42 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            // --calc: 只打开 V35 结构计算主窗口（不再同时开 Glass 主窗口）
+            var args = desktop.Args ?? System.Array.Empty<string>();
+            if (System.Array.Exists(args, a => a == "--calc"))
+            {
+                // 诊断用：--show=<窗体标题关键字> 直接载入该窗体（仅显式传参时生效，
+                // 正常启动仍然没有默认页）
+                var show = System.Array.Find(args, a => a.StartsWith("--show="));
+                GlassManagement.Desktop.Views.Calc.CalcMainWindow.ShowOnStartup =
+                    show?.Substring("--show=".Length);
+                // 诊断用：--menu=<顶级菜单>/<子项>，与真实鼠标点击同一 OpenFor 路径
+                // （Avalonia ContextMenu 的 MenuItem 不支持 UIA InvokePattern，自动化回归经此入口）
+                var menu = System.Array.Find(args, a => a.StartsWith("--menu="));
+                if (menu is not null)
+                {
+                    GlassManagement.Desktop.Views.Calc.CalcMainWindow.MenuOnStartup = menu.Substring("--menu=".Length);
+                }
+                // 诊断用：--selftest=preview —— 自动走 第一屏→下一步→立柱屏→预演（回归验证）
+                var selfTest = System.Array.Find(args, a => a.StartsWith("--selftest="));
+                if (selfTest is not null)
+                {
+                    GlassManagement.Desktop.Views.Calc.CalcMainWindow.SelfTestOnStartup =
+                        selfTest.Substring("--selftest=".Length);
+                }
+                // 诊断用：--dump-preview=<path> —— 自测后把预演结果导出为文本，供与 V31 自动对拍
+                var dump = System.Array.Find(args, a => a.StartsWith("--dump-preview="));
+                if (dump is not null)
+                {
+                    GlassManagement.Desktop.Views.Calc.CalcMainWindow.DumpPreviewPath =
+                        dump.Substring("--dump-preview=".Length);
+                }
+                desktop.MainWindow = new GlassManagement.Desktop.Views.Calc.CalcMainWindow();
+            }
+            else
+            {
+                desktop.MainWindow = new MainWindow();
+            }
         }
         base.OnFrameworkInitializationCompleted();
     }

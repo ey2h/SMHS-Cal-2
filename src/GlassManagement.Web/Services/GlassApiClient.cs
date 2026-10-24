@@ -94,6 +94,80 @@ public class GlassApiClient
         return await PostAsync<ReportResultDto>($"/api/Report/{type}", request) ?? new();
     }
 
+    // ===== 向导会话管理 =====
+
+    /// <summary>创建向导会话</summary>
+    public async Task<WizardSessionDto> CreateWizardSessionAsync(string projectName)
+    {
+        var resp = await _http.PostAsJsonAsync("/api/wizard/sessions", new { projectName }, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+        return (await resp.Content.ReadFromJsonAsync<WizardSessionDto>(JsonOpts))!;
+    }
+
+    /// <summary>保存步骤1基本参数</summary>
+    public async Task SaveWizardStep1Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step1-basic", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤2玻璃配置</summary>
+    public async Task SaveWizardStep2Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step2-glass", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤3立柱计算</summary>
+    public async Task SaveWizardStep3Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step3-mullion", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤4横梁计算</summary>
+    public async Task SaveWizardStep4Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step4-transom", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤5连接件计算</summary>
+    public async Task SaveWizardStep5Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step5-connection", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤6预埋件计算</summary>
+    public async Task SaveWizardStep6Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step6-embedded", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤7汇总确认</summary>
+    public async Task SaveWizardStep7Async(string sessionId)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step7-summary", new { }, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>保存步骤8计算书设置</summary>
+    public async Task SaveWizardStep8Async(string sessionId, object input)
+    {
+        var resp = await _http.PutAsJsonAsync($"/api/wizard/sessions/{sessionId}/step8-report", input, JsonOpts);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    /// <summary>下载计算书</summary>
+    public async Task<byte[]> DownloadWizardReportAsync(string sessionId, string format)
+    {
+        var resp = await _http.GetAsync($"/api/wizard/sessions/{sessionId}/download/{format}");
+        resp.EnsureSuccessStatusCode();
+        return await resp.Content.ReadAsByteArrayAsync();
+    }
+
     // 数据管理 CRUD
     public async Task<List<JsonElement>> GetDataAsync(string resource)
     {
@@ -204,4 +278,15 @@ public class ReportResultDto
 {
     public string? DownloadUrl { get; set; }
     public string? Message { get; set; }
+}
+
+public class WizardSessionDto
+{
+    public string SessionId { get; set; } = "";
+    public int CurrentStep { get; set; }
+    public List<int> CompletedSteps { get; set; } = new();
+    public string Status { get; set; } = "";
+    public int? ProjectId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

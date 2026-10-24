@@ -1,0 +1,1768 @@
+[
+ {
+  "file": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\汇宝软件参数库转换及截面工具箱V35.exe",
+  "bytes": 71680,
+  "sha256": "c98af798d2ce1554f8468c029bb6f8769e873f608fab0977dd5da5d1d4429649",
+  "e_lfanew": 184,
+  "machine": "0x14c",
+  "numSections": 5,
+  "timeDateStamp": 1781323915,
+  "timeDateStampISO": "2026-06-13T04:11:55.000Z",
+  "characteristics": "0x10f",
+  "optionalMagic": "PE32",
+  "imageBase": "0x400000",
+  "entryPoint": "0x4",
+  "sizeOfImage": 544768,
+  "sizeOfHeaders": 1536,
+  "dataDirectories": [
+   {
+    "name": "IMPORT",
+    "rva": "0x82fac",
+    "size": 100
+   },
+   {
+    "name": "RESOURCE",
+    "rva": "0x81000",
+    "size": 1978
+   },
+   {
+    "name": "BASERELOC",
+    "rva": "0x82f54",
+    "size": 8
+   },
+   {
+    "name": "COR20",
+    "rva": "0x0",
+    "size": 1048576
+   }
+  ],
+  "sections": [
+   {
+    "name": ".text",
+    "virtualSize": 516096,
+    "virtualAddress": 4096,
+    "sizeOfRawData": 62976,
+    "pointerToRawData": 1536,
+    "flags": "0xc0000040",
+    "entropy": 7.9932,
+    "raw_bytes_available": 62976
+   },
+   {
+    "name": ".data",
+    "virtualSize": 8192,
+    "virtualAddress": 520192,
+    "sizeOfRawData": 512,
+    "pointerToRawData": 64512,
+    "flags": "0xc0000040",
+    "entropy": 0.5812,
+    "raw_bytes_available": 512
+   },
+   {
+    "name": ".rsrc",
+    "virtualSize": 4096,
+    "virtualAddress": 528384,
+    "sizeOfRawData": 512,
+    "pointerToRawData": 65024,
+    "flags": "0xc0000040",
+    "entropy": 2.0679,
+    "raw_bytes_available": 512
+   },
+   {
+    "name": ".aspack",
+    "virtualSize": 8192,
+    "virtualAddress": 532480,
+    "sizeOfRawData": 6144,
+    "pointerToRawData": 65536,
+    "flags": "0xc0000040",
+    "entropy": 5.4293,
+    "raw_bytes_available": 6144
+   },
+   {
+    "name": ".adata",
+    "virtualSize": 4096,
+    "virtualAddress": 540672,
+    "sizeOfRawData": 0,
+    "pointerToRawData": 71680,
+    "flags": "0xc0000040",
+    "entropy": null,
+    "raw_bytes_available": 0
+   }
+  ],
+  "overlay": {
+   "offset": 71680,
+   "bytes": 0
+  },
+  "imports": [
+   {
+    "dll": "kernel32.dll",
+    "functions": [
+     "GetProcAddress",
+     "GetModuleHandleA",
+     "LoadLibraryA"
+    ],
+    "count": 3
+   },
+   {
+    "dll": "msvbvm60.dll",
+    "functions": [
+     "__vbaVarTstGt"
+    ],
+    "count": 1
+   }
+  ],
+  "resource_dir_offset": 65024,
+  "version": {
+   "valueLen": 616,
+   "type": 52,
+   "fixed": {
+    "signature": "",
+    "structure": "0x4bd",
+    "fileVersionMS": 2293760,
+    "fileVersionLS": 0,
+    "productVersionMS": 2293760,
+    "productVersionLS": 0,
+    "fileFlagsMask": "0x0",
+    "fileFlags": "0x0",
+    "fileOS": "0x4",
+    "fileType": "0x1"
+   },
+   "strings": {}
+  },
+  "rich": [
+   {
+    "id": "0x2b9c",
+    "ver": 10925,
+    "count": 1
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x79e",
+    "ver": 17102,
+    "count": -2001779838
+   },
+   {
+    "id": "0x9a45",
+    "ver": 10466,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -1985658322
+   },
+   {
+    "id": "0x43c5",
+    "ver": 17096,
+    "count": -2001886514
+   },
+   {
+    "id": "0x72ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x62cf",
+    "ver": 17094,
+    "count": -2002103602
+   },
+   {
+    "id": "0xb2ce",
+    "ver": 17097,
+    "count": -1997913394
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17102,
+    "count": -2002108210
+   },
+   {
+    "id": "0x42ca",
+    "ver": 17102,
+    "count": -2002107667
+   },
+   {
+    "id": "0x42ca",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x12ce",
+    "ver": 17094,
+    "count": -2002107186
+   },
+   {
+    "id": "0x8141",
+    "ver": 17094,
+    "count": -2002107700
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17118,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17118,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107682
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x6d62",
+    "ver": 17094,
+    "count": -2002107734
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17094,
+    "count": -2002107020
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x6d9a",
+    "ver": 17094,
+    "count": -2002107706
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2001059122
+   },
+   {
+    "id": "0x36e0",
+    "ver": 15019,
+    "count": -2002107718
+   },
+   {
+    "id": "0xa2ce",
+    "ver": 17097,
+    "count": -2002103602
+   },
+   {
+    "id": "0xb4ce",
+    "ver": 17102,
+    "count": -2002107186
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": 1219117710
+   },
+   {
+    "id": "0x26e0",
+    "ver": 13999,
+    "count": -2002107729
+   },
+   {
+    "id": "0x62ce",
+    "ver": 17102,
+    "count": -2001882418
+   },
+   {
+    "id": "0x40ce",
+    "ver": 17102,
+    "count": -2002075954
+   }
+  ],
+  "strings": {
+   "ascii_count": 795,
+   "wide_count": 2534,
+   "gbk_count": 0,
+   "gbk_sample": [],
+   "wide_sample": [
+    "됀촉렡䰁",
+    "桔獩瀠潲牧浡挠湡潮⁴敢爠湵椠⁮佄⁓潭敤",
+    "\udbc4䋏袪䋏袪䋏袪幌袤䋎袪悀袣䋍袪擹袧䋎袪楒档䋏袪",
+    "@쀀搮瑡a",
+    "@쀀爮牳c",
+    "@쀀愮灳捡k ",
+    "@쀀愮慤慴",
+    "엠衠뀨㪌",
+    " 혽\udf23墤夌ㄊ豅䒐倔偐",
+    "㉆옢\udef7俟",
+    "昛槳﹭獞讙",
+    "菬츤锬寜矉䥒뉪덙뤉萫\ud960〹䮖鈰挶渹敜㋩擞\udc9b斎廞띜瞹㏧霹鲙컝\udf9c￿糺뿖歞㷟忳神",
+    "瓙챜㙕猃驫蛥웒ꂹ誋덫쪺",
+    "쵟쌶㝷屲\udb49毘욆悝",
+    "㮝Ꙭ\udded붼蚪틜",
+    "㕢愥쨹瓓\ud97c뷙蟔\ud88b㌮즽㔖䗛薘",
+    "웹訷协겂",
+    "꿵睓油㙬안屪沬棥콬",
+    "宬펪盌轓爐띠",
+    "骬\ud86e䖲羅募僆䍖鐯홨",
+    "歪흔㳉姼⃺ꢸ噤\udd77刏柉墈릩瓯",
+    "㥄䖖葦骦셾茾黫",
+    "䢻鉐僵쇺䌦枲",
+    "폌ヶǟ捘꫑ꑙ늑",
+    "㵢퍼꿘맽銼䋍",
+    "윐鑘衁쀲肁쀒蘲",
+    "奰첁嬏ꁄ",
+    "㍠鍰옂䀎\ude76",
+    "鱐㟡鳈䡨",
+    "骁ꌉꮈ\ude40㠇偑\udac2섎쌭ꀊč",
+    "薠゜激蚊毂膁",
+    "ퟄ끁愴厅\ud80b",
+    "䉨銏ꀕ봧ꤨ侁퀝夬踸䴿藝",
+    "䅹荠㬈暨뤂袕ꚫ",
+    "碜뉐觓懶",
+    "ꍮ睨亇",
+    "쑬春鱅ㆁ燵멁壁갟胁蘊",
+    "ﲵ뱏䑃钂밲悻",
+    "賍耜㧯턒쀶臈嫿䀥",
+    "ꌡ踄喸燰갃僴\uda04풁礤",
+    "퀅숝뀥",
+    "뛀䦄신梑䆸뮉삃瑍ꄃ괃",
+    "䮔籁‍㴦锋怌",
+    "䈅怋쉤橘逥",
+    "壠벁䔊㢅쀊蜴",
+    "ㅘ䠆ㄤ共퓂뀘鲌稊〖䃨灜䉖",
+    "尕穸㠬썥",
+    "밑䝸\udf43鿂蘟䤐",
+    "痨꜀䤁䔄칄ヤ仸㤬",
+    "聈偫ꋤ辚",
+    "좲覭쮪艄",
+    "䱐큆饌诎풃",
+    "挨镭頫쥋\uda37錣䨱剠眑冓澙損榒櫂",
+    "殚搜㤢叙䴄",
+    "翔蜏再",
+    "砣㟥漞퇲獴标篺㽚꙲",
+    "㫋\udd30ㅈ\ud986롒響懎꛹ꥅ",
+    "䁾偋퀪壘嬑큁后遄ꀕ튐",
+    "옘啌槠갎퐥㢡",
+    "胈ꢲ䆓ㆀ훣釩",
+    "啣좪暲l郺ﷁ﹧\udcc6\udd91玝",
+    "淉䱤쌕彠",
+    "빪ꋊ쮓瀦焝ꖜ，霏籡鈹",
+    "辖䟶䷒摌ꐰ삹傺\ud8b0",
+    "誱㬾囀艬",
+    "\udd35腪岢",
+    "镗뼰겲䐛馃",
+    "燴뻄戦첷꯹䎶䠅אַ퉱阅崉䶬黁鬆ꉠ퇶蔮答揟葛付",
+    "ꋣ锗嶂嬂",
+    "䧈兮ų륹㲊",
+    "目䐚庤楄濏鲈怀雇䶔ꀓ昲쨲惵蓊〥莫㰈鎂ꨰ홡",
+    "簹閇䗴슯",
+    "缇堗옔ァ",
+    "쁆\udcc4呏䘖謶",
+    "酪렝偗寪",
+    "䏂胃鲙흅慡",
+    "낐萸뇏粭훱㸷䧑줟俏ㆬ",
+    "試혧ㅙ膉",
+    "棸髇沜劢䗎",
+    "㧨쀈킹욎孅䀋",
+    "礔悮㝖褈蹂\udc0a倝",
+    "黇낉鄫㇘",
+    "璏剼佰頊轜銅椄가횁",
+    "䙂즰쐷䱊厔說軐藉鎏縒尮墛䃺䦦諅鰎ꀴ",
+    "枡㽉쎕嬪",
+    "Ǔ찵浄觅㉨",
+    "襂㙑遙饢괄",
+    "接鳦揭韥虫",
+    "㨴뛥ﯘ矢ㅥ푁狸荇䶊锂﹠",
+    "獱궡계팋ꮛ푉垶鵠䠨戚艋꜖膬써馍ꐋ쨈鰘係",
+    "㰠崆刔ꁩ膪騶쪊琑",
+    "ゆ匭楡腂",
+    "跓퀒Ť焮",
+    "쒡ꟽ곺墅㗊塣",
+    "醇뙎㉑퇔쉐",
+    "셴鴸肉Ĵ鹋ꐊ夓㓬몟첓䉩㻃렓㷢",
+    "儔艠읇撉䚓광",
+    "Ꝁ㝒䳄邯렔v",
+    "퐉ꪒ쩰쎥쫈꣚Ʈ嘮",
+    "뱲呍㇑蕓鏔Ꝅ㚋딗ꒈ愖餁퓺神",
+    "놕꩐㰱蝜톅橈炪咅",
+    "幥鸠㺆꓏ɍ삵",
+    "䡤꠵貔䋕쨽瘊㔇",
+    "韅凶먱埤嗢鞃쎮钘",
+    "㜁쬖踉",
+    "䍣농똩彁냁啹岔傰塹",
+    "넊甼亠茀請",
+    "긞怙匢頦逻\uda22췅㠃",
+    "닭䐥䋡浵䖈䶸玂蝱㲑㚏",
+    "湇兑縓ꠌ",
+    "塱謱몕䉅㠳",
+    "炗ꏖꋳ\udead語ꃻ猒",
+    "ꉞ時ퟎ얱麬紓",
+    "ꐂ펋㐛验㸵塞\ud89f듚椩ㆇ骠",
+    "맂邆槢䄉",
+    "죉삮瑸栬녱犁槁儩䪑傣牢陡㐝糯澉퀌",
+    "㱒﫼褒좫餌遅溊",
+    "葄堤Ꚑꧦ皾庽촆檭ꭥ큢潬",
+    "襓Ǧ㎰ㄕ",
+    "蒐ぎ몢䢃헐퍗䇌瓠삚ꆰ囅",
+    "摰솭쪐䝰",
+    "䒯䬔䠨蒯쇪焒欲㐌麃澱잊예䝖",
+    "逽孚㘡彑삉",
+    "㦜懹顈ꨢ蝨㞑䲻",
+    "祖宁誙乜",
+    "抭귩垑䉛",
+    "쾠껖塬",
+    "른銋詣璥",
+    "뀫격놉",
+    "\ud849됊嶩搣譥㲕ꩻ痶딟",
+    "륛扴旧巭㫢쬮㾫慽늋戗뗕",
+    "곯㹽ꌯ笮㋞幞ꭕ鞢鞼ퟦ軕受駼",
+    "ꡖ硝掺쿫於춷멤秙긞\ud9e9",
+    "诜ﳘ絤",
+    "禠㹥㳛碱ꯉ鞼놣",
+    "쭸괦켻灏핸",
+    "㳟麟齌﹫歿",
+    "敟壾鶾侾헇﬎",
+    "者﫪짏㻃峽",
+    "콽妬忐瑳",
+    "쀙㦺㞴髢殺헕ꯇ퉫抳\uda70챆㺮퓰훔胋湵\udfcb颮鸜",
+    "饆貢讌㠘㼿郿",
+    "뚠ꝍ禗ꈚ",
+    "濂皦曚瓺",
+    "㣙ꗞ꾼鏷煩穧惤墢",
+    "磓瞳秵\udf30ￖ鼉ꍀ酌",
+    "ꕜ朚\ud832㎈숉윆詸䠃",
+    "㑈꒠熦㢾붰䶰金㑠ﰘﻃ森昩㯊碌",
+    "ﲃ푤컎㿲㸒辰投\udbfe㥀䯠",
+    "滸탓\udf36쁿俠"
+   ]
+  }
+ },
+ {
+  "file": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\PDF规范阅读器.exe",
+  "bytes": 249856,
+  "sha256": "0470e02d831939d2be8b9ebac76f94ff0dc3a1c056a6e21b715967f509a72f05",
+  "e_lfanew": 184,
+  "machine": "0x14c",
+  "numSections": 3,
+  "timeDateStamp": 1742774167,
+  "timeDateStampISO": "2025-03-23T23:56:07.000Z",
+  "characteristics": "0x10f",
+  "optionalMagic": "PE32",
+  "imageBase": "0x400000",
+  "entryPoint": "0x4",
+  "sizeOfImage": 249856,
+  "sizeOfHeaders": 4096,
+  "dataDirectories": [
+   {
+    "name": "IMPORT",
+    "rva": "0x20894",
+    "size": 40
+   },
+   {
+    "name": "RESOURCE",
+    "rva": "0x22000",
+    "size": 108390
+   },
+   {
+    "name": "BOUND_IMPORT",
+    "rva": "0x228",
+    "size": 32
+   },
+   {
+    "name": "IAT",
+    "rva": "0x1000",
+    "size": 344
+   }
+  ],
+  "sections": [
+   {
+    "name": ".text",
+    "virtualSize": 130808,
+    "virtualAddress": 4096,
+    "sizeOfRawData": 131072,
+    "pointerToRawData": 4096,
+    "flags": "0x60000020",
+    "entropy": 4.7377,
+    "raw_bytes_available": 131072
+   },
+   {
+    "name": ".data",
+    "virtualSize": 2752,
+    "virtualAddress": 135168,
+    "sizeOfRawData": 4096,
+    "pointerToRawData": 135168,
+    "flags": "0xc0000040",
+    "entropy": 0,
+    "raw_bytes_available": 4096
+   },
+   {
+    "name": ".rsrc",
+    "virtualSize": 108390,
+    "virtualAddress": 139264,
+    "sizeOfRawData": 110592,
+    "pointerToRawData": 139264,
+    "flags": "0x40000040",
+    "entropy": 4.2299,
+    "raw_bytes_available": 110592
+   }
+  ],
+  "overlay": {
+   "offset": 249856,
+   "bytes": 0
+  },
+  "imports": [
+   {
+    "dll": "MSVBVM60.DLL",
+    "functions": [
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?",
+     "?"
+    ],
+    "count": 85
+   }
+  ],
+  "resource_dir_offset": 139264,
+  "version": {
+   "valueLen": 508,
+   "type": 52,
+   "fixed": {
+    "signature": "",
+    "structure": "0x4bd",
+    "fileVersionMS": 65536,
+    "fileVersionLS": 0,
+    "productVersionMS": 65536,
+    "productVersionLS": 0,
+    "fileFlagsMask": "0x0",
+    "fileFlags": "0x0",
+    "fileOS": "0x4",
+    "fileType": "0x1"
+   },
+   "strings": {}
+  },
+  "rich": [
+   {
+    "id": "0x2b9c",
+    "ver": 10925,
+    "count": 1
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x79e",
+    "ver": 17102,
+    "count": -2002173054
+   },
+   {
+    "id": "0xdd59",
+    "ver": 9518,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -1985658322
+   },
+   {
+    "id": "0x43c5",
+    "ver": 17096,
+    "count": -2002238770
+   },
+   {
+    "id": "0x82ce",
+    "ver": 17103,
+    "count": -2002107698
+   },
+   {
+    "id": "0x570e",
+    "ver": 17102,
+    "count": -2002103602
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17100,
+    "count": -1997913394
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17102,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ca",
+    "ver": 17102,
+    "count": -2002107697
+   },
+   {
+    "id": "0x42ca",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x92ce",
+    "ver": 17101,
+    "count": -2002103602
+   },
+   {
+    "id": "0xfba5",
+    "ver": 17098,
+    "count": -2002107700
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17118,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17118,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107682
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x4a5a",
+    "ver": 17100,
+    "count": -2002107674
+   },
+   {
+    "id": "0x62ce",
+    "ver": 17100,
+    "count": -2002000472
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x40e6",
+    "ver": 17102,
+    "count": -2002107666
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17102,
+    "count": -2002107498
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x36e0",
+    "ver": 15019,
+    "count": -2002107718
+   },
+   {
+    "id": "0xbc36",
+    "ver": 17103,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17100,
+    "count": -2002103602
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -2002107698
+   },
+   {
+    "id": "0x42ce",
+    "ver": 17102,
+    "count": -391494930
+   },
+   {
+    "id": "0x26e0",
+    "ver": 13999,
+    "count": -2002107729
+   },
+   {
+    "id": "0x480e",
+    "ver": 17102,
+    "count": -2002234674
+   },
+   {
+    "id": "0x52ce",
+    "ver": 17102,
+    "count": -2002234674
+   }
+  ],
+  "strings": {
+   "ascii_count": 1583,
+   "wide_count": 2688,
+   "gbk_count": 0,
+   "gbk_sample": [],
+   "wide_sample": [
+    "됀촉렡䰁",
+    "桔獩瀠潲牧浡挠湡潮⁴敢爠湵椠⁮佄⁓潭敤",
+    "\udbc4䋏袪䋏袪䋏袪幌袤䋎袪悀袣䋍袪擹袧䋎袪楒档䋏袪",
+    " 怀搮瑡a",
+    "@쀀爮牳c",
+    "@䀀庨",
+    "卍䉖䵖〶䐮䱌",
+    "씲昐蠃昄꼒昏榇昐惯昐싳昐\ud9d4昁",
+    "昄棔昐ꟓ昏\uda3e昁ꗶ明깚昏ꌣ昀",
+    "昄젺昄ꞇ昏䑥昁쐀昐\ud872昁\ud94b昁ꠟ昏ꤟ昏\udd35昀䏳昏揫昐螭昄ퟵ昁\ud937昁畚昁\udaf4明\ud8e2昁蠗昄싚昐\ud9f5昁\udd7a明",
+    "昃앳昐꼏昏脈昁虊昄뢥昁",
+    "昐ꮢ昏꣓昏㌩昏․昑昁啠昀昀ǎ昁藠昄檲明ꑊ昀",
+    "昁ꡓ昏꥓昏\ud83c昁",
+    "昄\ud8f4昁ꢇ昏ꋂ昏뜨昀겑昂棿昐\uda75昀ぼ昑敒昐枃昐樘昐楟昐袐昃蠿昄\ud8b1昁糌昅䀗昏阱昏",
+    "昄\ud923昁\ud8cd昁",
+    "\ud879A\ud89cA\ud880A",
+    "폥A폽A퐌A픘A혞A홐A홷A횩A흘AퟍA\ud824A\ud856A\ud865A\ud872A",
+    "AAA",
+    "\ud975A\ud98dA\ud99cA\uda55A\udaddA\udb62A\udb67A\udbefA\udc74A\udd30A\ude94A\ude99A\ude99A\udf9eAAAAAAAAAAAAAAAAAAAAAA",
+    "AAA",
+    "AAAAAAAAAA",
+    "AAA",
+    "AAAAAAAAAAAAAA",
+    "AAAAAA",
+    "䑈ꀀ䖥쀀䕚",
+    "周䆾￮￿",
+    "茒鞖䟫\udba7㚪夣",
+    "㈰㐰〳꒹첳1〰",
+    "쳿1契茏",
+    "꛻Ꝅ\udede魒",
+    "髅焤\udce7荆좕백蹖㪣굏餳콦뜑",
+    "潆浲1čDꚱﺼ䑐륆럦풶뛄웁⃷††††††††††",
+    "ꚱﺼ䕔㩌㌱㜴ㄸ㤷㜲",
+    "B鸣ƣ氀t阀ƣ",
+    "匀ㄐ簀䨘輀唛蔀伙开㠒㐀",
+    "였瘦蜬鄯豈锱輯쌀琥琀䔖",
+    "踮鈯贮謀匚",
+    "\udd00萫\ud800脪陁切뉫切꽥豈餹豈鬼切녨切뉩豈鱀猀䐖케簨\udd00뎈첫땻豈뾅ﰀﰀﬀ뾃ﬀ부ﰀ\ud8b4ﬀ삄숀猥밀瀤꜀挠좯숀琥픀缩謭ꭞ豈ꙓ豈鐰ﰀ\ud8b5퐀縩鄀嘛\udc00쒭넀椢ꁕꍎ茀丙팀縩萀丙휀솬ꀀ弞\uda00鍌驈錰踀君묀漤舀䴙팀사밀陱\udd00얬쒦\ud900ꙴ깷펭ﰀ횰切롵逯笀䤗爀䐖꤀搠뤀ꆉ\udb00첾\udf00타폂헃\ud9c5\uddc8ﰀﬀ쮛蘫倀』",
+    "稀䠗砀䜖鈰쌀琦",
+    "稀䤗뀀椢贮㴀",
+    "툀紩ꨀ攡턀紨\ud900航䀀",
+    "洀䄕딀氣츀笨欀䀕Ȁ崀",
+    "巤Ȁ崀섂",
+    "넀巤Ȁ崀鄂",
+    "脀巤Ȁ崀愂",
+    "儀巤Ȁ崀㄂",
+    "℀巤Ȁ崀Ă",
+    "巣Ȁ崀턂",
+    "섀巣Ȁ崀ꄂ",
+    "鄀巣Ȁ崀焂",
+    "愀巣Ȁ崀䄂",
+    "㄀巣Ȁ崀",
+    "Ā巣Ȁ崀",
+    "턀巢Ȁ崀넂",
+    "ꄀ巢Ȁ崀脂",
+    "焀巢Ȁ崀儂",
+    "䄀巢Ȁ崀ℂ",
+    "巢Ȁ崀",
+    "巡Ȁ嘌樀글",
+    "崀鄂",
+    "脀巡Ȁ崀愂",
+    "儀巡Ȁ崀㄂",
+    "℀巡Ȁ崀Ă",
+    "巠Ȁ崀턂",
+    "섀巠Ȁ崀ꄂ",
+    "鄀巠Ȁ崀焂",
+    "愀巠Ȁ崀䄂",
+    "㄀巠Ȁ崀",
+    "Ā巠Ȁ\udff1崀\udf00",
+    "턀巟Ȁ\udfc1崀넂\udf00",
+    "ꄀ巟Ȁ\udf91崀脂\udf00",
+    "焀巟Ȁ\udf61崀儂\udf00",
+    "䄀巟Ȁ\udf31崀ℂ\udf00",
+    "巟Ȁ\udf01崀\ude00",
+    "州Ȁ\uded1崀섂",
+    "欀䉦䐻㍬",
+    "晥㭂㵄㐳朵",
+    "圀奘孚嵜彞慠b",
+    "䨀䱋乍偏剑",
+    "䈀䑃㌽䙅",
+    "㬀㴼㐳㼾",
+    "㄀㌲㔴㜶",
+    "＀ÿ＀ÿ",
+    "＀ÿ＀ÿ",
+    "豈锱豈锱豈锲豈锱豈锱豈锱豈锱豈锱鐰鐰鐰鐰錰錰鈰鈯鄯鄯逯輮踮贮謭褭蠬蜬蜬蘬\ude00蔬\udd00蔬\udb00萬\ud800舫혀耪퐀縩퀀簨촀笩쬀稩준礩윀砨씀瘧쐀甦쌀琥숀琥섀猥뼀爤밀瀤뤀渣똀氣대欢넀樢꼀栢글校가昡ꨀ攡ꠀ搠ꔀ挠ꌀ感ꄀ怟鼀弟鴀帞鬀崞頀嬝销夜鈀圜退嘛踀君謀刚蠀倚蔀伙萀丙舀䴙缀䰙紀䬙笀䨘礀䠘眀䜗甀䔖焀䌕洀䄔最㴓愀㨒嬀㘑唀㈐儀』䤀",
+    "ĀĀȀĀ",
+    "䜀〙圀㴣樀丱紀帿褀桇鐀牏ꈀ繚가蝡딀蹧봀鑬쀀饱쌀鱴윀鵴쨀鹲퀀ꁰ혀ꉮ\udd00ꑬꝫꡩꡦꭩ구꽬끭녮뉱둵뙽랃랉랎\udd00뢓\uda00몚\udb00뺠\udc00삥\udd00쎨\udf00얪욫잫좧즣쮢첢캣豈쾥切톩ﬀ펬ﬀ햯ﬀힳﬀ\ud9b7ﰀ\udabaﰀ\udcbdﰀ\uddbfﰀ\udec2ﰀﬀﬀ切切切ﬀﰀﴀﴀ︀淋︀ﯹ︀ﷻ︀﷼︀﻽︀﻽︀﻽︀﻽",
+    "㸩䥈䍆㱁",
+    "䤩䱎䙉䅃㬾㈷",
+    "㸓乏䥌䍆㹁㜻",
+    "佂䱎䙉䅃㬾㈷",
+    "㸉乏䥌䍆㹁㜻",
+    "伫䱎䙉䅃㬾㈷",
+    "䥊싀쏃쓃훅훖ퟗ",
+    "\ud84e￻￿￿￿﫹￿￿￿刺",
+    "㸇\uda4cퟜ￷￿퓈￲￿",
+    "䨐\uda49䇛뼻쇁",
+    "䤚\uda46㻛㜻",
+    "䘠\udb43㯜㈷",
+    "ﷶﯴ퇵",
+    "㔀㔸㜴䔽J",
+    "＀￿￿￿￿￿￿",
+    "￿￿￿￿￿￿",
+    "ȀȀĀȀĀȀĀĀĀĀĀĀ",
+    "ĀĀȀĀ",
+    "倀【匀㈐嘀㐐堀㔑娀㘑崀㜑开㤒戀㬓搀㰓最㴓椀㸔樀㼔欀䀔洀䀔洀䄕渀䄕瀀䈕焀䌕猀䐖琀䔖瘀䘖砀䜗稀䠗紀䨘缀䬘脀䰘茀丙蔀伙蜀倚蠀儚言刚谀匛踀君退嘜錀堝销娞需嬟頀崡騀弤鬀愦鴀挨鼀挨ꀀ戥ꈀ愡ꌀ感ꔀ戠꜀搠꤀攡가昡글栢뀀椢눀樣됀氣딀氣뜀洤렀渤묀瀥븀爥섀猦쌀琦쐀甦였瘦윀眦저眧쨀礧찀稧케笨퀀簨툀紩퐀縩혀耩휀耩\ud900脪\uda00航\udc00茫\ude00蔫蘬蠬褬設謭谭贮踮輮逯逯鄯鈰錰錰鐰鐰鐱鐱豈锱豈锱豈锱豈锱豈锱豈锱豈锲阳阵頹鱁鹇鵊魎驒\udd00驗\udd00鵝ꁡꙦ꭬끳덻몇슓쮡톬햱豈\ud8b8切\uddc0ﬀﰀﴀ︀︀ﳹ︀﻽＀﻾＀￾＀￿＀￿＀￾＀﻾＀﻾︀﷼︀ﳺ︀ﯸﴀ﫷ﴀ淋ﰀﬀ\uded2\ud9cb킿\udb00욱휀뺦퐀릞퀀뒗촀낒쬀궎준ꦊ윀ꞈ씀ꖇ윀Ꚇ준ꞅ찀ꢅ츀ꦅ턀ꮅ퐀궇\ud900낈\udf00뒉릋붌뾍솎쎏切얐切양ﬀ욒ﬀ잔ﬀ좖ﬀ즗ﬀ즙",
+    "꺮꺮꺮꺮꺮",
+    "글꺮꒮鎙醐鮕꺥꺮",
+    "글ꦮ肘摯晣橧湭罱鶎꺩",
+    "ꦮ溏恞换杦浪灮祱絺鲈꺩",
+    "꺮炜幜扠晣橧湭煰穹罽薂꒒꺮",
+    "글貮屡恞换杦浪灮祱絺艿螅醋꺟",
+    "ꦮ妃幜扠晣橧湭煰穹罽薂讇鎏ꂗꚫ",
+    "글蒮屙恞换杦浪灮祱絺艿螅辋隓鶚ꆤ",
+    "글妌幜扠晣橧湭煰穹罽薂讇鎏骗ꆝꂦ",
+    "骮屟恞换杦浪灮祱絺艿螅辋鞓鶚ꚡꞫ鎘",
+    "글炩幜扠晣橧湭煰穹罽薂讇鎏骖ꆝꮦ꺮邟",
+    "글岐摞畵癵癶繾뮻뮻벼벼붼뺽삿샀샀꺷钩",
+    "ꦮ幭\udf67퇑퇑퇑퇑퇑퇑퇑퇑퇑퇑퇑퇑퇑럌麮蒆",
+    "颮恞퇫퇍퇑퇑퇑퇑퇑\ud9db퇑퇑퇑퇑퇑\udbd1ꦮ膉",
+    "羮扠퇫퇗퇑퇑퇑퇉퇑퇑퇑\udad1￻꺮纓",
+    "글涮换퇫淫\udee1\udddc袻뻰뾓쫆\udbcc죋뛸ﾮ꺮粜y",
+    "글採晣퇫滪煰穹罽薂讇샳骖ꆝ꺦꺩꺮ﾮ꺮箥y",
+    "글掗杦퇫烩祱絺艿螅辋쇴鶚ꚡ꺫꺮꺮ﾮ꺮纮q",
+    "글暐橧퇫燩穹罽薂讇鎏쇵ꆝꮦ꺮꺮꺮ﾮ꺮芮p",
+    "글枎浪퇫秩絺艿螅辋隓싃ꚡ꺫꺮꺮꺮ﾮ꺮芮n",
+    "글檏湭퇬竨罽薂讇鎏骗ꮦ꺮꺮꺮꺮ﾮ꺮膮m",
+    "글涓灮퇬編艿螅辋鞓鶚꺫꺮꺮꺮꺮ﾮ꺮綮j",
+    "글溙煰퇮翱薂讇鎏骖ꆝ暈꺮꺮꺮꺮꺮ﾮ꺮犮h",
+    "글炣祱퇯苲螅辋鞓鶚ꚡ暈꺮꺮꺮꺮꺮ﾮ꺮檤f",
+    "글綮穹퇰藳讇鎏骗ꆝꮦﳆ꺮꺮꺮꺮꺮ﾮ꺮暘d",
+    "趮絺퇱蟳辋隓鶚ꚡ겫쓈꺮꺮꺮꺮꺮얩꺮撆",
+    "鲮罽햼鎑骗ꆝꮦﲴ\ud8ce껂꺮꺮꺮뚮컄뿖ꦮ捯",
+    "ꦮ芈퇎쏞뢾랶樂퇊퇑징럶뚷삷쳅\ud9d1껁閮慣",
+    "글薛讇쪽퇑퇑퇑퇑쯑ￂ퇚퇑퇑퇑컑럈꺮犩a",
+    "글醩辋鞓쒾쫈쯋엉뗀꺮쫇쯋죊럹꺬꺮憐_",
+    "ꎮ鎐骗ꆝꮦ꺮꺮꺮꺮꺮꺮꺮꺮꺮꺮ꂮ彨",
+    "글鞟鶚ꚡ꺫꺮꺮꺮꺮꺮꺮꺮꺮꺮꺮禨_",
+    "글ꂮꆝꮦ꺮꺮꺮꺮꺮꺮꺮꺮꺮꺮ꦮ彿]",
+    "ꮮꚤ꺫꺮꺮꺮꺮꺮꺮꺮꺮꺮꺮綧嵟",
+    "ꘀꂡ꺨꺮꺮꺮꺮꺮꺮꺮꺮꺮ꊮ役]",
+    "骝ꂘ꺩꺮꺮꺮꺮꺮꺮꺮ꦮ檐嵟",
+    "邓麔꺩꺮꺮꺮꺮꺮ꦮ熕彡",
+    "贀蚉閊ꢞ꺮꺮꺮馧澆慣_",
+    "萀纀籼莀芄祾晬捤a",
+    "祹灱浮桪摦",
+    "＀￿￿ÿ＀￿￿ÿ＀￿￿ÿ＀￿￿ÿ＀＇ÿ＀ÿ＀ÿ＀ü㼀ÿ＀ø",
+    "Āÿ＀À",
+    "ÿ＀ü㼀ÿ＀ÿ＀ÿ＀＇ÿ＀￿￿ÿ＀￿￿ÿ＀￿￿ÿ＀￿￿ÿ",
+    "豈锱豈锱锱鐱锱防霵頸豈霶阳錰鄯逯輮踮谮設褭蠬蘬\ude00萫\udc00茫\ud900脪혀缩툀紨케簨촀稧쬀礧저眦씀甦쌀琦섀猥븀焤밀瀤묀瀤뤀渤뜀洣됀欣넀樢꼀椢글栢가朡꬀昡꤀搠꜀挠ꔀ挠ꌀ感ꈀ怟鼀弟鸀帟鸀帞騀尝鐀堜贀君縀䬘爀䐖攀㰓䠀"
+   ]
+  }
+ },
+ {
+  "file": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\MQJSSV35.EXE",
+  "bytes": 13372298,
+  "sha256": "a0976f7383c0ff9924b2dc0d4e33d773f1fb9007d1d6ecbd86915708be93004b",
+  "e_lfanew": 192,
+  "machine": "0x14c",
+  "numSections": 11,
+  "timeDateStamp": 1783151868,
+  "timeDateStampISO": "2026-07-04T07:57:48.000Z",
+  "characteristics": "0x10f",
+  "optionalMagic": "PE32",
+  "imageBase": "0x400000",
+  "entryPoint": "0x4",
+  "sizeOfImage": 36040704,
+  "sizeOfHeaders": 4096,
+  "dataDirectories": [
+   {
+    "name": "IMPORT",
+    "rva": "0x1eb7c3c",
+    "size": 80
+   },
+   {
+    "name": "RESOURCE",
+    "rva": "0x1e42000",
+    "size": 53248
+   },
+   {
+    "name": "BASERELOC",
+    "rva": "0x1ebf000",
+    "size": 13624
+   },
+   {
+    "name": "IAT",
+    "rva": "0x1eaf000",
+    "size": 644
+   },
+   {
+    "name": "COR20",
+    "rva": "0x0",
+    "size": 1048576
+   }
+  ],
+  "sections": [
+   {
+    "name": ".text",
+    "virtualSize": 31506432,
+    "virtualAddress": 4096,
+    "sizeOfRawData": 0,
+    "pointerToRawData": 0,
+    "flags": "0xc0000040",
+    "entropy": null,
+    "raw_bytes_available": 0
+   },
+   {
+    "name": ".data",
+    "virtualSize": 102400,
+    "virtualAddress": 31510528,
+    "sizeOfRawData": 0,
+    "pointerToRawData": 0,
+    "flags": "0xc0000040",
+    "entropy": null,
+    "raw_bytes_available": 0
+   },
+   {
+    "name": ".rsrc0",
+    "virtualSize": 53248,
+    "virtualAddress": 31612928,
+    "sizeOfRawData": 0,
+    "pointerToRawData": 0,
+    "flags": "0xc0000040",
+    "entropy": null,
+    "raw_bytes_available": 0
+   },
+   {
+    "name": ".aspack",
+    "virtualSize": 57344,
+    "virtualAddress": 31666176,
+    "sizeOfRawData": 57344,
+    "pointerToRawData": 4096,
+    "flags": "0xc0000040",
+    "entropy": 2.82,
+    "raw_bytes_available": 57344
+   },
+   {
+    "name": ".adata",
+    "virtualSize": 4096,
+    "virtualAddress": 31723520,
+    "sizeOfRawData": 0,
+    "pointerToRawData": 0,
+    "flags": "0xc0000040",
+    "entropy": null,
+    "raw_bytes_available": 0
+   },
+   {
+    "name": ".rsrc",
+    "virtualSize": 53248,
+    "virtualAddress": 31727616,
+    "sizeOfRawData": 53248,
+    "pointerToRawData": 64000,
+    "flags": "0xc0000040",
+    "entropy": 2.3057,
+    "raw_bytes_available": 53248
+   },
+   {
+    "name": ".text1",
+    "virtualSize": 327680,
+    "virtualAddress": 31780864,
+    "sizeOfRawData": 270336,
+    "pointerToRawData": 118784,
+    "flags": "0xe0000020",
+    "entropy": 6.4748,
+    "raw_bytes_available": 270336
+   },
+   {
+    "name": ".adata1",
+    "virtualSize": 65536,
+    "virtualAddress": 32108544,
+    "sizeOfRawData": 53248,
+    "pointerToRawData": 389120,
+    "flags": "0xe0000020",
+    "entropy": 0,
+    "raw_bytes_available": 53248
+   },
+   {
+    "name": ".data1",
+    "virtualSize": 65536,
+    "virtualAddress": 32174080,
+    "sizeOfRawData": 40960,
+    "pointerToRawData": 442368,
+    "flags": "0xc0000040",
+    "entropy": 3.1584,
+    "raw_bytes_available": 40960
+   },
+   {
+    "name": ".reloc",
+    "virtualSize": 65536,
+    "virtualAddress": 32239616,
+    "sizeOfRawData": 16384,
+    "pointerToRawData": 483328,
+    "flags": "0x42000040",
+    "entropy": 6.2397,
+    "raw_bytes_available": 16384
+   },
+   {
+    "name": ".pdata",
+    "virtualSize": 3735552,
+    "virtualAddress": 32305152,
+    "sizeOfRawData": 3715072,
+    "pointerToRawData": 499712,
+    "flags": "0xc0000040",
+    "entropy": 7.9998,
+    "raw_bytes_available": 3715072
+   }
+  ],
+  "overlay": {
+   "offset": 4214784,
+   "bytes": 9157514,
+   "entropy": 7.9996
+  },
+  "imports": [
+   {
+    "dll": "KERNEL32.dll",
+    "functions": [
+     "GlobalUnlock",
+     "GlobalLock",
+     "GlobalAlloc",
+     "GetTickCount",
+     "WideCharToMultiByte",
+     "IsBadReadPtr",
+     "GlobalAddAtomA",
+     "GlobalAddAtomW",
+     "GetModuleHandleA",
+     "GlobalFree",
+     "GlobalGetAtomNameA",
+     "GlobalDeleteAtom",
+     "GlobalGetAtomNameW",
+     "FreeConsole",
+     "GetEnvironmentVariableA",
+     "VirtualProtect",
+     "VirtualAlloc",
+     "GetProcAddress",
+     "GetLastError",
+     "LoadLibraryA",
+     "SetLastError",
+     "SetThreadPriority",
+     "GetCurrentThread",
+     "CreateProcessA",
+     "GetCommandLineA",
+     "GetStartupInfoA",
+     "SetEnvironmentVariableA",
+     "ReleaseMutex",
+     "WaitForSingleObject",
+     "CreateMutexA",
+     "OpenMutexA",
+     "GetCurrentThreadId",
+     "CloseHandle",
+     "ReadFile",
+     "GetFileSize",
+     "CreateFileA",
+     "FindClose",
+     "FindFirstFileA",
+     "FindFirstFileW",
+     "VirtualQueryEx",
+     "GetExitCodeProcess",
+     "ReadProcessMemory",
+     "ContinueDebugEvent",
+     "SetThreadContext",
+     "GetThreadContext",
+     "WaitForDebugEvent",
+     "SuspendThread",
+     "CreateThread",
+     "ResumeThread",
+     "CreateProcessW",
+     "GetCommandLineW",
+     "GetStartupInfoW",
+     "MapViewOfFile",
+     "DuplicateHandle",
+     "GetCurrentProcess",
+     "CreateFileMappingA",
+     "VirtualProtectEx",
+     "WriteProcessMemory",
+     "ExitProcess",
+     "CompareStringA",
+     "FlushFileBuffers",
+     "LCMapStringW",
+     "LCMapStringA",
+     "SetStdHandle",
+     "GetOEMCP",
+     "GetACP",
+     "GetCPInfo",
+     "GetStringTypeW",
+     "GetStringTypeA",
+     "CompareStringW",
+     "MultiByteToWideChar",
+     "SetFilePointer",
+     "HeapReAlloc",
+     "WriteFile",
+     "VirtualFree",
+     "HeapCreate",
+     "HeapDestroy",
+     "GetFileType",
+     "GetStdHandle",
+     "SetHandleCount",
+     "GetEnvironmentStringsW",
+     "GetEnvironmentStrings",
+     "FreeEnvironmentStringsW",
+     "FreeEnvironmentStringsA",
+     "UnhandledExceptionFilter",
+     "HeapFree",
+     "HeapAlloc",
+     "GetVersion",
+     "GetLocalTime",
+     "GetSystemTime",
+     "GetTimeZoneInformation",
+     "RtlUnwind",
+     "TerminateProcess",
+     "Sleep",
+     "EnterCriticalSection",
+     "LeaveCriticalSection",
+     "GetVersionExA",
+     "InitializeCriticalSection",
+     "GetCurrentProcessId",
+     "GetModuleFileNameW",
+     "GetShortPathNameW",
+     "GetModuleFileNameA",
+     "DebugActiveProcess",
+     "GetShortPathNameA"
+    ],
+    "count": 104
+   },
+   {
+    "dll": "USER32.dll",
+    "functions": [
+     "GetDesktopWindow",
+     "MoveWindow",
+     "SetPropA",
+     "EnumThreadWindows",
+     "GetPropA",
+     "GetMessageA",
+     "BeginPaint",
+     "EndPaint",
+     "KillTimer",
+     "GetAsyncKeyState",
+     "GetSystemMetrics",
+     "SetTimer",
+     "SetWindowTextA",
+     "GetDlgItem",
+     "CreateDialogIndirectParamA",
+     "ShowWindow",
+     "UpdateWindow",
+     "LoadStringA",
+     "LoadStringW",
+     "FindWindowA",
+     "WaitForInputIdle",
+     "DestroyWindow",
+     "MessageBoxA",
+     "InSendMessage",
+     "UnpackDDElParam",
+     "FreeDDElParam",
+     "DefWindowProcA",
+     "LoadCursorA",
+     "RegisterClassW",
+     "CreateWindowExW",
+     "RegisterClassA",
+     "CreateWindowExA",
+     "GetWindowThreadProcessId",
+     "SendMessageA",
+     "PeekMessageA",
+     "TranslateMessage",
+     "DispatchMessageA",
+     "EnumWindows",
+     "IsWindowUnicode",
+     "PackDDElParam",
+     "PostMessageW",
+     "PostMessageA",
+     "IsWindow",
+     "SendMessageW"
+    ],
+    "count": 44
+   },
+   {
+    "dll": "GDI32.dll",
+    "functions": [
+     "DeleteDC",
+     "RealizePalette",
+     "SelectPalette",
+     "CreateDCA",
+     "CreatePalette",
+     "DeleteObject",
+     "BitBlt",
+     "SelectObject",
+     "CreateCompatibleDC",
+     "CreateDIBitmap"
+    ],
+    "count": 10
+   }
+  ],
+  "resource_dir_offset": 64000,
+  "version": {
+   "valueLen": 836,
+   "type": 52,
+   "fixed": {
+    "signature": "",
+    "structure": "0x4bd",
+    "fileVersionMS": 2293760,
+    "fileVersionLS": 0,
+    "productVersionMS": 2293760,
+    "productVersionLS": 0,
+    "fileFlagsMask": "0x0",
+    "fileFlags": "0x0",
+    "fileOS": "0x4",
+    "fileType": "0x1"
+   },
+   "strings": {}
+  },
+  "rich": [
+   {
+    "id": "0x2400",
+    "ver": 9521,
+    "count": 1
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x802",
+    "ver": 19794,
+    "count": -1966781410
+   },
+   {
+    "id": "0xf1ae",
+    "ver": 10010,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1950265934
+   },
+   {
+    "id": "0x4c59",
+    "ver": 7937,
+    "count": -1966424750
+   },
+   {
+    "id": "0xd52",
+    "ver": 19817,
+    "count": -1966191278
+   },
+   {
+    "id": "0xff11",
+    "ver": 19642,
+    "count": -1960133294
+   },
+   {
+    "id": "0x7d52",
+    "ver": 19633,
+    "count": -1970385582
+   },
+   {
+    "id": "0x5d52",
+    "ver": 19794,
+    "count": -1966187182
+   },
+   {
+    "id": "0x4d56",
+    "ver": 19794,
+    "count": -1966191247
+   },
+   {
+    "id": "0x4d56",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0xbd52",
+    "ver": 20343,
+    "count": -1966187182
+   },
+   {
+    "id": "0x3be4",
+    "ver": 19730,
+    "count": -1966191280
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19778,
+    "count": -1966187182
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19778,
+    "count": -1966187182
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191294
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x316e",
+    "ver": 19641,
+    "count": -1966191358
+   },
+   {
+    "id": "0x6d52",
+    "ver": 19638,
+    "count": -1966170798
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0xbd52",
+    "ver": 19641,
+    "count": -1966180246
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0xbd52",
+    "ver": 19640,
+    "count": -1966190634
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1965142702
+   },
+   {
+    "id": "0x397c",
+    "ver": 13623,
+    "count": -1966191322
+   },
+   {
+    "id": "0x8d52",
+    "ver": 19634,
+    "count": -1966187182
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": -1966191278
+   },
+   {
+    "id": "0x4d52",
+    "ver": 19794,
+    "count": 1255034130
+   },
+   {
+    "id": "0x297c",
+    "ver": 14643,
+    "count": -1966191309
+   },
+   {
+    "id": "0xdd52",
+    "ver": 19795,
+    "count": -1959879342
+   }
+  ],
+  "strings": {
+   "ascii_count": 154941,
+   "wide_count": 533223,
+   "gbk_count": 0,
+   "gbk_sample": [],
+   "wide_sample": [
+    "ꌹ8峆ￇÀ",
+    "됀촉렡䰁",
+    "桔獩瀠潲牧浡挠湡潮⁴敢爠湵椠⁮佄⁓潭敤",
+    "\ud9a0䵓諎䵓諎䵓諎凐諀䵒諎漜談䴕諎步諃䵒諎楒档䵓諎",
+    "àďċ剓",
+    "뉃ǨǤ　ǣ",
+    "@쀀搮瑡a",
+    "@쀀爮牳っ",
+    "@쀀愮灳捡k",
+    "@쀀愮慤慴",
+    "@쀀爮牳c",
+    "@쀀琮硥ㅴ",
+    " 愮慤慴1",
+    " 搮瑡ㅡ",
+    "@쀀爮汥捯",
+    "@䈀瀮慤慴",
+    "9Ǭ뀀8ꀀ",
+    "뭝￭￿\udd03　ǣ붃",
+    "嶍卞ｐ䦕",
+    "贀歝坓闿",
+    "䖍ｷ因物畴污汁潬c楖瑲慵䙬敲e鶋",
+    "ﮀ甀﹞",
+    "＀옷쌇퟿",
+    "児卖좋謆劵",
+    "瓉砮갬",
+    "寎奞",
+    "ꗳ좋庤h",
+    "퀫祴슋㌐诛㦵",
+    "茀>慴事茄",
+    "ë荦．욃讚",
+    "숃굦ꭦ咾謁",
+    "숃\ud88bｐ䶕",
+    "蔀痀匇闿",
+    "\uda03䍃腓￣￿卿뗿",
+    "삅畛Ã",
+    "￿翿薋",
+    "譗䫓謂䖝",
+    "謀㱻粋砻尃",
+    "ﻫ￿肸ơ倀蔃",
+    "匀橗＀妕",
+    "欀牥敮㍬",
+    "汤l硅瑩牐捯獥s獵牥㈳搮汬䴀獥慳敧潂䅸眀灳楲瑮䅦䰀䅏䕄⁒剅佒R桔⁥牰捯摥牵⁥湥牴⁹潰湩⁴猥挠畯摬渠瑯戠⁥潬慣整⁤湩琠敨搠湹浡捩氠湩⁫楬牢牡⁹猥吀敨漠摲湩污",
+    "⁵潣汵⁤潮⁴敢氠捯瑡摥椠⁮桴⁥祤慮業⁣楬歮氠扩慲祲",
+    "瓀㈔냐턈珪脆髲ꟳﻁ痈鋧썚\udb87",
+    "쀀Ǡ퀀Ǡ",
+    "萀痀茊￈쒁",
+    "㠰偀灠ꂀ",
+    "āāȂȂ",
+    "圀䨹爄匵￿诿訂䀘岈",
+    "잋窉㬄珁寒犋謄",
+    "￿ÿ襟",
+    "謸豜质豌䌨㭀觅爙맫",
+    "犉褄䑲璉栤Ｓ璉",
+    "謀㑄褨}嶋",
+    "䖉襀㑄籬譍u䒋",
+    "쬫ﬃ\ud88a톋ﮊ璉",
+    "昐쎋讫诊",
+    "抍￿臿ÿ",
+    "琁式嵞쀲腛飄",
+    "줳삅㭶뒋갤",
+    "謀葄襨蜌쀳",
+    "謱葼赨葄䝨㢉芋",
+    "㭁狈忌嵞ư腛飄",
+    "%￾㬀珁謔貖",
+    "⃫䘻猴먇",
+    "쌫쨫퍟诨陌",
+    "帀譛脄썙噓譗㏹㏒跀梷",
+    "言れ䀾D뭞",
+    "䃓爺诞",
+    "匀\ud98b噕殍圄Ū춋",
+    "￼藿痀謎悻",
+    "꯳㎪櫶謄ﰌ￿䒈",
+    "譐ﲀ￿삄",
+    "㏃诶﷤￿猐謕悋",
+    "言ㄔ퀂蠏㑔䘤惫",
+    "춋돨￻菿",
+    "衈㑌䘤삅㛫甑樎謃ﮆ￿삃樌謇ﭸ￿삃蔋绀脓",
+    "紀옗㑄$䡆삅ﺁ",
+    "谏ｳ￿咍",
+    "䮍刐헨￻蓿痀弋嵞腛",
+    "倀돨￻蓿痀弋嵞腛",
+    "釨￻蓿痀弋嵞腛",
+    "甃䀈爈옇撃",
+    "徤嵞ư腛",
+    "退腞쯮䑅쌀謔",
+    "㍗藿诀觱",
+    "菨￼㷿Ā",
+    "ﰶ￿事㌈四淨￿諿゜䀢D荞",
+    "㉲事訄䄑咈",
+    "臋￢￿팀㏪囉",
+    "￿諿れ䀆D譞",
+    "툳ﻚ￿钊㸵䑀帀삄懲癴ﾃ爃譱",
+    "計䀈䲈",
+    "茀퀋솋褈",
+    "촫￿ÿ躍İ",
+    "跃寫纃",
+    "計䀈䲈․事褈",
+    "茀퀋솋褈",
+    "켫Ｅ￿팀",
+    "蔀瓛謰傖",
+    "㬸观猖謐",
+    "傈诿㬖狂诰",
+    "謐謋ﯷ￿삄",
+    "舏ﶫ￿䒋",
+    "㢉幟끝嬁쒃숔",
+    "幟㉝寀쒃숔",
+    "㽹ǣ㾊ǣ㾝ǣ",
+    "敫湲汥㈳搮汬",
+    "獭扶浶〶搮汬ﴀ",
+    "VS_VERSION_INFO",
+    "VarFileInfo",
+    "Translation",
+    "StringFileInfo",
+    "080404B0",
+    "Comments",
+    "http://www.huibaosoft.com",
+    "CompanyName",
+    "马英、曾海红",
+    "FileDescription",
+    "一个实用的幕墙计算系统",
+    "LegalCopyright",
+    "汇宝软件 版权所有",
+    "LegalTrademarks",
+    "本软件已经取得国家版权登记，受国家法律保护",
+    "ProductName",
+    "汇宝幕墙门窗结构计算软件V35.0",
+    "FileVersion",
+    "35.00",
+    "ProductVersion",
+    "35.00",
+    "InternalName",
+    "MQJSSV35bk",
+    "OriginalFilename",
+    "MQJSSV35bk.exe",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿䗾︇",
+    "￿￿￿￿￿￿￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿䗾︇",
+    "￿￿￿￿￿￿￿﻿",
+    "￿￿￿￿￿￿￿﻿"
+   ]
+  }
+ }
+]

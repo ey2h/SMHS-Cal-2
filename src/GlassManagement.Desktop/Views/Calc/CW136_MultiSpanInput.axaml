@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="using:GlassManagement.Desktop.Views.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW136_MultiSpanInput"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    独立宿主：把「多跨数据输入」Frame 从 V31 的立柱计算窗体中抽出为可直接打开的复刻窗体。
+    V31 实测：该 Frame 在窗体「全隐框玻璃幕墙计算-立柱计算」中以整屏视图替换方式出现，
+              窗体客户区 936x442，Frame 位于 (9,29) 尺寸 919x408。
+    本宿主标题栏 + 面板按同一尺寸还原，便于与 V31 截图逐像素对照。
+  -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="全隐框玻璃幕墙计算-立柱计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+    <Border DockPanel.Dock="Top" Height="18" Background="#F0F0F0">
+      <TextBlock x:Name="StatusText" Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#24405E"/>
+    </Border>
+    <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">
+      <views:MultiSpanInputView x:Name="Panel" Canvas.Left="9" Canvas.Top="29"/>
+    </Canvas>
+  </DockPanel>
+</UserControl>

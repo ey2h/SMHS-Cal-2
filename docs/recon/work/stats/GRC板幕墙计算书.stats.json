@@ -1,0 +1,31 @@
+{
+    "book":  "GRC板幕墙计算书",
+    "source":  "C:\\code\\Glass\\docs\\recon\\calcbooks\\raw\\GRC板幕墙计算书.DOC",
+    "ok":  true,
+    "error":  null,
+    "paragraphs":  3072,
+    "tables":  20,
+    "tableFailures":  [
+
+                      ],
+    "tableCells":  904,
+    "lines":  3072,
+    "linesWithEquals":  637,
+    "linesWithStressUnit":  129,
+    "linesWithClause":  109,
+    "headings":  271,
+    "emptyLines":  346,
+    "embeddedObjectLines":  5,
+    "fields":  151,
+    "omaths":  0,
+    "shapes":  0,
+    "inlineShapes":  5,
+    "footnotes":  0,
+    "endnotes":  0,
+    "outlineOnlyHeadings":  76,
+    "styleHeadings":  0,
+    "patternOnlyHeadings":  195,
+    "seconds":  119.3,
+    "closeError":  null,
+    "quitError":  null
+}

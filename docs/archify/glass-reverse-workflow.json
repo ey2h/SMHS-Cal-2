@@ -1,0 +1,309 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "幕墙计算复刻：从前置面板到立柱验算的参数链",
+    "subtitle": "基本参数输入 → 立柱计算 → 多跨数据输入 → 预演判据（已确证公式与未定环节）",
+    "locale": "zh-CN",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "output": ".archify/workflow-glass-reverse-20261023-113500/glass-reverse.html"
+  },
+  "lanes": [
+    {
+      "id": "human",
+      "label": "人工操作（用户）"
+    },
+    {
+      "id": "obs",
+      "label": "观测采集层"
+    },
+    {
+      "id": "evidence",
+      "label": "证据落盘"
+    },
+    {
+      "id": "engine",
+      "label": "引擎复刻"
+    },
+    {
+      "id": "gap",
+      "label": "未确证 / 缺口",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "collect",
+      "label": "采集",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "derive",
+      "label": "反推",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "default"
+    },
+    {
+      "id": "verify",
+      "label": "复刻与对照",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g_obs",
+      "label": "只读观测，不改程序状态",
+      "lane": "obs",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "g_gap",
+      "label": "需补样本或读 V35 代码",
+      "lane": "gap",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "user",
+    "watch",
+    "jsonl",
+    "evidence",
+    "derive",
+    "engine",
+    "check",
+    "pass"
+  ],
+  "nodes": [
+    {
+      "id": "user",
+      "lane": "human",
+      "col": 0,
+      "type": "external",
+      "label": "手工操作 V31",
+      "sublabel": "选分支 / 填参数 / 点预演",
+      "tag": "你操作，我读",
+      "width": 138
+    },
+    {
+      "id": "watch",
+      "lane": "obs",
+      "col": 1,
+      "type": "frontend",
+      "label": "watch2.ps1",
+      "sublabel": "400ms 快照",
+      "tag": "标题/单选/下拉/enabled",
+      "width": 138
+    },
+    {
+      "id": "uia",
+      "lane": "obs",
+      "col": 2,
+      "type": "frontend",
+      "label": "dump_results.ps1",
+      "sublabel": "UIA 读预演结果",
+      "tag": "RichText 全文",
+      "width": 138
+    },
+    {
+      "id": "jsonl",
+      "lane": "evidence",
+      "col": 1,
+      "type": "database",
+      "label": "v31_watch.jsonl",
+      "sublabel": "操作轨迹原始快照",
+      "width": 138
+    },
+    {
+      "id": "evidence",
+      "lane": "evidence",
+      "col": 2,
+      "type": "database",
+      "label": "结构化证据 JSON",
+      "sublabel": "分支表 / 结果 / 屏内容",
+      "tag": "代码真值",
+      "width": 138
+    },
+    {
+      "id": "derive",
+      "lane": "engine",
+      "col": 3,
+      "type": "backend",
+      "label": "公式反推",
+      "sublabel": "从数值反解系数与公式",
+      "tag": "多解时用双点验证",
+      "width": 138
+    },
+    {
+      "id": "engine",
+      "lane": "engine",
+      "col": 4,
+      "type": "backend",
+      "label": "MultiSpanStaticEngine",
+      "sublabel": "多跨静定梁引擎",
+      "tag": "折算 √(σ²+τ²)",
+      "width": 138
+    },
+    {
+      "id": "check",
+      "lane": "engine",
+      "col": 5,
+      "type": "backend",
+      "label": "对照测试",
+      "sublabel": "逐项比对实测输出",
+      "tag": "PASS / FAIL",
+      "width": 138
+    },
+    {
+      "id": "pass",
+      "lane": "human",
+      "col": 5,
+      "type": "messagebus",
+      "label": "公式一致",
+      "sublabel": "可进入下一分支",
+      "width": 138
+    },
+    {
+      "id": "gap",
+      "lane": "gap",
+      "col": 4,
+      "type": "security",
+      "label": "未确证项",
+      "sublabel": "补样本 B~E + 读 V35 代码",
+      "tag": "OpenQuestions",
+      "width": 138
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-user-watch",
+      "from": "user",
+      "to": "watch",
+      "label": "触发界面变更",
+      "variant": "emphasis",
+      "bias": 0.15
+    },
+    {
+      "id": "e-watch-uia",
+      "from": "watch",
+      "to": "uia",
+      "label": "预演后按需补读",
+      "variant": "default",
+      "bias": 0.85
+    },
+    {
+      "id": "e-watch-jsonl",
+      "from": "watch",
+      "to": "jsonl",
+      "label": "签名变化才落盘",
+      "variant": "dashed"
+    },
+    {
+      "id": "e-uia-jsonl",
+      "from": "uia",
+      "to": "jsonl",
+      "label": "结果原文",
+      "variant": "dashed"
+    },
+    {
+      "id": "e-jsonl-evidence",
+      "from": "jsonl",
+      "to": "evidence",
+      "label": "转录整理",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-evidence-derive",
+      "from": "evidence",
+      "to": "derive",
+      "label": "反解",
+      "variant": "default"
+    },
+    {
+      "id": "e-derive-engine",
+      "from": "derive",
+      "to": "engine",
+      "label": "写入公式",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e-engine-check",
+      "from": "engine",
+      "to": "check",
+      "label": "dotnet run",
+      "variant": "default"
+    },
+    {
+      "id": "e-check-pass",
+      "from": "check",
+      "to": "pass",
+      "label": "全部 PASS",
+      "variant": "emphasis",
+      "role": "return",
+      "width": 1.2
+    },
+    {
+      "id": "e-check-gap",
+      "from": "check",
+      "to": "gap",
+      "label": "FAIL / 未确证",
+      "variant": "security",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "已确证（两样本双向验证）",
+      "items": [
+        "折算强度 σ_eq = √(σ_弯²+τ_剪²) —— 4 个独立点零误差（68.403 / 41.975 / 62.136 / 132.35）",
+        "挠度限值分段（JGJ336）：calcSpan = 跨度i + 跨间距Li；≤4500 → /180；>4500 → /250+7",
+        "样本1 calcSpan=3760 → 20.889；样本2 calcSpan=5000 → 27.0（分处阈值两侧）",
+        "型材许用：抗弯135 / 抗剪75 / 折算148.5 = 135×1.1（6063A-T5）",
+        "多跨几何：A_i 与 L_i 交替，共 2N+1 段；输出位置固定 4 个（与跨数无关）"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "参数链（复刻的输入契约）",
+      "items": [
+        "① 基本参数输入屏：地区(上海) + 场地类别(Ⅱ类) + 荷载规范 → 风荷载标准值 1.526 KPa",
+        "① 另含 41~46 六个尺寸(1350/1350/1380/1380/1100/1100) 与 id3/4/8/27/39/49 → 疑为分格与层高",
+        "② 立柱计算屏：材质/规范/型材/边界条件/力学模型 → 选分支",
+        "③ 多跨数据输入屏：总跨数 + 跨间距Li + 跨度i → 几何",
+        "④ 预演输出：风荷载 + 10 组判据（第1跨/第3跨/第2跨支座/第2跨后）"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "结构事实与易踩坑",
+      "items": [
+        "整条向导链共用 hWnd 32768，靠改写窗体标题切换阶段，不是多个窗体",
+        "多跨分支 = 整屏替换（框架式 4 Frame 全灭、OptionButton 全消失），不是 Frame 显隐",
+        "同屏两套力学模型单选组；隐藏套 id41 保留 ON 值 —— 隐藏 ≠ 清值",
+        "预演置灰分支：多跨静定107 / 多跨超静定102 / 钢铝结合110（后两者与钢铝结合互斥）",
+        "程序原文笔误「设计值为为:135MPa」按原样保留"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "未定环节（下一步）",
+      "items": [
+        "风荷载标准值随几何变（1.551→1.526，仅改跨数/跨间距/跨度）→ 分摊规则未知",
+        "支座弯矩/跨中弯矩之比不是常数（1.0888→1.3436）→ 需读 V35 代码",
+        "计算值复算缺「快速查找型材」的 W / I / S / 壁厚",
+        "待跑样本：F 材质6063-T5 · H i=3600 验分段边界 · I 改前置面板验风荷载"
+      ]
+    }
+  ]
+}

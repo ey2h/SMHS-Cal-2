@@ -1,0 +1,31 @@
+{
+    "book":  "单元幕墙计算书",
+    "source":  "C:\\code\\Glass\\docs\\recon\\calcbooks\\raw\\单元幕墙计算书.DOC",
+    "ok":  true,
+    "error":  null,
+    "paragraphs":  3318,
+    "tables":  20,
+    "tableFailures":  [
+
+                      ],
+    "tableCells":  904,
+    "lines":  3318,
+    "linesWithEquals":  733,
+    "linesWithStressUnit":  229,
+    "linesWithClause":  137,
+    "headings":  293,
+    "emptyLines":  347,
+    "embeddedObjectLines":  6,
+    "fields":  169,
+    "omaths":  0,
+    "shapes":  0,
+    "inlineShapes":  6,
+    "footnotes":  0,
+    "endnotes":  0,
+    "outlineOnlyHeadings":  85,
+    "styleHeadings":  0,
+    "patternOnlyHeadings":  208,
+    "seconds":  249,
+    "closeError":  null,
+    "quitError":  null
+}

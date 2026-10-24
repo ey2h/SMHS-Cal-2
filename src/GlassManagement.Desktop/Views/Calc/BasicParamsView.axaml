@@ -1,0 +1,330 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.BasicParamsView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-基本参数输入」MVVM 绑定版（V35 向导第 1 屏）。
+    权威来源：V35 运行期控件树 hb_window_tree2.tsv → screen_幕墙计算-基本参数输入.json，
+    窗体原点 (-73,41)，客户区 907x612。所有坐标 = 相对窗体原点 px（VB6 原值）。
+    TextBox/ComboBox 只能从运行期树取得（设计记录 relink 未收录这两类），共 13 TextBox + 10 Combo。
+    运行期抓到的「《规范》表8.3.3 说明 Frame(890x576)」与「地震组合系数 Frame(890x65)」是互斥视图
+    （V35 未注册 → 全部 visible=0），本屏按首视图呈现，互斥 Frame 不叠加。
+  -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙计算-基本参数输入" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="907" Height="612" Background="#F0F0F0" ClipToBounds="True">
+
+      <!-- ── Frame 重现期 (11,102) 122x63 ── -->
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="102" Width="122" Height="63"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="93" Text="重现期(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="19" Canvas.Top="117" Width="49" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="重现期(?)"
+                   IsChecked="{Binding Session.Return50, Mode=TwoWay}" Content="50年"/>
+      <RadioButton Classes="hb" Canvas.Left="19" Canvas.Top="131" Width="57" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="重现期(?)"
+                   IsChecked="{Binding Session.Return100, Mode=TwoWay}" Content="100年"/>
+      <CheckBox Classes="hb" Canvas.Left="19" Canvas.Top="147" Width="105" Height="15" FontSize="12"
+                HorizontalContentAlignment="Left" IsChecked="{Binding Session.SnowSensitive, Mode=TwoWay}" Content="雪荷载敏感结构"/>
+
+      <!-- ── Frame 地面类型 (136,102) 87x105 ── -->
+      <Border Classes="hbFrame" Canvas.Left="136" Canvas.Top="102" Width="87" Height="105"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="142" Canvas.Top="93" Text="地面类型(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="143" Canvas.Top="122" Width="65" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="地面类型(?)"
+                   IsChecked="{Binding Session.TerrainA, Mode=TwoWay}" Content="A类地形"/>
+      <RadioButton Classes="hb" Canvas.Left="143" Canvas.Top="142" Width="65" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="地面类型(?)"
+                   IsChecked="{Binding Session.TerrainB, Mode=TwoWay}" Content="B类地形"/>
+      <RadioButton Classes="hb" Canvas.Left="143" Canvas.Top="163" Width="65" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="地面类型(?)"
+                   IsChecked="{Binding Session.TerrainC, Mode=TwoWay}" Content="C类地形"/>
+      <RadioButton Classes="hb" Canvas.Left="143" Canvas.Top="183" Width="65" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="地面类型(?)"
+                   IsChecked="{Binding Session.TerrainD, Mode=TwoWay}" Content="D类地形"/>
+
+      <!-- ── Frame 外部局部体型系数 (226,102) 152x105 ── -->
+      <Border Classes="hbFrame" Canvas.Left="226" Canvas.Top="102" Width="152" Height="105"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="232" Canvas.Top="93" Text="外部局部体型系数(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="234" Canvas.Top="126" Width="65" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="外部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefExternalWall, Mode=TwoWay}" Content="墙面区"/>
+      <RadioButton Classes="hb" Canvas.Left="234" Canvas.Top="144" Width="86" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="外部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefExternalCorner, Mode=TwoWay}" Content="墙角边区"/>
+      <RadioButton Classes="hb" Canvas.Left="234" Canvas.Top="162" Width="73" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="外部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefExternalManual, Mode=TwoWay}" Content="人工给定"/>
+      <TextBox Classes="hb" Canvas.Left="258" Canvas.Top="182" Width="47" Height="18" FontSize="12"
+               IsEnabled="{Binding ExternalManualEnabled}" Text="{Binding CoefExternalValueText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <Button Classes="hb" Canvas.Left="314" Canvas.Top="142" Width="44" Height="24" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"/>
+
+      <!-- ── Frame 内部局部体型系数 (381,102) 264x105 ── -->
+      <Border Classes="hbFrame" Canvas.Left="381" Canvas.Top="102" Width="264" Height="105"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="387" Canvas.Top="93" Text="内部局部体型系数(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="389" Canvas.Top="118" Width="233" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="内部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefInnerEnclosed, Mode=TwoWay}" Content="封闭式建筑物"/>
+      <RadioButton Classes="hb" Canvas.Left="389" Canvas.Top="134" Width="249" Height="15" FontSize="11"
+                   HorizontalContentAlignment="Left" GroupName="内部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefInnerOneWall010, Mode=TwoWay}" Content="仅一面墙有主导洞口,0.10≥开孔率&gt;0.02"/>
+      <RadioButton Classes="hb" Canvas.Left="389" Canvas.Top="150" Width="249" Height="15" FontSize="11"
+                   HorizontalContentAlignment="Left" GroupName="内部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefInnerOneWall030, Mode=TwoWay}" Content="仅一面墙有主导洞口,0.30≥开孔率&gt;0.10"/>
+      <RadioButton Classes="hb" Canvas.Left="389" Canvas.Top="166" Width="249" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="内部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefInnerOneWallGt030, Mode=TwoWay}" Content="仅一面墙有主导洞口,开孔率&gt;0.30"/>
+      <RadioButton Classes="hb" Canvas.Left="389" Canvas.Top="182" Width="143" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="内部局部体型系数(?)"
+                   IsChecked="{Binding Session.CoefInnerManual, Mode=TwoWay}" Content="其它情况(人工给定)"/>
+      <TextBox Classes="hb" Canvas.Left="533" Canvas.Top="180" Width="49" Height="18" FontSize="12"
+               IsEnabled="{Binding InnerManualEnabled}" Text="{Binding CoefInnerValueText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+      <!-- ── Frame 风荷载标准值取值 (648,102) 249x54 ── -->
+      <Border Classes="hbFrame" Canvas.Left="648" Canvas.Top="102" Width="249" Height="54"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="654" Canvas.Top="93" Text="风荷载标准值取值(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="659" Canvas.Top="118" Width="128" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="风荷载标准值取值(?)"
+                   IsChecked="{Binding Session.WindByCodeMin, Mode=TwoWay}" Content="按规范不小于1KPa"/>
+      <RadioButton Classes="hb" Canvas.Left="789" Canvas.Top="118" Width="76" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="风荷载标准值取值(?)"
+                   IsChecked="{Binding Session.WindManual, Mode=TwoWay}" Content="人工给定"/>
+      <RadioButton Classes="hb" Canvas.Left="659" Canvas.Top="136" Width="113" Height="15" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="风荷载标准值取值(?)"
+                   IsChecked="{Binding Session.WindByCalcResult, Mode=TwoWay}" Content="按实际计算结果"/>
+      <TextBox Classes="hb" Canvas.Left="787" Canvas.Top="135" Width="41" Height="18" FontSize="12"
+               IsEnabled="{Binding WindManualEnabled}" Text="{Binding WindManualKpaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="833" Canvas.Top="137" Width="24" Height="15" Text="KPa" FontSize="10"/>
+
+      <!-- ── Frame 幕墙结构 (648,157) 249x50 ── -->
+      <Border Classes="hbFrame" Canvas.Left="648" Canvas.Top="157" Width="249" Height="50"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="654" Canvas.Top="148" Text="幕墙结构"/>
+      <RadioButton Classes="hb" Canvas.Left="653" Canvas.Top="177" Width="166" Height="19" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="幕墙结构"
+                   IsChecked="{Binding Session.StructFrame, Mode=TwoWay}" Content="构件式（框架式）幕墙"/>
+      <RadioButton Classes="hb" Canvas.Left="800" Canvas.Top="177" Width="92" Height="19" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="幕墙结构"
+                   IsChecked="{Binding Session.StructUnit, Mode=TwoWay}" Content="单元式幕墙"/>
+
+      <!-- ── Frame 计算标高 (11,167) 122x40 ── -->
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="167" Width="122" Height="40"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="158" Text="计算标高"/>
+      <TextBox Classes="hb" Canvas.Left="39" Canvas.Top="182" Width="49" Height="18" FontSize="12"
+               Text="{Binding CalcLevelText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="92" Canvas.Top="183" Width="24" Height="15" Text="m" FontSize="12"/>
+
+      <!-- ── Frame 构件的安全性能等级 (11,210) 367x49 ── -->
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="210" Width="367" Height="49"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="201" Text="构件的安全性能等级-结构重要性系数(?)"/>
+      <ComboBox Classes="hb" Canvas.Left="91" Canvas.Top="230" Width="97" Height="20"
+                ItemsSource="{Binding Session.GradeOptions}" SelectedItem="{Binding Session.GradeWhenInsert, Mode=TwoWay}"
+                ToolTip.Tip="安全等级 → 结构重要性系数 γ0：1级=1.1 / 2级=1.0 / 3级=0.9（GB50068）"/>
+      <ComboBox Classes="hb" Canvas.Left="275" Canvas.Top="230" Width="97" Height="20"
+                ItemsSource="{Binding Session.GradeOptions}" SelectedItem="{Binding Session.GradeWhenNoInsert, Mode=TwoWay}"
+                ToolTip.Tip="安全等级 → 结构重要性系数 γ0：1级=1.1 / 2级=1.0 / 3级=0.9（GB50068）"/>
+      <TextBlock Classes="hb" Canvas.Left="22" Canvas.Top="233" Width="64" Height="13" Text="计算埋件时" FontSize="10"/>
+      <TextBlock Classes="hb" Canvas.Left="196" Canvas.Top="233" Width="74" Height="13" Text="计算非埋件时" FontSize="10"/>
+
+      <!-- ── Frame 地形修正系数及风向影响系数 (381,210) 264x50 ── -->
+      <Border Classes="hbFrame" Canvas.Left="381" Canvas.Top="210" Width="264" Height="50"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="387" Canvas.Top="201" Text="地形修正系数及风向影响系数(?)"/>
+      <TextBox Classes="hb" Canvas.Left="469" Canvas.Top="231" Width="41" Height="18" FontSize="12"
+               Text="{Binding TerrainFactorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBox Classes="hb" Canvas.Left="591" Canvas.Top="231" Width="41" Height="18" FontSize="12"
+               Text="{Binding WindDirFactorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="385" Canvas.Top="233" Width="80" Height="13" Text="地形修正系数" FontSize="10"/>
+      <TextBlock Classes="hb" Canvas.Left="514" Canvas.Top="233" Width="72" Height="13" Text="风向影响系数" FontSize="10"/>
+
+      <!-- ── Frame 幕墙横框结构 (648,210) 249x50 ── -->
+      <Border Classes="hbFrame" Canvas.Left="648" Canvas.Top="210" Width="249" Height="50"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="654" Canvas.Top="201" Text="幕墙横框结构"/>
+      <!-- V31 实测（midrig）：横框两个单选**只在单元式下可操作**；构件式下被禁用，点不动、值保持原样。
+           → 两个单选都跟随 Session.StructUnit 启用/禁用，且不使用「切回构件式就重置为无中横」的额外行为。 -->
+      <RadioButton Classes="hb" Canvas.Left="684" Canvas.Top="233" Width="93" Height="16" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="幕墙横框结构"
+                   IsEnabled="{Binding Session.StructUnit}"
+                   IsChecked="{Binding Session.TransomNone, Mode=TwoWay}" Content="无中横结构"/>
+      <RadioButton Classes="hb" Canvas.Left="776" Canvas.Top="233" Width="93" Height="16" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="幕墙横框结构"
+                   IsEnabled="{Binding Session.StructUnit}"
+                   IsChecked="{Binding Session.TransomMid, Mode=TwoWay}" Content="有中横结构"/>
+
+      <!-- ── Frame 龙骨间距 (11,262) 367x91 ── -->
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="262" Width="367" Height="91"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="253" Text="龙骨间距"/>
+      <TextBlock Classes="hb" Canvas.Left="20" Canvas.Top="280" Width="96" Height="13" Text="立柱左分格宽度：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="122" Canvas.Top="277" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayColLeftText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="202" Canvas.Top="280" Width="96" Height="13" Text="横框上分格高度：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="300" Canvas.Top="277" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayTransTopText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="20" Canvas.Top="300" Width="96" Height="13" Text="立柱右分格宽度：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="122" Canvas.Top="297" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayColRightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="202" Canvas.Top="300" Width="96" Height="13" Text="横框下分格高度：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="300" Canvas.Top="297" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayTransBottomText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="20" Canvas.Top="329" Width="96" Height="13" Text="中横框上分格高：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="122" Canvas.Top="326" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayMidTopText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="202" Canvas.Top="329" Width="96" Height="13" Text="中横框下分格高：" FontSize="10"/>
+      <TextBox Classes="hb" Canvas.Left="300" Canvas.Top="326" Width="49" Height="18" FontSize="12"
+               Text="{Binding BayMidBottomText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+      <!-- ── Frame 抗震设防分类及场地类型 (381,262) 264x91 ── -->
+      <Border Classes="hbFrame" Canvas.Left="381" Canvas.Top="262" Width="264" Height="91"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="387" Canvas.Top="253" Text="抗震设防分类及场地类型(?)"/>
+      <RadioButton Classes="hb" Canvas.Left="405" Canvas.Top="280" Width="89" Height="12" FontSize="10"
+                   HorizontalContentAlignment="Left" GroupName="抗震设防分类及场地类型(?)"
+                   IsChecked="{Binding Session.SeismicStandard, Mode=TwoWay}" Content="标准设防类"/>
+      <RadioButton Classes="hb" Canvas.Left="533" Canvas.Top="280" Width="89" Height="12" FontSize="10"
+                   HorizontalContentAlignment="Left" GroupName="抗震设防分类及场地类型(?)"
+                   IsChecked="{Binding Session.SeismicKey, Mode=TwoWay}" Content="重点设防类"/>
+      <RadioButton Classes="hb" Canvas.Left="405" Canvas.Top="300" Width="89" Height="12" FontSize="10"
+                   HorizontalContentAlignment="Left" GroupName="抗震设防分类及场地类型(?)"
+                   IsChecked="{Binding Session.SeismicSpecial, Mode=TwoWay}" Content="特殊设防类"/>
+      <RadioButton Classes="hb" Canvas.Left="533" Canvas.Top="300" Width="89" Height="12" FontSize="10"
+                   HorizontalContentAlignment="Left" GroupName="抗震设防分类及场地类型(?)"
+                   IsChecked="{Binding Session.SeismicModerate, Mode=TwoWay}" Content="适度设防类"/>
+
+      <!-- ── 荷载规范（V31 第一页下拉 (537,304)，实测三档；低矮/高层在立柱屏同值）── -->
+      <ComboBox Classes="hb" Canvas.Left="405" Canvas.Top="326" Width="105" Height="20" FontSize="10"
+                SelectedIndex="{Binding Session.LoadStandardIndex, Mode=TwoWay}">
+        <ComboBoxItem Content="全国荷载规范"/>
+        <ComboBoxItem Content="广东(≤45m)"/>
+        <ComboBoxItem Content="广东(&gt;45m)"/>
+      </ComboBox>
+      <TextBlock Classes="hb" Canvas.Left="405" Canvas.Top="327" Width="48" Height="13" Text="场地类型" FontSize="10"/>
+      <ComboBox Classes="hb" Canvas.Left="469" Canvas.Top="325" Width="105" Height="20"
+                ItemsSource="{Binding Session.SiteClasses}" SelectedItem="{Binding Session.SiteClassSelected, Mode=TwoWay}"/>
+
+      <!-- ── Frame 玻璃配置 (648,265) 249x88 ── -->
+      <Border Classes="hbFrame" Canvas.Left="648" Canvas.Top="265" Width="249" Height="88"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="654" Canvas.Top="256" Text="玻璃配置"/>
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="280" Width="105" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassMono, Mode=TwoWay}" Content="单片玻璃"/>
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="280" Width="105" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassInsulLam, Mode=TwoWay}" Content="中空+夹层玻璃"/>
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="303" Width="73" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassInsulated, Mode=TwoWay}" Content="中空玻璃"/>
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="303" Width="100" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassDoubleInsul, Mode=TwoWay}" Content="双中空玻璃"/>
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="327" Width="73" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassLaminated, Mode=TwoWay}" Content="夹层玻璃"/>
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="327" Width="113" Height="17" FontSize="12"
+                   HorizontalContentAlignment="Left" GroupName="玻璃配置"
+                   IsChecked="{Binding Session.GlassDoubleLam, Mode=TwoWay}" Content="双夹层-中空玻璃"/>
+
+      <!-- ── Frame 地区参数 (10,358) 887x220 ── -->
+      <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="358" Width="887" Height="220"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="349" Width="870" Text="地区参数(新版GB18306-2015中，抗震参数细分到街道与乡镇，表中地震参数仅供参考，以结构说明或新版规范为准)" FontSize="10"/>
+      <Button Classes="hb" Canvas.Left="26" Canvas.Top="374" Width="105" Height="24" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding FindRegionCommand}" Content="查找并定位地区"/>
+      <TextBox Classes="hb" Canvas.Left="141" Canvas.Top="377" Width="65" Height="18" FontSize="12"
+               Text="{Binding Session.RegionKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock Classes="hb" Canvas.Left="215" Canvas.Top="380" Width="252" Height="13" Text="←请在此处输入待查找城市名(或城市名关键字)" FontSize="10"/>
+      <ComboBox Classes="hb" Canvas.Left="537" Canvas.Top="376" Width="220" Height="20"
+                ItemsSource="{Binding RegionNames}" SelectedItem="{Binding Session.RegionSelected, Mode=TwoWay}"/>
+      <TextBlock Classes="hb" Canvas.Left="502" Canvas.Top="380" Width="30" Height="13" Text="★按" FontSize="10"/>
+      <TextBlock Classes="hb" Canvas.Left="762" Canvas.Top="380" Width="60" Height="13" Text="计算荷载" FontSize="10"/>
+      <Button Classes="hb" Canvas.Left="826" Canvas.Top="374" Width="59" Height="24" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"/>
+      <!-- 地区参数表 = V35 参数库「地区参数」表全量 634 行（ParamLibrary 内嵌，列名与参数库一致）。
+           DataGrid 的 Width 在 Avalonia 不生效 → 自绘表头 + ListBox 行；选中行 = 地区下拉当前值。 -->
+      <Border Canvas.Left="16" Canvas.Top="406" Width="873" Height="17" Background="#F0F0F0"
+              BorderBrush="#808080" BorderThickness="1"/>
+      <TextBlock Canvas.Left="20" Canvas.Top="408" Width="116" Text="地区名称" FontSize="12"/>
+      <TextBlock Canvas.Left="140" Canvas.Top="408" Width="96" Text="50年基本风压" FontSize="11"/>
+      <TextBlock Canvas.Left="240" Canvas.Top="408" Width="101" Text="100年基本风压" FontSize="11"/>
+      <TextBlock Canvas.Left="345" Canvas.Top="408" Width="66" Text="抗震烈度" FontSize="11"/>
+      <TextBlock Canvas.Left="415" Canvas.Top="408" Width="121" Text="基本地震动峰值加速度" FontSize="11"/>
+      <TextBlock Canvas.Left="540" Canvas.Top="408" Width="51" Text="αmax" FontSize="11"/>
+      <TextBlock Canvas.Left="595" Canvas.Top="408" Width="66" Text="极限温差" FontSize="11"/>
+      <TextBlock Canvas.Left="665" Canvas.Top="408" Width="96" Text="50年基本雪压" FontSize="11"/>
+      <TextBlock Canvas.Left="765" Canvas.Top="408" Width="101" Text="100年基本雪压" FontSize="11"/>
+      <Border Canvas.Left="16" Canvas.Top="423" Width="857" Height="148" Background="#FFFFFF"
+              BorderBrush="#646464" BorderThickness="1"/>
+      <ListBox Canvas.Left="16" Canvas.Top="423" Width="857" Height="148"
+               ItemsSource="{Binding Session.RegionRows}" SelectedItem="{Binding Session.RegionSelected, Mode=TwoWay}"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+               ScrollViewer.VerticalScrollBarVisibility="Hidden">
+        <ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+              <ControlTemplate>
+                <Border Name="row" Background="{TemplateBinding Background}" Padding="0">
+                  <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0"/>
+                </Border>
+              </ControlTemplate>
+            </Setter>
+          </Style>
+          <Style Selector="ListBoxItem:selected /template/ Border#row">
+            <Setter Property="Background" Value="#C0FFFF"/>
+          </Style>
+          <Style Selector="ListBoxItem:pointerover /template/ Border#row">
+            <Setter Property="Background" Value="#E0F7F7"/>
+          </Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Grid Height="16" ColumnDefinitions="120,100,105,70,125,55,70,100,105">
+              <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="12" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="1" Text="{Binding Wind50Pa}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="2" Text="{Binding Wind100Pa}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="3" Text="{Binding SeismicIntensity}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="4" Text="{Binding PeakAccel}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="5" Text="{Binding AlphaMax}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="6" Text="{Binding LimitTempDiff}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="7" Text="{Binding Snow50Pa}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="8" Text="{Binding Snow100Pa}" FontSize="11" Margin="4,0" VerticalAlignment="Center"/>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <!-- 列分隔线（VB6 DataGrid 竖线） -->
+      <Border Canvas.Left="136" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="236" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="341" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="411" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="536" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="591" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="661" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="761" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <!-- 竖滚动条（VB6 式 16px 滑道 + 上下三角） -->
+      <Border Canvas.Left="873" Canvas.Top="423" Width="16" Height="148" Background="#F0F0F0"
+              BorderBrush="#808080" BorderThickness="1"/>
+      <Path Canvas.Left="877" Canvas.Top="427" Fill="#000000" Data="M 0,7 L 8,0 L 8,7 Z"/>
+      <Path Canvas.Left="877" Canvas.Top="560" Fill="#000000" Data="M 0,0 L 8,0 L 8,7 Z"/>
+      <TextBlock Classes="hb" Canvas.Left="20" Canvas.Top="578" Width="860" Height="14" FontSize="11"
+                 Text="其它形式的建筑结构局部体型系数请参看《建筑结构荷载规范》GB50009-2012原文8.3部分；另外点本界面所处屏幕左下角“有问题点这里”，会有具体的提示信息供用户参考。" TextTrimming="CharacterEllipsis"/>
+
+      <!-- ── 顶层按钮 / 复选（互斥视图：80℃温差 与 不考虑地震 同位置，此处按首视图显示前者） ── -->
+      <Button Classes="hb" Canvas.Left="645" Canvas.Top="580" Width="59" Height="24" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding PrevCommand}" Content="返回"/>
+      <Button Classes="hb" Canvas.Left="705" Canvas.Top="580" Width="59" Height="24" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding NextCommand}" Content="下一步"/>
+      <Button Classes="hb" Canvas.Left="27" Canvas.Top="583" Width="89" Height="18" FontSize="12"
+              HorizontalContentAlignment="Center" Command="{Binding PresetWeightCommand}" Content="自重参数预置"/>
+      <!-- V35 运行期这两个复选在互斥视图里同位置 (163,585)；本屏为单视图，并排呈现避免叠压 -->
+      <CheckBox Classes="hb" Canvas.Left="163" Canvas.Top="585" Width="200" Height="15" FontSize="12"
+                HorizontalContentAlignment="Left" IsChecked="{Binding Session.TempLimit80, Mode=TwoWay}" Content="按幕墙规范考虑80℃极限温差"/>
+      <CheckBox Classes="hb" Canvas.Left="371" Canvas.Top="585" Width="167" Height="15" FontSize="12"
+                HorizontalContentAlignment="Left" IsChecked="{Binding Session.NoSeismic, Mode=TwoWay}" Content="计算中不考虑地震作用"/>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

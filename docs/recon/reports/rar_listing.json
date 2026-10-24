@@ -1,0 +1,50 @@
+﻿{
+    "generatedAt":  "2026-10-22T03:48:28.3570154+08:00",
+    "tool":  "C:\\Program Files\\WinRAR\\UnRAR.exe",
+    "toolNote":  "WinRAR UnRAR.exe was already installed on this machine; nothing was installed.",
+    "policy":  "all archives listed with \"unrar vt\"; only the spec-related archive was extracted",
+    "archives":  [
+                     {
+                         "archive":  "标准AHCI控制器设置方法.rar",
+                         "archivePath":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\标准AHCI控制器设置方法.rar",
+                         "archiveBytes":  74438,
+                         "listedEntries":  0,
+                         "entries":  [
+
+                                     ],
+                         "extracted":  false,
+                         "extractDir":  null,
+                         "extractedFiles":  [
+
+                                            ]
+                     },
+                     {
+                         "archive":  "汇宝软件系统环境修复工具.rar",
+                         "archivePath":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\汇宝软件系统环境修复工具.rar",
+                         "archiveBytes":  11228,
+                         "listedEntries":  0,
+                         "entries":  [
+
+                                     ],
+                         "extracted":  false,
+                         "extractDir":  null,
+                         "extractedFiles":  [
+
+                                            ]
+                     },
+                     {
+                         "archive":  "节能计算基本原则与汇总表.rar",
+                         "archivePath":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\节能计算基本原则与汇总表.rar",
+                         "archiveBytes":  6896,
+                         "listedEntries":  0,
+                         "entries":  [
+
+                                     ],
+                         "extracted":  true,
+                         "extractDir":  "C:\\code\\Glass\\docs\\recon\\attachments\\extracted\\节能计算基本原则与汇总表",
+                         "extractedFiles":  [
+
+                                            ]
+                     }
+                 ]
+}

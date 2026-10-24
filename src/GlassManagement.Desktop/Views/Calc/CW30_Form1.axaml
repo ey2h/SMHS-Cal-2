@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW30_Form1"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: Form1 | client 781x522 | 33 nodes (10 labels) | pairs=6 spread=0px dropped=0 declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="Form1" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="781" Height="522" Background="#F0F0F0" ClipToBounds="True">
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="7" Width="761" Height="489"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="0" Text="植筋计算(仅适用于带肋的植筋)"/>
+      <Border Classes="hbFrame" Canvas.Left="49" Canvas.Top="9" Width="779" Height="457"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="55" Canvas.Top="0" Text="力学模型选择"/>
+      <TextBox Classes="hb" Canvas.Left="467" Canvas.Top="23" Width="296" Height="413" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+      <ComboBox Classes="hb" Canvas.Left="103" Canvas.Top="27" Width="73" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="312" Canvas.Top="28" Width="88" Height="19" FontSize="12" Text="5000"/>
+      <TextBlock Classes="hb" Canvas.Left="190" Canvas.Top="32" Width="60" Height="13" Text="梁结构选择" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <ComboBox Classes="hb" Canvas.Left="103" Canvas.Top="52" Width="73" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="312" Canvas.Top="53" Width="88" Height="19" FontSize="12" Text="4000"/>
+      <ComboBox Classes="hb" Canvas.Left="91" Canvas.Top="79" Width="73" Height="20"/>
+      <Button Classes="hb" Canvas.Left="171" Canvas.Top="79" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下框说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <TextBox Classes="hb" Canvas.Left="315" Canvas.Top="80" Width="103" Height="19" FontSize="12" Text="200000"/>
+      <ComboBox Classes="hb" Canvas.Left="104" Canvas.Top="104" Width="153" Height="20"/>
+      <ComboBox Classes="hb" Canvas.Left="91" Canvas.Top="128" Width="73" Height="20"/>
+      <ComboBox Classes="hb" Canvas.Left="347" Canvas.Top="129" Width="53" Height="20"/>
+      <ComboBox Classes="hb" Canvas.Left="83" Canvas.Top="153" Width="73" Height="20"/>
+      <ComboBox Classes="hb" Canvas.Left="327" Canvas.Top="153" Width="53" Height="20"/>
+      <ComboBox Classes="hb" Canvas.Left="155" Canvas.Top="177" Width="73" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="363" Canvas.Top="179" Width="49" Height="18" FontSize="12" Text="110"/>
+      <ComboBox Classes="hb" Canvas.Left="163" Canvas.Top="202" Width="73" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="363" Canvas.Top="203" Width="49" Height="18" FontSize="12" Text="250"/>
+      <ComboBox Classes="hb" Canvas.Left="163" Canvas.Top="226" Width="73" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="391" Canvas.Top="227" Width="49" Height="18" FontSize="12" Text="105"/>
+      <ComboBox Classes="hb" Canvas.Left="111" Canvas.Top="251" Width="121" Height="20"/>
+      <TextBox Classes="hb" Canvas.Left="391" Canvas.Top="252" Width="49" Height="18" FontSize="12" Text="600"/>
+      <TextBox Classes="hb" Canvas.Left="283" Canvas.Top="275" Width="33" Height="18" FontSize="12" Text="25"/>
+      <ComboBox Classes="hb" Canvas.Left="379" Canvas.Top="299" Width="73" Height="20"/>
+      <CheckBox Classes="hb" Canvas.Left="315" Canvas.Top="327" Width="137" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="使用快固型粘结剂" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <Button Classes="hb" Canvas.Left="522" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一页" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="605" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一页" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="720" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="635" Canvas.Top="441" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="696" Canvas.Top="465" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="635" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

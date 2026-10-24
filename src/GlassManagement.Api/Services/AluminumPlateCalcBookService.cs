@@ -8,7 +8,7 @@ namespace GlassManagement.Api.Services;
 /// <summary>
 /// 铝单板幕墙计算书生成服务（使用NPOI生成.docx）
 /// 
-/// 严格参照汇宝计算书样本格式：
+/// 严格参照原程序计算书样本格式：
 /// - 自定义Heading1/2/3样式，带多级列表自动编号
 /// - 正文使用自定义BodyText样式（宋体+TNR 12pt）
 /// - 封面标题22pt居中，封面与正文分节

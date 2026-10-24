@@ -1,0 +1,31 @@
+{
+    "book":  "UHPC板幕墙计算书",
+    "source":  "C:\\code\\Glass\\docs\\recon\\calcbooks\\raw\\UHPC板幕墙计算书.DOC",
+    "ok":  true,
+    "error":  null,
+    "paragraphs":  2828,
+    "tables":  20,
+    "tableFailures":  [
+
+                      ],
+    "tableCells":  904,
+    "lines":  2828,
+    "linesWithEquals":  532,
+    "linesWithStressUnit":  137,
+    "linesWithClause":  54,
+    "headings":  260,
+    "emptyLines":  345,
+    "embeddedObjectLines":  4,
+    "fields":  133,
+    "omaths":  0,
+    "shapes":  0,
+    "inlineShapes":  4,
+    "footnotes":  0,
+    "endnotes":  0,
+    "outlineOnlyHeadings":  67,
+    "styleHeadings":  0,
+    "patternOnlyHeadings":  193,
+    "seconds":  228.5,
+    "closeError":  null,
+    "quitError":  null
+}

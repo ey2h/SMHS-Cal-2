@@ -1,109 +1,240 @@
 @page "/phase2"
 @using GlassManagement.Ui.Shared.Models
-@using GlassManagement.Api.Models
 @inject System.Net.Http.HttpClient Http
 @using System.Text.Json
 @using System.Text
-@inherits Microsoft.AspNetCore.Components.ComponentBase
 
 <div class="phase2" style="padding:16px;">
   <h3>Phase 2 - 立柱/横梁基础计算（初版）</h3>
   <RegionsSelector @bind-SelectedRegion="SelectedRegion" />
+
+  @if (!string.IsNullOrEmpty(ValidationError))
+  {
+    <div class="alert alert-danger" style="margin-top:8px;">@ValidationError</div>
+  }
+
   <div class="panels-builder" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
     @foreach (var p in Panels)
     {
       <div class="panel-row" style="display:flex; gap:8px; align-items:center;">
         <input class="form-control" placeholder="PanelId" style="width:120px;" @bind="p.PanelId" />
-        <input class="form-control" placeholder="Type" style="width:140px;" @bind="p.Type" />
-        <input class="form-control" placeholder="Width" style="width:100px;" @bind="p.Width" />
-        <input class="form-control" placeholder="Height" style="width:100px;" @bind="p.Height" />
-        <input class="form-control" placeholder="Thickness" style="width:90px;" @bind="p.Thickness" />
-        <button class="btn btn-secondary" @onclick="() => RemovePanel(p)" title="Remove">-</button>
+        <select class="form-control" style="width:160px;" @bind="p.Type">
+          <option value="Single">Single</option>
+          <option value="Laminated">Laminated</option>
+          <option value="Insulating">Insulating</option>
+          <option value="LaminatedInsulating">LaminatedInsulating</option>
+        </select>
+        <input class="form-control" placeholder="Width" style="width:100px;" @bind="p.Width" type="number" />
+        <input class="form-control" placeholder="Height" style="width:100px;" @bind="p.Height" type="number" />
+        <input class="form-control" placeholder="Thickness" style="width:90px;" @bind="p.Thickness" type="number" />
+        <button class="btn btn-danger btn-sm" @onclick="() => RemovePanel(p)" title="Remove">-</button>
       </div>
     }
   </div>
-  <button class="btn btn-secondary" style="margin-top:8px;" @onclick="AddPanel">Add Panel</button>
-  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase2">提交阶段2</button>
+
+  <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;">
+    <button class="btn btn-secondary" @onclick="AddPanel">Add Panel</button>
+    <button class="btn btn-secondary" @onclick="LoadSample">加载示例面板</button>
+    <button class="btn btn-secondary" @onclick="ClearAll">清空</button>
+  </div>
+
+  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase2" disabled="@(!Phase2IsSubmittable)">提交阶段2</button>
+
   <CloudVizPane CloudViz="phase2CloudVizUI" />
+
+  <div class="phase2-status" style="margin-top:8px; color:#555; min-height:20px;">@Phase2Status</div>
 </div>
 
 @code {
   private string SelectedRegion { get; set; }
-  private List<PanelUI> Panels { get; set; } = new List<PanelUI>
+  private string Phase2Status { get; set; } = string.Empty;
+  private string ValidationError { get; set; } = string.Empty;
+  private bool IsSubmitting { get; set; }
+  private List<PanelUI> Panels { get; set; } = new()
   {
     new PanelUI { PanelId = "p2-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 }
   };
-  private GlassManagement.Ui.Shared.Models.CloudVizData phase2CloudVizUI;
+  private CloudVizData phase2CloudVizUI;
 
   protected override async Task OnInitializedAsync()
   {
     try
     {
-      var regs = await Http.GetFromJsonAsync<List<GlassManagement.Api.Models.RegionInfo>>("/api/regions");
+      var regs = await Http.GetFromJsonAsync<List<RegionInfo>>("/api/regions");
       if (regs != null && regs.Count > 0)
       {
         SelectedRegion = regs[0].RegionId;
       }
     }
-    catch { /* ignore */ }
+    catch { }
   }
 
   private void AddPanel()
   {
     int next = Panels.Count + 1;
     Panels.Add(new PanelUI { PanelId = $"p2-{next}", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    ValidationError = string.Empty;
   }
 
   private void RemovePanel(PanelUI p)
   {
     Panels.Remove(p);
+    ValidationError = string.Empty;
   }
+
+  private bool Phase2InputIsValid()
+  {
+    if (string.IsNullOrWhiteSpace(SelectedRegion)) return false;
+    if (Panels == null || Panels.Count == 0) return false;
+    foreach (var p in Panels)
+    {
+      if (string.IsNullOrWhiteSpace(p.PanelId)) return false;
+      if (!Enum.TryParse<GlassPanelType>(p.Type, true, out var _)) return false;
+      if (p.Width <= 0 || p.Height <= 0 || p.Thickness <= 0) return false;
+    }
+    return true;
+  }
+
+  private bool ArePanelIdsUnique()
+  {
+    var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    foreach (var p in Panels)
+    {
+      if (string.IsNullOrWhiteSpace(p.PanelId)) return false;
+      if (!seen.Add(p.PanelId)) return false;
+    }
+    return true;
+  }
+
+  private bool Phase2IsSubmittable => Phase2InputIsValid() && ArePanelIdsUnique() && !IsSubmitting;
 
   private async Task SubmitPhase2()
   {
-    var input = new GlassManagement.Api.Models.GlassInput { ProjectId = "demo-phase2", RegionId = SelectedRegion ?? "default", Panels = new List<GlassManagement.Api.Models.GlassPanelInput>() };
-    foreach (var p in Panels)
+    ValidationError = string.Empty;
+
+    if (!Phase2InputIsValid())
     {
-      input.Panels.Add(new GlassManagement.Api.Models.GlassPanelInput
+      if (string.IsNullOrWhiteSpace(SelectedRegion))
+        ValidationError = "区域未选择";
+      else if (Panels == null || Panels.Count == 0)
+        ValidationError = "Panel 为空";
+      else
       {
-        PanelId = p.PanelId,
-        Type = (GlassManagement.Api.Models.GlassPanelType)Enum.Parse(typeof(GlassManagement.Api.Models.GlassPanelType), p.Type, true),
-        Width = p.Width,
-        Height = p.Height,
-        Thickness = p.Thickness,
-        Layers = new List<GlassManagement.Api.Models.GlassLayerInput> { new GlassManagement.Api.Models.GlassLayerInput { MaterialId = "default", Thickness = p.Thickness } }
-      });
-    }
-    var json = JsonSerializer.Serialize(input);
-    var content = new StringContent(json, Encoding.UTF8, "application/json");
-    var resp = await Http.PostAsync("/api/calculation/phase2", content);
-    if (resp.IsSuccessStatusCode)
-    {
-      var body = await resp.Content.ReadAsStringAsync();
-      var output = JsonSerializer.Deserialize<GlassManagement.Api.Models.GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-      if (output?.CloudViz != null)
-      {
-        var pts = new List<GlassManagement.Ui.Shared.Models.CloudVizPoint>();
-        int idx = 0;
-        foreach (var pr in output.PanelsResults)
+        foreach (var p in Panels)
         {
-          double x = idx * 60;
-          double y = Math.Max(0, pr.Metrics.Deflection * 100);
-          double v = pr.Metrics.MaxStress;
-          pts.Add(new GlassManagement.Ui.Shared.Models.CloudVizPoint { X = x, Y = y, Value = v });
-          idx++;
+          if (string.IsNullOrWhiteSpace(p.PanelId)) { ValidationError = "PanelId 不能为空"; return; }
+          if (!Enum.TryParse<GlassPanelType>(p.Type, true, out var _)) { ValidationError = $"Panel Type 非法: {p.Type}"; return; }
+          if (p.Width <= 0 || p.Height <= 0 || p.Thickness <= 0) { ValidationError = "Panel 尺寸必须大于 0"; return; }
         }
-        phase2CloudVizUI = new GlassManagement.Ui.Shared.Models.CloudVizData { Points = pts };
+      }
+      Phase2Status = ValidationError;
+      return;
+    }
+
+    if (!ArePanelIdsUnique())
+    {
+      ValidationError = "PanelId 重复";
+      Phase2Status = ValidationError;
+      return;
+    }
+
+    IsSubmitting = true;
+    Phase2Status = "正在提交...";
+
+    try
+    {
+      var input = new GlassInput
+      {
+        ProjectId = "demo-phase2",
+        RegionId = SelectedRegion ?? "default",
+        Panels = new List<GlassPanelInput>()
+      };
+      foreach (var p in Panels)
+      {
+        if (Enum.TryParse<GlassPanelType>(p.Type, true, out var panelType))
+        {
+          input.Panels.Add(new GlassPanelInput
+          {
+            PanelId = p.PanelId,
+            Type = panelType,
+            Width = p.Width,
+            Height = p.Height,
+            Thickness = p.Thickness,
+            Layers = new List<GlassLayerInput> { new() { MaterialId = "default", Thickness = p.Thickness } }
+          });
+        }
+      }
+
+      var json = JsonSerializer.Serialize(input);
+      var content = new StringContent(json, Encoding.UTF8, "application/json");
+      var resp = await Http.PostAsync("/api/calculation/phase2", content);
+
+      if (resp.IsSuccessStatusCode)
+      {
+        var body = await resp.Content.ReadAsStringAsync();
+        var output = JsonSerializer.Deserialize<GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (output != null)
+        {
+          var pts = new List<CloudVizPoint>();
+          int idx = 0;
+          foreach (var pr in output.PanelsResults)
+          {
+            double x = idx * 60;
+            double y = Math.Max(0, pr.Metrics.Deflection * 100);
+            double v = pr.Metrics.MaxStress;
+            pts.Add(new CloudVizPoint { X = x, Y = y, Value = v });
+            idx++;
+          }
+          phase2CloudVizUI = new CloudVizData { Points = pts };
+          Phase2Status = $"提交成功 - {output.PanelsResults.Count} 个面板计算完成";
+        }
+        else
+        {
+          Phase2Status = "提交成功，但响应数据为空";
+        }
+      }
+      else
+      {
+        var errorBody = await resp.Content.ReadAsStringAsync();
+        Phase2Status = $"提交失败 ({(int)resp.StatusCode}): {errorBody}";
       }
     }
+    catch (Exception ex)
+    {
+      Phase2Status = $"提交异常: {ex.Message}";
+    }
+    finally
+    {
+      IsSubmitting = false;
+    }
+  }
+
+  private void LoadSample()
+  {
+    Panels.Clear();
+    Panels.Add(new PanelUI { PanelId = "p2-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    Panels.Add(new PanelUI { PanelId = "p2-2", Type = "Laminated", Width = 1500, Height = 3000, Thickness = 12 });
+    SelectedRegion = "default";
+    ValidationError = string.Empty;
+    Phase2Status = "已加载示例面板";
+  }
+
+  private void ClearAll()
+  {
+    Panels.Clear();
+    SelectedRegion = null;
+    phase2CloudVizUI = null;
+    ValidationError = string.Empty;
+    Phase2Status = "已清空";
   }
 
   private class PanelUI
   {
     public string PanelId { get; set; } = "p2-1";
     public string Type { get; set; } = "Single";
-    public int Width { get; set; } = 1200;
-    public int Height { get; set; } = 2400;
-    public int Thickness { get; set; } = 6;
+    public double Width { get; set; } = 1200;
+    public double Height { get; set; } = 2400;
+    public double Thickness { get; set; } = 6;
   }
 }

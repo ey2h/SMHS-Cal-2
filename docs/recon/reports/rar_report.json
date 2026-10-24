@@ -1,0 +1,138 @@
+﻿{
+    "generatedAt":  "2026-10-22T03:46:58.1580801+08:00",
+    "policy":  "report only; nothing extracted; nothing installed",
+    "files":  [
+                  {
+                      "name":  "标准AHCI控制器设置方法.rar",
+                      "path":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\标准AHCI控制器设置方法.rar",
+                      "sizeBytes":  74438,
+                      "sha256":  "F2BB889F292A814EE9A52E0D0F99F723218BCB45233FDC74771072A72790D46C",
+                      "first8Hex":  "52 61 72 21 1a 07 01 00",
+                      "signature":  "RAR 5.x archive header",
+                      "extracted":  false,
+                      "note":  "no extraction performed (task forbids installing third-party tools)"
+                  },
+                  {
+                      "name":  "汇宝软件系统环境修复工具.rar",
+                      "path":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\汇宝软件系统环境修复工具.rar",
+                      "sizeBytes":  11228,
+                      "sha256":  "33EEA7638D1C5A46C52F1168B933AFA2B9543240CFF54A5F6F1D2B2A62C9FD8A",
+                      "first8Hex":  "52 61 72 21 1a 07 01 00",
+                      "signature":  "RAR 5.x archive header",
+                      "extracted":  false,
+                      "note":  "no extraction performed (task forbids installing third-party tools)"
+                  },
+                  {
+                      "name":  "节能计算基本原则与汇总表.rar",
+                      "path":  "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\节能计算基本原则与汇总表.rar",
+                      "sizeBytes":  6896,
+                      "sha256":  "BFCF2B75CF28B2C33C6DCE6BE795323B407C566835FED0E7D8DF7FECC5838710",
+                      "first8Hex":  "52 61 72 21 1a 07 01 00",
+                      "signature":  "RAR 5.x archive header",
+                      "extracted":  false,
+                      "note":  "no extraction performed (task forbids installing third-party tools)"
+                  }
+              ],
+    "toolProbe":  [
+                      {
+                          "name":  "unrar",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "rar",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "7z",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "7za",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "WinRAR",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "bandizip",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "bsdtar",
+                          "available":  false,
+                          "source":  "none",
+                          "path":  null
+                      },
+                      {
+                          "name":  "tar",
+                          "available":  true,
+                          "source":  "PATH",
+                          "path":  "C:\\WINDOWS\\system32\\tar.exe"
+                      },
+                      {
+                          "name":  "7z.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files\\7-Zip\\7z.exe"
+                      },
+                      {
+                          "name":  "7z.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files (x86)\\7-Zip\\7z.exe"
+                      },
+                      {
+                          "name":  "WinRAR.exe",
+                          "available":  true,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files\\WinRAR\\WinRAR.exe"
+                      },
+                      {
+                          "name":  "UnRAR.exe",
+                          "available":  true,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files\\WinRAR\\UnRAR.exe"
+                      },
+                      {
+                          "name":  "WinRAR.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files (x86)\\WinRAR\\WinRAR.exe"
+                      },
+                      {
+                          "name":  "UnRAR.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files (x86)\\WinRAR\\UnRAR.exe"
+                      },
+                      {
+                          "name":  "bz.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files\\Bandizip\\bz.exe"
+                      },
+                      {
+                          "name":  "bz.exe",
+                          "available":  false,
+                          "source":  "fixed path",
+                          "path":  "C:\\Program Files (x86)\\Bandizip\\bz.exe"
+                      }
+                  ],
+    "shellRoute":  {
+                       "shellApplicationAvailable":  true,
+                       "classRootDotRarHandler":  "WinRAR"
+                   }
+}

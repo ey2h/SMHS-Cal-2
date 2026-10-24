@@ -1,0 +1,31 @@
+{
+    "book":  "点式钢管结构计算书",
+    "source":  "C:\\code\\Glass\\docs\\recon\\calcbooks\\raw\\点式钢管结构计算书.DOC",
+    "ok":  true,
+    "error":  null,
+    "paragraphs":  1874,
+    "tables":  20,
+    "tableFailures":  [
+
+                      ],
+    "tableCells":  904,
+    "lines":  1874,
+    "linesWithEquals":  162,
+    "linesWithStressUnit":  53,
+    "linesWithClause":  28,
+    "headings":  148,
+    "emptyLines":  339,
+    "embeddedObjectLines":  3,
+    "fields":  65,
+    "omaths":  0,
+    "shapes":  0,
+    "inlineShapes":  3,
+    "footnotes":  0,
+    "endnotes":  0,
+    "outlineOnlyHeadings":  33,
+    "styleHeadings":  0,
+    "patternOnlyHeadings":  115,
+    "seconds":  73.8,
+    "closeError":  null,
+    "quitError":  null
+}

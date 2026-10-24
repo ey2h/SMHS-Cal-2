@@ -13,3 +13,26 @@
 *.suo
 *.cache
 
+# 汇宝派生数据（参数库导出/地区表/随附计算书样本）——属厂商受版权保护内容，
+# 不要提交到公开仓库。本地保留即可；如曾被提交过，用
+#   git rm -r --cached 计算书样本 local-data
+# 只取消跟踪、保留磁盘文件。
+local-data/
+*.mdb
+计算书样本/
+
+
+# 厂商帮助文档/计算书提取件（受版权保护，随 local-data 一并本地保留）
+docs/recon/chm_extract/
+docs/recon/help/
+docs/recon/calcbooks/
+
+# 本地工具/构建/缓存产物
+.tools/
+.tmpbuild/
+graphify-out/
+.archify/
+nul
+docs/recon/specs/
+docs/recon/attachments/
+docs/recon/template/

@@ -1,0 +1,2922 @@
+{
+  "generatedAt": "2026-10-21T16:36:10.938Z",
+  "note": "源目录只读；本脚本仅读取，不写入源目录。sha256 为源文件内容哈希。",
+  "roots": [
+    {
+      "label": "guifan",
+      "label_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范",
+      "exists": true,
+      "dirCount": 4,
+      "fileCount": 50,
+      "errorCount": 0,
+      "totalBytes": 5564885,
+      "byExtension": {
+        ".doc": {
+          "count": 8,
+          "bytes": 2530441
+        },
+        ".txt": {
+          "count": 8,
+          "bytes": 45788
+        },
+        ".xml": {
+          "count": 3,
+          "bytes": 710
+        },
+        ".htm": {
+          "count": 3,
+          "bytes": 141879
+        },
+        ".thmx": {
+          "count": 1,
+          "bytes": 3087
+        },
+        ".jpg": {
+          "count": 2,
+          "bytes": 159090
+        },
+        ".dat": {
+          "count": 1,
+          "bytes": 301
+        },
+        ".mht": {
+          "count": 24,
+          "bytes": 2683589
+        }
+      },
+      "dirs": [
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范",
+          "relPath": "荷载规范",
+          "name": "荷载规范"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files",
+          "relPath": "荷载规范\\001.files",
+          "name": "001.files"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.files",
+          "relPath": "荷载规范\\002.files",
+          "name": "002.files"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能",
+          "relPath": "物理性能",
+          "name": "物理性能"
+        }
+      ],
+      "files": [
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表1.doc",
+          "relPath": "表1.doc",
+          "name": "表1.doc",
+          "ext": ".doc",
+          "sizeBytes": 189952,
+          "mtime": "2022-01-21T10:22:59.000Z",
+          "sha256": "e3faab1bab56ffdfde1cd5276b8add56626641c85c11b2d7f127ff22af06932a"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表2.doc",
+          "relPath": "表2.doc",
+          "name": "表2.doc",
+          "ext": ".doc",
+          "sizeBytes": 199787,
+          "mtime": "2025-03-13T00:54:59.000Z",
+          "sha256": "c4dba9050c124ff7baaa84b76bf1525583126b6f9d25110607bfafe337e5b58f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表3.doc",
+          "relPath": "表3.doc",
+          "name": "表3.doc",
+          "ext": ".doc",
+          "sizeBytes": 209687,
+          "mtime": "2025-03-13T01:20:23.000Z",
+          "sha256": "102f15200e5a2e32a9d6b72c8f8b0c4a6c4f87f0ee7cde231beadbdfa0d1f9b0"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表4.doc",
+          "relPath": "表4.doc",
+          "name": "表4.doc",
+          "ext": ".doc",
+          "sizeBytes": 210699,
+          "mtime": "2025-03-13T01:21:32.000Z",
+          "sha256": "6c403f6316dcaa0b04915d1f754963961096be636d822d96e2f61efe0124db23"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表5.doc",
+          "relPath": "表5.doc",
+          "name": "表5.doc",
+          "ext": ".doc",
+          "sizeBytes": 200355,
+          "mtime": "2025-03-13T00:51:24.000Z",
+          "sha256": "49f9402577682303fe90c8cbac3e8fc7335d24bb150be8f7397b7041bb8a7ae1"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表6.doc",
+          "relPath": "表6.doc",
+          "name": "表6.doc",
+          "ext": ".doc",
+          "sizeBytes": 140800,
+          "mtime": "2022-01-21T10:32:14.000Z",
+          "sha256": "54edcda3a5d608fe037980779df58ff55c8c4afb20aaa36d9dbdcf2571452e45"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表7.doc",
+          "relPath": "表7.doc",
+          "name": "表7.doc",
+          "ext": ".doc",
+          "sizeBytes": 1093120,
+          "mtime": "2023-09-13T11:54:22.000Z",
+          "sha256": "dc89519e47c2ac0136881cb569ca2f2022ba912432a1489f00a6513affad8ee8"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\附录.doc",
+          "relPath": "附录.doc",
+          "name": "附录.doc",
+          "ext": ".doc",
+          "sizeBytes": 286041,
+          "mtime": "2026-07-04T06:08:46.000Z",
+          "sha256": "2e939b9f951e4d6a850f547ecfa0063c6b5d44d23e2ecf02f5e53059c20d97ca"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范1.txt",
+          "relPath": "规范1.txt",
+          "name": "规范1.txt",
+          "ext": ".txt",
+          "sizeBytes": 9892,
+          "mtime": "2026-06-14T01:24:03.000Z",
+          "sha256": "9267924de00e835f5d099103e1939ed8df9089cc91c615e79087a90e4e6f5c49"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范2.txt",
+          "relPath": "规范2.txt",
+          "name": "规范2.txt",
+          "ext": ".txt",
+          "sizeBytes": 5802,
+          "mtime": "2026-06-14T01:16:23.000Z",
+          "sha256": "db6541a0f07489f637709d917a82877e6a09a45670e4ec6f15cf9e5f67499c5c"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范3.txt",
+          "relPath": "规范3.txt",
+          "name": "规范3.txt",
+          "ext": ".txt",
+          "sizeBytes": 7957,
+          "mtime": "2026-06-14T01:23:51.000Z",
+          "sha256": "c517a7feadbff1ccaec30795d5c0243b4992eff7d9ad1ae3b50c9f57643c2055"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范4.txt",
+          "relPath": "规范4.txt",
+          "name": "规范4.txt",
+          "ext": ".txt",
+          "sizeBytes": 8828,
+          "mtime": "2026-06-14T01:24:26.000Z",
+          "sha256": "194b61c7a3db16d6fa93d644843fda5b50554f2ce6844550869fc04524bea7ee"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范5.txt",
+          "relPath": "规范5.txt",
+          "name": "规范5.txt",
+          "ext": ".txt",
+          "sizeBytes": 5929,
+          "mtime": "2026-06-14T01:17:17.000Z",
+          "sha256": "82bd2a51c5809c93cfd811bc6376669e4a1f3b6dc9c8e61082d64c574c2fddc0"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范6.txt",
+          "relPath": "规范6.txt",
+          "name": "规范6.txt",
+          "ext": ".txt",
+          "sizeBytes": 1108,
+          "mtime": "2023-10-07T00:19:31.000Z",
+          "sha256": "a4828d7fb14ca61b86e7a07ae643cfa0d912c9c1e57e5fe3fac3dfcaf782573b"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范7.txt",
+          "relPath": "规范7.txt",
+          "name": "规范7.txt",
+          "ext": ".txt",
+          "sizeBytes": 5918,
+          "mtime": "2026-06-14T01:17:42.000Z",
+          "sha256": "1710bba9d192bb4f2552e124c9760e5a9b0bf2c5fd450983dd4002f2bd8509ab"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范8.txt",
+          "relPath": "规范8.txt",
+          "name": "规范8.txt",
+          "ext": ".txt",
+          "sizeBytes": 354,
+          "mtime": "2023-10-07T00:21:16.000Z",
+          "sha256": "b599d64ed594c18a8305443e530ba2f713f7f2d5644c7609751e99f7e9e975b9"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\colorschememapping.xml",
+          "relPath": "荷载规范\\001.files\\colorschememapping.xml",
+          "name": "colorschememapping.xml",
+          "ext": ".xml",
+          "sizeBytes": 314,
+          "mtime": "2022-01-13T01:21:07.000Z",
+          "sha256": "65f3cdbc4390c81b94fa960b7362917443fc1e6a51e3f81e4cb4c4dfa09da4be"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\filelist.xml",
+          "relPath": "荷载规范\\001.files\\filelist.xml",
+          "name": "filelist.xml",
+          "ext": ".xml",
+          "sizeBytes": 235,
+          "mtime": "2022-01-13T01:21:07.000Z",
+          "sha256": "978d52652b1157fb5be36fdfd6b4781dfbdebea052268d4ee92b2af91dceb5bf"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\header.htm",
+          "relPath": "荷载规范\\001.files\\header.htm",
+          "name": "header.htm",
+          "ext": ".htm",
+          "sizeBytes": 1716,
+          "mtime": "2022-01-13T01:21:07.000Z",
+          "sha256": "31364428f7671403a6a0a77751d0c2a99c4c7edb244dac4c97db92c48c62588f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\themedata.thmx",
+          "relPath": "荷载规范\\001.files\\themedata.thmx",
+          "name": "themedata.thmx",
+          "ext": ".thmx",
+          "sizeBytes": 3087,
+          "mtime": "2022-01-13T01:21:07.000Z",
+          "sha256": "65f91121025b3c37da5649f06d0fd7e0c7233758e135f909fceec1936dfd79c1"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.htm",
+          "relPath": "荷载规范\\001.htm",
+          "name": "001.htm",
+          "ext": ".htm",
+          "sizeBytes": 135733,
+          "mtime": "2022-01-13T01:21:07.000Z",
+          "sha256": "ed8df5d6e7aac6d525f111bc79716aaedc6f5b0ef1b0f62427996bec54c01e8f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.jpg",
+          "relPath": "荷载规范\\001.jpg",
+          "name": "001.jpg",
+          "ext": ".jpg",
+          "sizeBytes": 12046,
+          "mtime": "2012-07-13T07:55:52.000Z",
+          "sha256": "4c9aa5690341ba88ecb1ffa5a912d690c67a6f8ce3547cab0a51e804006c2472"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.files\\filelist.xml",
+          "relPath": "荷载规范\\002.files\\filelist.xml",
+          "name": "filelist.xml",
+          "ext": ".xml",
+          "sizeBytes": 161,
+          "mtime": "2018-09-12T03:05:16.000Z",
+          "sha256": "c3a5eb074b1a8eb932b2ef5e9eae03ac68a698c6d0fc979e6185ec22d657ba2f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.files\\image001.jpg",
+          "relPath": "荷载规范\\002.files\\image001.jpg",
+          "name": "image001.jpg",
+          "ext": ".jpg",
+          "sizeBytes": 147044,
+          "mtime": "2023-09-01T05:51:30.000Z",
+          "sha256": "de4c84360c9abfbdff32cf5ef46776a57e7c397b11847601896ef734ee9a37ce"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.htm",
+          "relPath": "荷载规范\\002.htm",
+          "name": "002.htm",
+          "ext": ".htm",
+          "sizeBytes": 4430,
+          "mtime": "2018-09-12T03:05:16.000Z",
+          "sha256": "719c89383ffdc697db88a505dca23397a0351db4c44777e279862ca4db1c25a6"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\guifan.dat",
+          "relPath": "荷载规范\\guifan.dat",
+          "name": "guifan.dat",
+          "ext": ".dat",
+          "sizeBytes": 301,
+          "mtime": "2026-03-01T09:22:19.000Z",
+          "sha256": "032b700b3981b211ef6c2a670922d5b91846ed1894601513b5587d05d44a6873"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能1.mht",
+          "relPath": "节能1.mht",
+          "name": "节能1.mht",
+          "ext": ".mht",
+          "sizeBytes": 42130,
+          "mtime": "2023-09-01T03:26:40.000Z",
+          "sha256": "1ef63f448bc87e7b91d725d7861ab078e66fd10335bd354313739993449d0156"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能2.mht",
+          "relPath": "节能2.mht",
+          "name": "节能2.mht",
+          "ext": ".mht",
+          "sizeBytes": 15818,
+          "mtime": "2022-01-10T09:05:46.000Z",
+          "sha256": "b9bb08049f05fe8bc307ef49ee38c3d0338a445d6b68d51a2bf0e0c3c9067a89"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能3.mht",
+          "relPath": "节能3.mht",
+          "name": "节能3.mht",
+          "ext": ".mht",
+          "sizeBytes": 34067,
+          "mtime": "2023-09-01T03:27:11.000Z",
+          "sha256": "9a5cbf57e4fb2a1ac62c2145e928e1b5ab6034c4149016ac8f2c31a0e8bbf0f2"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\AQXS.mht",
+          "relPath": "物理性能\\AQXS.mht",
+          "name": "AQXS.mht",
+          "ext": ".mht",
+          "sizeBytes": 12615,
+          "mtime": "2022-11-15T13:49:38.000Z",
+          "sha256": "96396d094a46cf18580a8619d135d6b96410ef09be34e9a65c2b554e11f9d9df"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FLGN.mht",
+          "relPath": "物理性能\\FLGN.mht",
+          "name": "FLGN.mht",
+          "ext": ".mht",
+          "sizeBytes": 278513,
+          "mtime": "2022-11-16T00:54:24.000Z",
+          "sha256": "b4c9b10dd2ce147da85f2258df54541f28ee83103a8ceeb253f5658d39990a33"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FYFS.mht",
+          "relPath": "物理性能\\FYFS.mht",
+          "name": "FYFS.mht",
+          "ext": ".mht",
+          "sizeBytes": 210320,
+          "mtime": "2025-03-13T01:24:33.000Z",
+          "sha256": "f929b95c8163f16605bfd0002cfed8aa7ba8f9ef3cbfd45c0792e3b9d14aaa0a"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M01.mht",
+          "relPath": "物理性能\\M01.mht",
+          "name": "M01.mht",
+          "ext": ".mht",
+          "sizeBytes": 59303,
+          "mtime": "2020-06-09T05:54:16.000Z",
+          "sha256": "b4b77a00033b3435040acc0e99953c0b6e7807df28f81aa9181ab92726cc51a5"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M02.mht",
+          "relPath": "物理性能\\M02.mht",
+          "name": "M02.mht",
+          "ext": ".mht",
+          "sizeBytes": 39526,
+          "mtime": "2020-06-09T05:55:16.000Z",
+          "sha256": "f5076ae5028ec340b08b1ec123a801315c8c65b5ea6076500033007cea52af1f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M03.mht",
+          "relPath": "物理性能\\M03.mht",
+          "name": "M03.mht",
+          "ext": ".mht",
+          "sizeBytes": 43772,
+          "mtime": "2020-06-09T05:55:46.000Z",
+          "sha256": "0cc3763bb784824a4dbeec74ba98c61d5b9e7b177a88a880791a68d9b9357160"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M04.mht",
+          "relPath": "物理性能\\M04.mht",
+          "name": "M04.mht",
+          "ext": ".mht",
+          "sizeBytes": 58147,
+          "mtime": "2020-06-09T05:57:04.000Z",
+          "sha256": "4fa1ad5d7fe692f7c79d0570ea998c5f190c5bb0a5f3ed8f394b44b2a947ba69"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M05.mht",
+          "relPath": "物理性能\\M05.mht",
+          "name": "M05.mht",
+          "ext": ".mht",
+          "sizeBytes": 25049,
+          "mtime": "2020-06-09T09:46:02.000Z",
+          "sha256": "e7bae57ca325098d67c679680220083b1cdff892c64990ee74dc2733e3e21077"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M06.mht",
+          "relPath": "物理性能\\M06.mht",
+          "name": "M06.mht",
+          "ext": ".mht",
+          "sizeBytes": 95478,
+          "mtime": "2021-05-18T02:13:54.000Z",
+          "sha256": "6589ee101ae84d1bec80c3270dfd7ad14267d2d1ab0fa99796ec2dcc56e432c1"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M07.mht",
+          "relPath": "物理性能\\M07.mht",
+          "name": "M07.mht",
+          "ext": ".mht",
+          "sizeBytes": 14766,
+          "mtime": "2011-10-09T06:37:46.000Z",
+          "sha256": "5217acbe06083e0984237138c6c9df0727d38c23ba283511eaf8cb4814b1f67d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M08.mht",
+          "relPath": "物理性能\\M08.mht",
+          "name": "M08.mht",
+          "ext": ".mht",
+          "sizeBytes": 140245,
+          "mtime": "2025-03-20T23:33:46.000Z",
+          "sha256": "40dfd0c3ce47af81b1dbd57166d0357942c26d9c051e1f56ce72ec08a0f1cbe9"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M09.mht",
+          "relPath": "物理性能\\M09.mht",
+          "name": "M09.mht",
+          "ext": ".mht",
+          "sizeBytes": 32337,
+          "mtime": "2023-12-31T20:51:09.000Z",
+          "sha256": "3b60b4904a146ccd186119ed401d8b577d6db84d7506122fb11e42df2f4733ed"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M10.mht",
+          "relPath": "物理性能\\M10.mht",
+          "name": "M10.mht",
+          "ext": ".mht",
+          "sizeBytes": 296310,
+          "mtime": "2020-06-15T04:23:14.000Z",
+          "sha256": "4a06c6c62aa4cfa3a0511f28bb44e1c7905c906be573c33a7d8cb3f066518f62"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC01.mht",
+          "relPath": "物理性能\\MC01.mht",
+          "name": "MC01.mht",
+          "ext": ".mht",
+          "sizeBytes": 35672,
+          "mtime": "2021-11-05T03:44:36.000Z",
+          "sha256": "041ea2aaf91dd5aea1d54d461c9ca1a2375a9c32d8eab70bcf4450826cb0904e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC02.mht",
+          "relPath": "物理性能\\MC02.mht",
+          "name": "MC02.mht",
+          "ext": ".mht",
+          "sizeBytes": 29886,
+          "mtime": "2021-11-05T03:45:14.000Z",
+          "sha256": "8bebefddddcf0586c33203c89edbdd2617292d0906d2409f1db514a0b8ec3095"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC03.mht",
+          "relPath": "物理性能\\MC03.mht",
+          "name": "MC03.mht",
+          "ext": ".mht",
+          "sizeBytes": 54635,
+          "mtime": "2021-11-05T03:45:31.000Z",
+          "sha256": "3972fb7492cf207b1659a9b558b62653fb7a5a5920697253b1a8c1eba6127dde"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC04.mht",
+          "relPath": "物理性能\\MC04.mht",
+          "name": "MC04.mht",
+          "ext": ".mht",
+          "sizeBytes": 66935,
+          "mtime": "2020-06-14T02:44:38.000Z",
+          "sha256": "d071c4b3399c7750d4815fb0386457d1c75e978fb1f1f6796c9c5023e882d84e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC05.mht",
+          "relPath": "物理性能\\MC05.mht",
+          "name": "MC05.mht",
+          "ext": ".mht",
+          "sizeBytes": 30562,
+          "mtime": "2020-06-14T06:25:14.000Z",
+          "sha256": "e96a0d89defe84b5f058594b74162a1736a44ff714ffa0ceffe28cea925e5431"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC06.mht",
+          "relPath": "物理性能\\MC06.mht",
+          "name": "MC06.mht",
+          "ext": ".mht",
+          "sizeBytes": 21190,
+          "mtime": "2020-06-09T10:55:46.000Z",
+          "sha256": "891820298c1f6d91b4d116948e75b53d2730bbb926241f7c46d37d85742285c8"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\WLXN.mht",
+          "relPath": "物理性能\\WLXN.mht",
+          "name": "WLXN.mht",
+          "ext": ".mht",
+          "sizeBytes": 860094,
+          "mtime": "2022-12-01T04:47:41.000Z",
+          "sha256": "8a63d5ceaaefb539b40b93be4fbd056971b59b5d55dce1284832948999d5caa5"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\YLMJ.mht",
+          "relPath": "物理性能\\YLMJ.mht",
+          "name": "YLMJ.mht",
+          "ext": ".mht",
+          "sizeBytes": 186219,
+          "mtime": "2022-11-14T05:11:20.000Z",
+          "sha256": "c03c2abb05a13e4f3a3e67037fabe5eb618c25d67e1faf70597be30ae78736ef"
+        }
+      ]
+    },
+    {
+      "label": "fujian",
+      "label_cn": "附件",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件",
+      "exists": true,
+      "dirCount": 0,
+      "fileCount": 4,
+      "errorCount": 0,
+      "totalBytes": 210482,
+      "byExtension": {
+        ".rar": {
+          "count": 3,
+          "bytes": 92562
+        },
+        ".dwg": {
+          "count": 1,
+          "bytes": 117920
+        }
+      },
+      "dirs": [],
+      "files": [
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\标准AHCI控制器设置方法.rar",
+          "relPath": "标准AHCI控制器设置方法.rar",
+          "name": "标准AHCI控制器设置方法.rar",
+          "ext": ".rar",
+          "sizeBytes": 74438,
+          "mtime": "2022-01-06T02:15:43.000Z",
+          "sha256": "f2bb889f292a814ee9a52e0d0f99f723218bcb45233fdc74771072a72790d46c"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\附录 型材断面汇总表（内附用法说明）.dwg",
+          "relPath": "附录 型材断面汇总表（内附用法说明）.dwg",
+          "name": "附录 型材断面汇总表（内附用法说明）.dwg",
+          "ext": ".dwg",
+          "sizeBytes": 117920,
+          "mtime": "2023-11-05T14:09:32.000Z",
+          "sha256": "6f1aad77eae9d4a533a7e652d5f850930796576f47ee5c38200b04370af5f60a"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\汇宝软件系统环境修复工具.rar",
+          "relPath": "汇宝软件系统环境修复工具.rar",
+          "name": "汇宝软件系统环境修复工具.rar",
+          "ext": ".rar",
+          "sizeBytes": 11228,
+          "mtime": "2025-10-29T02:56:15.000Z",
+          "sha256": "33eea7638d1c5a46c52f1168b933afa2b9543240cff54a5f6f1d2b2a62c9fd8a"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\节能计算基本原则与汇总表.rar",
+          "relPath": "节能计算基本原则与汇总表.rar",
+          "name": "节能计算基本原则与汇总表.rar",
+          "ext": ".rar",
+          "sizeBytes": 6896,
+          "mtime": "2024-01-11T01:53:12.000Z",
+          "sha256": "bfcf2b75cf28b2c33c6dce6be795323b407c566835fed0e7d8df7fecc5838710"
+        }
+      ]
+    },
+    {
+      "label": "regong",
+      "label_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工",
+      "exists": true,
+      "dirCount": 3,
+      "fileCount": 82,
+      "errorCount": 0,
+      "totalBytes": 2834219,
+      "byExtension": {
+        ".wmf": {
+          "count": 14,
+          "bytes": 2194274
+        },
+        ".inx": {
+          "count": 62,
+          "bytes": 17811
+        },
+        ".txt": {
+          "count": 1,
+          "bytes": 8255
+        },
+        ".mht": {
+          "count": 5,
+          "bytes": 613879
+        }
+      },
+      "dirs": [
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范",
+          "relPath": "规范",
+          "name": "规范"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176",
+          "relPath": "规范\\50176",
+          "name": "50176"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji",
+          "relPath": "规范\\leiji",
+          "name": "leiji"
+        }
+      ],
+      "files": [
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\10.wmf",
+          "relPath": "10.wmf",
+          "name": "10.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 8102,
+          "mtime": "2011-01-29T03:37:30.000Z",
+          "sha256": "9559a3173ff430ada9234b9d6f4ff37a394f81163f94d2816b43205c3b80d8cf"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\11.wmf",
+          "relPath": "11.wmf",
+          "name": "11.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 1226962,
+          "mtime": "2010-05-06T01:26:00.000Z",
+          "sha256": "e21c1ecca0a7a39c64a39d7395ac9d3ea26805f71e7aa112f21c7f50d7d9fc0c"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\12.wmf",
+          "relPath": "12.wmf",
+          "name": "12.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 97838,
+          "mtime": "2010-05-06T01:26:00.000Z",
+          "sha256": "a2d6d53f4923310d4353148e37508d041c9bdd552d6c3d9a3c270cd14c17c2a1"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\13.wmf",
+          "relPath": "13.wmf",
+          "name": "13.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 321372,
+          "mtime": "2010-05-06T01:26:00.000Z",
+          "sha256": "5478efe2bdadf6fb6fa6e63082791aa9c86cecf7f0410c9fd8f8ca038da8db7d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\14.wmf",
+          "relPath": "14.wmf",
+          "name": "14.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 13706,
+          "mtime": "2011-01-29T03:36:28.000Z",
+          "sha256": "b27d35b382a25a8058e42cd8e095ff706b1085d76b204b262bd04dcbf1f52660"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\15.wmf",
+          "relPath": "15.wmf",
+          "name": "15.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 6880,
+          "mtime": "2018-09-30T05:24:16.000Z",
+          "sha256": "35d91d093410d692b2bca45570e2300185b0f98082c2bca8bf7dd303eff81a5f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\16.wmf",
+          "relPath": "16.wmf",
+          "name": "16.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 7076,
+          "mtime": "2018-10-21T04:45:28.000Z",
+          "sha256": "14199c59173d609540710c01b01c11989f7d95c10177c00c887d63abd18c5704"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\17.wmf",
+          "relPath": "17.wmf",
+          "name": "17.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 65654,
+          "mtime": "2023-09-14T00:44:03.000Z",
+          "sha256": "493cb4403880ea63a0d1bfe38a15fa40d182d3f244aa8b8df79e2fca6a9d46e7"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\18.wmf",
+          "relPath": "18.wmf",
+          "name": "18.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 6052,
+          "mtime": "2025-03-13T10:40:11.000Z",
+          "sha256": "79240d2cb11df4842ffb112cb164ac6a226fad48a674bb4927c0c82f9aef768d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\7.wmf",
+          "relPath": "7.wmf",
+          "name": "7.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 4864,
+          "mtime": "2011-01-29T03:40:30.000Z",
+          "sha256": "f42b97a97328c264a82b982e4d602ce9c5561edc8d13530cdebb11d45c758ef0"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\8.wmf",
+          "relPath": "8.wmf",
+          "name": "8.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 9652,
+          "mtime": "2011-01-29T03:40:04.000Z",
+          "sha256": "828406e5af9303ccce3967242e729ce6253ca204f402ca97665ae61f77e2b314"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\9.wmf",
+          "relPath": "9.wmf",
+          "name": "9.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 10246,
+          "mtime": "2011-01-29T03:39:40.000Z",
+          "sha256": "f495dbcfac704c16cb4a641ec04ddb8c9d5dc3c78d708d46d7adedb459f8f35e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\ah.inx",
+          "relPath": "规范\\50176\\ah.inx",
+          "name": "ah.inx",
+          "ext": ".inx",
+          "sizeBytes": 264,
+          "mtime": "2017-02-17T03:25:40.000Z",
+          "sha256": "50bee5a653d1b8c44ed7ecc07ee622c7a91b474c89ca1274723e5a24a9abf92d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\bj.inx",
+          "relPath": "规范\\50176\\bj.inx",
+          "name": "bj.inx",
+          "ext": ".inx",
+          "sizeBytes": 21,
+          "mtime": "2017-02-17T01:26:34.000Z",
+          "sha256": "d9662c750cfbee2662abdf39e968d368480c5644d65b54605553c63dacb729c7"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\cq.inx",
+          "relPath": "规范\\50176\\cq.inx",
+          "name": "cq.inx",
+          "ext": ".inx",
+          "sizeBytes": 83,
+          "mtime": "2017-02-17T01:28:08.000Z",
+          "sha256": "fce0d4461bffc225aee8c1b77b6b018d727e36641eb659d486c1a44368bfcd8e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\fj.inx",
+          "relPath": "规范\\50176\\fj.inx",
+          "name": "fj.inx",
+          "ext": ".inx",
+          "sizeBytes": 316,
+          "mtime": "2017-02-17T04:21:04.000Z",
+          "sha256": "6920ff9dbb60392b0dd2a5afb6472ca4ba4f148f7b7cf69e2320ae3736fe8e3c"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gd.inx",
+          "relPath": "规范\\50176\\gd.inx",
+          "name": "gd.inx",
+          "ext": ".inx",
+          "sizeBytes": 573,
+          "mtime": "2017-02-17T04:00:24.000Z",
+          "sha256": "4bd70393105fb4cca95338192e0eb1a8c6b2bf90f4690c7c0bde419a1d867860"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gs.inx",
+          "relPath": "规范\\50176\\gs.inx",
+          "name": "gs.inx",
+          "ext": ".inx",
+          "sizeBytes": 393,
+          "mtime": "2017-02-17T03:13:06.000Z",
+          "sha256": "2bd6a35697900b1739c85e4e2f16f9b80ccb91afdcf0507e588587eb234b0196"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gx.inx",
+          "relPath": "规范\\50176\\gx.inx",
+          "name": "gx.inx",
+          "ext": ".inx",
+          "sizeBytes": 269,
+          "mtime": "2017-02-17T04:01:06.000Z",
+          "sha256": "fb18e763e51fcb3879d4f9b6bbae4d084ba510576b95450f6a9fce56ac53a302"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gz.inx",
+          "relPath": "规范\\50176\\gz.inx",
+          "name": "gz.inx",
+          "ext": ".inx",
+          "sizeBytes": 290,
+          "mtime": "2017-02-17T03:38:12.000Z",
+          "sha256": "7b2b5a0328bb90c882ba7e1ebd0ed7eb96393d4f9285cda8b2bd610b16df7e69"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hainan.inx",
+          "relPath": "规范\\50176\\hainan.inx",
+          "name": "hainan.inx",
+          "ext": ".inx",
+          "sizeBytes": 125,
+          "mtime": "2017-02-17T04:01:28.000Z",
+          "sha256": "441d48a08b38529ab0ca0ccd4dfc532cf7cb1a4bbe9c5a3873d133deafb4eb1d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hb.inx",
+          "relPath": "规范\\50176\\hb.inx",
+          "name": "hb.inx",
+          "ext": ".inx",
+          "sizeBytes": 401,
+          "mtime": "2017-02-17T03:07:20.000Z",
+          "sha256": "32e662bbb2b80f52a28a1f77b40615aaa89b4a1a4cc317d4e4babbc897fe152f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hbei.inx",
+          "relPath": "规范\\50176\\hbei.inx",
+          "name": "hbei.inx",
+          "ext": ".inx",
+          "sizeBytes": 374,
+          "mtime": "2017-02-17T03:33:10.000Z",
+          "sha256": "4d88aeebdf1c3fa701f0c61d0ede089a96ad12b027bf86446ee7bd207ba8d194"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hlj.inx",
+          "relPath": "规范\\50176\\hlj.inx",
+          "name": "hlj.inx",
+          "ext": ".inx",
+          "sizeBytes": 616,
+          "mtime": "2017-02-17T02:46:30.000Z",
+          "sha256": "91fae0f2066f0998c041784af17e9398d4fa169aa7880d985422af60d595440e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hn.inx",
+          "relPath": "规范\\50176\\hn.inx",
+          "name": "hn.inx",
+          "ext": ".inx",
+          "sizeBytes": 249,
+          "mtime": "2017-02-17T03:09:42.000Z",
+          "sha256": "c8f191292eb476058d2c65f8134438c5f007ebc301e61d677bc29e84e72d7a85"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hunan.inx",
+          "relPath": "规范\\50176\\hunan.inx",
+          "name": "hunan.inx",
+          "ext": ".inx",
+          "sizeBytes": 368,
+          "mtime": "2017-02-17T03:34:50.000Z",
+          "sha256": "ff342bc787b95524081af78230566b3f5445b9cc6123f59f2dc77d3553e5a034"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\jl.inx",
+          "relPath": "规范\\50176\\jl.inx",
+          "name": "jl.inx",
+          "ext": ".inx",
+          "sizeBytes": 330,
+          "mtime": "2017-02-17T02:48:20.000Z",
+          "sha256": "15e2e0bf046e5ad2952c7849374cb95ec3bfc48595301844f367b788ebf59c72"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\js.inx",
+          "relPath": "规范\\50176\\js.inx",
+          "name": "js.inx",
+          "ext": ".inx",
+          "sizeBytes": 425,
+          "mtime": "2017-02-17T03:29:12.000Z",
+          "sha256": "2d18c3f1e073dc8b508eeb14e1eeba334361557087755e36b53f837fbcb64ecd"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\jx.inx",
+          "relPath": "规范\\50176\\jx.inx",
+          "name": "jx.inx",
+          "ext": ".inx",
+          "sizeBytes": 258,
+          "mtime": "2017-02-17T03:35:50.000Z",
+          "sha256": "fd698e1eb2cb784939506bcb5559bac367532c8548833488bad2db87a4cfd56a"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\ln.inx",
+          "relPath": "规范\\50176\\ln.inx",
+          "name": "ln.inx",
+          "ext": ".inx",
+          "sizeBytes": 437,
+          "mtime": "2017-02-17T02:58:40.000Z",
+          "sha256": "eca36bc0a5b02f6416a69fe6951d43c673063ad3927c64ebe1c629a66aeb54bb"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\nmg.inx",
+          "relPath": "规范\\50176\\nmg.inx",
+          "name": "nmg.inx",
+          "ext": ".inx",
+          "sizeBytes": 913,
+          "mtime": "2017-02-17T01:29:38.000Z",
+          "sha256": "77719da59e2cdaf36226752e813ed1615362ddca760a8b18d95b1cf12c9dc639"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\nx.inx",
+          "relPath": "规范\\50176\\nx.inx",
+          "name": "nx.inx",
+          "ext": ".inx",
+          "sizeBytes": 127,
+          "mtime": "2017-02-17T03:13:38.000Z",
+          "sha256": "13f40b79b63aac49c91634d87dac7a9c405ce0e35a6fd0b6ec13b7e1966ed49f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\qh.inx",
+          "relPath": "规范\\50176\\qh.inx",
+          "name": "qh.inx",
+          "ext": ".inx",
+          "sizeBytes": 426,
+          "mtime": "2017-02-17T01:33:04.000Z",
+          "sha256": "b1135077e3a32665cf3ea49ec4ca4d9959e4aef9b3b1ddc560d2ecc0f2603ece"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sc.inx",
+          "relPath": "规范\\50176\\sc.inx",
+          "name": "sc.inx",
+          "ext": ".inx",
+          "sizeBytes": 659,
+          "mtime": "2017-02-17T03:36:50.000Z",
+          "sha256": "08b70afb426a6f31d592fbe6ff80030f52097c1203ba80e0aedef5f638c4f6fe"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sd.inx",
+          "relPath": "规范\\50176\\sd.inx",
+          "name": "sd.inx",
+          "ext": ".inx",
+          "sizeBytes": 745,
+          "mtime": "2017-02-17T03:04:54.000Z",
+          "sha256": "5111d09f399b8728d11007e2df1e2265d69ef0b1de07e70495c43ede08824f9e"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sh.inx",
+          "relPath": "规范\\50176\\sh.inx",
+          "name": "sh.inx",
+          "ext": ".inx",
+          "sizeBytes": 18,
+          "mtime": "2017-02-17T01:27:36.000Z",
+          "sha256": "40babbef406b3b9336e9a25c50f262eee2fd30d3d11b957e28b450287f404055"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sx1.inx",
+          "relPath": "规范\\50176\\sx1.inx",
+          "name": "sx1.inx",
+          "ext": ".inx",
+          "sizeBytes": 370,
+          "mtime": "2017-02-17T03:19:28.000Z",
+          "sha256": "4b2a1f0a5ca833163d9a1fd613d625f7210742823ae61a7c525be08f299d0ff5"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sx2.inx",
+          "relPath": "规范\\50176\\sx2.inx",
+          "name": "sx2.inx",
+          "ext": ".inx",
+          "sizeBytes": 184,
+          "mtime": "2017-02-17T03:12:06.000Z",
+          "sha256": "d6c4e3091014a16bb45b7c0634d408db9c44e30e9bcbdf348b999a8b2a925f1b"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\tj.inx",
+          "relPath": "规范\\50176\\tj.inx",
+          "name": "tj.inx",
+          "ext": ".inx",
+          "sizeBytes": 20,
+          "mtime": "2017-02-17T01:27:04.000Z",
+          "sha256": "1f3797648b604bdd4285a681bd17a72dc022e4c0a5cc6858e0629519c25e5dfb"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\tmp.txt",
+          "relPath": "规范\\50176\\tmp.txt",
+          "name": "tmp.txt",
+          "ext": ".txt",
+          "sizeBytes": 8255,
+          "mtime": "2017-02-17T01:51:02.000Z",
+          "sha256": "3580f67bc123d4da4fa9a4f74939b752c663290fa3006fbdf619f2df426144b5"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\xj.inx",
+          "relPath": "规范\\50176\\xj.inx",
+          "name": "xj.inx",
+          "ext": ".inx",
+          "sizeBytes": 803,
+          "mtime": "2017-02-17T03:17:22.000Z",
+          "sha256": "d7061ac160a4d7737a42aac0d393b52e7ba6343e52cb8e37ed42ffc9d6b5453d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\xz.inx",
+          "relPath": "规范\\50176\\xz.inx",
+          "name": "xz.inx",
+          "ext": ".inx",
+          "sizeBytes": 330,
+          "mtime": "2017-02-17T01:33:56.000Z",
+          "sha256": "2f61d96be5b8bf27752a56c17d35919474cd2c9ae4ae2f51d4e97e76e12f6d85"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\yn.inx",
+          "relPath": "规范\\50176\\yn.inx",
+          "name": "yn.inx",
+          "ext": ".inx",
+          "sizeBytes": 566,
+          "mtime": "2017-02-17T03:39:08.000Z",
+          "sha256": "8fe3025edee16b9dff4da60ad1df440cd97e5e2e0422e3e0ccbef9a0697ad03f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\zj.inx",
+          "relPath": "规范\\50176\\zj.inx",
+          "name": "zj.inx",
+          "ext": ".inx",
+          "sizeBytes": 312,
+          "mtime": "2017-02-17T03:31:22.000Z",
+          "sha256": "075faf6220f8890f19c9fa36e932093411f9745ef066e9a0060e32a0cfb9dcf6"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表5.3.1-6.3.1.mht",
+          "relPath": "规范\\表5.3.1-6.3.1.mht",
+          "name": "表5.3.1-6.3.1.mht",
+          "ext": ".mht",
+          "sizeBytes": 74166,
+          "mtime": "2017-06-05T09:01:42.000Z",
+          "sha256": "5382bfd2e89d9506b36e941ab3649248fb2cea0da8b8835791ff167b2ca9cc0c"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.2.mht",
+          "relPath": "规范\\表B.2.mht",
+          "name": "表B.2.mht",
+          "ext": ".mht",
+          "sizeBytes": 84438,
+          "mtime": "2017-06-05T06:33:50.000Z",
+          "sha256": "43ef031881d3199652f66c3b8d83f2f5c887e766e189ae95a4268ed1b4436e97"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.5.mht",
+          "relPath": "规范\\表B.5.mht",
+          "name": "表B.5.mht",
+          "ext": ".mht",
+          "sizeBytes": 125033,
+          "mtime": "2017-06-05T06:15:30.000Z",
+          "sha256": "db86fca23474f7c818307aa6fd19b1c674acc54092b396002195ece6a082c3f7"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-1-2.mht",
+          "relPath": "规范\\表C.5.3-1-2.mht",
+          "name": "表C.5.3-1-2.mht",
+          "ext": ".mht",
+          "sizeBytes": 142112,
+          "mtime": "2017-02-23T03:01:16.000Z",
+          "sha256": "03bb5f611626fee7b46b05570450003f124d8da401435c64556c9652bc914558"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-3.mht",
+          "relPath": "规范\\表C.5.3-3.mht",
+          "name": "表C.5.3-3.mht",
+          "ext": ".mht",
+          "sizeBytes": 188130,
+          "mtime": "2018-08-06T13:22:56.000Z",
+          "sha256": "a6de733626bbc3953824a380e2d86aa4a55ef259b08e058dfcddcd7a7ad7ffef"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\ah.inx",
+          "relPath": "规范\\leiji\\ah.inx",
+          "name": "ah.inx",
+          "ext": ".inx",
+          "sizeBytes": 157,
+          "mtime": "2018-10-18T06:48:02.000Z",
+          "sha256": "34336866417230289f3d7fcf477728c980ab332823743f201eeb51f8696dcfa2"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\bj.inx",
+          "relPath": "规范\\leiji\\bj.inx",
+          "name": "bj.inx",
+          "ext": ".inx",
+          "sizeBytes": 24,
+          "mtime": "2018-10-18T06:45:08.000Z",
+          "sha256": "8731cf37598f125de0666a5f0ec4e376123559489b8e1fc4f6f0537327270573"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\cq.inx",
+          "relPath": "规范\\leiji\\cq.inx",
+          "name": "cq.inx",
+          "ext": ".inx",
+          "sizeBytes": 61,
+          "mtime": "2018-10-18T06:47:13.000Z",
+          "sha256": "fe6442ac49ea9a3a43a8981653ff26c2c52862785261f77440ba8dabd15e509f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\fj.inx",
+          "relPath": "规范\\leiji\\fj.inx",
+          "name": "fj.inx",
+          "ext": ".inx",
+          "sizeBytes": 192,
+          "mtime": "2018-10-18T06:48:14.000Z",
+          "sha256": "a6ab74d83a0e619a57b0f8f11180d8f1386fac005e2dcb63bb6550e65a8581ca"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gd.inx",
+          "relPath": "规范\\leiji\\gd.inx",
+          "name": "gd.inx",
+          "ext": ".inx",
+          "sizeBytes": 225,
+          "mtime": "2018-10-18T06:48:33.000Z",
+          "sha256": "19513b8fa363d3cc303a9c7f4f01ec7f98f266becf2d9991cceae9bf7f8a8403"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gs.inx",
+          "relPath": "规范\\leiji\\gs.inx",
+          "name": "gs.inx",
+          "ext": ".inx",
+          "sizeBytes": 249,
+          "mtime": "2018-10-18T06:48:53.000Z",
+          "sha256": "61c0a692f42966f45a1f5a21e5364c06a642718a6f1cee6d3b993e111bfe4d9b"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gx.inx",
+          "relPath": "规范\\leiji\\gx.inx",
+          "name": "gx.inx",
+          "ext": ".inx",
+          "sizeBytes": 236,
+          "mtime": "2018-10-18T06:49:07.000Z",
+          "sha256": "021110b7c77e166c6f8d24a0a353c59d4ebf9bfbe538f6bcb7ed72d451c538c2"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gz.inx",
+          "relPath": "规范\\leiji\\gz.inx",
+          "name": "gz.inx",
+          "ext": ".inx",
+          "sizeBytes": 226,
+          "mtime": "2018-10-18T06:49:20.000Z",
+          "sha256": "1be6cce011f7ba964d795bc46e112ada44b989ebdd2de539dde7e91ae7da7f7d"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hainan.inx",
+          "relPath": "规范\\leiji\\hainan.inx",
+          "name": "hainan.inx",
+          "ext": ".inx",
+          "sizeBytes": 72,
+          "mtime": "2018-10-18T06:49:36.000Z",
+          "sha256": "1da428cb72f18989f9bf9d35658d56ee93d5c7c2426e6c768c53c3f28ed16782"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hb.inx",
+          "relPath": "规范\\leiji\\hb.inx",
+          "name": "hb.inx",
+          "ext": ".inx",
+          "sizeBytes": 288,
+          "mtime": "2018-10-18T06:49:52.000Z",
+          "sha256": "dcca2daa97988c1d4409d0bcec65f944c2c0ff0a57a1a85fc8529bb5486a1281"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hbei.inx",
+          "relPath": "规范\\leiji\\hbei.inx",
+          "name": "hbei.inx",
+          "ext": ".inx",
+          "sizeBytes": 293,
+          "mtime": "2018-10-18T06:50:10.000Z",
+          "sha256": "b9d9006eed8eddb57bf5eb6342a15f05c0ad6fd1f6440c297e829665ad8d9dc8"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hlj.inx",
+          "relPath": "规范\\leiji\\hlj.inx",
+          "name": "hlj.inx",
+          "ext": ".inx",
+          "sizeBytes": 269,
+          "mtime": "2018-10-18T06:47:47.000Z",
+          "sha256": "c7cba247b512356065d7de38d214076c2a01a840a3aefa70ac43dbeaed9a1bed"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hn.inx",
+          "relPath": "规范\\leiji\\hn.inx",
+          "name": "hn.inx",
+          "ext": ".inx",
+          "sizeBytes": 264,
+          "mtime": "2018-10-18T06:50:22.000Z",
+          "sha256": "d40f598c0c6638fd6ba13badc5448a665d2a597102c4f5a3193e3d3a5643a705"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hunan.inx",
+          "relPath": "规范\\leiji\\hunan.inx",
+          "name": "hunan.inx",
+          "ext": ".inx",
+          "sizeBytes": 255,
+          "mtime": "2018-10-18T06:50:39.000Z",
+          "sha256": "2d3c74050f1832afc83962524ed7ee25f05aec0468267c50da947fb8f33ead27"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\jl.inx",
+          "relPath": "规范\\leiji\\jl.inx",
+          "name": "jl.inx",
+          "ext": ".inx",
+          "sizeBytes": 148,
+          "mtime": "2018-10-18T06:50:50.000Z",
+          "sha256": "09a3569499a0ef51a0532fee30f316c223ea1f37482a1663818d4ad62ae53b67"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\js.inx",
+          "relPath": "规范\\leiji\\js.inx",
+          "name": "js.inx",
+          "ext": ".inx",
+          "sizeBytes": 196,
+          "mtime": "2018-10-18T06:51:03.000Z",
+          "sha256": "9b12190eec7875165c30c1dd68d51e833d678ab9dcc0eee5a12169089a6453c6"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\jx.inx",
+          "relPath": "规范\\leiji\\jx.inx",
+          "name": "jx.inx",
+          "ext": ".inx",
+          "sizeBytes": 276,
+          "mtime": "2018-10-18T06:51:15.000Z",
+          "sha256": "94b489ab38b0c77800651072bfceea9fbaa5bf4c7e2ee3ca1849659caf6333f5"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\ln.inx",
+          "relPath": "规范\\leiji\\ln.inx",
+          "name": "ln.inx",
+          "ext": ".inx",
+          "sizeBytes": 148,
+          "mtime": "2018-10-18T06:51:25.000Z",
+          "sha256": "ebcdf74a410a2becd7732786d6c554c8cc269a1c59871f64e55330c3b4ad36a2"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\nmg.inx",
+          "relPath": "规范\\leiji\\nmg.inx",
+          "name": "nmg.inx",
+          "ext": ".inx",
+          "sizeBytes": 350,
+          "mtime": "2018-10-18T06:51:36.000Z",
+          "sha256": "831ebeb13553fb9ed61cf0c96915090fa6069f5df2567b86b04c36ef3ca8ba83"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\nx.inx",
+          "relPath": "规范\\leiji\\nx.inx",
+          "name": "nx.inx",
+          "ext": ".inx",
+          "sizeBytes": 79,
+          "mtime": "2018-10-18T06:51:46.000Z",
+          "sha256": "834f92c05491beb7ea2b97dc0ce8134d0be7c81eabba4701ac54922a6b148d38"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\qh.inx",
+          "relPath": "规范\\leiji\\qh.inx",
+          "name": "qh.inx",
+          "ext": ".inx",
+          "sizeBytes": 290,
+          "mtime": "2018-10-18T06:51:56.000Z",
+          "sha256": "d46a3f49aba8b1627f6ac7f8731b84d117401d0ed3248326b4f8e4be4b7a2744"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sc.inx",
+          "relPath": "规范\\leiji\\sc.inx",
+          "name": "sc.inx",
+          "ext": ".inx",
+          "sizeBytes": 593,
+          "mtime": "2018-10-18T06:52:12.000Z",
+          "sha256": "4c2d4caa5aad501bb4a9d9c524e9e095eb4e1733b70888075cc03b67bcbc493f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sd.inx",
+          "relPath": "规范\\leiji\\sd.inx",
+          "name": "sd.inx",
+          "ext": ".inx",
+          "sizeBytes": 275,
+          "mtime": "2018-10-18T06:52:26.000Z",
+          "sha256": "7d93a988e2275bf832527d45ce07704c70fa7acfebf22bf5e187d17d7c529cf1"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sh.inx",
+          "relPath": "规范\\leiji\\sh.inx",
+          "name": "sh.inx",
+          "ext": ".inx",
+          "sizeBytes": 13,
+          "mtime": "2018-10-18T06:46:36.000Z",
+          "sha256": "7869286b582734c50fad4cb53a2b35074946aedf0b5d7b8adb99a25bd7071ff9"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sx1.inx",
+          "relPath": "规范\\leiji\\sx1.inx",
+          "name": "sx1.inx",
+          "ext": ".inx",
+          "sizeBytes": 160,
+          "mtime": "2018-10-18T06:52:35.000Z",
+          "sha256": "a9db16d39ce5dc4e45165031509d339f821765ebdeebe809daf7739cb321f40f"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sx2.inx",
+          "relPath": "规范\\leiji\\sx2.inx",
+          "name": "sx2.inx",
+          "ext": ".inx",
+          "sizeBytes": 227,
+          "mtime": "2018-10-18T06:52:46.000Z",
+          "sha256": "dd87d132235d4582ccac3a891d672432faabeebde29e684c564fb14a7bbbf8a8"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\tj.inx",
+          "relPath": "规范\\leiji\\tj.inx",
+          "name": "tj.inx",
+          "ext": ".inx",
+          "sizeBytes": 24,
+          "mtime": "2018-10-18T06:45:49.000Z",
+          "sha256": "e2f5fb2984dd565febff0a7dec60ffdee0a09e7710c10dbad8c2cb1568f48f98"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\xj.inx",
+          "relPath": "规范\\leiji\\xj.inx",
+          "name": "xj.inx",
+          "ext": ".inx",
+          "sizeBytes": 291,
+          "mtime": "2018-10-18T06:53:09.000Z",
+          "sha256": "3925172688487d94c286de7f8b75db3eac837f5ee63933dea96997f5112de872"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\xz.inx",
+          "relPath": "规范\\leiji\\xz.inx",
+          "name": "xz.inx",
+          "ext": ".inx",
+          "sizeBytes": 184,
+          "mtime": "2018-10-18T06:53:20.000Z",
+          "sha256": "026fe7041354f0a01ce3812ea51fb312d57dee23b01464144be0f9597ce459b0"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\yn.inx",
+          "relPath": "规范\\leiji\\yn.inx",
+          "name": "yn.inx",
+          "ext": ".inx",
+          "sizeBytes": 343,
+          "mtime": "2018-10-18T06:53:33.000Z",
+          "sha256": "1738f3ab7f0de0033d224d7f78f44b9abe8e85805505733e18551dee3b41cd38"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\zj.inx",
+          "relPath": "规范\\leiji\\zj.inx",
+          "name": "zj.inx",
+          "ext": ".inx",
+          "sizeBytes": 138,
+          "mtime": "2018-10-18T06:53:45.000Z",
+          "sha256": "1e1688d239d52d62f592f28c715fb60324d34a284d56029bc3539ec188b7e0fa"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\regc.wmf",
+          "relPath": "regc.wmf",
+          "name": "regc.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 320430,
+          "mtime": "2010-05-06T01:26:00.000Z",
+          "sha256": "c2f2b63dfb9cde0846f32733a6fb6ed12c605794ac4c1e838ea8e2ddea216ce0"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\regmq.wmf",
+          "relPath": "regmq.wmf",
+          "name": "regmq.wmf",
+          "ext": ".wmf",
+          "sizeBytes": 95440,
+          "mtime": "2010-05-06T01:26:00.000Z",
+          "sha256": "c6272c5cc7c82ba3e1692448a43b4c13e7568772f536667ddbacaa40f52f1678"
+        }
+      ]
+    }
+  ],
+  "allFiles": [
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表1.doc",
+      "relPath": "表1.doc",
+      "name": "表1.doc",
+      "ext": ".doc",
+      "sizeBytes": 189952,
+      "mtime": "2022-01-21T10:22:59.000Z",
+      "sha256": "e3faab1bab56ffdfde1cd5276b8add56626641c85c11b2d7f127ff22af06932a"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表2.doc",
+      "relPath": "表2.doc",
+      "name": "表2.doc",
+      "ext": ".doc",
+      "sizeBytes": 199787,
+      "mtime": "2025-03-13T00:54:59.000Z",
+      "sha256": "c4dba9050c124ff7baaa84b76bf1525583126b6f9d25110607bfafe337e5b58f"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表3.doc",
+      "relPath": "表3.doc",
+      "name": "表3.doc",
+      "ext": ".doc",
+      "sizeBytes": 209687,
+      "mtime": "2025-03-13T01:20:23.000Z",
+      "sha256": "102f15200e5a2e32a9d6b72c8f8b0c4a6c4f87f0ee7cde231beadbdfa0d1f9b0"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表4.doc",
+      "relPath": "表4.doc",
+      "name": "表4.doc",
+      "ext": ".doc",
+      "sizeBytes": 210699,
+      "mtime": "2025-03-13T01:21:32.000Z",
+      "sha256": "6c403f6316dcaa0b04915d1f754963961096be636d822d96e2f61efe0124db23"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表5.doc",
+      "relPath": "表5.doc",
+      "name": "表5.doc",
+      "ext": ".doc",
+      "sizeBytes": 200355,
+      "mtime": "2025-03-13T00:51:24.000Z",
+      "sha256": "49f9402577682303fe90c8cbac3e8fc7335d24bb150be8f7397b7041bb8a7ae1"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表6.doc",
+      "relPath": "表6.doc",
+      "name": "表6.doc",
+      "ext": ".doc",
+      "sizeBytes": 140800,
+      "mtime": "2022-01-21T10:32:14.000Z",
+      "sha256": "54edcda3a5d608fe037980779df58ff55c8c4afb20aaa36d9dbdcf2571452e45"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\表7.doc",
+      "relPath": "表7.doc",
+      "name": "表7.doc",
+      "ext": ".doc",
+      "sizeBytes": 1093120,
+      "mtime": "2023-09-13T11:54:22.000Z",
+      "sha256": "dc89519e47c2ac0136881cb569ca2f2022ba912432a1489f00a6513affad8ee8"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\附录.doc",
+      "relPath": "附录.doc",
+      "name": "附录.doc",
+      "ext": ".doc",
+      "sizeBytes": 286041,
+      "mtime": "2026-07-04T06:08:46.000Z",
+      "sha256": "2e939b9f951e4d6a850f547ecfa0063c6b5d44d23e2ecf02f5e53059c20d97ca"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范1.txt",
+      "relPath": "规范1.txt",
+      "name": "规范1.txt",
+      "ext": ".txt",
+      "sizeBytes": 9892,
+      "mtime": "2026-06-14T01:24:03.000Z",
+      "sha256": "9267924de00e835f5d099103e1939ed8df9089cc91c615e79087a90e4e6f5c49"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范2.txt",
+      "relPath": "规范2.txt",
+      "name": "规范2.txt",
+      "ext": ".txt",
+      "sizeBytes": 5802,
+      "mtime": "2026-06-14T01:16:23.000Z",
+      "sha256": "db6541a0f07489f637709d917a82877e6a09a45670e4ec6f15cf9e5f67499c5c"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范3.txt",
+      "relPath": "规范3.txt",
+      "name": "规范3.txt",
+      "ext": ".txt",
+      "sizeBytes": 7957,
+      "mtime": "2026-06-14T01:23:51.000Z",
+      "sha256": "c517a7feadbff1ccaec30795d5c0243b4992eff7d9ad1ae3b50c9f57643c2055"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范4.txt",
+      "relPath": "规范4.txt",
+      "name": "规范4.txt",
+      "ext": ".txt",
+      "sizeBytes": 8828,
+      "mtime": "2026-06-14T01:24:26.000Z",
+      "sha256": "194b61c7a3db16d6fa93d644843fda5b50554f2ce6844550869fc04524bea7ee"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范5.txt",
+      "relPath": "规范5.txt",
+      "name": "规范5.txt",
+      "ext": ".txt",
+      "sizeBytes": 5929,
+      "mtime": "2026-06-14T01:17:17.000Z",
+      "sha256": "82bd2a51c5809c93cfd811bc6376669e4a1f3b6dc9c8e61082d64c574c2fddc0"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范6.txt",
+      "relPath": "规范6.txt",
+      "name": "规范6.txt",
+      "ext": ".txt",
+      "sizeBytes": 1108,
+      "mtime": "2023-10-07T00:19:31.000Z",
+      "sha256": "a4828d7fb14ca61b86e7a07ae643cfa0d912c9c1e57e5fe3fac3dfcaf782573b"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范7.txt",
+      "relPath": "规范7.txt",
+      "name": "规范7.txt",
+      "ext": ".txt",
+      "sizeBytes": 5918,
+      "mtime": "2026-06-14T01:17:42.000Z",
+      "sha256": "1710bba9d192bb4f2552e124c9760e5a9b0bf2c5fd450983dd4002f2bd8509ab"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\规范8.txt",
+      "relPath": "规范8.txt",
+      "name": "规范8.txt",
+      "ext": ".txt",
+      "sizeBytes": 354,
+      "mtime": "2023-10-07T00:21:16.000Z",
+      "sha256": "b599d64ed594c18a8305443e530ba2f713f7f2d5644c7609751e99f7e9e975b9"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\colorschememapping.xml",
+      "relPath": "荷载规范\\001.files\\colorschememapping.xml",
+      "name": "colorschememapping.xml",
+      "ext": ".xml",
+      "sizeBytes": 314,
+      "mtime": "2022-01-13T01:21:07.000Z",
+      "sha256": "65f3cdbc4390c81b94fa960b7362917443fc1e6a51e3f81e4cb4c4dfa09da4be"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\filelist.xml",
+      "relPath": "荷载规范\\001.files\\filelist.xml",
+      "name": "filelist.xml",
+      "ext": ".xml",
+      "sizeBytes": 235,
+      "mtime": "2022-01-13T01:21:07.000Z",
+      "sha256": "978d52652b1157fb5be36fdfd6b4781dfbdebea052268d4ee92b2af91dceb5bf"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\header.htm",
+      "relPath": "荷载规范\\001.files\\header.htm",
+      "name": "header.htm",
+      "ext": ".htm",
+      "sizeBytes": 1716,
+      "mtime": "2022-01-13T01:21:07.000Z",
+      "sha256": "31364428f7671403a6a0a77751d0c2a99c4c7edb244dac4c97db92c48c62588f"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.files\\themedata.thmx",
+      "relPath": "荷载规范\\001.files\\themedata.thmx",
+      "name": "themedata.thmx",
+      "ext": ".thmx",
+      "sizeBytes": 3087,
+      "mtime": "2022-01-13T01:21:07.000Z",
+      "sha256": "65f91121025b3c37da5649f06d0fd7e0c7233758e135f909fceec1936dfd79c1"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.htm",
+      "relPath": "荷载规范\\001.htm",
+      "name": "001.htm",
+      "ext": ".htm",
+      "sizeBytes": 135733,
+      "mtime": "2022-01-13T01:21:07.000Z",
+      "sha256": "ed8df5d6e7aac6d525f111bc79716aaedc6f5b0ef1b0f62427996bec54c01e8f"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.jpg",
+      "relPath": "荷载规范\\001.jpg",
+      "name": "001.jpg",
+      "ext": ".jpg",
+      "sizeBytes": 12046,
+      "mtime": "2012-07-13T07:55:52.000Z",
+      "sha256": "4c9aa5690341ba88ecb1ffa5a912d690c67a6f8ce3547cab0a51e804006c2472"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.files\\filelist.xml",
+      "relPath": "荷载规范\\002.files\\filelist.xml",
+      "name": "filelist.xml",
+      "ext": ".xml",
+      "sizeBytes": 161,
+      "mtime": "2018-09-12T03:05:16.000Z",
+      "sha256": "c3a5eb074b1a8eb932b2ef5e9eae03ac68a698c6d0fc979e6185ec22d657ba2f"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.files\\image001.jpg",
+      "relPath": "荷载规范\\002.files\\image001.jpg",
+      "name": "image001.jpg",
+      "ext": ".jpg",
+      "sizeBytes": 147044,
+      "mtime": "2023-09-01T05:51:30.000Z",
+      "sha256": "de4c84360c9abfbdff32cf5ef46776a57e7c397b11847601896ef734ee9a37ce"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.htm",
+      "relPath": "荷载规范\\002.htm",
+      "name": "002.htm",
+      "ext": ".htm",
+      "sizeBytes": 4430,
+      "mtime": "2018-09-12T03:05:16.000Z",
+      "sha256": "719c89383ffdc697db88a505dca23397a0351db4c44777e279862ca4db1c25a6"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\guifan.dat",
+      "relPath": "荷载规范\\guifan.dat",
+      "name": "guifan.dat",
+      "ext": ".dat",
+      "sizeBytes": 301,
+      "mtime": "2026-03-01T09:22:19.000Z",
+      "sha256": "032b700b3981b211ef6c2a670922d5b91846ed1894601513b5587d05d44a6873"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能1.mht",
+      "relPath": "节能1.mht",
+      "name": "节能1.mht",
+      "ext": ".mht",
+      "sizeBytes": 42130,
+      "mtime": "2023-09-01T03:26:40.000Z",
+      "sha256": "1ef63f448bc87e7b91d725d7861ab078e66fd10335bd354313739993449d0156"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能2.mht",
+      "relPath": "节能2.mht",
+      "name": "节能2.mht",
+      "ext": ".mht",
+      "sizeBytes": 15818,
+      "mtime": "2022-01-10T09:05:46.000Z",
+      "sha256": "b9bb08049f05fe8bc307ef49ee38c3d0338a445d6b68d51a2bf0e0c3c9067a89"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能3.mht",
+      "relPath": "节能3.mht",
+      "name": "节能3.mht",
+      "ext": ".mht",
+      "sizeBytes": 34067,
+      "mtime": "2023-09-01T03:27:11.000Z",
+      "sha256": "9a5cbf57e4fb2a1ac62c2145e928e1b5ab6034c4149016ac8f2c31a0e8bbf0f2"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\AQXS.mht",
+      "relPath": "物理性能\\AQXS.mht",
+      "name": "AQXS.mht",
+      "ext": ".mht",
+      "sizeBytes": 12615,
+      "mtime": "2022-11-15T13:49:38.000Z",
+      "sha256": "96396d094a46cf18580a8619d135d6b96410ef09be34e9a65c2b554e11f9d9df"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FLGN.mht",
+      "relPath": "物理性能\\FLGN.mht",
+      "name": "FLGN.mht",
+      "ext": ".mht",
+      "sizeBytes": 278513,
+      "mtime": "2022-11-16T00:54:24.000Z",
+      "sha256": "b4c9b10dd2ce147da85f2258df54541f28ee83103a8ceeb253f5658d39990a33"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FYFS.mht",
+      "relPath": "物理性能\\FYFS.mht",
+      "name": "FYFS.mht",
+      "ext": ".mht",
+      "sizeBytes": 210320,
+      "mtime": "2025-03-13T01:24:33.000Z",
+      "sha256": "f929b95c8163f16605bfd0002cfed8aa7ba8f9ef3cbfd45c0792e3b9d14aaa0a"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M01.mht",
+      "relPath": "物理性能\\M01.mht",
+      "name": "M01.mht",
+      "ext": ".mht",
+      "sizeBytes": 59303,
+      "mtime": "2020-06-09T05:54:16.000Z",
+      "sha256": "b4b77a00033b3435040acc0e99953c0b6e7807df28f81aa9181ab92726cc51a5"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M02.mht",
+      "relPath": "物理性能\\M02.mht",
+      "name": "M02.mht",
+      "ext": ".mht",
+      "sizeBytes": 39526,
+      "mtime": "2020-06-09T05:55:16.000Z",
+      "sha256": "f5076ae5028ec340b08b1ec123a801315c8c65b5ea6076500033007cea52af1f"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M03.mht",
+      "relPath": "物理性能\\M03.mht",
+      "name": "M03.mht",
+      "ext": ".mht",
+      "sizeBytes": 43772,
+      "mtime": "2020-06-09T05:55:46.000Z",
+      "sha256": "0cc3763bb784824a4dbeec74ba98c61d5b9e7b177a88a880791a68d9b9357160"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M04.mht",
+      "relPath": "物理性能\\M04.mht",
+      "name": "M04.mht",
+      "ext": ".mht",
+      "sizeBytes": 58147,
+      "mtime": "2020-06-09T05:57:04.000Z",
+      "sha256": "4fa1ad5d7fe692f7c79d0570ea998c5f190c5bb0a5f3ed8f394b44b2a947ba69"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M05.mht",
+      "relPath": "物理性能\\M05.mht",
+      "name": "M05.mht",
+      "ext": ".mht",
+      "sizeBytes": 25049,
+      "mtime": "2020-06-09T09:46:02.000Z",
+      "sha256": "e7bae57ca325098d67c679680220083b1cdff892c64990ee74dc2733e3e21077"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M06.mht",
+      "relPath": "物理性能\\M06.mht",
+      "name": "M06.mht",
+      "ext": ".mht",
+      "sizeBytes": 95478,
+      "mtime": "2021-05-18T02:13:54.000Z",
+      "sha256": "6589ee101ae84d1bec80c3270dfd7ad14267d2d1ab0fa99796ec2dcc56e432c1"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M07.mht",
+      "relPath": "物理性能\\M07.mht",
+      "name": "M07.mht",
+      "ext": ".mht",
+      "sizeBytes": 14766,
+      "mtime": "2011-10-09T06:37:46.000Z",
+      "sha256": "5217acbe06083e0984237138c6c9df0727d38c23ba283511eaf8cb4814b1f67d"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M08.mht",
+      "relPath": "物理性能\\M08.mht",
+      "name": "M08.mht",
+      "ext": ".mht",
+      "sizeBytes": 140245,
+      "mtime": "2025-03-20T23:33:46.000Z",
+      "sha256": "40dfd0c3ce47af81b1dbd57166d0357942c26d9c051e1f56ce72ec08a0f1cbe9"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M09.mht",
+      "relPath": "物理性能\\M09.mht",
+      "name": "M09.mht",
+      "ext": ".mht",
+      "sizeBytes": 32337,
+      "mtime": "2023-12-31T20:51:09.000Z",
+      "sha256": "3b60b4904a146ccd186119ed401d8b577d6db84d7506122fb11e42df2f4733ed"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M10.mht",
+      "relPath": "物理性能\\M10.mht",
+      "name": "M10.mht",
+      "ext": ".mht",
+      "sizeBytes": 296310,
+      "mtime": "2020-06-15T04:23:14.000Z",
+      "sha256": "4a06c6c62aa4cfa3a0511f28bb44e1c7905c906be573c33a7d8cb3f066518f62"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC01.mht",
+      "relPath": "物理性能\\MC01.mht",
+      "name": "MC01.mht",
+      "ext": ".mht",
+      "sizeBytes": 35672,
+      "mtime": "2021-11-05T03:44:36.000Z",
+      "sha256": "041ea2aaf91dd5aea1d54d461c9ca1a2375a9c32d8eab70bcf4450826cb0904e"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC02.mht",
+      "relPath": "物理性能\\MC02.mht",
+      "name": "MC02.mht",
+      "ext": ".mht",
+      "sizeBytes": 29886,
+      "mtime": "2021-11-05T03:45:14.000Z",
+      "sha256": "8bebefddddcf0586c33203c89edbdd2617292d0906d2409f1db514a0b8ec3095"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC03.mht",
+      "relPath": "物理性能\\MC03.mht",
+      "name": "MC03.mht",
+      "ext": ".mht",
+      "sizeBytes": 54635,
+      "mtime": "2021-11-05T03:45:31.000Z",
+      "sha256": "3972fb7492cf207b1659a9b558b62653fb7a5a5920697253b1a8c1eba6127dde"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC04.mht",
+      "relPath": "物理性能\\MC04.mht",
+      "name": "MC04.mht",
+      "ext": ".mht",
+      "sizeBytes": 66935,
+      "mtime": "2020-06-14T02:44:38.000Z",
+      "sha256": "d071c4b3399c7750d4815fb0386457d1c75e978fb1f1f6796c9c5023e882d84e"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC05.mht",
+      "relPath": "物理性能\\MC05.mht",
+      "name": "MC05.mht",
+      "ext": ".mht",
+      "sizeBytes": 30562,
+      "mtime": "2020-06-14T06:25:14.000Z",
+      "sha256": "e96a0d89defe84b5f058594b74162a1736a44ff714ffa0ceffe28cea925e5431"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC06.mht",
+      "relPath": "物理性能\\MC06.mht",
+      "name": "MC06.mht",
+      "ext": ".mht",
+      "sizeBytes": 21190,
+      "mtime": "2020-06-09T10:55:46.000Z",
+      "sha256": "891820298c1f6d91b4d116948e75b53d2730bbb926241f7c46d37d85742285c8"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\WLXN.mht",
+      "relPath": "物理性能\\WLXN.mht",
+      "name": "WLXN.mht",
+      "ext": ".mht",
+      "sizeBytes": 860094,
+      "mtime": "2022-12-01T04:47:41.000Z",
+      "sha256": "8a63d5ceaaefb539b40b93be4fbd056971b59b5d55dce1284832948999d5caa5"
+    },
+    {
+      "root": "guifan",
+      "root_cn": "规范",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\YLMJ.mht",
+      "relPath": "物理性能\\YLMJ.mht",
+      "name": "YLMJ.mht",
+      "ext": ".mht",
+      "sizeBytes": 186219,
+      "mtime": "2022-11-14T05:11:20.000Z",
+      "sha256": "c03c2abb05a13e4f3a3e67037fabe5eb618c25d67e1faf70597be30ae78736ef"
+    },
+    {
+      "root": "fujian",
+      "root_cn": "附件",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\标准AHCI控制器设置方法.rar",
+      "relPath": "标准AHCI控制器设置方法.rar",
+      "name": "标准AHCI控制器设置方法.rar",
+      "ext": ".rar",
+      "sizeBytes": 74438,
+      "mtime": "2022-01-06T02:15:43.000Z",
+      "sha256": "f2bb889f292a814ee9a52e0d0f99f723218bcb45233fdc74771072a72790d46c"
+    },
+    {
+      "root": "fujian",
+      "root_cn": "附件",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\附录 型材断面汇总表（内附用法说明）.dwg",
+      "relPath": "附录 型材断面汇总表（内附用法说明）.dwg",
+      "name": "附录 型材断面汇总表（内附用法说明）.dwg",
+      "ext": ".dwg",
+      "sizeBytes": 117920,
+      "mtime": "2023-11-05T14:09:32.000Z",
+      "sha256": "6f1aad77eae9d4a533a7e652d5f850930796576f47ee5c38200b04370af5f60a"
+    },
+    {
+      "root": "fujian",
+      "root_cn": "附件",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\汇宝软件系统环境修复工具.rar",
+      "relPath": "汇宝软件系统环境修复工具.rar",
+      "name": "汇宝软件系统环境修复工具.rar",
+      "ext": ".rar",
+      "sizeBytes": 11228,
+      "mtime": "2025-10-29T02:56:15.000Z",
+      "sha256": "33eea7638d1c5a46c52f1168b933afa2b9543240cff54a5f6f1d2b2a62c9fd8a"
+    },
+    {
+      "root": "fujian",
+      "root_cn": "附件",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\附件\\节能计算基本原则与汇总表.rar",
+      "relPath": "节能计算基本原则与汇总表.rar",
+      "name": "节能计算基本原则与汇总表.rar",
+      "ext": ".rar",
+      "sizeBytes": 6896,
+      "mtime": "2024-01-11T01:53:12.000Z",
+      "sha256": "bfcf2b75cf28b2c33c6dce6be795323b407c566835fed0e7d8df7fecc5838710"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\10.wmf",
+      "relPath": "10.wmf",
+      "name": "10.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 8102,
+      "mtime": "2011-01-29T03:37:30.000Z",
+      "sha256": "9559a3173ff430ada9234b9d6f4ff37a394f81163f94d2816b43205c3b80d8cf"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\11.wmf",
+      "relPath": "11.wmf",
+      "name": "11.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 1226962,
+      "mtime": "2010-05-06T01:26:00.000Z",
+      "sha256": "e21c1ecca0a7a39c64a39d7395ac9d3ea26805f71e7aa112f21c7f50d7d9fc0c"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\12.wmf",
+      "relPath": "12.wmf",
+      "name": "12.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 97838,
+      "mtime": "2010-05-06T01:26:00.000Z",
+      "sha256": "a2d6d53f4923310d4353148e37508d041c9bdd552d6c3d9a3c270cd14c17c2a1"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\13.wmf",
+      "relPath": "13.wmf",
+      "name": "13.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 321372,
+      "mtime": "2010-05-06T01:26:00.000Z",
+      "sha256": "5478efe2bdadf6fb6fa6e63082791aa9c86cecf7f0410c9fd8f8ca038da8db7d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\14.wmf",
+      "relPath": "14.wmf",
+      "name": "14.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 13706,
+      "mtime": "2011-01-29T03:36:28.000Z",
+      "sha256": "b27d35b382a25a8058e42cd8e095ff706b1085d76b204b262bd04dcbf1f52660"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\15.wmf",
+      "relPath": "15.wmf",
+      "name": "15.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 6880,
+      "mtime": "2018-09-30T05:24:16.000Z",
+      "sha256": "35d91d093410d692b2bca45570e2300185b0f98082c2bca8bf7dd303eff81a5f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\16.wmf",
+      "relPath": "16.wmf",
+      "name": "16.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 7076,
+      "mtime": "2018-10-21T04:45:28.000Z",
+      "sha256": "14199c59173d609540710c01b01c11989f7d95c10177c00c887d63abd18c5704"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\17.wmf",
+      "relPath": "17.wmf",
+      "name": "17.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 65654,
+      "mtime": "2023-09-14T00:44:03.000Z",
+      "sha256": "493cb4403880ea63a0d1bfe38a15fa40d182d3f244aa8b8df79e2fca6a9d46e7"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\18.wmf",
+      "relPath": "18.wmf",
+      "name": "18.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 6052,
+      "mtime": "2025-03-13T10:40:11.000Z",
+      "sha256": "79240d2cb11df4842ffb112cb164ac6a226fad48a674bb4927c0c82f9aef768d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\7.wmf",
+      "relPath": "7.wmf",
+      "name": "7.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 4864,
+      "mtime": "2011-01-29T03:40:30.000Z",
+      "sha256": "f42b97a97328c264a82b982e4d602ce9c5561edc8d13530cdebb11d45c758ef0"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\8.wmf",
+      "relPath": "8.wmf",
+      "name": "8.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 9652,
+      "mtime": "2011-01-29T03:40:04.000Z",
+      "sha256": "828406e5af9303ccce3967242e729ce6253ca204f402ca97665ae61f77e2b314"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\9.wmf",
+      "relPath": "9.wmf",
+      "name": "9.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 10246,
+      "mtime": "2011-01-29T03:39:40.000Z",
+      "sha256": "f495dbcfac704c16cb4a641ec04ddb8c9d5dc3c78d708d46d7adedb459f8f35e"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\ah.inx",
+      "relPath": "规范\\50176\\ah.inx",
+      "name": "ah.inx",
+      "ext": ".inx",
+      "sizeBytes": 264,
+      "mtime": "2017-02-17T03:25:40.000Z",
+      "sha256": "50bee5a653d1b8c44ed7ecc07ee622c7a91b474c89ca1274723e5a24a9abf92d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\bj.inx",
+      "relPath": "规范\\50176\\bj.inx",
+      "name": "bj.inx",
+      "ext": ".inx",
+      "sizeBytes": 21,
+      "mtime": "2017-02-17T01:26:34.000Z",
+      "sha256": "d9662c750cfbee2662abdf39e968d368480c5644d65b54605553c63dacb729c7"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\cq.inx",
+      "relPath": "规范\\50176\\cq.inx",
+      "name": "cq.inx",
+      "ext": ".inx",
+      "sizeBytes": 83,
+      "mtime": "2017-02-17T01:28:08.000Z",
+      "sha256": "fce0d4461bffc225aee8c1b77b6b018d727e36641eb659d486c1a44368bfcd8e"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\fj.inx",
+      "relPath": "规范\\50176\\fj.inx",
+      "name": "fj.inx",
+      "ext": ".inx",
+      "sizeBytes": 316,
+      "mtime": "2017-02-17T04:21:04.000Z",
+      "sha256": "6920ff9dbb60392b0dd2a5afb6472ca4ba4f148f7b7cf69e2320ae3736fe8e3c"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gd.inx",
+      "relPath": "规范\\50176\\gd.inx",
+      "name": "gd.inx",
+      "ext": ".inx",
+      "sizeBytes": 573,
+      "mtime": "2017-02-17T04:00:24.000Z",
+      "sha256": "4bd70393105fb4cca95338192e0eb1a8c6b2bf90f4690c7c0bde419a1d867860"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gs.inx",
+      "relPath": "规范\\50176\\gs.inx",
+      "name": "gs.inx",
+      "ext": ".inx",
+      "sizeBytes": 393,
+      "mtime": "2017-02-17T03:13:06.000Z",
+      "sha256": "2bd6a35697900b1739c85e4e2f16f9b80ccb91afdcf0507e588587eb234b0196"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gx.inx",
+      "relPath": "规范\\50176\\gx.inx",
+      "name": "gx.inx",
+      "ext": ".inx",
+      "sizeBytes": 269,
+      "mtime": "2017-02-17T04:01:06.000Z",
+      "sha256": "fb18e763e51fcb3879d4f9b6bbae4d084ba510576b95450f6a9fce56ac53a302"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\gz.inx",
+      "relPath": "规范\\50176\\gz.inx",
+      "name": "gz.inx",
+      "ext": ".inx",
+      "sizeBytes": 290,
+      "mtime": "2017-02-17T03:38:12.000Z",
+      "sha256": "7b2b5a0328bb90c882ba7e1ebd0ed7eb96393d4f9285cda8b2bd610b16df7e69"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hainan.inx",
+      "relPath": "规范\\50176\\hainan.inx",
+      "name": "hainan.inx",
+      "ext": ".inx",
+      "sizeBytes": 125,
+      "mtime": "2017-02-17T04:01:28.000Z",
+      "sha256": "441d48a08b38529ab0ca0ccd4dfc532cf7cb1a4bbe9c5a3873d133deafb4eb1d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hb.inx",
+      "relPath": "规范\\50176\\hb.inx",
+      "name": "hb.inx",
+      "ext": ".inx",
+      "sizeBytes": 401,
+      "mtime": "2017-02-17T03:07:20.000Z",
+      "sha256": "32e662bbb2b80f52a28a1f77b40615aaa89b4a1a4cc317d4e4babbc897fe152f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hbei.inx",
+      "relPath": "规范\\50176\\hbei.inx",
+      "name": "hbei.inx",
+      "ext": ".inx",
+      "sizeBytes": 374,
+      "mtime": "2017-02-17T03:33:10.000Z",
+      "sha256": "4d88aeebdf1c3fa701f0c61d0ede089a96ad12b027bf86446ee7bd207ba8d194"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hlj.inx",
+      "relPath": "规范\\50176\\hlj.inx",
+      "name": "hlj.inx",
+      "ext": ".inx",
+      "sizeBytes": 616,
+      "mtime": "2017-02-17T02:46:30.000Z",
+      "sha256": "91fae0f2066f0998c041784af17e9398d4fa169aa7880d985422af60d595440e"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hn.inx",
+      "relPath": "规范\\50176\\hn.inx",
+      "name": "hn.inx",
+      "ext": ".inx",
+      "sizeBytes": 249,
+      "mtime": "2017-02-17T03:09:42.000Z",
+      "sha256": "c8f191292eb476058d2c65f8134438c5f007ebc301e61d677bc29e84e72d7a85"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\hunan.inx",
+      "relPath": "规范\\50176\\hunan.inx",
+      "name": "hunan.inx",
+      "ext": ".inx",
+      "sizeBytes": 368,
+      "mtime": "2017-02-17T03:34:50.000Z",
+      "sha256": "ff342bc787b95524081af78230566b3f5445b9cc6123f59f2dc77d3553e5a034"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\jl.inx",
+      "relPath": "规范\\50176\\jl.inx",
+      "name": "jl.inx",
+      "ext": ".inx",
+      "sizeBytes": 330,
+      "mtime": "2017-02-17T02:48:20.000Z",
+      "sha256": "15e2e0bf046e5ad2952c7849374cb95ec3bfc48595301844f367b788ebf59c72"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\js.inx",
+      "relPath": "规范\\50176\\js.inx",
+      "name": "js.inx",
+      "ext": ".inx",
+      "sizeBytes": 425,
+      "mtime": "2017-02-17T03:29:12.000Z",
+      "sha256": "2d18c3f1e073dc8b508eeb14e1eeba334361557087755e36b53f837fbcb64ecd"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\jx.inx",
+      "relPath": "规范\\50176\\jx.inx",
+      "name": "jx.inx",
+      "ext": ".inx",
+      "sizeBytes": 258,
+      "mtime": "2017-02-17T03:35:50.000Z",
+      "sha256": "fd698e1eb2cb784939506bcb5559bac367532c8548833488bad2db87a4cfd56a"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\ln.inx",
+      "relPath": "规范\\50176\\ln.inx",
+      "name": "ln.inx",
+      "ext": ".inx",
+      "sizeBytes": 437,
+      "mtime": "2017-02-17T02:58:40.000Z",
+      "sha256": "eca36bc0a5b02f6416a69fe6951d43c673063ad3927c64ebe1c629a66aeb54bb"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\nmg.inx",
+      "relPath": "规范\\50176\\nmg.inx",
+      "name": "nmg.inx",
+      "ext": ".inx",
+      "sizeBytes": 913,
+      "mtime": "2017-02-17T01:29:38.000Z",
+      "sha256": "77719da59e2cdaf36226752e813ed1615362ddca760a8b18d95b1cf12c9dc639"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\nx.inx",
+      "relPath": "规范\\50176\\nx.inx",
+      "name": "nx.inx",
+      "ext": ".inx",
+      "sizeBytes": 127,
+      "mtime": "2017-02-17T03:13:38.000Z",
+      "sha256": "13f40b79b63aac49c91634d87dac7a9c405ce0e35a6fd0b6ec13b7e1966ed49f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\qh.inx",
+      "relPath": "规范\\50176\\qh.inx",
+      "name": "qh.inx",
+      "ext": ".inx",
+      "sizeBytes": 426,
+      "mtime": "2017-02-17T01:33:04.000Z",
+      "sha256": "b1135077e3a32665cf3ea49ec4ca4d9959e4aef9b3b1ddc560d2ecc0f2603ece"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sc.inx",
+      "relPath": "规范\\50176\\sc.inx",
+      "name": "sc.inx",
+      "ext": ".inx",
+      "sizeBytes": 659,
+      "mtime": "2017-02-17T03:36:50.000Z",
+      "sha256": "08b70afb426a6f31d592fbe6ff80030f52097c1203ba80e0aedef5f638c4f6fe"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sd.inx",
+      "relPath": "规范\\50176\\sd.inx",
+      "name": "sd.inx",
+      "ext": ".inx",
+      "sizeBytes": 745,
+      "mtime": "2017-02-17T03:04:54.000Z",
+      "sha256": "5111d09f399b8728d11007e2df1e2265d69ef0b1de07e70495c43ede08824f9e"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sh.inx",
+      "relPath": "规范\\50176\\sh.inx",
+      "name": "sh.inx",
+      "ext": ".inx",
+      "sizeBytes": 18,
+      "mtime": "2017-02-17T01:27:36.000Z",
+      "sha256": "40babbef406b3b9336e9a25c50f262eee2fd30d3d11b957e28b450287f404055"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sx1.inx",
+      "relPath": "规范\\50176\\sx1.inx",
+      "name": "sx1.inx",
+      "ext": ".inx",
+      "sizeBytes": 370,
+      "mtime": "2017-02-17T03:19:28.000Z",
+      "sha256": "4b2a1f0a5ca833163d9a1fd613d625f7210742823ae61a7c525be08f299d0ff5"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\sx2.inx",
+      "relPath": "规范\\50176\\sx2.inx",
+      "name": "sx2.inx",
+      "ext": ".inx",
+      "sizeBytes": 184,
+      "mtime": "2017-02-17T03:12:06.000Z",
+      "sha256": "d6c4e3091014a16bb45b7c0634d408db9c44e30e9bcbdf348b999a8b2a925f1b"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\tj.inx",
+      "relPath": "规范\\50176\\tj.inx",
+      "name": "tj.inx",
+      "ext": ".inx",
+      "sizeBytes": 20,
+      "mtime": "2017-02-17T01:27:04.000Z",
+      "sha256": "1f3797648b604bdd4285a681bd17a72dc022e4c0a5cc6858e0629519c25e5dfb"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\tmp.txt",
+      "relPath": "规范\\50176\\tmp.txt",
+      "name": "tmp.txt",
+      "ext": ".txt",
+      "sizeBytes": 8255,
+      "mtime": "2017-02-17T01:51:02.000Z",
+      "sha256": "3580f67bc123d4da4fa9a4f74939b752c663290fa3006fbdf619f2df426144b5"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\xj.inx",
+      "relPath": "规范\\50176\\xj.inx",
+      "name": "xj.inx",
+      "ext": ".inx",
+      "sizeBytes": 803,
+      "mtime": "2017-02-17T03:17:22.000Z",
+      "sha256": "d7061ac160a4d7737a42aac0d393b52e7ba6343e52cb8e37ed42ffc9d6b5453d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\xz.inx",
+      "relPath": "规范\\50176\\xz.inx",
+      "name": "xz.inx",
+      "ext": ".inx",
+      "sizeBytes": 330,
+      "mtime": "2017-02-17T01:33:56.000Z",
+      "sha256": "2f61d96be5b8bf27752a56c17d35919474cd2c9ae4ae2f51d4e97e76e12f6d85"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\yn.inx",
+      "relPath": "规范\\50176\\yn.inx",
+      "name": "yn.inx",
+      "ext": ".inx",
+      "sizeBytes": 566,
+      "mtime": "2017-02-17T03:39:08.000Z",
+      "sha256": "8fe3025edee16b9dff4da60ad1df440cd97e5e2e0422e3e0ccbef9a0697ad03f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\50176\\zj.inx",
+      "relPath": "规范\\50176\\zj.inx",
+      "name": "zj.inx",
+      "ext": ".inx",
+      "sizeBytes": 312,
+      "mtime": "2017-02-17T03:31:22.000Z",
+      "sha256": "075faf6220f8890f19c9fa36e932093411f9745ef066e9a0060e32a0cfb9dcf6"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表5.3.1-6.3.1.mht",
+      "relPath": "规范\\表5.3.1-6.3.1.mht",
+      "name": "表5.3.1-6.3.1.mht",
+      "ext": ".mht",
+      "sizeBytes": 74166,
+      "mtime": "2017-06-05T09:01:42.000Z",
+      "sha256": "5382bfd2e89d9506b36e941ab3649248fb2cea0da8b8835791ff167b2ca9cc0c"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.2.mht",
+      "relPath": "规范\\表B.2.mht",
+      "name": "表B.2.mht",
+      "ext": ".mht",
+      "sizeBytes": 84438,
+      "mtime": "2017-06-05T06:33:50.000Z",
+      "sha256": "43ef031881d3199652f66c3b8d83f2f5c887e766e189ae95a4268ed1b4436e97"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.5.mht",
+      "relPath": "规范\\表B.5.mht",
+      "name": "表B.5.mht",
+      "ext": ".mht",
+      "sizeBytes": 125033,
+      "mtime": "2017-06-05T06:15:30.000Z",
+      "sha256": "db86fca23474f7c818307aa6fd19b1c674acc54092b396002195ece6a082c3f7"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-1-2.mht",
+      "relPath": "规范\\表C.5.3-1-2.mht",
+      "name": "表C.5.3-1-2.mht",
+      "ext": ".mht",
+      "sizeBytes": 142112,
+      "mtime": "2017-02-23T03:01:16.000Z",
+      "sha256": "03bb5f611626fee7b46b05570450003f124d8da401435c64556c9652bc914558"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-3.mht",
+      "relPath": "规范\\表C.5.3-3.mht",
+      "name": "表C.5.3-3.mht",
+      "ext": ".mht",
+      "sizeBytes": 188130,
+      "mtime": "2018-08-06T13:22:56.000Z",
+      "sha256": "a6de733626bbc3953824a380e2d86aa4a55ef259b08e058dfcddcd7a7ad7ffef"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\ah.inx",
+      "relPath": "规范\\leiji\\ah.inx",
+      "name": "ah.inx",
+      "ext": ".inx",
+      "sizeBytes": 157,
+      "mtime": "2018-10-18T06:48:02.000Z",
+      "sha256": "34336866417230289f3d7fcf477728c980ab332823743f201eeb51f8696dcfa2"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\bj.inx",
+      "relPath": "规范\\leiji\\bj.inx",
+      "name": "bj.inx",
+      "ext": ".inx",
+      "sizeBytes": 24,
+      "mtime": "2018-10-18T06:45:08.000Z",
+      "sha256": "8731cf37598f125de0666a5f0ec4e376123559489b8e1fc4f6f0537327270573"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\cq.inx",
+      "relPath": "规范\\leiji\\cq.inx",
+      "name": "cq.inx",
+      "ext": ".inx",
+      "sizeBytes": 61,
+      "mtime": "2018-10-18T06:47:13.000Z",
+      "sha256": "fe6442ac49ea9a3a43a8981653ff26c2c52862785261f77440ba8dabd15e509f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\fj.inx",
+      "relPath": "规范\\leiji\\fj.inx",
+      "name": "fj.inx",
+      "ext": ".inx",
+      "sizeBytes": 192,
+      "mtime": "2018-10-18T06:48:14.000Z",
+      "sha256": "a6ab74d83a0e619a57b0f8f11180d8f1386fac005e2dcb63bb6550e65a8581ca"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gd.inx",
+      "relPath": "规范\\leiji\\gd.inx",
+      "name": "gd.inx",
+      "ext": ".inx",
+      "sizeBytes": 225,
+      "mtime": "2018-10-18T06:48:33.000Z",
+      "sha256": "19513b8fa363d3cc303a9c7f4f01ec7f98f266becf2d9991cceae9bf7f8a8403"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gs.inx",
+      "relPath": "规范\\leiji\\gs.inx",
+      "name": "gs.inx",
+      "ext": ".inx",
+      "sizeBytes": 249,
+      "mtime": "2018-10-18T06:48:53.000Z",
+      "sha256": "61c0a692f42966f45a1f5a21e5364c06a642718a6f1cee6d3b993e111bfe4d9b"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gx.inx",
+      "relPath": "规范\\leiji\\gx.inx",
+      "name": "gx.inx",
+      "ext": ".inx",
+      "sizeBytes": 236,
+      "mtime": "2018-10-18T06:49:07.000Z",
+      "sha256": "021110b7c77e166c6f8d24a0a353c59d4ebf9bfbe538f6bcb7ed72d451c538c2"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\gz.inx",
+      "relPath": "规范\\leiji\\gz.inx",
+      "name": "gz.inx",
+      "ext": ".inx",
+      "sizeBytes": 226,
+      "mtime": "2018-10-18T06:49:20.000Z",
+      "sha256": "1be6cce011f7ba964d795bc46e112ada44b989ebdd2de539dde7e91ae7da7f7d"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hainan.inx",
+      "relPath": "规范\\leiji\\hainan.inx",
+      "name": "hainan.inx",
+      "ext": ".inx",
+      "sizeBytes": 72,
+      "mtime": "2018-10-18T06:49:36.000Z",
+      "sha256": "1da428cb72f18989f9bf9d35658d56ee93d5c7c2426e6c768c53c3f28ed16782"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hb.inx",
+      "relPath": "规范\\leiji\\hb.inx",
+      "name": "hb.inx",
+      "ext": ".inx",
+      "sizeBytes": 288,
+      "mtime": "2018-10-18T06:49:52.000Z",
+      "sha256": "dcca2daa97988c1d4409d0bcec65f944c2c0ff0a57a1a85fc8529bb5486a1281"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hbei.inx",
+      "relPath": "规范\\leiji\\hbei.inx",
+      "name": "hbei.inx",
+      "ext": ".inx",
+      "sizeBytes": 293,
+      "mtime": "2018-10-18T06:50:10.000Z",
+      "sha256": "b9d9006eed8eddb57bf5eb6342a15f05c0ad6fd1f6440c297e829665ad8d9dc8"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hlj.inx",
+      "relPath": "规范\\leiji\\hlj.inx",
+      "name": "hlj.inx",
+      "ext": ".inx",
+      "sizeBytes": 269,
+      "mtime": "2018-10-18T06:47:47.000Z",
+      "sha256": "c7cba247b512356065d7de38d214076c2a01a840a3aefa70ac43dbeaed9a1bed"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hn.inx",
+      "relPath": "规范\\leiji\\hn.inx",
+      "name": "hn.inx",
+      "ext": ".inx",
+      "sizeBytes": 264,
+      "mtime": "2018-10-18T06:50:22.000Z",
+      "sha256": "d40f598c0c6638fd6ba13badc5448a665d2a597102c4f5a3193e3d3a5643a705"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\hunan.inx",
+      "relPath": "规范\\leiji\\hunan.inx",
+      "name": "hunan.inx",
+      "ext": ".inx",
+      "sizeBytes": 255,
+      "mtime": "2018-10-18T06:50:39.000Z",
+      "sha256": "2d3c74050f1832afc83962524ed7ee25f05aec0468267c50da947fb8f33ead27"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\jl.inx",
+      "relPath": "规范\\leiji\\jl.inx",
+      "name": "jl.inx",
+      "ext": ".inx",
+      "sizeBytes": 148,
+      "mtime": "2018-10-18T06:50:50.000Z",
+      "sha256": "09a3569499a0ef51a0532fee30f316c223ea1f37482a1663818d4ad62ae53b67"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\js.inx",
+      "relPath": "规范\\leiji\\js.inx",
+      "name": "js.inx",
+      "ext": ".inx",
+      "sizeBytes": 196,
+      "mtime": "2018-10-18T06:51:03.000Z",
+      "sha256": "9b12190eec7875165c30c1dd68d51e833d678ab9dcc0eee5a12169089a6453c6"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\jx.inx",
+      "relPath": "规范\\leiji\\jx.inx",
+      "name": "jx.inx",
+      "ext": ".inx",
+      "sizeBytes": 276,
+      "mtime": "2018-10-18T06:51:15.000Z",
+      "sha256": "94b489ab38b0c77800651072bfceea9fbaa5bf4c7e2ee3ca1849659caf6333f5"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\ln.inx",
+      "relPath": "规范\\leiji\\ln.inx",
+      "name": "ln.inx",
+      "ext": ".inx",
+      "sizeBytes": 148,
+      "mtime": "2018-10-18T06:51:25.000Z",
+      "sha256": "ebcdf74a410a2becd7732786d6c554c8cc269a1c59871f64e55330c3b4ad36a2"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\nmg.inx",
+      "relPath": "规范\\leiji\\nmg.inx",
+      "name": "nmg.inx",
+      "ext": ".inx",
+      "sizeBytes": 350,
+      "mtime": "2018-10-18T06:51:36.000Z",
+      "sha256": "831ebeb13553fb9ed61cf0c96915090fa6069f5df2567b86b04c36ef3ca8ba83"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\nx.inx",
+      "relPath": "规范\\leiji\\nx.inx",
+      "name": "nx.inx",
+      "ext": ".inx",
+      "sizeBytes": 79,
+      "mtime": "2018-10-18T06:51:46.000Z",
+      "sha256": "834f92c05491beb7ea2b97dc0ce8134d0be7c81eabba4701ac54922a6b148d38"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\qh.inx",
+      "relPath": "规范\\leiji\\qh.inx",
+      "name": "qh.inx",
+      "ext": ".inx",
+      "sizeBytes": 290,
+      "mtime": "2018-10-18T06:51:56.000Z",
+      "sha256": "d46a3f49aba8b1627f6ac7f8731b84d117401d0ed3248326b4f8e4be4b7a2744"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sc.inx",
+      "relPath": "规范\\leiji\\sc.inx",
+      "name": "sc.inx",
+      "ext": ".inx",
+      "sizeBytes": 593,
+      "mtime": "2018-10-18T06:52:12.000Z",
+      "sha256": "4c2d4caa5aad501bb4a9d9c524e9e095eb4e1733b70888075cc03b67bcbc493f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sd.inx",
+      "relPath": "规范\\leiji\\sd.inx",
+      "name": "sd.inx",
+      "ext": ".inx",
+      "sizeBytes": 275,
+      "mtime": "2018-10-18T06:52:26.000Z",
+      "sha256": "7d93a988e2275bf832527d45ce07704c70fa7acfebf22bf5e187d17d7c529cf1"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sh.inx",
+      "relPath": "规范\\leiji\\sh.inx",
+      "name": "sh.inx",
+      "ext": ".inx",
+      "sizeBytes": 13,
+      "mtime": "2018-10-18T06:46:36.000Z",
+      "sha256": "7869286b582734c50fad4cb53a2b35074946aedf0b5d7b8adb99a25bd7071ff9"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sx1.inx",
+      "relPath": "规范\\leiji\\sx1.inx",
+      "name": "sx1.inx",
+      "ext": ".inx",
+      "sizeBytes": 160,
+      "mtime": "2018-10-18T06:52:35.000Z",
+      "sha256": "a9db16d39ce5dc4e45165031509d339f821765ebdeebe809daf7739cb321f40f"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\sx2.inx",
+      "relPath": "规范\\leiji\\sx2.inx",
+      "name": "sx2.inx",
+      "ext": ".inx",
+      "sizeBytes": 227,
+      "mtime": "2018-10-18T06:52:46.000Z",
+      "sha256": "dd87d132235d4582ccac3a891d672432faabeebde29e684c564fb14a7bbbf8a8"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\tj.inx",
+      "relPath": "规范\\leiji\\tj.inx",
+      "name": "tj.inx",
+      "ext": ".inx",
+      "sizeBytes": 24,
+      "mtime": "2018-10-18T06:45:49.000Z",
+      "sha256": "e2f5fb2984dd565febff0a7dec60ffdee0a09e7710c10dbad8c2cb1568f48f98"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\xj.inx",
+      "relPath": "规范\\leiji\\xj.inx",
+      "name": "xj.inx",
+      "ext": ".inx",
+      "sizeBytes": 291,
+      "mtime": "2018-10-18T06:53:09.000Z",
+      "sha256": "3925172688487d94c286de7f8b75db3eac837f5ee63933dea96997f5112de872"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\xz.inx",
+      "relPath": "规范\\leiji\\xz.inx",
+      "name": "xz.inx",
+      "ext": ".inx",
+      "sizeBytes": 184,
+      "mtime": "2018-10-18T06:53:20.000Z",
+      "sha256": "026fe7041354f0a01ce3812ea51fb312d57dee23b01464144be0f9597ce459b0"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\yn.inx",
+      "relPath": "规范\\leiji\\yn.inx",
+      "name": "yn.inx",
+      "ext": ".inx",
+      "sizeBytes": 343,
+      "mtime": "2018-10-18T06:53:33.000Z",
+      "sha256": "1738f3ab7f0de0033d224d7f78f44b9abe8e85805505733e18551dee3b41cd38"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\leiji\\zj.inx",
+      "relPath": "规范\\leiji\\zj.inx",
+      "name": "zj.inx",
+      "ext": ".inx",
+      "sizeBytes": 138,
+      "mtime": "2018-10-18T06:53:45.000Z",
+      "sha256": "1e1688d239d52d62f592f28c715fb60324d34a284d56029bc3539ec188b7e0fa"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\regc.wmf",
+      "relPath": "regc.wmf",
+      "name": "regc.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 320430,
+      "mtime": "2010-05-06T01:26:00.000Z",
+      "sha256": "c2f2b63dfb9cde0846f32733a6fb6ed12c605794ac4c1e838ea8e2ddea216ce0"
+    },
+    {
+      "root": "regong",
+      "root_cn": "pic\\热工",
+      "path": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\regmq.wmf",
+      "relPath": "regmq.wmf",
+      "name": "regmq.wmf",
+      "ext": ".wmf",
+      "sizeBytes": 95440,
+      "mtime": "2010-05-06T01:26:00.000Z",
+      "sha256": "c6272c5cc7c82ba3e1692448a43b4c13e7568772f536667ddbacaa40f52f1678"
+    }
+  ],
+  "byExtension": {
+    ".doc": {
+      "count": 8,
+      "bytes": 2530441
+    },
+    ".txt": {
+      "count": 9,
+      "bytes": 54043
+    },
+    ".xml": {
+      "count": 3,
+      "bytes": 710
+    },
+    ".htm": {
+      "count": 3,
+      "bytes": 141879
+    },
+    ".thmx": {
+      "count": 1,
+      "bytes": 3087
+    },
+    ".jpg": {
+      "count": 2,
+      "bytes": 159090
+    },
+    ".dat": {
+      "count": 1,
+      "bytes": 301
+    },
+    ".mht": {
+      "count": 29,
+      "bytes": 3297468
+    },
+    ".rar": {
+      "count": 3,
+      "bytes": 92562
+    },
+    ".dwg": {
+      "count": 1,
+      "bytes": 117920
+    },
+    ".wmf": {
+      "count": 14,
+      "bytes": 2194274
+    },
+    ".inx": {
+      "count": 62,
+      "bytes": 17811
+    }
+  },
+  "totals": {
+    "files": 136,
+    "errors": 0,
+    "dirs": 7,
+    "bytes": 8609586
+  }
+}

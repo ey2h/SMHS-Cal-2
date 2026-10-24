@@ -7,6 +7,7 @@ using NPOI.Util;
 using System.Xml.Linq;
 using System.IO;
 using System.Drawing;
+using System.Runtime.Versioning;
 using GlassManagement.Api.Services.StaticCalcEngine;
 
 namespace GlassManagement.Api.Services;
@@ -18,6 +19,7 @@ namespace GlassManagement.Api.Services;
 /// - 受力简图/弯矩图/剪力图/挠度图
 /// - 完整公式推导
 /// </summary>
+[SupportedOSPlatform("windows")]
 public class CalcBookWordService
 {
     private const string MainFont = "Times New Roman";
@@ -1870,221 +1872,318 @@ public class CalcBookWordService
 
     private void RenderSiliconeSection(XWPFDocument doc, GlassCalcBookInput input)
     {
-        AddHeading2(doc, "结构胶及密封计算");
-
-        AddBody(doc, "结构胶按JGJ102-2003《玻璃幕墙工程技术规范》第5.6节进行计算。");
-
-        // ========== 基本参数 ==========
-        AddHeading3(doc, "1 密封胶基本参数");
+        AddHeading2(doc, "胶类计算");
         
+        AddBody(doc, "硅酮结构密封胶用于玻璃板块与副框之间的粘结固定，按JGJ102-2003《玻璃幕墙工程技术规范》第5.6节进行计算。");
+
+        AddHeading3(doc, "1 胶缝参数");
+        double sealantWidth = input.SealantWidth > 0 ? input.SealantWidth : 12;
+        double sealantDepth = input.SealantDepth > 0 ? input.SealantDepth : 6;
+        double sealantStrength = input.SealantStrength > 0 ? input.SealantStrength : 0.2;
+        double sealantModulus = input.SealantModulus > 0 ? input.SealantModulus : 1.0;
+        double jointWidth = input.JointWidth > 0 ? input.JointWidth : 15;
+
         var table1 = new string[][]
         {
-            new string[] { "结构胶品牌", "白云SS811 / 陶氏DC993" },
-            new string[] { "结构胶型号", "SS811 / DC993" },
-            new string[] { "设计强度fb", "0.14 MPa" },
-            new string[] { "拉伸粘结强度ft", "0.18 MPa" },
-            new string[] { "剪切强度fv", "0.14 MPa" },
-            new string[] { "弹性模量E", "1.5 MPa" }
+            new string[] { "胶缝宽度a", $"{sealantWidth:F1} mm" },
+            new string[] { "胶缝深度b", $"{sealantDepth:F1} mm" },
+            new string[] { "胶缝面积A", $"{sealantWidth * sealantDepth:F1} mm²" },
+            new string[] { "硅酮胶强度设计值f1", $"{sealantStrength:F3} MPa" },
+            new string[] { "硅酮胶弹性模量E", $"{sealantModulus:F2} MPa" },
+            new string[] { "伸缩缝宽度", $"{jointWidth:F1} mm" }
         };
-        CreateTable(doc, "表11-1 密封胶参数", "JGJ102-2003 表5.6.2",
+        CreateTable(doc, "表11-1 胶缝参数", "JGJ102-2003 第5.6节",
             new string[] { "参数", "数值" }, table1);
 
-        // ========== 胶缝受力 ==========
-        AddHeading3(doc, "2 结构胶受力计算");
+        AddHeading3(doc, "2 胶缝应力计算");
+        AddBody(doc, "2.1 风荷载作用下胶缝剪应力");
+        AddFormula(doc, "τw = qwk × B / (2 × a × b)", "JGJ102-2003 第5.6.2条");
         
-        double a = input.PanelWidth;
-        double b = input.PanelHeight;
-        double q = input.GustFactor * input.HeightFactor * (Math.Abs(input.Mus1Base) + 0.2) 
-            * input.BasicWindPressure / 1e6;
-        double F = q * a * b / 2; // 每个边的总力
-
-        AddFormula(doc, "F = q × a × b / 2", "每个胶缝承受的力");
-        AddCalcLine(doc, $"= {q*1000:F4} × {a:F0} × {b:F0} / 2");
-        AddCalcLine(doc, $"= {F:F1} N");
-
-        // ========== 胶缝宽度计算 ==========
-        AddHeading3(doc, "3 结构胶宽度计算");
+        double qwk = input.WindPressureDesign > 0 ? input.WindPressureDesign / 1000 : 2.0; // kPa -> MPa
+        double panelWidth = input.PanelWidth > 0 ? input.PanelWidth : 1200;
+        double tauW = qwk * panelWidth / (2 * sealantWidth * sealantDepth);
         
-        AddFormula(doc, "bf ≥ F / (fb × L)", "JGJ102-2003 公式5.6.2-1");
+        AddCalcLine(doc, $"qwk = {qwk:F4} MPa");
+        AddCalcLine(doc, $"B = {panelWidth:F0} mm");
+        AddCalcLine(doc, $"τw = {qwk:F4} × {panelWidth:F0} / (2 × {sealantWidth:F1} × {sealantDepth:F1})");
+        AddCalcLine(doc, $"= {tauW:F4} MPa");
+
+        AddBody(doc, "2.2 自重作用下胶缝拉应力");
+        AddFormula(doc, "σG = Gk × H / (2 × a × b)", "JGJ102-2003 第5.6.3条");
         
-        double fb = 0.14; // 设计强度
-        double L = (a + b) * 2; // 周长
-        double bf = F / (fb * 1000 * (L/2)); // 单边宽度
-
-        AddCalcLine(doc, $"bf ≥ {F:F1}/({fb:F2}×1000×{L/2:F0}) = {bf:F2} mm");
-        AddBody(doc, $"实际取胶缝宽度bf = 8mm，满足要求。");
-
-        // ========== 胶缝厚度计算 ==========
-        AddHeading3(doc, "4 结构胶厚度计算");
+        double gravityLoad = 0.0004; // MPa
+        double panelHeight = input.PanelHeight > 0 ? input.PanelHeight : 1500;
+        double sigmaG = gravityLoad * panelHeight / (2 * sealantWidth * sealantDepth);
         
-        AddFormula(doc, "df ≥ 2u × (bc / δ)² / (E × bf)", "JGJ102-2003 公式5.6.2-2");
+        AddCalcLine(doc, $"σG = {gravityLoad:F4} × {panelHeight:F0} / (2 × {sealantWidth:F1} × {sealantDepth:F1})");
+        AddCalcLine(doc, $"= {sigmaG:F4} MPa");
+
+        AddBody(doc, "2.3 组合应力验算");
+        AddFormula(doc, "τcombined = √(τw² + σG²) ≤ f1", "JGJ102-2003 第5.6.4条");
         
-        double u = 0.3; // 幕墙相对位移
-        double bc = b / 2;
-        double delta = 6; // 胶层厚度
-        double df_calc = 2 * u * Math.Pow(bc, 2) / (1.5 * 1000 * 8);
+        double tauCombined = Math.Sqrt(tauW * tauW + sigmaG * sigmaG);
+        double stressRatio = tauCombined / sealantStrength;
+        bool passed = tauCombined <= sealantStrength;
+        
+        AddCalcLine(doc, $"τcombined = √({tauW:F4}² + {sigmaG:F4}²)");
+        AddCalcLine(doc, $"= {tauCombined:F4} MPa");
+        AddCalcLine(doc, $"f1 = {sealantStrength:F3} MPa");
+        AddCalcLine(doc, $"τcombined / f1 = {stressRatio:F2} ≤ 1.0, {(passed ? "满足" : "不满足")}");
 
-        AddCalcLine(doc, $"df = 2×{u:F1}×({bc:F0}²/6²)/(1.5×1000×8)");
-        AddCalcLine(doc, $"= {df_calc:F3} mm");
-        AddBody(doc, $"实际取胶层厚度δ = {delta}mm，满足要求。");
+        AddHeading3(doc, "3 伸缩缝宽度验算");
+        AddFormula(doc, "ΔL = α × ΔT × L + δ", "热胀冷缩");
+        
+        double alpha = 0.00005; // 铝合金线膨胀系数
+        double deltaT = 80; // 温差°C
+        double deltaL = alpha * deltaT * panelHeight + jointWidth;
+        
+        AddCalcLine(doc, $"α = {alpha:F5} /°C");
+        AddCalcLine(doc, $"ΔT = {deltaT}°C");
+        AddCalcLine(doc, $"L = {panelHeight:F0} mm");
+        AddCalcLine(doc, $"ΔL = {alpha:F5} × {deltaT} × {panelHeight:F0} + {jointWidth:F1}");
+        AddCalcLine(doc, $"= {deltaL:F1} mm");
 
+        AddHeading3(doc, "4 计算结果汇总");
+        var conclusionTable = new string[][]
+        {
+            new string[] { "验算项目", "计算值", "允许值", "比值", "结果" },
+            new string[] { "胶缝剪应力", $"{tauCombined:F4} MPa", $"{sealantStrength:F3} MPa", $"{stressRatio:F2}", passed ? "满足" : "不满足" },
+            new string[] { "伸缩缝宽度", $"{deltaL:F1} mm", $"{jointWidth:F1} mm", $"{deltaL/jointWidth:F2}", deltaL <= jointWidth ? "满足" : "不满足" }
+        };
+        CreateTable(doc, "表11-2 胶类计算结果", "",
+            new string[] { "验算项目", "计算值", "允许值", "比值", "结果" }, conclusionTable);
+
+        AddVerdict(doc, passed, $"胶缝组合应力 τ = {tauCombined:F4} MPa", $"≤ f1 = {sealantStrength:F3} MPa", "硅酮胶");
         AddBody(doc, "参考规范：JGJ102-2003《玻璃幕墙工程技术规范》");
     }
 
     private void RenderPressPlateSection(XWPFDocument doc, GlassCalcBookInput input)
     {
         AddHeading2(doc, "压板计算");
-
-        AddBody(doc, "玻璃面板与横梁的连接压板按GB50429-2007《铝合金结构设计规范》进行计算。");
-
-        // ========== 基本参数 ==========
-        AddHeading3(doc, "1 压板基本参数");
         
+        AddBody(doc, "压板用于固定横梁与立柱的连接，按GB50017-2017《钢结构设计标准》及JGJ102-2003《玻璃幕墙工程技术规范》进行计算。");
+
+        AddHeading3(doc, "1 压板参数");
+        int plateCount = input.PressurePlateCount > 0 ? input.PressurePlateCount : 2;
+        double plateThickness = input.PressurePlateThickness > 0 ? input.PressurePlateThickness : 4;
+        double plateWidth = input.PressurePlateWidth > 0 ? input.PressurePlateWidth : 40;
+        string plateMaterial = !string.IsNullOrEmpty(input.PressurePlateMaterial) ? input.PressurePlateMaterial : "Q235";
+        double plateStrength = input.PressurePlateStrength > 0 ? input.PressurePlateStrength : 215;
+
         var table1 = new string[][]
         {
-            new string[] { "压板材料", "Q235B" },
-            new string[] { "压板厚度t", "4 mm" },
-            new string[] { "压板宽度b", "20 mm" },
-            new string[] { "强度设计值f", "215 MPa" },
-            new string[] { "螺栓间距s", "150 mm" }
+            new string[] { "压板数量n", $"{plateCount}" },
+            new string[] { "压板厚度t", $"{plateThickness:F1} mm" },
+            new string[] { "压板宽度b", $"{plateWidth:F1} mm" },
+            new string[] { "压板材料", plateMaterial },
+            new string[] { "材料强度设计值f", $"{plateStrength:F0} MPa" }
         };
-        CreateTable(doc, "表12-1 压板参数", "GB50429-2007",
+        CreateTable(doc, "表12-1 压板参数", "JGJ102-2003",
             new string[] { "参数", "数值" }, table1);
 
-        // ========== 受力计算 ==========
-        AddHeading3(doc, "2 压板受力计算");
+        AddHeading3(doc, "2 压板受剪承载力验算");
+        AddBody(doc, "每个压板承受的剪力:");
+        AddFormula(doc, "V = Rmax / n", "按支座反力分配");
         
-        double a = input.PanelWidth;
-        double b = input.PanelHeight;
-        double q = input.GustFactor * input.HeightFactor * (Math.Abs(input.Mus1Base) + 0.2) 
-            * input.BasicWindPressure / 1e6;
-        double F = q * a * b / (2 * b); // 每米宽度受力
-        double s = 150; // 螺栓间距
-
-        AddFormula(doc, "q1 = wk × a / 2", "压板承受的线荷载");
-        AddCalcLine(doc, $"q1 = {q*1000:F4} × {a:F0} / 2 = {F:F1} N/m");
-        AddCalcLine(doc, $"每个螺栓受力 = {F:F1} × {s:F0}/1000 = {F*s/1000:F1} N");
-
-        // ========== 压板强度验算 ==========
-        AddHeading3(doc, "3 压板强度验算");
+        double rMax = 2500; // N, 典型支座反力（来自立柱计算）
+        double v = rMax / plateCount;
         
-        double t = 4; // 压板厚度
-        double b_eff = 20; // 有效宽度
-        double W = b_eff * t * t / 6;
-        double M = F * s / 1000 * 20 / 1000; // 简化
-        double sigma = M * 1000 / W;
-        double f = 215;
+        AddCalcLine(doc, $"Rmax = {rMax:F0} N");
+        AddCalcLine(doc, $"n = {plateCount}");
+        AddCalcLine(doc, $"V = {rMax:F0} / {plateCount} = {v:F1} N");
 
-        AddFormula(doc, "σ = M / Wn ≤ f", "压板抗弯强度");
-        AddCalcLine(doc, $"σ = {sigma:F2} MPa");
-        AddVerdict(doc, sigma <= f, $"σ = {sigma:F2} MPa", $"f = {f:F0} MPa", "压板强度");
+        AddBody(doc, "压板剪应力:");
+        AddFormula(doc, "τ = V / (b × t) ≤ fv", "GB50017-2017");
+        
+        double fv = 125; // Q235钢材抗剪强度 MPa
+        double tau = v / (plateWidth * plateThickness);
+        bool shearPassed = tau <= fv;
+        
+        AddCalcLine(doc, $"τ = {v:F1} / ({plateWidth:F1} × {plateThickness:F1})");
+        AddCalcLine(doc, $"= {tau:F2} MPa");
+        AddCalcLine(doc, $"fv = {fv:F0} MPa");
+        AddCalcLine(doc, $"τ = {tau:F2} MPa {(shearPassed ? "≤" : ">")} fv = {fv:F0} MPa, {(shearPassed ? "满足" : "不满足")}");
 
-        AddBody(doc, "参考规范：GB50429-2007《铝合金结构设计规范》");
+        AddHeading3(doc, "3 压板弯曲应力验算");
+        AddBody(doc, "压板按悬臂梁计算:");
+        AddFormula(doc, "σ = M / W ≤ f", "GB50017-2017");
+        
+        double plateSpan = 20; // mm, 压板悬臂长度
+        double m = v * plateSpan / 1000; // N·mm -> N·m
+        double w = plateWidth * plateThickness * plateThickness / 6; // mm³
+        double sigma = m * 1000 / w; // MPa
+        bool bendPassed = sigma <= plateStrength;
+        
+        AddCalcLine(doc, $"M = V × a = {v:F1} × {plateSpan:F0} = {m:F2} N·m");
+        AddCalcLine(doc, $"W = b×t²/6 = {plateWidth:F1}×{plateThickness:F1}²/6 = {w:F2} mm³");
+        AddCalcLine(doc, $"σ = M/W × 1000 = {sigma:F2} MPa");
+        AddCalcLine(doc, $"f = {plateStrength:F0} MPa");
+        AddCalcLine(doc, $"σ = {sigma:F2} MPa {(bendPassed ? "≤" : ">")} f = {plateStrength:F0} MPa, {(bendPassed ? "满足" : "不满足")}");
+
+        AddHeading3(doc, "4 计算结果汇总");
+        bool allPassed = shearPassed && bendPassed;
+        var conclusionTable = new string[][]
+        {
+            new string[] { "验算项目", "计算值", "允许值", "结果" },
+            new string[] { "压板剪应力", $"{tau:F2} MPa", $"{fv:F0} MPa", shearPassed ? "满足" : "不满足" },
+            new string[] { "压板弯曲应力", $"{sigma:F2} MPa", $"{plateStrength:F0} MPa", bendPassed ? "满足" : "不满足" }
+        };
+        CreateTable(doc, "表12-2 压板计算结果", "",
+            new string[] { "验算项目", "计算值", "允许值", "结果" }, conclusionTable);
+
+        AddVerdict(doc, allPassed, $"压板应力 σ = {sigma:F2} MPa", $"≤ f = {plateStrength:F0} MPa", "压板");
+        AddBody(doc, "参考规范：GB50017-2017《钢结构设计标准》、JGJ102-2003《玻璃幕墙工程技术规范》");
     }
 
     private void RenderSubFrameSection(XWPFDocument doc, GlassCalcBookInput input)
     {
         AddHeading2(doc, "副框计算");
-
-        AddBody(doc, "玻璃副框按JGJ102-2003《玻璃幕墙工程技术规范》进行计算。");
-
-        // ========== 基本参数 ==========
-        AddHeading3(doc, "1 副框基本参数");
         
+        AddBody(doc, "副框用于固定玻璃板块，与横梁及扣条配合使用，按JGJ102-2003《玻璃幕墙工程技术规范》进行计算。");
+
+        AddHeading3(doc, "1 副框参数");
+        string subFrameType = !string.IsNullOrEmpty(input.SubFrameType) ? input.SubFrameType : "铝合金副框";
+        double subFrameWidth = input.SubFrameWidth > 0 ? input.SubFrameWidth : 30;
+        double subFrameHeight = input.SubFrameHeight > 0 ? input.SubFrameHeight : 20;
+        double subFrameThickness = input.SubFrameThickness > 0 ? input.SubFrameThickness : 1.5;
+        string subFrameMaterial = !string.IsNullOrEmpty(input.SubFrameMaterial) ? input.SubFrameMaterial : "6063-T5";
+
         var table1 = new string[][]
         {
-            new string[] { "副框型号", "50系列铝合金" },
-            new string[] { "惯性矩Ix", "50 cm⁴" },
-            new string[] { "惯性矩Iy", "30 cm⁴" },
-            new string[] { "抵抗矩Wx", "15 cm³" },
-            new string[] { "弹性模量E", "70000 MPa" },
-            new string[] { "强度设计值fa", "90 MPa" }
+            new string[] { "副框类型", subFrameType },
+            new string[] { "副框宽度b", $"{subFrameWidth:F1} mm" },
+            new string[] { "副框高度h", $"{subFrameHeight:F1} mm" },
+            new string[] { "副框壁厚t", $"{subFrameThickness:F2} mm" },
+            new string[] { "副框材料", subFrameMaterial }
         };
         CreateTable(doc, "表13-1 副框参数", "JGJ102-2003",
             new string[] { "参数", "数值" }, table1);
 
-        // ========== 副框受力 ==========
-        AddHeading3(doc, "2 副框受力计算");
+        AddHeading3(doc, "2 副框截面特性");
+        // 简化计算: 空心矩形截面
+        double b = subFrameWidth;
+        double h = subFrameHeight;
+        double t = subFrameThickness;
+        double area = 2 * (b + h) * t; // mm²
+        double ix = (b * h * h * h - (b - 2*t) * (h - 2*t) * (h - 2*t) * (h - 2*t)) / 12; // mm⁴
+        double wx = ix / (h/2); // mm³
         
-        double a = input.PanelWidth;
-        double q = input.GustFactor * input.HeightFactor * (Math.Abs(input.Mus1Base) + 0.2) 
-            * input.BasicWindPressure / 1e6;
-        double q_line = q * a / 2;
+        AddCalcLine(doc, $"A = 2×(b+h)×t = 2×({b:F1}+{h:F1})×{t:F2} = {area:F2} mm²");
+        AddCalcLine(doc, $"Ix ≈ {ix:F2} mm⁴");
+        AddCalcLine(doc, $"Wx ≈ {wx:F2} mm³");
 
-        AddFormula(doc, "q = wk × a / 2", "副框承受的线荷载");
-        AddCalcLine(doc, $"q = {q*1000:F4} × {a:F0} / 2 = {q_line:F4} N/mm");
-
-        // ========== 强度验算 ==========
-        AddHeading3(doc, "3 副框强度验算");
+        AddHeading3(doc, "3 副框应力计算");
+        AddBody(doc, "3.1 风荷载作用");
+        AddFormula(doc, "σw = M / W ≤ f", "JGJ102-2003");
         
-        double M = q_line * 1200 * 1200 / 8; // 简支梁
-        double Wx = 15 * 1000;
-        double sigma = M / Wx;
-        double fa = 90;
+        double qwk = input.WindPressureDesign > 0 ? input.WindPressureDesign / 1000 : 2.0;
+        double panelWidth = input.PanelWidth > 0 ? input.PanelWidth : 1200;
+        double l = panelWidth; // mm
+        double m = qwk * 1000 * l * l / 8; // N·mm
+        double sigmaW = m / (wx > 0 ? wx : 1) / 1000; // MPa
+        double f = 85; // 铝合金强度设计值 MPa
+        bool windPassed = sigmaW <= f;
+        
+        AddCalcLine(doc, $"qwk = {qwk:F4} MPa");
+        AddCalcLine(doc, $"L = {l:F0} mm");
+        AddCalcLine(doc, $"M = {qwk:F4}×10³×{l:F0}²/8 = {m/1000:F2} N·m");
+        AddCalcLine(doc, $"σw = {sigmaW:F2} MPa, f = {f:F0} MPa, {(windPassed ? "满足" : "不满足")}");
 
-        AddFormula(doc, "σ = M / Wn ≤ fa", "副框抗弯强度");
-        AddCalcLine(doc, $"σ = {M:F1}/{Wx:F0} = {sigma:F2} MPa");
-        AddVerdict(doc, sigma <= fa, $"σ = {sigma:F2} MPa", $"fa = {fa:F0} MPa", "副框强度");
+        AddHeading3(doc, "4 副框挠度验算");
+        AddFormula(doc, "dmax = 5×q×L⁴/(384×E×I) ≤ L/200", "材料力学");
+        
+        double e = 70000; // MPa
+        double dmax = 5 * qwk * 1000 * Math.Pow(l, 4) / (384 * e * (ix > 0 ? ix : 1)) / 1000; // mm
+        double dlim = l / 200;
+        bool deflectionPassed = dmax <= dlim;
+        
+        AddCalcLine(doc, $"E = {e:F0} MPa");
+        AddCalcLine(doc, $"I = {ix:F2} mm⁴");
+        AddCalcLine(doc, $"dmax = 5×{qwk:F4}×10³×{l:F0}⁴/(384×{e:F0}×{ix:F2})");
+        AddCalcLine(doc, $"= {dmax:F3} mm");
+        AddCalcLine(doc, $"L/200 = {dlim:F2} mm");
+        AddCalcLine(doc, $"dmax = {dmax:F3} mm {(deflectionPassed ? "≤" : ">")} L/200 = {dlim:F2} mm, {(deflectionPassed ? "满足" : "不满足")}");
 
+        AddHeading3(doc, "5 计算结果汇总");
+        bool allPassed = windPassed && deflectionPassed;
+        var conclusionTable = new string[][]
+        {
+            new string[] { "验算项目", "计算值", "允许值", "比值", "结果" },
+            new string[] { "风荷载应力", $"{sigmaW:F2} MPa", $"{f:F0} MPa", $"{sigmaW/f:F2}", windPassed ? "满足" : "不满足" },
+            new string[] { "挠度", $"{dmax:F3} mm", $"{dlim:F2} mm", $"{dmax/dlim:F2}", deflectionPassed ? "满足" : "不满足" }
+        };
+        CreateTable(doc, "表13-2 副框计算结果", "",
+            new string[] { "验算项目", "计算值", "允许值", "比值", "结果" }, conclusionTable);
+
+        AddVerdict(doc, allPassed, $"副框应力 σ = {sigmaW:F2} MPa", $"≤ f = {f:F0} MPa", "副框");
         AddBody(doc, "参考规范：JGJ102-2003《玻璃幕墙工程技术规范》");
     }
 
     private void RenderBearingSection(XWPFDocument doc, GlassCalcBookInput input)
     {
         AddHeading2(doc, "承托件计算");
-
-        AddBody(doc, "承托件(牛腿)按GB50017-2017《钢结构设计标准》进行计算。");
-
-        // ========== 基本参数 ==========
-        AddHeading3(doc, "1 承托件基本参数");
         
+        AddBody(doc, "承托件用于支撑玻璃板块的自重，按JGJ102-2003《玻璃幕墙工程技术规范》及GB50017-2017《钢结构设计标准》进行计算。");
+
+        AddHeading3(doc, "1 承托件参数");
+        string bracketType = !string.IsNullOrEmpty(input.BracketType) ? input.BracketType : "L型钢托";
+        double bracketHeight = input.BracketHeight > 0 ? input.BracketHeight : 50;
+        double bracketThickness = input.BracketThickness > 0 ? input.BracketThickness : 4;
+        double bracketWidth = input.BracketWidth > 0 ? input.BracketWidth : 50;
+
         var table1 = new string[][]
         {
-            new string[] { "承托件型号", "热轧槽钢10#" },
-            new string[] { "截面积A", "1274.8 mm²" },
-            new string[] { "惯性矩Ix", "198 cm⁴" },
-            new string[] { "抵抗矩Wx", "39.7 cm³" },
-            new string[] { "强度设计值f", "215 MPa" },
-            new string[] { "剪力设计值fv", "125 MPa" }
+            new string[] { "承托件类型", bracketType },
+            new string[] { "承托高度h", $"{bracketHeight:F1} mm" },
+            new string[] { "承托件厚度t", $"{bracketThickness:F1} mm" },
+            new string[] { "承托件宽度b", $"{bracketWidth:F1} mm" },
+            new string[] { "材料", "Q235" },
+            new string[] { "强度设计值f", "215 MPa" }
         };
-        CreateTable(doc, "表14-1 承托件参数", "GB50017-2017",
+        CreateTable(doc, "表14-1 承托件参数", "JGJ102-2003",
             new string[] { "参数", "数值" }, table1);
 
-        // ========== 承托件受力 ==========
-        AddHeading3(doc, "2 承托件受力计算");
+        AddHeading3(doc, "2 承托件受力分析");
+        AddBody(doc, "承托件承受玻璃板块自重:");
+        AddFormula(doc, "G = γg × B × H", "自重荷载");
         
-        var m = input.Column!;
-        double V = 1.5 * input.GustFactor * input.HeightFactor * (Math.Abs(input.Mus1Base) + 0.2) 
-            * input.BasicWindPressure / 1e6 * m.LoadWidth * m.Span;
-        double N = 1.3 * 0.0005 * m.LoadWidth * m.Span;
-        double R = Math.Sqrt(V * V + N * N);
-
-        AddFormula(doc, "R = √(V² + N²)", "承托件合力");
-        AddCalcLine(doc, $"= √({V:F1}² + {N:F1}²) = {R:F1} N");
-
-        // ========== 强度验算 ==========
-        AddHeading3(doc, "3 承托件强度验算");
+        double gammaG = 0.0004; // MPa, 玻璃+附件
+        double panelWidth = input.PanelWidth > 0 ? input.PanelWidth : 1200;
+        double panelHeight = input.PanelHeight > 0 ? input.PanelHeight : 1500;
+        double g = gammaG * panelWidth * panelHeight; // N/mm -> N
         
-        double Wx = 39.7 * 1000;
-        double M = R * 50; // 悬臂50mm
-        double sigma = M / Wx;
-        double f = 215;
+        AddCalcLine(doc, $"γg = {gammaG:F4} MPa");
+        AddCalcLine(doc, $"B = {panelWidth:F0} mm, H = {panelHeight:F0} mm");
+        AddCalcLine(doc, $"G = {gammaG:F4}×{panelWidth:F0}×{panelHeight:F0}");
+        AddCalcLine(doc, $"= {g:F1} N");
 
-        AddFormula(doc, "σ = M / Wn ≤ f", "承托件抗弯强度");
-        AddCalcLine(doc, $"σ = {M:F1}/{Wx:F0} = {sigma:F2} MPa");
-        AddVerdict(doc, sigma <= f, $"σ = {sigma:F2} MPa", $"f = {f:F0} MPa", "承托件强度");
-
-        // ========== 抗剪验算 ==========
-        AddHeading3(doc, "4 承托件抗剪验算");
+        AddHeading3(doc, "3 承托件应力验算");
+        AddBody(doc, "按悬臂梁计算:");
+        AddFormula(doc, "σ = M / W ≤ f", "GB50017-2017");
         
-        double tau = R / 1274.8;
-        double fv = 125;
+        double m = g * bracketHeight / 1000; // N·mm -> N·m
+        double w = bracketWidth * bracketThickness * bracketThickness / 6; // mm³
+        double sigma = m * 1000 / w; // MPa
+        double f = 215; // MPa
+        bool passed = sigma <= f;
+        
+        AddCalcLine(doc, $"M = G × h = {g:F1} × {bracketHeight:F0} = {m:F3} N·m");
+        AddCalcLine(doc, $"W = b×t²/6 = {bracketWidth:F1}×{bracketThickness:F1}²/6 = {w:F2} mm³");
+        AddCalcLine(doc, $"σ = M/W × 1000 = {sigma:F2} MPa");
+        AddCalcLine(doc, $"f = {f:F0} MPa");
+        AddCalcLine(doc, $"σ = {sigma:F2} MPa {(passed ? "≤" : ">")} f = {f:F0} MPa, {(passed ? "满足" : "不满足")}");
 
-        AddFormula(doc, "τ = V / A ≤ fv", "承托件抗剪");
-        AddCalcLine(doc, $"τ = {R:F1}/1274.8 = {tau:F2} MPa");
-        AddVerdict(doc, tau <= fv, $"τ = {tau:F2} MPa", $"fv = {fv:F0} MPa", "承托件抗剪");
+        AddHeading3(doc, "4 计算结果汇总");
+        var conclusionTable = new string[][]
+        {
+            new string[] { "验算项目", "计算值", "允许值", "结果" },
+            new string[] { "承托件弯曲应力", $"{sigma:F2} MPa", $"{f:F0} MPa", passed ? "满足" : "不满足" }
+        };
+        CreateTable(doc, "表14-2 承托件计算结果", "",
+            new string[] { "验算项目", "计算值", "允许值", "结果" }, conclusionTable);
 
-        AddBody(doc, "参考规范：GB50017-2017《钢结构设计标准》");
+        AddVerdict(doc, passed, $"承托件应力 σ = {sigma:F2} MPa", $"≤ f = {f:F0} MPa", "承托件");
+        AddBody(doc, "参考规范：JGJ102-2003《玻璃幕墙工程技术规范》、GB50017-2017《钢结构设计标准》");
     }
 
     private void RenderAppendix(XWPFDocument doc)

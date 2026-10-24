@@ -6,41 +6,34 @@
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
-        <!-- ============ 全局基础样式 ============ -->
-        <Style Selector="TextBlock">
-            <Setter Property="FontFamily" Value="Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        <Style Selector="ComboBox">
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        <Style Selector="Button">
-            <Setter Property="CornerRadius" Value="8"/>
-        </Style>
-        <Style Selector="Button.Primary">
-            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        <Style Selector="Button.Secondary">
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-
-        <!-- ============ DEFAULT THEME: Classic ============ -->
+        <!-- ============================================================
+             设计令牌
+             两套调色板并存：
+               Hb*  = 复刻界面（VB6/宋体9pt 观感：直角、紧凑、灰底白输入）
+               其它 = 现代主页（圆角卡片、大留白）
+             全局「无 class」控件样式一律取复刻基准，避免现代主页那套
+             圆角 8 / 14px / Padding 10,8 把 VB6 的 20px 单行控件撑变形。
+             现代主页需要的观感，请用 .Primary/.Secondary/.Card 等显式 class。
+             ============================================================ -->
         <Style Selector=":is(Window)">
             <Style.Resources>
+                <!-- 复刻界面调色板 -->
+                <SolidColorBrush x:Key="HbFormBg" Color="#F0F0F0"/>
+                <SolidColorBrush x:Key="HbPanelBg" Color="#FBFBFD"/>
+                <SolidColorBrush x:Key="HbControlBg" Color="#FFFFFF"/>
+                <SolidColorBrush x:Key="HbBorder" Color="#7A7A7A"/>
+                <SolidColorBrush x:Key="HbFrameBorder" Color="#9AA5B1"/>
+                <SolidColorBrush x:Key="HbText" Color="#1F2937"/>
+                <SolidColorBrush x:Key="HbTextMuted" Color="#6B7280"/>
+                <SolidColorBrush x:Key="HbTitleBar" Color="#E8EEF7"/>
+                <SolidColorBrush x:Key="HbTitleText" Color="#24405E"/>
+                <SolidColorBrush x:Key="HbAccent" Color="#2F6FED"/>
+                <SolidColorBrush x:Key="HbHover" Color="#DEE7F5"/>
+                <SolidColorBrush x:Key="HbPressed" Color="#C8D6EA"/>
+                <SolidColorBrush x:Key="HbButtonBg" Color="#E3E3E3"/>
+                <SolidColorBrush x:Key="HbDisabled" Color="#9A9A9A"/>
+
+                <!-- 现代主页调色板（沿用） -->
                 <SolidColorBrush x:Key="PageBgBrush" Color="#fbfbfe"/>
                 <SolidColorBrush x:Key="CardBgBrush" Color="#ffffff"/>
                 <SolidColorBrush x:Key="AccentBrush" Color="#2f27ce"/>
@@ -61,7 +54,350 @@
             </Style.Resources>
         </Style>
 
-        <!-- Card style -->
+        <!-- ============================================================
+             一、全局控件基准 = VB6 尺寸契约
+             VB6 实测运行期几何（hb_window_tree2.tsv，V35）：
+               TextBox   H=18   ComboBox H=20   Option/Check H=15~17
+               CommandButton H=24~28   TabItem 行 22   行距步进 ~20px
+             Avalonia Fluent 主题的 MinHeight / 大 glyph / Padding 会把这些
+             撑爆（MinHeight 32 的 ComboBox、16px glyph + Padding 6 的
+             RadioButton），从而互相压叠。以下样式把控件"压回" VB6 尺寸：
+               MinHeight=0（尊重 XAML 里的显式 Height）
+               选择类控件用自定义 VB6 紧凑模板（11px 圆圈/方框 glyph）
+             ============================================================ -->
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="LineHeight" Value="15"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="LineHeight" Value="15"/>
+        </Style>
+        <Style Selector="TextBox:pointerover">
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+        </Style>
+        <Style Selector="ComboBox:pointerover">
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+
+        <!-- 选择类：VB6 OptionButton / CheckBox 紧凑模板
+             glyph 11px（VB6 实测圆圈 ≈10px），文字紧跟 3px，行高 15 -->
+        <Style Selector="RadioButton">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Panel Width="12" Height="12" VerticalAlignment="Center">
+                                <Ellipse x:Name="ring" Width="11" Height="11"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Stroke="#7A7A7A" StrokeThickness="1" Fill="White"/>
+                                <Ellipse x:Name="dot" Width="5" Height="5"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Fill="#1F2937"/>
+                            </Panel>
+                            <ContentPresenter Grid.Column="1" Margin="3,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton /template/ Ellipse#dot">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <Style Selector="RadioButton:checked /template/ Ellipse#dot">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="RadioButton:pointerover /template/ Ellipse#ring">
+            <Setter Property="Stroke" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="RadioButton:disabled">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+        </Style>
+        <Style Selector="RadioButton:disabled /template/ Ellipse#ring">
+            <Setter Property="Stroke" Value="#C8C8C8"/>
+            <Setter Property="Fill" Value="#F0F0F0"/>
+        </Style>
+
+        <Style Selector="CheckBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Panel Width="12" Height="12" VerticalAlignment="Center">
+                                <Border x:Name="box" Width="11" Height="11"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        BorderBrush="#7A7A7A" BorderThickness="1" Background="White"/>
+                                <Path x:Name="tick" Data="M 2,6 L 5,9 L 10,3"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Stroke="#1F2937" StrokeThickness="1.6"/>
+                            </Panel>
+                            <ContentPresenter Grid.Column="1" Margin="3,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="CheckBox /template/ Path#tick">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <Style Selector="CheckBox:checked /template/ Path#tick">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="CheckBox:pointerover /template/ Border#box">
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="CheckBox:disabled">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+        </Style>
+        <Style Selector="CheckBox:disabled /template/ Border#box">
+            <Setter Property="BorderBrush" Value="#C8C8C8"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Background" Value="#E3E3E3"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="3,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#DEE7F5"/>
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="#C8D6EA"/>
+        </Style>
+        <!-- 禁用态：必须让内嵌 TextBlock 也变灰（复刻按钮内容多用 TextBlock.hb，其 Foreground 会吞掉继承色） -->
+        <Style Selector="Button:disabled">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+            <Setter Property="Background" Value="#EDEDED"/>
+            <Setter Property="BorderBrush" Value="#C8C8C8"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+        <Style Selector="Button:disabled TextBlock">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+        </Style>
+
+        <Style Selector="ListBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <!-- DataGrid 无 CornerRadius，单独定义以免运行时报错 -->
+        <Style Selector="DataGrid">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,3"/>
+        </Style>
+        <Style Selector="DataGridCell">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="4,2"/>
+        </Style>
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="#E8EEF7"/>
+            <Setter Property="Foreground" Value="#24405E"/>
+            <Setter Property="Padding" Value="6,4"/>
+        </Style>
+
+        <!-- 滚动区：细边框、直角，与 VB6 面板一致 -->
+        <Style Selector="ScrollViewer">
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="ScrollBar">
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+
+        <!-- Tab：页签 11px、紧凑，内容区贴边，选中页有蓝色下边线提示 -->
+        <Style Selector="TabControl">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="#FBFBFD"/>
+            <Setter Property="BorderBrush" Value="#9AA5B1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="TabControl > TabItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#24405E"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Margin" Value="0,0,1,0"/>
+        </Style>
+        <Style Selector="TabControl > TabItem:selected">
+            <Setter Property="Background" Value="#E8EEF7"/>
+            <Setter Property="Foreground" Value="#12315A"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <!-- TabItem 里的文字也要继承字号（TabItem 不是 ContentControl 内容宿主，单独定） -->
+        <Style Selector="TabItem TextBlock">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- 下拉菜单（ContextMenu/MenuItem）：宋体 12、紧凑、悬停高亮 -->
+        <Style Selector="ContextMenu">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="BorderBrush" Value="#7A7A7A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="1"/>
+        </Style>
+        <Style Selector="MenuItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="22"/>
+        </Style>
+        <Style Selector="MenuItem:pointerover">
+            <Setter Property="Background" Value="#DEE7F5"/>
+        </Style>
+        <Style Selector="MenuItem:disabled">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+        </Style>
+        <Style Selector="Separator">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="4,2"/>
+        </Style>
+
+        <!-- ============================================================
+             二、复刻界面专用类（.hb）
+             值取字面色而非 DynamicResource，保证 UserControl 独立加载时也生效。
+             ============================================================ -->
+        <Style Selector="TextBlock.hb">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="LineHeight" Value="15"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <!-- Frame 标题：V31 实测为窗体灰底(#F0F0F0) + 黑字 9pt(=12px) 骑在边框线上，无浅蓝底条 -->
+        <Style Selector="TextBlock.hbFrameTitle">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="Padding" Value="4,0"/>
+        </Style>
+        <Style Selector="Border.hbFrame">
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#A0A0A0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <!-- 结果面板：V31 立柱屏 (633,32)292x352 与多跨屏结果区实测均为 #C0FFFF + #808080 边框 -->
+        <Style Selector="Border.hbResultPanel">
+            <Setter Property="Background" Value="#C0FFFF"/>
+            <Setter Property="BorderBrush" Value="#808080"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="Border.hbPanel">
+            <Setter Property="Background" Value="#F0F0F0"/>
+        </Style>
+        <!-- V31 多跨表：数据行浅青底 #C0FFFF（实测） -->
+        <Style Selector="DataGrid.hb DataGridRow">
+            <Setter Property="Background" Value="#C0FFFF"/>
+        </Style>
+        <Style Selector="DataGrid.hb DataGridRow:nth-child(even)">
+            <Setter Property="Background" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="DataGrid.hb DataGridRowHeader">
+            <Setter Property="Background" Value="#FFFFFF"/>
+        </Style>
+
+        <!-- ============================================================
+             三、现代主页专用类（沿用原设计，不影响复刻界面）
+             ============================================================ -->
+        <Style Selector="Button.Primary">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinHeight" Value="0"/>
+        </Style>
+        <Style Selector="Button.Secondary">
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinHeight" Value="0"/>
+        </Style>
         <Style Selector="Border.Card">
             <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
             <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>

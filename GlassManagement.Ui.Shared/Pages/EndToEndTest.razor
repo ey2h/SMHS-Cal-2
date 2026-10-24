@@ -1,5 +1,5 @@
 @page "/e2e-test"
-@using GlassManagement.Api.Models
+@using GlassManagement.Ui.Shared.Models
 @using System.Text.Json
 @inject HttpClient Http
 <div class="e2e-test" style="padding:16px;">
@@ -14,7 +14,7 @@
   {
     try
     {
-      var panel = new GlassPanelInput { PanelId = "e2e1", Type = GlassPanelType.Single, Width = 1200, Height = 2400, Thickness = 6.0, Layers = new List<GlassLayerInput> { new GlassLayerInput { MaterialId = "default", Thickness = 6.0 } } };
+      var panel = new GlassPanelInput { PanelId = "e2e1", Type = GlassPanelType.Single, Width = 1200, Height = 2400, Thickness = 6.0, Layers = new List<GlassLayerInput> { new() { MaterialId = "default", Thickness = 6.0 } } };
       var input = new GlassInput { ProjectId = "e2e-demo", RegionId = "default", Panels = new List<GlassPanelInput> { panel } };
       var json = JsonSerializer.Serialize(input);
       var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");

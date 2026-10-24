@@ -23,4 +23,9 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
+  <!-- 多跨静定梁计算引擎（复刻窗体调用） -->
+  <ItemGroup>
+    <ProjectReference Include="..\GlassManagement.Calc\GlassManagement.CalcCalc.csproj" />
+  </ItemGroup>
+
 </Project>

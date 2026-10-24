@@ -1,74 +1,83 @@
 @page "/phase1/basic"
 @using GlassManagement.Ui.Shared.Models
-@using GlassManagement.Api.Models
-@using GlassManagement.Api.Models
-@using GlassManagement.Ui.Shared.Models
 @using System.Net.Http.Json
 @inject System.Net.Http.HttpClient Http
 @using System.Text.Json
 @using System.Text
-@using System
-@inherits Microsoft.AspNetCore.Components.ComponentBase
 
 <div class="phase1-basic" style="padding:16px;">
   <h3>Phase 1 - 基本参数</h3>
-  <EditForm Model="model" OnValidSubmit="HandleValidSubmit" class="g-form">
+  <div class="g-form">
     <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start;">
       <div>
-        <RegionsSelector @bind-SelectedRegion="model.Region" />
+        <RegionsSelector @bind-SelectedRegion="region" />
       </div>
-      
       <div>
         <label>风压区域</label>
-        <input class="form-control" placeholder="风压区域" @bind="model.WindRegion" />
+        <input class="form-control" placeholder="风压区域" @bind="windRegion" />
       </div>
       <div>
         <label>幕墙类型</label>
-        <input class="form-control" placeholder="幕墙类型" @bind="model.WallType" />
+        <input class="form-control" placeholder="幕墙类型" @bind="wallType" />
       </div>
       <div>
         <label>龙骨间距</label>
-        <input class="form-control" placeholder="间距" @bind="model.MemberSpacing" />
+        <input class="form-control" placeholder="间距" type="number" @bind="memberSpacing" />
       </div>
     </div>
-    <button type="submit" class="btn btn-primary" style="margin-top:12px;">提交</button>
-  </EditForm>
+    <button class="btn btn-primary" style="margin-top:12px;" @onclick="HandleValidSubmit">提交</button>
+  </div>
   <CloudVizPane CloudViz="cloudVizUI" />
   <div class="status" style="color: #c00; margin-top:8px;">@statusMessage</div>
 </div>
 
 @code {
-    private Phase1BasicParams model = new Phase1BasicParams();
-    private GlassManagement.Api.Models.GlassOutput? apiOutput;
-    private GlassManagement.Ui.Shared.Models.CloudVizData? cloudVizUI;
+    private string region = string.Empty;
+    private string windRegion = string.Empty;
+    private string wallType = string.Empty;
+    private double memberSpacing = 1200;
+    private GlassOutput? apiOutput;
+    private CloudVizData? cloudVizUI;
     private string statusMessage = string.Empty;
+
     private async Task HandleValidSubmit()
     {
-        // Simple demonstration: build a minimal GlassInput and post to API
-        var panel = new GlassPanelInput { PanelId = "p1", Type = GlassPanelType.Single, Width = 1200, Height = 2400, Thickness = 6.0, Layers = new List<GlassLayerInput> { new GlassLayerInput { MaterialId = "default", Thickness = 6.0 } } };
-        var input = new GlassInput { ProjectId = "demo", RegionId = model.Region, Panels = new List<GlassPanelInput> { panel } };
+        var panel = new GlassPanelInput
+        {
+            PanelId = "p1",
+            Type = GlassPanelType.Single,
+            Width = 1200,
+            Height = 2400,
+            Thickness = 6.0,
+            Layers = new List<GlassLayerInput> { new() { MaterialId = "default", Thickness = 6.0 } }
+        };
+        var input = new GlassInput
+        {
+            ProjectId = "demo",
+            RegionId = region,
+            Panels = new List<GlassPanelInput> { panel }
+        };
         var json = JsonSerializer.Serialize(input);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var resp = await Http.PostAsync("/api/calculation/multi", content);
         if (resp.IsSuccessStatusCode)
         {
-          var body = await resp.Content.ReadAsStringAsync();
-          apiOutput = System.Text.Json.JsonSerializer.Deserialize<GlassManagement.Api.Models.GlassOutput>(body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var body = await resp.Content.ReadAsStringAsync();
+            apiOutput = JsonSerializer.Deserialize<GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (apiOutput?.CloudViz != null)
             {
-            // Map to UI CloudVizData from API results
-            var pts = new List<GlassManagement.Ui.Shared.Models.CloudVizPoint>();
-            int idx = 0;
-            foreach (var panelRes in apiOutput.PanelsResults)
-            {
-              double x = idx * 60; // simple x spacing
-              double y = Math.Max(0, panelRes.Metrics.Deflection * 100);
-              double v = panelRes.Metrics.MaxStress;
-              pts.Add(new GlassManagement.Ui.Shared.Models.CloudVizPoint { X = x, Y = y, Value = v });
-              idx++;
-            }
-            cloudVizUI = new GlassManagement.Ui.Shared.Models.CloudVizData { Points = pts };
-            statusMessage = "Phase 1 基本参数提交完成，云图已加载";
+                var pts = new List<CloudVizPoint>();
+                int idx = 0;
+                foreach (var panelRes in apiOutput.PanelsResults)
+                {
+                    double x = idx * 60;
+                    double y = Math.Max(0, panelRes.Metrics.Deflection * 100);
+                    double v = panelRes.Metrics.MaxStress;
+                    pts.Add(new CloudVizPoint { X = x, Y = y, Value = v });
+                    idx++;
+                }
+                cloudVizUI = new CloudVizData { Points = pts };
+                statusMessage = "Phase 1 基本参数提交完成，云图已加载";
             }
             else
             {

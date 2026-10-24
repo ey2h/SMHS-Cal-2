@@ -7,6 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Default HttpClient for shared pages
+builder.Services.AddHttpClient("Default", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUrl") ?? "http://localhost:5188");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Default"));
+
 // API Client
 builder.Services.AddHttpClient<GlassApiClient>(client =>
 {

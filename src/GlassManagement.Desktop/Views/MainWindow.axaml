@@ -27,6 +27,9 @@
 
                 <!-- 右: 设置/用户 -->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <!-- 结构计算界面 -->
+                    <Button AutomationProperties.AutomationId="OpenCalcButton" Content="结构计算界面" Click="OnOpenCalc"
+                            Padding="12,6" FontSize="12"/>
                     <!-- 主题切换 -->
                     <ComboBox AutomationProperties.AutomationId="ThemeSelector" SelectedIndex="{Binding ThemeIndex}" Width="100" FontSize="12">
                         <ComboBoxItem Content="经典"/>

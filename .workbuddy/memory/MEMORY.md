@@ -115,3 +115,17 @@
 - origin 已切为 `git@github.com:ey2h/SMHS-Cal-2.git`。
 - **需用户一次性操作**：把 `~/.ssh/id_ed25519.pub` 内容贴到 GitHub → Settings → SSH and GPG keys → New SSH key。
 - 之后 `git push origin feat/phase3-extend` 即可，无需再输密码。
+
+## 三之二、★ 立柱计算函数 = 0xD1E9E0（2026-10-25 Frida 实证，取代旧结论）
+
+- **实证方法**：Frida 挂 `rtcRound(0x41371A)`，取 `this.returnAddress` 统计 → 预演时命中集中在 **0xD2xxxx**；
+  反查函数首（0x55 8B EC）= **0xD1E9E0**（>46KB，含 1.5 引用 0xD233AF/0xD27E25/0xD2E74D）。
+- **qd 链（0xD23320–0xD23436）**：
+  `__vbaVarMul` → `rtcRound(.,3)` → 写 **slot[8]=qk**；`fld 1.5(VT_R8)` → `__vbaVarMul(slot[8]×1.5)` → `rtcRound(.,3)` → 写 **slot[9]=qd**；
+  槽数组基址 **dword_1C91184**（第三个槽数组）。
+- **实测类型**（hook 0xD23431）：slot7=**wk=0.001285 N/mm²**、slot8=**qk=1.414 (VT_R8)**、qd 输入=**2.121 (VT_R8)**。
+  ⇒ qk/qd 全是 **double**，乘法是 double×double，**不是 decimal**。
+- 旧结论 `sub_18BD010`/`sub_89EA1D` 均**不是**立柱计算本体（Frida 实测 0 命中；rtcRound 对照 3+ 次命中证明链路有效）。
+- B10 直接调 rtcRound 实测（v31_frida_round.py）：入参 double →
+  3.0495…→3.05 / 4.0515…→**4.052** / 4.1325…→**4.132** / 2.0475…→**2.047**。
+  这 4 个结果**同时**否定「double 就近」和「decimal 半偶」，舍入算法仍需用真实 qk 位模式复现。

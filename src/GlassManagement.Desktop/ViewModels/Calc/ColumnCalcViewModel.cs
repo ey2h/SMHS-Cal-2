@@ -125,17 +125,16 @@ public partial class ColumnCalcViewModel : ObservableObject
             double E = double.TryParse(ElasticModulusText, out double e) && e > 0 ? e : Session.ElasticModulusMpa;
 
             // ★★ 2026-10-25 实机定案（Frida 直读 V31 立柱函数 0xD1E9E0）：
-            //   qk/qd 全程 **double（Variant VT_R8）**，取整一律走 rtcRound，
-            //   而 rtcRound 的真身是「逐次 ×10 → 四舍六入五成双 → 除以 10^d」，
-            //   等价实现见 WindLoadEngine.VbaRound（4 个平局点位模式 4/4 全等）。
-            //   V31 槽证据：slot[7]=wk=0.001285 N/mm²、slot[8]=qk=1.414、qd 输入=2.121。
-            //   之前用 decimal + RoundDec 只在 3/4 个平局点上对，B10（2.0475→2.047）对不上，
-            //   根因是 decimal 路径把「qk 的 double 位模式」抹平了。
+            //   qd 这一步是 **double**：qd 输入 = qk(double) × 1.5，实测 VT_R8（slot8=1.414 → 输入 2.121）。
+            //   取整用 VbaRound（逐次×10 → 半偶 → 除以 10^d），4 个平局点位模式 4/4 全等。
+            //   注意：**qk 这一步仍走十进制半偶**——实测 2.455/1000×1100 = 2.7005000000000003，
+            //   V31 给 2.701（十进制半偶），而 VbaRound 的逐次×10 会把它压成恰好 2700.5 → 半偶得 2700（错）。
+            //   两步用不同路径不是"挑好看的对"，而是各自被实机数据钉死的：qk 见 B08/B09，
+            //   qd 见 B01/B08/B10/B12 四个平局点（见 VbaRoundTests）。
             double wk3 = WindLoadEngine.RoundLikeV35(wkMain, 3);     // = V31 slot[7]×1000
-            double wkNmm2 = wk3 / 1000.0;                            // V31 slot[7]（N/mm²）
-            double qkD = WindLoadEngine.VbaRound(wkNmm2 * bay, 3);    // V31 slot[8]
-            decimal qk = (decimal)qkD;                               // 仅供后续 decimal 显示
-            double qdD = WindLoadEngine.VbaRound(qkD * WindPartialFactor, 3);  // V31 slot[9]
+            decimal qk0 = (decimal)Math.Round(wk3 / 1000.0 * bay, 3, MidpointRounding.ToEven);
+            decimal qk = qk0;                                        // K1/K2 已含在 wkMain 里，此处不得再乘
+            double qdD = WindLoadEngine.VbaRound((double)qk * WindPartialFactor, 3);  // V31 slot[9]
             decimal qd = (decimal)qdD;
             // ★★ 2026-10-24 四面对拍修正：qk 必须用「已取 3 位的 wk」再按 N/mm² × mm 的**顺序**算，
             //   而且要在 double 域取整（不能转 decimal），否则广东档差 0.03~0.06%。

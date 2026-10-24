@@ -144,3 +144,16 @@ double VbaRound(x, d):
 - 已实现：`WindLoadEngine.VbaRound`（`R()` 委托它）；`ColumnCalcViewModel` 的 qk/qd 改回 **double** 路径；
   单测 `tests/GlassManagement.Calc.Tests/VbaRoundTests.cs`（9 例，含 4 个平局点位模式比对）全过
 - ⚠ 此前"必须用 decimal"的结论作废（v35 侧另说，v31 实测是 R8）
+- **复刻铁律**：参与计算的中间量一律 **double**（与 V31 的 VT_R8 对齐），**禁止 decimal 参与运算**；
+  decimal 只可用于显示/格式化。且**运算顺序**必须与代码一致（N/mm²×mm、逐次×10、n/10^d），
+  否则 double 也照样差末位。
+
+## 四之三、★ 第一页 40 案 = 280/280（2026-10-25 07:30）
+
+- 立柱函数 `0xD1E9E0`；qd 链 `0xD23320–0xD23436`；槽数组 `dword_1C91184`（slot7=wk(N/mm²)、8=qk、9=qd）。
+- **两步不同语义**（各自被实机钉死）：
+  * qk：十进制半偶（`2.7005000000000003 → 2.701`，B08/B09 证据）
+  * qd：`VbaRound`（逐次×10→半偶→`n/10^d`；B01/B08/B10/B12 位模式 4/4）
+- VbaRound **不是** rtcRound 全局等价（对"略高于平局"的 2.7005 会舍错），只在 qd 可达输入上等价。
+- 复刻基线生成：`dotnet run --project src/GlassManagement.Desktop -- --calc --selftest=basic40 --dump-preview=...`
+  再跑 `python local-data/recon/compare_basic40.py`；当前 **280/280 = 100.0%**。

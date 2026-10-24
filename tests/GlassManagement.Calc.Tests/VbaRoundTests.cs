@@ -7,6 +7,12 @@ namespace GlassManagement.Calc.Tests;
 /// <summary>
 /// rtcRound 等价性测试（2026-10-25 实机定案）。
 ///
+/// ⚠ 适用范围要写清楚：<see cref="WindLoadEngine.VbaRound"/> 是「qd 那一步」的等价实现
+/// （入参 = qk(double)×1.5，4 个平局点位模式与 V31 全等）。
+/// 它**不是** rtcRound 的全局等价：例如 2.7005000000000003 这种「略高于平局」的入参，
+/// V31 会进位到 2.701，而 VbaRound 的逐次×10 会把它压成恰好 2700.5 → 半偶舍去得 2.700。
+/// 因此复刻里 **qk 那一步仍用十进制半偶**（见 ColumnCalcViewModel 注释与 B08/B09 实机数据）。
+///
 /// 期望值不是"算出来的近似"，而是 **Frida 直接调用 V31 的 0x41371A 读回的 VT_R8 位模式**
 /// （见 local-data/recon/v31_frida_round.py / v31_frida_chain.py），逐位相等。
 /// </summary>
@@ -54,5 +60,19 @@ public class VbaRoundTests
             double got = WindLoadEngine.VbaRound(qk * 1.5, 3);
             Assert.Equal(BitConverter.DoubleToInt64Bits(qd), BitConverter.DoubleToInt64Bits(got));
         }
+    }
+
+    [Theory]
+    // 生产路径回归：qk 用十进制半偶，qd 用 VbaRound(qk(double)*1.5)
+    // 期望值全部来自 V31 实机（B01/B08/B09/B10/B12）
+    [InlineData(2.455, 1100, 2.701)]    // B08/B09：2.7005 边界必须进位（十进制半偶）
+    [InlineData(1.241, 1100, 1.365)]    // B10
+    [InlineData(1.848, 1100, 2.033)]    // B01
+    [InlineData(2.505, 1100, 2.755)]    // B12
+    public void ProductionQk_UsesDecimalHalfEven(double wkKpa, double bayMm, double expectQk)
+    {
+        double wk3 = WindLoadEngine.RoundLikeV35(wkKpa, 3);
+        decimal qk = (decimal)Math.Round(wk3 / 1000.0 * bayMm, 3, MidpointRounding.ToEven);
+        Assert.Equal(expectQk, (double)qk, 12);
     }
 }

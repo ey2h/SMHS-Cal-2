@@ -106,3 +106,12 @@
 - 长扫描每案立即落盘（丢过 37 案）；含中文 .ps1 必须 UTF-8 带 BOM
 - 构建坑：仓库根有设备名文件 `nul` → `dotnet build` 报 Stack overflow；用 `-p:OutputPath=C:/code/Glass/.tmpbuild/` 绕行
 - Avalonia UIA：Radio/Check 的 Content 必须是字符串；RDP 下鼠标点击对 Avalonia 无效，必须走 UIA
+
+## 二之二、git 推送授权（2026-10-25 配置）
+
+- 根因：`credential.helper=manager` 但机器上**没装 GCM 可执行文件** → `could not read Username`。
+- 已配 **SSH**：`~/.ssh/id_ed25519`（ed25519，无口令）+ `~/.ssh/config` 走 `ssh.github.com:443`
+  （22 端口不可用时用 443）；`git@github.com` 已验证可连通（Permission denied(publickey) = 能到）。
+- origin 已切为 `git@github.com:ey2h/SMHS-Cal-2.git`。
+- **需用户一次性操作**：把 `~/.ssh/id_ed25519.pub` 内容贴到 GitHub → Settings → SSH and GPG keys → New SSH key。
+- 之后 `git push origin feat/phase3-extend` 即可，无需再输密码。

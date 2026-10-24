@@ -68,6 +68,8 @@
 
 - 规程 `docs/COMPARE_PROTOCOL_4WAY.md`；经验手册 `docs/RE_EXPERIENCE_PLAYBOOK.md`
 - 立柱 93 条公式表 `docs/V31_COLUMN_MODEL_FORMULAS.md`；代码地图 `docs/V31_COLUMN_CODE_MAP.md`
+- **立柱 45 分支（图号→公式）`docs/V31_MODEL_CASE_MAP.md`**：选择子 = `Form->[+54h]` 图名串，
+  01=悬臂15种 / 02=简支21种 / 03=带悬臂简支9种（依据帮助 B24 原文）；图号↔界面模型仍待定位
 - 取整对齐 `docs/ROUNDING_ALIGNMENT_V35.md`；第一页 40 案 `docs/COMPARE_BASIC_PAGE40.md`
 - 风荷载代码地图 `docs/WINDLOAD_CODE_MAP.md`；槽映射 `docs/V31_SLOT_MAP.md`；模板字典 `docs/FORMULA_TEMPLATE_DICTIONARY.md`
 - 单元式 `docs/COMPARE_UNIT_COLUMN_CODE.md`；工具链 `docs/RE_TOOLCHAIN_SETUP.md`；流程参数表 `docs/PROCESS_PARAM_TABLE.md`

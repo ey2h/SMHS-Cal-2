@@ -259,3 +259,68 @@ wk=2.146  W预选=29516.667  I预选=2134343.474  df=8.524  σ=74.366  τ=7.337
 | `local-data/recon/ida_out/v31_roundpoint_expr.tsv` | 189 个定稿点**还原出的算式** |
 | `local-data/recon/v31_slice.py` | 符号执行切片器（x87 栈 + Variant 槽 + 调用名解析） |
 | `local-data/recon/v31_attach.ps1` | 新增 `col-sweep`（剪贴板先写 + 回读校验 + 重找句柄三重保护） |
+
+---
+
+# ★ 2026-10-25 更正：立柱计算函数 = 0xD1E9E0（Frida 实证）
+
+## 结论（取代本文档前面所有"立柱函数"标注）
+
+| 项 | 旧标注 | 实测结果 |
+|---|---|---|
+| 立柱计算函数 | `sub_18BD010`（0x18BD010） | **`0xD1E9E0`**（>46KB，含 1.5 常量 `0xD233AF/0xD27E25/0xD2E74D`）|
+| 45 分支图名链 | 曾疑为立柱 | 与立柱页预演无关（Frida 实测 0 命中）|
+| A 簇 5 个候选 | 曾疑为面板函数 | 预演时全 0 命中（应只在**生成计算书**时才走）|
+
+**取证方法**：Frida 17.24.3 挂 `rtcRound(0x41371A)`，取 `this.returnAddress` 做调用点统计 →
+预演期间 rtcRound 的返回地址集中在 **0xD2xxxx**；再按 `55 8B EC` 反查函数首得 **0xD1E9E0**。
+对照组 `rtcRound` 命中 3+ 次，证明挂钩与点击链路有效（此前自研调试器的"0 命中"无效，因为其 TF 单步自检都过不了）。
+
+## qd 链（0xD23320–0xD23436，逐指令）
+
+```asm
+0xD2332A  call __vbaVarMul          ; 乘出 qk 原始值
+0xD23337  call __vbaVarMove         ; → var_C4
+0xD2334C  call rtcRound(var_C4, 3)  ; ★ 取 3 位
+0xD23392  call __vbaVarMove         ; → 槽数组 dword_1C91184 的 slot[8]   = qk
+0xD233AF  fld  dbl_4020D8           ; ★ 1.5
+0xD233BB  mov  [ebp-314h], 5        ;   类型 VT_R8
+0xD2340F  call __vbaVarMul          ; slot[8] × 1.5
+0xD23431  call rtcRound(…, 3)       ; ★ 再取 3 位
+0xD23477  call __vbaVarMove         ; → slot[9]  = qd
+```
+
+**槽数组：`dword_1C91184`**（第三个）。实测（hook 0xD23431，默认单跨受拉 L=3000/a=700）：
+
+| 槽 | 含义 | 类型 | 值 |
+|---|---|---|---|
+| slot[7] | wk（N/mm²） | VT_R8 | 0.001285 |
+| slot[8] | qk | VT_R8 | 1.414 |
+| qd 输入 | qk×1.5 | VT_R8 | 2.121 |
+| slot[9] | qd | — | — |
+
+⇒ **qk/qd 全程 double（VT_R8），不是 decimal**；乘法是 `double × double`。
+
+## B10：直接调 rtcRound 的实测（`v31_frida_round.py`）
+
+把 V31 自己的 `rtcRound` 当函数调用（入参构造 VT_R8 Variant，digits=3）：
+
+| 入参（double） | rtcRound 返回 | 对应 V31 案 |
+|---|---|---|
+| 3.0495000000000000995 | **3.05** | B01 ✓ |
+| 4.0514999999999998792 | **4.052** | B08 ✓ |
+| 4.1325000000000002842 | **4.132** | B12 ✓ |
+| 2.0474999999999998757 | **2.047** | B10 ✓ |
+
+**四个平局点全部与 V31 输出一致** ⇒ qd 的规则就是 `rtcRound(double(qk) × 1.5, 3)`，
+剩下的只是把 VB6 `rtcRound` 在 R8 上的舍入行为等价实现出来（它既不是 `Math.Round(x,3,ToEven)`
+也不是十进制半偶：`4.0515…→4.052`、`2.0475…→2.047` 两个方向相反）。
+
+## 复现工具
+
+| 工具 | 作用 |
+|---|---|
+| `local-data/recon/v31_frida.py` | 任意 VA 挂钩；`rtcRound` 返回地址统计定位热点函数 |
+| `local-data/recon/v31_frida_qd.py` | 在 0xD23431 读 qd 输入 Variant 与 slot[7]/[8]/[9] |
+| `local-data/recon/v31_frida_round.py` | 直接 call 0x41371A，测任意 double 的 3 位舍入 |
+| `local-data/recon/v31_selftest.py` | 调试器自检（TF 单步），用于判定"未命中"是否可信 |

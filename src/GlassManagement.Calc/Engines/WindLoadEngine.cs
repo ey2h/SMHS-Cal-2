@@ -104,11 +104,45 @@ public static class WindLoadEngine
     public const int DigitsWk = 3;        // wk
 
     /// <summary>
-    /// V35 的 rtcRound：VB6 的 Round() 是<b>银行家舍入</b>（round-half-to-even），
-    /// 与 C# <see cref="Math.Round(double, int)"/> 默认行为一致，故直接委托。
+    /// V31/V35 的 <c>rtcRound</c> 等价实现（<b>double</b> 语义，2026-10-25 实机定案）。
+    ///
+    /// <para><b>算法（用 V31 自己的 rtcRound 逐位对齐反推并验证 4/4 位模式全等）</b>：</para>
+    /// <code>
+    /// y = x;  重复 digits 次  y *= 10      // ★ 必须逐次乘 10，不能一次乘 10^digits
+    /// n = 四舍六入五成双(y)
+    /// return n / 10^digits                 // 除法，不是乘法
+    /// </code>
+    ///
+    /// <para><b>为什么"逐次乘 10"是关键</b>：qd = rtcRound(qk×1.5) 的四个平局点，
+    /// 一次乘 1000 与逐次乘 10 得到不同的末位：</para>
+    /// <list type="table">
+    /// <item><term>4.0514999999999999</term><description>×1000=4051.4999999999995→4051；逐次×10 得 4051.5 → 4052 ✅</description></item>
+    /// <item><term>2.0474999999999999</term><description>×1000=2047.5（看似平局）→2048；逐次×10 得 2047.4999999999998 → 2047 ✅</description></item>
+    /// <item><term>3.0495000000000001</term><description>→ 3050 ✅（V31 实际 3.05）</description></item>
+    /// <item><term>4.1325000000000003</term><description>→ 4132（半偶）✅（V31 实际 4.132）</description></item>
+    /// </list>
+    ///
+    /// <para>实证手段：Frida 直接调用 V31 的 <c>0x41371A</c>（见 <c>v31_frida_round.py</c> /
+    /// <c>v31_frida_chain.py</c>），读回 VT_R8 位模式；本地按上式复现为
+    /// 3.0499999999999998 / 4.0519999999999996 / 4.1319999999999997 / 2.0470000000000002，与 V31 逐位相同。</para>
     /// </summary>
-    private static double R(double v, int digits)
-        => double.IsNaN(v) || double.IsInfinity(v) ? v : Math.Round(v, digits, MidpointRounding.ToEven);
+    public static double VbaRound(double v, int digits)
+    {
+        if (double.IsNaN(v) || double.IsInfinity(v)) return v;
+
+        // ★ 逐次乘 10：这是与 Math.Round(v, digits) 的唯一实质区别
+        double y = v;
+        for (int i = 0; i < digits; i++) y *= 10.0;
+
+        double n = Math.Round(y, MidpointRounding.ToEven);
+
+        double div = 1.0;
+        for (int i = 0; i < digits; i++) div *= 10.0;
+        return n / div;
+    }
+
+    /// <summary>V35 的 rtcRound（= <see cref="VbaRound"/>，double 语义）。</summary>
+    private static double R(double v, int digits) => VbaRound(v, digits);
 
     /// <summary>按 V35 的 rtcRound 取整（供外部对齐位数用）。</summary>
     public static double RoundLikeV35(double v, int digits) => R(v, digits);

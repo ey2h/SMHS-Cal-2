@@ -124,30 +124,34 @@ public partial class ColumnCalcViewModel : ObservableObject
             double L = Session.ColumnSpanMm;                           // 立柱跨度 mm
             double E = double.TryParse(ElasticModulusText, out double e) && e > 0 ? e : Session.ElasticModulusMpa;
 
-            // ★ 用 decimal 做十进制精确取整（V35 的 rtcRound 走 Variant 的 Decimal 子类型）。
-            //   三个判别点只有「十进制精确值 + 银行家舍入」能同时成立：
-            //     3.0495 → 3.050（基准 qd=3.05）｜4.0515 → 4.052（墙角）｜4.1325 → 4.132（内0.6）
-            //   用 double 的 Math.Round 时 ToEven 与 AwayFromZero 各会错一个（实测 2/3 上限）。
-            decimal bayM = (decimal)bay / 1000m;
+            // ★★ 2026-10-25 实机定案（Frida 直读 V31 立柱函数 0xD1E9E0）：
+            //   qk/qd 全程 **double（Variant VT_R8）**，取整一律走 rtcRound，
+            //   而 rtcRound 的真身是「逐次 ×10 → 四舍六入五成双 → 除以 10^d」，
+            //   等价实现见 WindLoadEngine.VbaRound（4 个平局点位模式 4/4 全等）。
+            //   V31 槽证据：slot[7]=wk=0.001285 N/mm²、slot[8]=qk=1.414、qd 输入=2.121。
+            //   之前用 decimal + RoundDec 只在 3/4 个平局点上对，B10（2.0475→2.047）对不上，
+            //   根因是 decimal 路径把「qk 的 double 位模式」抹平了。
+            double wk3 = WindLoadEngine.RoundLikeV35(wkMain, 3);     // = V31 slot[7]×1000
+            double wkNmm2 = wk3 / 1000.0;                            // V31 slot[7]（N/mm²）
+            double qkD = WindLoadEngine.VbaRound(wkNmm2 * bay, 3);    // V31 slot[8]
+            decimal qk = (decimal)qkD;                               // 仅供后续 decimal 显示
+            double qdD = WindLoadEngine.VbaRound(qkD * WindPartialFactor, 3);  // V31 slot[9]
+            decimal qd = (decimal)qdD;
             // ★★ 2026-10-24 四面对拍修正：qk 必须用「已取 3 位的 wk」再按 N/mm² × mm 的**顺序**算，
             //   而且要在 double 域取整（不能转 decimal），否则广东档差 0.03~0.06%。
             //   证据链（7 个 V31 实测案，见 docs/COMPARE_4WAY_GUANGDONG.md）：
-            //     V31 内部 wk 存的是 3 位取整值，且单位是 N/mm²（slot[15]=0.002146 可证）：
+            //     V31 内部 wk 存的是 3 位取整值，且单位是 N/mm²（slot[7]=0.001285 可证）：
             //       · 广东 100m：slot=2.146 → 0.002146×1100 = 2.3606000000000003 → 2.361 ✅（V31 qk）
             //       · 广东 60m ：slot=1.895 → 0.001895×1100 = 2.0844999999999999 → 2.084 ✅
             //       · 内压0.6μs1：slot=2.505 → 0.002505×1100 = 2.7554999999999996 → 2.755 ✅
             //   若换成 kPa 路径（wk×1.1=2.0845/2.7555 精确边界），Or 若先转 decimal 抹掉二进制尾巴，
             //   这两个案子会分别落到 2.085 / 2.756，与 V31 的 26050 / 34433.333 不符。
             //   K1/K2 已在 wk 阶段乘入（见 wkMain 注释），qk 阶段不再乘。
-            double wk3 = WindLoadEngine.RoundLikeV35(wkMain, 3);     // = V31 slot[15]×1000
-            decimal qk0 = (decimal)Math.Round(wk3 / 1000.0 * bay, 3, MidpointRounding.ToEven);
-            decimal qk = qk0;    // K1/K2 已含在 wkMain 里，此处不得再乘（见上）
-            decimal qd = WindLoadEngine.RoundDec(qk * (decimal)WindPartialFactor, 3); // 3.0495→3.05
             // 抗剪用「显示值 wk × bay × 1.5」——V31 内存 0x1FBE6C0 = 3049.2（= 1.848×1.1×1.5×1000，
             //   注意是 round3 的 1.848，不是 raw 的 1.8480969；用 raw 会得 τ=11.708 而 V31 是 11.707）
             // 与其抗剪结果 11.707 相符；若改用取整后的 3.05 会得 11.710，与 V31 不符。
             // wk 显示值本身已含 K1/K2（WindStandardKpa = round3(wkMain×K1×K2)），这里不能再乘一次
-            double qdRaw = (double)((decimal)wk * bayM * (decimal)WindPartialFactor);
+            double qdRaw = wk * bay * WindPartialFactor / 1000.0;
 
             double I = sec.Ix * 1e4;                                   // cm⁴ → mm⁴
             double W = sec.Wx1 * 1e3;                                  // cm³ → mm³

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GlassManagement.Calc\GlassManagement.Calc.csproj" />
+    <ProjectReference Include="..\..\src\GlassManagement.Calc\GlassManagement.CalcCalc.csproj" />
   </ItemGroup>
 
 </Project>

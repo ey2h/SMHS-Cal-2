@@ -149,6 +149,10 @@ public partial class CalcMainWindow : Window
                     {
                         dumpText = _wizard.SelfTestDoubleSpan();  // 双跨梁两组参数（与 V31 0xD35D8C 对拍）
                     }
+                    else if (string.Equals(SelfTestOnStartup, "col-matrix", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        dumpText = _wizard.SelfTestColumnMatrix();  // 模型×跨度矩阵（每组先回第一页重算）
+                    }
                     else
                     {
                         _wizard.SelfTestColumnPreview();

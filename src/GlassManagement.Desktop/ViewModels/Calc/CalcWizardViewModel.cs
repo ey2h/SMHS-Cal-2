@@ -484,6 +484,64 @@ public partial class CalcWizardViewModel : ObservableObject
         return "### CASE L1=3000 L2=1500" + nl + t1 + nl + "### CASE L1=3000 L2=1200" + nl + t2 + nl;
     }
 
+    /// <summary>
+    /// 诊断（对拍用）：立柱页「模型 × 跨度」矩阵。
+    /// **每组都先在第一页重算 wk（Recalculate）**，再从第一页结果算立柱 —— 不允许在立柱页覆盖荷载。
+    /// 输出 CSV，供与 V31 实机 <c>v31runs/mat_*.csv</c> 逐位比对。
+    /// </summary>
+    public string SelfTestColumnMatrix()
+    {
+        SelfTestColumnPreview();                       // 建链并定位到立柱屏
+
+        var cases = new (string model, double l1, double l2)[]
+        {
+            ("单跨受拉", 3000, 0), ("单跨受拉", 4000, 0), ("单跨受拉", 2500, 0),
+            ("单跨受压", 3000, 0), ("单跨受压", 4000, 0),
+            ("双跨梁", 3000, 1499), ("双跨梁", 3000, 1200), ("双跨梁", 3000, 900),
+            ("双跨梁", 3000, 600), ("双跨梁", 4500, 2000), ("双跨梁", 2500, 1000),
+            ("双跨梁", 4000, 1500),
+        };
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("model,L1,L2,wk,w_pre,i_pre,df,lim,sigma,tau");
+        foreach (var (model, l1, l2) in cases)
+        {
+            Session.ModelSingleTension = model == "单跨受拉";
+            Session.ModelSingleCompression = model == "单跨受压";
+            Session.ModelDoubleSpan = model == "双跨梁";
+            Session.ColumnSpanMm = l1;
+            if (l2 > 0) Session.ShortSpanMm = l2;
+
+            _basic?.Recalculate();                     // ① 第一页重算（A 随 L1 变 → wk 变）
+            _column!.PreviewCommand.Execute(null);     // ② 立柱页预演
+
+            var map = new System.Collections.Generic.Dictionary<string, string>();
+            foreach (var r in _column.Results)
+            {
+                string t = r.Text ?? "";
+                foreach (var (key, pat) in Patterns)
+                {
+                    var m = System.Text.RegularExpressions.Regex.Match(t, pat);
+                    if (m.Success) { map[key] = m.Groups[1].Value; break; }
+                }
+            }
+            string G(string k) => map.TryGetValue(k, out var v) ? v : "";
+            sb.AppendLine($"{model},{l1},{(l2 > 0 ? l2 : 0)},{G("wk")},{G("w_pre")},{G("i_pre")},{G("df")},{G("lim")},{G("sigma")},{G("tau")}");
+        }
+        return sb.ToString();
+    }
+
+    private static readonly (string key, string pat)[] Patterns =
+    {
+        ("wk", @"风荷载标准值为[：:]([0-9.]+)"),
+        ("w_pre", @"抗弯矩预选[：:]([0-9.]+)"),
+        ("i_pre", @"惯性矩预选[：:]([0-9.]+)"),
+        ("df", @"实际挠度计算值为[：:]([0-9.]+)"),
+        ("lim", @"规范要求的挠度值为[：:]([0-9.]+)"),
+        ("sigma", @"抗弯强度计算值[：:]([0-9.]+)"),
+        ("tau", @"抗剪强度计算值[：:]([0-9.]+)"),
+    };
+
     /// <summary>子屏 VM 的 StatusText 变化（确认数据/预演结果说明）同步到向导状态文本，主窗口状态栏据此刷新。</summary>
     private void MirrorStatus(ObservableObject vm)
     {

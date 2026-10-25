@@ -23,6 +23,13 @@ public static class DoubleSpanColumnEngine
     /// <summary>挠度限值分母：V31 用 180（Lc/180），实测 1501/180=8.3389→8.339、1800/180=10。</summary>
     public const double LimitDivisor = 180.0;
 
+    /// <summary>
+    /// 挠度限值绝对上限 20mm（V31 常量 <c>dbl_4019E0 = 20</c>，在双跨函数内被引用
+    /// <c>0xD3CBB3</c> / <c>0xD3DE6F</c>）。实测：Lc=2500 → 13.889（Lc/180）、
+    /// Lc=4000 → **20**（4000/180=22.2 被压到 20）。
+    /// </summary>
+    public const double LimitCapMm = 20.0;
+
     /// <summary>V31 里两个不同的 π 常量：theta 用 3.14，角度转弧度用 3.1415926。</summary>
     private const double PiShort = 3.14;
     private const double PiLong = 3.1415926;
@@ -73,8 +80,8 @@ public static class DoubleSpanColumnEngine
         double mRaw = qd * (Math.Pow(a, 3) + Math.Pow(b, 3)) / 8.0 / l1;
         double m = WindLoadEngine.VbaRound(mRaw, 3);
 
-        // ② 挠度限值（未取整参与计算，显示时才 round3）
-        double lim = lc / LimitDivisor;
+        // ② 挠度限值 = min(Lc/180, 20)（未取整参与计算，显示时才 round3）
+        double lim = Math.Min(lc / LimitDivisor, LimitCapMm);
 
         // ③ 挠度系数链 —— 每一步的取整位置都按 V31 实机定稿点还原
         double k1 = WindLoadEngine.VbaRound(4.0 * m / (qd * lc * lc), 3);        // slot[22] 0.499

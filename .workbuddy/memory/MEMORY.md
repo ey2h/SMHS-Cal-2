@@ -180,3 +180,19 @@ double VbaRound(x, d):
   （读 [ebp-X] 局部量）、`v31_frida_rounds.py`（定稿点入出参）、`v31_model_run.ps1`（切模型+设跨度+预演落盘）。
 - helper 语义：Div/Mul/Pow/Add **一律 args[2] op args[1]**；Sub=0x41377A、Neg=0x413804、
   Atn=0x4137FE、Cos=0x4137F2、Sqr=0x4137F8。
+
+## 三之四、立柱页矩阵对拍（2026-10-25，84/84 + 型材 3/3）
+
+- **矩阵**：单跨受拉×3 跨度 / 单跨受压×2 / 双跨梁×7 = 12 组 × 7 项 = **84/84 逐位一致**。
+  单跨受拉与受压在构件式下**结果完全相同**（V31 实测）。
+- **挠度限值有 20mm 上限**：`lim = min(L/180, 20)`（常量 `dbl_4019E0=20`，引用点 0xD3CBB3/0xD3DE6F）；
+  3600 是边界（=20），3700/4500/5000 都是 20；`I_req` 用截断后的 lim。
+- **L2 必须 < L1/2**：等于时自动 −1（→1499），大于时弹「无效输入」不计算。
+- **wk→qk 必须走十进制**：V31 slot[7]=0.0012650000000000001（比浮点 1.265/1000 大 1ulp），
+  → qk 输入 1.3915000000000002 → 1.392；double 直算得 1.391（错一档）。修法：wk 先 `Math.Round((decimal)wk3,3)`。
+- **型材**：4000 组 I/W/S/t 全从 `立柱.csv` 走；预选量（抗弯/惯性矩）与型材无关（V31 同）。
+- 工具：`v31_col_matrix.ps1`、`v31_limit_probe.ps1`、`v31_profile_run.ps1`、`v31_py.py`（纯 python 驱动）、
+  `kill_dialogs.py`、`compare_matrix.py`。
+- **驱动坑**：① 预演单次点击偶发不刷新 → 每组点两次；② L2≥L1/2 弹「无效输入」必须先收掉；
+  ③ 点控件用 PostMessage（SendMessage 遇模态框死锁）；④ python ctypes 需声明 GlobalAlloc restype=c_void_p。
+- 未完成：自定义材质（填值 ok，预演无输出）、连续梁、多跨（要「下一步」进「多跨数据输入」Frame）、钢铝结合。

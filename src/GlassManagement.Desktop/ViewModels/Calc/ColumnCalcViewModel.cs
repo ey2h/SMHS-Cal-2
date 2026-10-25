@@ -132,7 +132,13 @@ public partial class ColumnCalcViewModel : ObservableObject
             //   两步用不同路径不是"挑好看的对"，而是各自被实机数据钉死的：qk 见 B08/B09，
             //   qd 见 B01/B08/B10/B12 四个平局点（见 VbaRoundTests）。
             double wk3 = WindLoadEngine.RoundLikeV35(wkMain, 3);     // = V31 slot[7]×1000
-            decimal qk0 = (decimal)Math.Round(wk3 / 1000.0 * bay, 3, MidpointRounding.ToEven);
+            // ★ 2026-10-25（L=4000 案暴露）：wk 必须回到**十进制**再往下算。
+            //   V31 slot[7] = 0.0012650000000000001（比 1.265/1000 的浮点结果**大 1ulp**），
+            //   于是 qk 输入 = 1.3915000000000002 → round3 = 1.392；
+            //   复刻直接用 double 1.265/1000*1100 = 1.3914999999999998 → round3 = 1.391（错 1 档）。
+            //   把 wk 用 decimal 舍入回 1.265 再按十进制做 /1000×bay，即得 1.3915 → 1.392 ✅
+            decimal wkDec = Math.Round((decimal)wk3, 3, MidpointRounding.ToEven);
+            decimal qk0 = Math.Round(wkDec / 1000m * (decimal)bay, 3, MidpointRounding.ToEven);
             decimal qk = qk0;                                        // K1/K2 已含在 wkMain 里，此处不得再乘
             double qdD = WindLoadEngine.VbaRound((double)qk * WindPartialFactor, 3);  // V31 slot[9]
             decimal qd = (decimal)qdD;
@@ -190,7 +196,10 @@ public partial class ColumnCalcViewModel : ObservableObject
                 df = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * I);   // mm（标准值）
                 // 挠度限值先 round3（V31 内存 0x1FBE570/0x1FBE590 = 16.667，即 3000/180 取整后）
                 // iReq 必须用这个 16.667，用未取整的 16.6667 会得 1837868.3，与 V31 的 1837831.547 差 37。
-                lim = Math.Round(MultiSpanStaticEngine.DeflectionLimit(L, 0), 3, MidpointRounding.ToEven);  // mm
+                // ★ 2026-10-25 实测：单跨也受 20mm 绝对上限约束（3600→20 边界、3700→20、4500→20、5000→20；
+                //   3400→18.889、3500→19.444 仍按 L/180）。上限常量即 V31 dbl_4019E0=20。
+                lim = Math.Round(Math.Min(MultiSpanStaticEngine.DeflectionLimit(L, 0),
+                                          DoubleSpanColumnEngine.LimitCapMm), 3, MidpointRounding.ToEven);  // mm
                 wReq = M / fAllow;
                 iReq = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * lim);
             }

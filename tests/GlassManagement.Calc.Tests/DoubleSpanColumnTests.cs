@@ -83,4 +83,26 @@ public class DoubleSpanColumnTests
         double tau = WindLoadEngine.VbaRound(13606.0 * WindLoadEngine.VbaRound(r.Shear, 3) / I / 6.0, 3);
         Assert.Equal(5.836, tau, 9);                     // V31 0xD40A76 → 5.836
     }
+
+    /// <summary>
+    /// 换型材：I/W 走参数库（立柱.csv），预选量（w_pre/i_pre）与型材无关、强度/挠度随型材变。
+    /// 期望值来自 V31 实机（双跨 3000/1500、wk=1.285）：60/100系列 df=0.363 σ=20.215 τ=4.076、
+    /// 60/125系列 df=0.21 σ=14.583 τ=3.276。
+    /// </summary>
+    [Theory]
+    // I[mm4], W[mm3], S[mm3], t[mm], 期望 df, 期望 sigma, 期望 tau
+    [InlineData(1532970.0, 29510.0, 18846.0, 6.0, 0.363, 20.215, 4.076)]
+    [InlineData(2656350.0, 40905.0, 26247.0, 6.0, 0.21, 14.583, 3.276)]
+    public void DifferentProfiles_MatchV31(double iMm4, double wMm3, double sMm3, double tw,
+                                           double expDf, double expSigma, double expTau)
+    {
+        var r = DoubleSpanColumnEngine.Compute(3000.0, 1500.0, Qk, Qd, E, iMm4, SigmaAllow);
+        Assert.Equal(expDf, WindLoadEngine.VbaRound(r.Deflection, 3), 9);
+        Assert.Equal(expSigma, WindLoadEngine.VbaRound(r.Moment / wMm3, 3), 9);
+        double tau = WindLoadEngine.VbaRound(sMm3 * WindLoadEngine.VbaRound(r.Shear, 3) / iMm4 / tw, 3);
+        Assert.Equal(expTau, tau, 9);
+        // 预选量与型材无关（V31 实机同值）
+        Assert.Equal(66756.46614604564, r.RequiredI, 6);
+        Assert.Equal(4418.755888888889, r.RequiredW, 6);
+    }
 }

@@ -617,6 +617,15 @@ public partial class CalcSession : ObservableObject
     [ObservableProperty] private double _glassMidThicknessMm = 6;
     [ObservableProperty] private double _glassInnerThicknessMm = 6;
 
+    /// <summary>
+    /// 双夹层-中空（4 片）时，外夹层/内夹层各自的**第二片**厚度。
+    /// <para>V31 该构型下中片框禁用（en=0），外片框和内片框各出现 2 个厚度下拉
+    /// （外 80,203 / 80,225；内 376,203 / 375,225），种类单选仍各框共用一套。
+    /// 普通构型（≤3 片）不用这两个字段。</para>
+    /// </summary>
+    [ObservableProperty] private double _glassOuter2ThicknessMm = 6;
+    [ObservableProperty] private double _glassInner2ThicknessMm = 6;
+
     /// <summary>三片玻璃种类（5 档：普通/浮法/半钢化/钢化/夹丝，默认钢化）。</summary>
     [ObservableProperty] private string _glassOuterKind = "钢化玻璃";
     [ObservableProperty] private string _glassMidKind = "钢化玻璃";

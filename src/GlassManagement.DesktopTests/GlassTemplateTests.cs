@@ -22,6 +22,7 @@ public class GlassTemplateTests
 {
     private const string Sep47 = "***********************************************";
     private const string Sep43 = "*******************************************";
+    private const string Sep41 = "*****************************************";
     private const string Dash = "——————————————————";
 
     /// <summary>建 VM 并立刻渲染取快照（CalcSession.Default 是单例，不能先建两个再渲染）。</summary>
@@ -127,8 +128,25 @@ public class GlassTemplateTests
         Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm(双中空玻璃)"));
     }
 
-    // ---------------- 片位可用性矩阵 ----------------
+    [Test]
+    public void 双夹层中空_四片各一组_41星分隔_容许值无后缀()
+    {
+        // 实测（glass_cfg_scan.py --cases dbllam）：4 片、41 星、
+        // 片名为「最外片(1#)/次外片(2#)/次内片(3#)/最内片(4#)」，
+        // 且挠度容许值行**没有**「(××玻璃)」后缀 —— 与其他构型都不同。
+        var got = Render(s => { s.GlassMono = false; s.GlassDoubleLam = true; });
+        Assert.That(got[0], Is.EqualTo(Sep41));
+        Assert.That(got[1], Does.StartWith("玻璃部分风荷载标准值为:"));
+        Assert.That(got, Has.Some.EqualTo("最外片(1#)玻璃强度计算值:8.172MPa"));
+        Assert.That(got, Has.Some.EqualTo("次外片(2#)玻璃强度计算值:8.172MPa"));
+        Assert.That(got, Has.Some.EqualTo("次内片(3#)玻璃强度计算值:7.539MPa"));
+        Assert.That(got, Has.Some.EqualTo("最内片(4#)玻璃强度计算值:7.539MPa"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度计算值:2.625mm"));
+        Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm"));
+        Assert.That(got, Has.None.Contains("(双夹层"), "V31 此构型容许值不带后缀");
+    }
 
+    // ---------------- 片位可用性矩阵 ----------------
     [Test]
     public void 片位可用性_四种配置()
     {

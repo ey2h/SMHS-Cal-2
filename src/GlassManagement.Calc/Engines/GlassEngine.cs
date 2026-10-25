@@ -154,6 +154,27 @@ public static class GlassEngine
 
     private static double R3(double v) => R(v, 3);
 
+    /// <summary>
+    /// round6，但**先转 decimal 消掉 double 的 ulp 噪声**再向偶舍入。
+    ///
+    /// <para>用于份额这类会精确落在平局点上的量：两侧玻璃同厚时
+    /// <c>w = wk·D侧/ΣD/2</c> 的比例精确为 0.5，结果正好是 <c>x.xxxxxx5</c>。
+    /// double 的末位噪声会把平局推向某一侧，decimal（15 位有效数字）不会。</para>
+    /// <para>V31 用 Variant Decimal 计算，语义与此一致。</para>
+    /// </summary>
+    private static double R6Exact(double v)
+    {
+        if (double.IsNaN(v) || double.IsInfinity(v)) return v;
+        try
+        {
+            return (double)Math.Round((decimal)v, 6, MidpointRounding.ToEven);
+        }
+        catch (OverflowException)
+        {
+            return R(v, 6);
+        }
+    }
+
     /// <summary>分段线性插值（与 0xA79518 段一致的写法：η = 上端 − (上端−下端)·(θ−θ下)/(θ上−θ下)）。</summary>
     private static double Interp(double x, (double X, double Y)[] table)
     {
@@ -492,6 +513,96 @@ public static class GlassEngine
         double e2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
         double e3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
         return R3(Math.Pow(e1 + e2 + e3, 1.0 / 3.0));
+    }
+
+    /// <summary>
+    /// **双夹层-中空玻璃**（4 片：外夹层 2 片 + 中空腔 + 内夹层 2 片）。
+    ///
+    /// <para><b>实机取证</b>（2026-10-25，`glass_cfg_scan.py --cases dbllam`，
+    /// 1100×1380、4 片均 6mm、wk=0.00137、αmax=0.16）</para>
+    /// <code>
+    /// 屏上文案（41 星分隔）：
+    ///   最外片(1#) 8.172   次外片(2#) 8.172   次内片(3#) 7.539   最内片(4#) 7.539
+    ///   df 2.625   限值 18.333（**无「(××玻璃)」后缀**，与其他构型不同）
+    ///
+    /// 槽：厚度[5..8]=6/6/6/6   t_e[11]=9.04875   wk[12]=0.00137
+    ///     w外侧合计[13]=0.000754（每片[14][15]=0.000377）
+    ///     w内侧合计[26]=0.000685（每片[27][28]=0.000342）
+    ///     W标准[22]=0.000438 [33]=0.000404   W强度[23]=0.000652 [34]=0.000599
+    ///     θ[40]=6.8724 η[41]=0.985  θ[54]=6.3389 η[55]=0.989
+    ///     D[70]=4630690.832  μ[67]=0.00606  df[73]=2.625
+    /// </code>
+    ///
+    /// <para><b>与「双中空」的两处口径差异（各自实测，不可统一）</b></para>
+    /// <list type="number">
+    /// <item><b>地震项用未取整的自重</b>：qe = t₁·2.56e-5·5·αmax = 0.00012288。
+    /// 双中空那边必须用 round6 后的 qg（0.000154→qe=0.0001232），否则对不上；
+    /// 这里反过来——用 0.0001232 会让 W标准 变成 0.000439（实测 0.000438）。</item>
+    /// <item><b>W标准 用未取整份额、W强度 用 round6 份额</b>：
+    /// w_raw=0.00037675 / 0.0003425，round6 后为 0.000377 / 0.000342。
+    /// 实测 0.000438=round6(0.00037675+0.00006144)、0.000652=round6(1.5×0.000377+0.000086016)，
+    /// 四个值同时成立，交叉验证过。</item>
+    /// </list>
+    ///
+    /// <para><b>⚠ 已知未逐位</b>：t_e。实测 9.04875，本实现按 (Σ(0.95tᵢ)³)^(1/3) 得 9.04814，
+    /// 相对差 7e-5（t_e³: 740.91 vs 740.77）。屏上 df 仍为 2.625（round3 吸收），
+    /// 但槽位 θ_δ 会得 4.156 而非 4.155。未定位，不硬凑；很可能 V31 此构型对腔体的折减
+    /// 不是整齐的 0.95（需改厚度取两点才能定系数）。</para>
+    /// </summary>
+    public static CompositeGlassResult ComputeDoubleLaminated(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double t4, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = t1 * DensityNmm3;                            // 不取整
+        double qe = qg * SeismicFactor * alphaMax;               // 0.00012288（刻意不 round）
+
+        // 每一侧是「夹层整体」：2 片同厚，各按 0.95 折一次
+        double dOuter = Math.Pow(InsulatedThicknessFactor * t1, 3.0)
+                      + Math.Pow(InsulatedThicknessFactor * t2, 3.0);
+        double dInner = Math.Pow(InsulatedThicknessFactor * t3, 3.0)
+                      + Math.Pow(InsulatedThicknessFactor * t4, 3.0);
+        double sum = dOuter + dInner;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        double wOuter = InsulatedOuterFactor * wkNmm2 * dOuter / sum;   // 0.0007535
+        double wInner = wkNmm2 * dInner / sum;                          // 0.0006849
+
+        var ts = new[] { t1, t2, t3, t4 };
+        var side = new[] { wOuter, wOuter, wInner, wInner };
+        var plies = new GlassPlyResult[4];
+        for (int i = 0; i < 4; i++)
+        {
+            double wRaw = side[i] / 2.0;                        // 每侧 2 片均分
+            // ★ 份额的 round6 必须走 decimal：两侧同厚时 wRaw 恰好 = 0.0003425，
+            //   正落在 6 位小数**平局点**上；double 会把 0.0003425 算成 0.0003425000000000004，
+            //   于是向偶舍入得到 0.000343（实测槽[27]=0.000342）。
+            //   V31 走 Variant Decimal（无 ulp 噪声），这里用 decimal 复现其平局语义。
+            double w = R6Exact(wRaw);                           // 槽上显示值
+            double wStd = R6Exact(wRaw + 0.5 * qe);             // ★ 用未取整份额
+            double wStr = R6Exact(1.5 * w + 0.7 * qe);          // ★ 用 round6 份额
+            // ★ 本构型 θ 取 **4 位**（槽[40]=6.8724、槽[54]=6.3389），
+            //   而双中空/中空是 3 位（9.681 / 7.767）——V31 各构型自己一套，不统一。
+            double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)), 4);
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
+        }
+
+        // ★ 本构型 t_e **不 round3**：槽[11]=9.04875 是 6 位（双中空/中空都是 3 位）。
+        //   若 round3 成 9.048，D 会掉到 4628688，df 变成 2.626（实测 2.625）。
+        double te = R(Math.Pow(sum, 1.0 / 3.0), 6);
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum, 0.0, te, thetaD, Eta(thetaD), stiff, df, limit);
     }
 
     /// <summary>

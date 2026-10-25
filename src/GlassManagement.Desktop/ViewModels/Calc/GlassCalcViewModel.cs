@@ -315,6 +315,8 @@ public partial class GlassCalcViewModel : ObservableObject
 
     private const string Sep47 = "***********************************************";
     private const string Sep43 = "*******************************************";
+    /// <summary>双夹层-中空（4 片）用 41 星 —— 实测该构型分隔符与 47/43 都不同。</summary>
+    private const string Sep41 = "*****************************************";
     private const string Dash = "——————————————————";
 
     private static readonly IBrush ColorNormal = Brushes.Black;
@@ -457,9 +459,45 @@ public partial class GlassCalcViewModel : ObservableObject
                     Add(Sep43, ColorRule);
                     break;
                 }
+                case GlassBuildKind.DoubleLaminated:
+                {
+                    // 双夹层-中空 = 4 片：外夹层(1#/2#) + 中空腔 + 内夹层(3#/4#)
+                    // 实测文案：最外片/次外片/次内片/最内片，41 星分隔，容许值**无「(××玻璃)」后缀**
+                    var r = GlassEngine.ComputeDoubleLaminated(wk, a, b,
+                        Session.GlassOuterThicknessMm, Session.GlassOuter2ThicknessMm,
+                        Session.GlassInnerThicknessMm, Session.GlassInner2ThicknessMm,
+                        alpha);
+                    var name = new[] { "最外片(1#)", "次外片(2#)", "次内片(3#)", "最内片(4#)" };
+                    var kinds = new[]
+                    {
+                        Session.GlassOuterKind, Session.GlassOuterKind,
+                        Session.GlassInnerKind, Session.GlassInnerKind,
+                    };
+                    var ths = new[]
+                    {
+                        Session.GlassOuterThicknessMm, Session.GlassOuter2ThicknessMm,
+                        Session.GlassInnerThicknessMm, Session.GlassInner2ThicknessMm,
+                    };
+                    Add(Sep41, ColorRule);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
+                    Add(Sep41, ColorRule);
+                    for (int i = 0; i < r.Plies.Length; i++)
+                    {
+                        Add($"{name[i]}玻璃强度计算值:{r.Plies[i].Sigma:0.###}MPa", ColorNormal);
+                        Add($"选用的{name[i]}玻璃强度设计值:{GlassAllowables.Caption(kinds[i], ths[i])}", ColorNormal);
+                        Judge(r.Plies[i].Sigma <= GlassAllowables.Bending(kinds[i], ths[i]));
+                        if (i < r.Plies.Length - 1) Add(Dash, ColorRule);
+                    }
+                    Add(Sep41, ColorRule);
+                    Add($"玻璃挠度计算值:{r.Deflection:0.###}mm", ColorNormal);
+                    Add($"选用玻璃挠度容许值:{r.Limit:0.###}mm", ColorNormal);   // 实测无后缀
+                    Judge(r.Deflection <= r.Limit);
+                    Add(Sep41, ColorRule);
+                    break;
+                }
                 default:
                     StatusIsWarning = true;
-                    StatusText = "双夹层-中空玻璃的计算未挖，暂不支持预演";
+                    StatusText = "该玻璃构型暂不支持预演";
                     return;
             }
 

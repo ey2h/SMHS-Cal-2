@@ -145,6 +145,10 @@ public partial class CalcMainWindow : Window
                     {
                         dumpText = _wizard.DumpParamSource();  // 参数库数据源诊断
                     }
+                    else if (string.Equals(SelfTestOnStartup, "col-doublespan", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        dumpText = _wizard.SelfTestDoubleSpan();  // 双跨梁两组参数（与 V31 0xD35D8C 对拍）
+                    }
                     else
                     {
                         _wizard.SelfTestColumnPreview();

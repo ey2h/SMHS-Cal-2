@@ -23,8 +23,10 @@ public partial class CalcSession : ObservableObject
 
     /// <summary>地面类型 A/B/C/D</summary>
     [ObservableProperty] private bool _terrainA;
-    [ObservableProperty] private bool _terrainB = true;   // V31/V35 默认 B 类地形
-    [ObservableProperty] private bool _terrainC;
+    [ObservableProperty] private bool _terrainB;
+    // ★ 2026-10-25：V31 实机默认 = C 类地形（dump-basic 读回「C类地形 chk=1」）。
+    //   此前默认 B 类，导致第一页算出的 wk 偏高（1.848 vs V31 1.285），立柱屏整体对不上。
+    [ObservableProperty] private bool _terrainC = true;
     [ObservableProperty] private bool _terrainD;
 
     /// <summary>外部局部体型系数</summary>
@@ -388,7 +390,8 @@ public partial class CalcSession : ObservableObject
 
     /// <summary>地区查找输入框（关键字）与地区下拉</summary>
     [ObservableProperty] private string _regionKeyword = "";
-    [ObservableProperty] private string _regionSelected = "上海";
+    // ★ V31 启动时未选地区（w0 回落参数库首行北京 0.45kPa），见 CurrentRegion 注释
+    [ObservableProperty] private string _regionSelected = "";
 
     /// <summary>地区参数表数据源 = V35 参数库「地区参数」表全量 634 行。
     /// 数据由 local-data/gen_param_library_cs.py 从 参数库.mdb 导出 CSV 编译期内嵌
@@ -397,8 +400,15 @@ public partial class CalcSession : ObservableObject
         => GlassManagement.Calc.Data.ParamLibrary.Regions;
 
     /// <summary>当前选中地区的参数库行（地区下拉 → 风压/地震/温差参数唯一来源）。</summary>
+    /// <remarks>
+    /// ★ 2026-10-25：V31 启动时「查找并定位地区」框为空（dump-basic 实读 TextBox(141,305)=''），
+    /// 此时 w0 回落到**参数库首行 = 北京 450 → 0.45kPa**（反算证据：wk=1.285 = 0.45×βgz 1.6929×μz 1.4983×μs合 1.126）。
+    /// 复刻此前默认「上海」(0.55)，导致立柱屏 wk 一直是 1.848/1.571 而 V31 是 1.285。
+    /// </remarks>
     public GlassManagement.Calc.Data.ParamLibrary.RegionRow? CurrentRegion
-        => GlassManagement.Calc.Data.ParamLibrary.FindRegion(RegionSelected);
+        => string.IsNullOrWhiteSpace(RegionSelected)
+            ? GlassManagement.Calc.Data.ParamLibrary.Regions.FirstOrDefault()
+            : GlassManagement.Calc.Data.ParamLibrary.FindRegion(RegionSelected);
 
     /// <summary>50 年基本风压（kPa）= 参数库 Pa 值 / 1000。</summary>
     public double RegionWind50KPa => CurrentRegion?.Wind50KPa ?? 0;

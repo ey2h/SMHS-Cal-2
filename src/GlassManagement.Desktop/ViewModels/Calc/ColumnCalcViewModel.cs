@@ -167,18 +167,37 @@ public partial class ColumnCalcViewModel : ObservableObject
             //   ⇒ M = round3(q · L² / 8)，弯矩本身要取 3 位；随后才由 0x18CF05A 打印
             //   「最大弯矩为：M=qL^2/8=」。复刻此前不取整（L=3000 时结果相同，
             //   但其它跨度/非千分位 qd 会差 0.001，故按代码取整）。
-            double M = WindLoadEngine.RoundLikeV35((double)qd * L * L / 8.0, 3);   // N·mm
-            double V = qdRaw * L / 2.0;                                // N（用未取整 qd，见上）
+            double fAllow = MaterialAllowables.Bending(Session.ColumnMaterial);
+            double fvAllow = MaterialAllowables.Shear(Session.ColumnMaterial);
+            double M, V, df, lim, wReq, iReq;
+            if (Session.ModelDoubleSpan && !Session.StructUnit)
+            {
+                // ── 双跨梁：公式全部来自 V31 函数 0xD35D8C（见 DoubleSpanColumnEngine 注释）──
+                //   两组实机参数（L2=1500 等跨 / L2=1200 不等跨）逐位复现 13/13。
+                var ds = DoubleSpanColumnEngine.Compute(L, Session.ShortSpanMm, (double)qk, (double)qd,
+                                                        E, I, fAllow);
+                M = ds.Moment;
+                V = WindLoadEngine.VbaRound(ds.Shear, 3);       // τ 吃 round3(V)（V31 实机 1989.234）
+                df = ds.Deflection;
+                lim = WindLoadEngine.VbaRound(ds.Limit, 3);
+                wReq = ds.RequiredW;
+                iReq = ds.RequiredI;
+            }
+            else
+            {
+                M = WindLoadEngine.RoundLikeV35((double)qd * L * L / 8.0, 3);   // N·mm
+                V = qdRaw * L / 2.0;                                // N（用未取整 qd，见上）
+                df = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * I);   // mm（标准值）
+                // 挠度限值先 round3（V31 内存 0x1FBE570/0x1FBE590 = 16.667，即 3000/180 取整后）
+                // iReq 必须用这个 16.667，用未取整的 16.6667 会得 1837868.3，与 V31 的 1837831.547 差 37。
+                lim = Math.Round(MultiSpanStaticEngine.DeflectionLimit(L, 0), 3, MidpointRounding.ToEven);  // mm
+                wReq = M / fAllow;
+                iReq = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * lim);
+            }
             // V31 打印位数统一为「round 3 位后去尾随零」：
             //   159.9501→159.95、175.5779→175.578、174.4773→174.477、27725.000→27725
             double sigma = Math.Round(gamma0 * M / W, 3, MidpointRounding.ToEven);          // MPa
             double tau = Math.Round(gamma0 * V * Sx / (I * t), 3, MidpointRounding.ToEven); // MPa
-            double df = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * I);   // mm（标准值）
-            // 挠度限值先 round3（V31 内存 0x1FBE570/0x1FBE590 = 16.667，即 3000/180 取整后）
-            // iReq 必须用这个 16.667，用未取整的 16.6667 会得 1837868.3，与 V31 的 1837831.547 差 37。
-            double lim = Math.Round(MultiSpanStaticEngine.DeflectionLimit(L, 0), 3, MidpointRounding.ToEven);  // mm
-            double fAllow = MaterialAllowables.Bending(Session.ColumnMaterial);
-            double fvAllow = MaterialAllowables.Shear(Session.ColumnMaterial);
 
             // ── 单元式幕墙分支（V35 计算书模板 0x4EC890–0x4ED4C4）──────────────────
             //   V35 原文：「由于立柱轴力对计算影响很小，此处轴力分配按均分，
@@ -272,9 +291,9 @@ public partial class ColumnCalcViewModel : ObservableObject
                 return;
             }
 
-            // 选型预选：W_req = M/f（用设计值弯矩）；I_req = 5qk·L⁴/(384E·df_lim)（用标准值）
-            double wReq = M / fAllow;
-            double iReq = 5.0 * (double)qk * Math.Pow(L, 4) / (384.0 * E * lim);
+            // 选型预选已在上面的模型分支里算好（wReq / iReq）：
+            //   单跨简支 W_req = M/f、I_req = 5qk·L⁴/(384E·df_lim)
+            //   双跨梁   W_req = M/f、I_req = qk·kf·Lc⁴/(24E·df_lim)（V31 0xD3E8xx 实机链）
 
             Add(Bar);
             Add($"风荷载标准值为:{Fmt(wk)}KPa");

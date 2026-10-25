@@ -462,6 +462,28 @@ public partial class CalcWizardViewModel : ObservableObject
             ? ""
             : string.Join(Environment.NewLine, System.Linq.Enumerable.Select(_column.Results, r => r.Text));
 
+    /// <summary>
+    /// 诊断（对拍用）：双跨梁两组参数（L1=3000，L2=1500 等跨 / L2=1200 不等跨）各预演一次，
+    /// 输出两段文本供与 V31 实机 <c>model_shuang_*.txt</c> 逐行比对。
+    /// </summary>
+    public string SelfTestDoubleSpan()
+    {
+        SelfTestColumnPreview();                       // 走真实链路：第一屏 →「下一步」→ 立柱屏（wk 由第一屏算出）
+        Session.ModelDoubleSpan = true;
+        Session.ColumnSpanMm = 3000;
+
+        Session.ShortSpanMm = 1500;                    // 等跨：V31 会自动改成 1499/1501
+        _column!.PreviewCommand.Execute(null);
+        string t1 = DumpColumnPreviewText();
+
+        Session.ShortSpanMm = 1200;                    // 不等跨：1200/1800 原样
+        _column.PreviewCommand.Execute(null);
+        string t2 = DumpColumnPreviewText();
+
+        string nl = Environment.NewLine;
+        return "### CASE L1=3000 L2=1500" + nl + t1 + nl + "### CASE L1=3000 L2=1200" + nl + t2 + nl;
+    }
+
     /// <summary>子屏 VM 的 StatusText 变化（确认数据/预演结果说明）同步到向导状态文本，主窗口状态栏据此刷新。</summary>
     private void MirrorStatus(ObservableObject vm)
     {

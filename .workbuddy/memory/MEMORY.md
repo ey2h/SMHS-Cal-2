@@ -157,3 +157,26 @@ double VbaRound(x, d):
 - VbaRound **不是** rtcRound 全局等价（对"略高于平局"的 2.7005 会舍错），只在 qd 可达输入上等价。
 - 复刻基线生成：`dotnet run --project src/GlassManagement.Desktop -- --calc --selftest=basic40 --dump-preview=...`
   再跑 `python local-data/recon/compare_basic40.py`；当前 **280/280 = 100.0%**。
+
+## 一之三、★ 铁律：所有测试必须从第一页开始（用户强调）
+
+- wk / μs / 场地 / 地区 / 地形 **全部由第一页计算链产出后传到立柱页**，
+  不允许在立柱页或测试代码里覆盖 wk 凑数（`--selftest` 里也禁止）。
+- 立柱页对拍前必须先确认第一页默认值与 V31 一致：V31 启动默认 = **C 类地形** + **地区未选
+  （回落参数库首行「北京」0.45kPa）** + 标高 100 + 50 年 + 墙面区 1.0 + 封闭式 + ≥1kPa 下限。
+  复刻曾默认 B 类 + 上海，导致 wk=1.848 而 V31=1.285，立柱屏全部对不上。
+
+## 三之三、★ 双跨梁 = 函数 0xD35D8C（2026-10-25 全链闭合，14/14）
+
+- 边界 0xD35D8C–0xD42762；槽数组 `dword_1C91184`（slot2=L1、3=a、4=b、19=-M、22..27=系数）。
+- 两跨：`a=L2, b=L1-L2`，**等跨时 a-1 / b+1**（L2=1500→1499/1501；L2=1200→1200/1800）。
+- `M=round3(qd(a³+b³)/8/L1)`；`V=max(a·qd/2+M/a, b·qd/2+M/b)`；`τ=Sx·round3(V)/I/t`；
+  `lim=Lc/180`；`df=qk·kf·Lc⁴/(24EI)`；`I_req` 同式但除 `round3(lim)`。
+- **kf 是一条 20 步的解析链**（k1..k12，含 Atn/Cos/Sqr，两个 π：3.14 与 3.1415926），
+  见 `docs/V31_DOUBLESPAN_CODE.md`；**k3=0.62475 不能取整**（取整会偏 0.24%）。
+- 完整实现：`src/GlassManagement.Calc/Engines/DoubleSpanColumnEngine.cs`；
+  单测 `tests/.../DoubleSpanColumnTests.cs`（4 例）；对拍 `compare_doublespan.py` → 14/14 = 100%。
+- 取证工具（新增）：`v31_frida_ops.py`（hook 全部 Variant helper 读实参）、`v31_frida_vars.py`
+  （读 [ebp-X] 局部量）、`v31_frida_rounds.py`（定稿点入出参）、`v31_model_run.ps1`（切模型+设跨度+预演落盘）。
+- helper 语义：Div/Mul/Pow/Add **一律 args[2] op args[1]**；Sub=0x41377A、Neg=0x413804、
+  Atn=0x4137FE、Cos=0x4137F2、Sqr=0x4137F8。

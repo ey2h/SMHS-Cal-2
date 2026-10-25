@@ -65,6 +65,7 @@ public enum InterlayerKind
 public readonly record struct CompositeGlassResult(
     GlassPlyResult[] Plies,       // 按「室外 → 室内」顺序，逐片 σ
     double TotalStiffness,        // 全部玻璃片 Σt³（分配分母）
+    double StrengthThickness,     // 强度用等效厚度 t_s（SGP 专用；PVB 逐片算故为 0）
     double EquivalentThickness,   // t_e，round3
     double ThetaDefl,
     double EtaDefl,
@@ -340,6 +341,72 @@ public static class GlassEngine
     }
 
     /// <summary>
+    /// SGP 复合玻璃（中空 + 单侧夹胶）—— V31 玻璃屏第五段函数区 <c>0xA4AA25–0xA54FFD</c>。
+    ///
+    /// <para><b>与 PVB 的三处结构差异（全部运行期校验过）</b></para>
+    /// <list type="number">
+    /// <item><b>强度用等效厚度</b>（不是逐片）：
+    /// <c>Γ = 1/(1 + 9.6·E·kΓ₁·t_f / (kΓ₂·(t+t_f)²·a²))</c>（0xA5104D–0xA51118，取 4 位），
+    /// <c>t_s = round3(sqrt(d³/(t + 2Γy)))</c>，<c>d=t₁+t₂</c>、<c>y=(t+t_f)/2</c>（0xA5162D–0xA516B2）。</item>
+    /// <item><b>折减系数恒 1</b>（0xA534A9 乘 1，不查 η 表）。</item>
+    /// <item><b>强度荷载用整片</b>：<c>W=round6(1.5·wk·d³/Σ + 0.7Q)</c>，<c>Σ=d³+t₃³</c>（0xA522A7）。</item>
+    /// </list>
+    ///
+    /// <para><b>挠度</b>：<c>t_e = round3(0.95·Σ^(1/3))</c> = 11.856（Σ=1944），θ_δ=1.410 → η=1 → D=10415846.9 → df=1.167。</para>
+    ///
+    /// <para><b>实测工况</b>（三片均 6mm、胶片 0.76、wk=0.00137、αmax=0.16、1100×1380）：
+    /// Γ=0.8967、t_s=11.969、W标准=0.001341、W强度=0.001999、σ=6.392。</para>
+    /// </summary>
+    /// <param name="kGamma1">Γ 公式里的 k₁₉ = 137.093（V31 slot[19]，物理含义待考）。</param>
+    /// <param name="kGamma2">Γ 公式里的 k₁₄ = 11.3（V31 slot[14]，即夹层配置框的 11.3）。</param>
+    public static CompositeGlassResult ComputeCompositeSgp(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double filmThickness, double alphaMax,
+        double kGamma1 = 137.093, double kGamma2 = 11.3)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R((t1 + t2) * DensityNmm3, 6);              // 0.000307（两片和）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);       // 0.000246
+
+        double d = t1 + t2;                                      // 12
+        double y = (t1 + filmThickness) / 2.0;                   // 3.38
+        double eSum = Math.Pow(d, 3.0) + Math.Pow(t3, 3.0);       // 1944
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        // Γ 剪切传递系数（0xA51118），取 4 位
+        double gamma = R(1.0 / (1.0 + 9.6 * E * kGamma1 * filmThickness
+                                     / (kGamma2 * Math.Pow(t1 + filmThickness, 2.0) * a * a)), 4);
+
+        // 强度等效厚度 t_s = sqrt(d³/(t+2Γy))（0xA516B2）
+        double ts = R3(Math.Sqrt(Math.Pow(d, 3.0) / (t1 + 2.0 * gamma * y)));
+
+        // 整片强度组合（0xA522A7）
+        double wStr = R(1.5 * (wkNmm2 * Math.Pow(d, 3.0) / eSum) + 0.7 * qe, 6);
+        double wStd = R(wkNmm2 * Math.Pow(d, 3.0) / eSum + 0.5 * qe, 6);
+
+        double sigma = R3(6.0 * m * wStr * a * a * 1.0 / (ts * ts));   // η 恒 1（0xA534A9）
+
+        double te = R3(InsulatedThicknessFactor * Math.Pow(eSum, 1.0 / 3.0));   // 11.856
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0))); // 1.410
+        double etaD = 1.0;                                        // SGP 亦为 1（槽[64]=1）
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);  // 10415846.938
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);   // 1.167
+        double limit = R3(a / DeflectionDivisor);
+
+        var plies = new[]
+        {
+            new GlassPlyResult(t1, R(wkNmm2 * Math.Pow(d, 3.0) / eSum, 6), wStr, wStd, 0, 1.0, sigma),
+            new GlassPlyResult(t2, 0, 0, 0, 0, 1.0, sigma),
+            new GlassPlyResult(t3, 0, 0, 0, 0, 1.0, 0),
+        };
+        return new CompositeGlassResult(plies, eSum, ts, te, thetaD, etaD, stiff, df, limit);
+    }
+
+    /// <summary>
     /// 复合玻璃（中空 + 单侧夹胶，共 3 片）—— 走**第四段函数区** <c>0xA46000–0xA49B00</c>（17 个定稿点）。
     ///
     /// <para><b>三级受力流程（V31 的合并实现，与「先分侧、再分片」数学等价）</b></para>
@@ -414,6 +481,6 @@ public static class GlassEngine
         double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d);
         double limit = R3(a / DeflectionDivisor);
 
-        return new CompositeGlassResult(plies, sum3, te, thetaD, etaD, d, df, limit);
+        return new CompositeGlassResult(plies, sum3, 0, te, thetaD, etaD, d, df, limit);
     }
 }

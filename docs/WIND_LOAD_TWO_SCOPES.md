@@ -77,10 +77,24 @@ G1 同法：`1.598/1.514 = 1.0555`，反解 `1.200/x = 1.0555 ⇒ x = 1.1369 = 0
 
 ## 五、代码落地
 
+### 5.0 三套偏移规则对照（2026-10-25 实测校正）
+
+用 `find_prologue_v31.py` / `capstone` 双验证过，三套**不能混用**：
+
+| 目标 | 公式 | 依据 |
+|---|---|---|
+| `unpack/v31_unpacked.exe` | **`off = VA − 0x400C00`** | `dis_range.py:11`、`v31_slice2.py:26`；`0xA1EBF5 → 0x61DFF5 = 55 8B EC` ✔ |
+| `v31mem_clean/v31_mem_00401000.bin` | **`off = VA − 0x401000`** | 文件名即 base（`dump_v31_mem.py` 按 `VirtualQueryEx` 区块落盘）；`0xA1EBF5 → 0x61DBF5 = 55 8B EC` ✔ |
+| `unpack/unpacked_runtime.exe`（V35 图） | `off = VA − 0x401000 + 0x1000` | `work/find_prologues.py:4-10` |
+
+> **本页此前把第 2 行写成了 `− 0x400C00`，是错的**（把 exe 的规则套到了内存镜像上）。
+> 用错会读到指令中间，看起来"也像指令"，极易误判 —— 已在本轮修正。
+
 ### 5.1 代码级机制：同一槽位 slot[0x45]，两屏填不同值
 
 `0xA7CE09` 是玻璃屏的风荷载函数入口，槽索引以立即数出现（反汇编自
-`v31mem_clean/v31_mem_00401000.bin`，文件偏移 = VA − 0x400C00）：
+`v31mem_clean/v31_mem_00401000.bin`，**文件偏移 = VA − 0x401000** —— 该 bin 的 base 就是
+文件名里的 `0x401000`；`VA − 0x400C00` 是 `unpacked_v31.exe` 的规则，两者别混，详见下表）：
 
 ```
 0xA7CE38  mov [ebp-0xd8], 0x0B     ; 索引 slot[0x0b] = μs内压档

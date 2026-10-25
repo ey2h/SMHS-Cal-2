@@ -19,8 +19,42 @@
 
 ### 明确**不用**的
 
-- **REA（rea-agents）**：装了但全程未使用。它要自带 Ghidra 12.1.4 + JDK 21，本机没有；IDA 这条路已经够用。
+- **REA（rea-agents）**：默认不可用——它自己不带动分析器，需外挂 Ghidra / IDA / Hopper / Kuna 之一。
+  本机无 Ghidra、Hopper 不支持 Windows、Kuna 不支持 PE，**只能接 IDA**。
+  2026-10-25 已接上（见 §7.1），但 rea 相对 `ida` MCP 的增量价值主要在跨二进制对比与证据包，
+  日常单库反编译直接用 `ida` MCP 更快。
 - **注册绕过 / 脱壳机 / 内存补丁**：边界 B1 写死不做。V35 注册失效就退回静态分析，不碰 `Reg.dll`、不碰主板/硬盘绑定。
+
+## 1.1 两条 MCP 通道的关系
+
+| 通道 | 启动方式 | 能力 | 何时用 |
+|---|---|---|---|
+| `ida`（`ida-mcp`） | `uvx ida-mcp stdio --agent=workbuddy` | 单库：反编译（Hex-Rays）、反汇编、xrefs、符号、字节读写、类型/注释 | **默认用它**。已开 `unpacked_v31.exe`（base 0x400000） |
+| `rea`（`rea-agents`） | `npx rea-agents@6.7.0 mcp` | 编排层：跨二进制 `compare_functions`、证据包、复刻义务台账 | V31↔V35 差分、需要固化成证据链时 |
+
+`rea` 的诊断命令（配置改动后先跑这个，不要直接试分析）：
+
+```bash
+REA_IDA_MCP_CONFIG="C:\code\Glass\local-data\recon\rea_ida_registration.json" \
+  npx -y rea-agents@6.7.0 doctor
+# 关注 ida-registration: ok: true
+```
+
+### 7.1 rea 接 IDA 的配置（2026-10-25 落地）
+
+rea 的 `ida` provider 读环境变量 `REA_IDA_MCP_CONFIG`，指向**一个 JSON 注册文件**
+（`>64KiB` 会拒；接受 `{mcpServers:{"ida-pro-mcp":{...}}}` 包裹形式，也接受裸 `{command,args}`）。
+已生成 `local-data/recon/rea_ida_registration.json`，内容就是把现有 `ida` MCP 的启动命令搬过来：
+
+```json
+{ "mcpServers": { "ida-pro-mcp": {
+    "command": "C:\\Users\\Jack\\.workbuddy\\binaries\\python\\envs\\default\\Scripts\\uvx.exe",
+    "args": ["--exclude-newer=1s", "ida-mcp", "stdio", "--agent=workbuddy"] } } }
+```
+
+并在 `~/.workbuddy/mcp.json` 的 `rea` 条目下加 `env.REA_IDA_MCP_CONFIG` 指向该文件。
+**注意**：改了 `mcp.json` 必须重连 MCP 才生效；`doctor` 只校验注册文件合法性，
+上游可用性要到真正开始分析时才检查。
 
 ---
 

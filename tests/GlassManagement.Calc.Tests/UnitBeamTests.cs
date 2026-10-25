@@ -85,6 +85,79 @@ public class UnitBeamTests
     }
 
     [Fact]
+    public void 中横框_有中横时追加5个量_逐位()
+    {
+        // 实机（有中横，上分格 1380）：中横抗弯 62.147 / 水平挠度 1.992 / 垂直挠度 0.952
+        //                             τx 6.059 / τy 1.497
+        var mid = Top;   // 参数库「单元横框三（中横框）」40/60，字段与上框同值
+        var r = UnitBeamEngine.Compute(1.285, 1100, 1380, G, AlphaBeijing, Top, Bottom, false, mid);
+
+        Assert.Equal(62.147, r.MidSigma!.Value);
+        Assert.Equal(1.992, r.MidDeflectionH!.Value);
+        Assert.Equal(0.952, r.MidDeflectionV!.Value);
+        Assert.Equal(6.059, r.MidTauX!.Value);
+        Assert.Equal(1.497, r.MidTauY!.Value);
+        Assert.Equal(79708.75, r.MidMx!.Value, 6);   // q_x(1350·g·1.3)=0.527 × B²/8
+    }
+
+    [Fact]
+    public void 上分格高小于跨度_水平链仍按B_竖向链按H_逐位()
+    {
+        // ★ 2026-10-26 实机（单元式 + 有中横，上分格高 1000 < B=1100）：
+        //   上框 36.301 / 下框 20.184 / df水平 0.996 / df垂直 0.706 / Mx 58987.5 / Vv 214.5
+        //   τx 3.03 / τy上 1.109 / τy下 0 / 中横 62.147·1.992·0.952·6.059·1.497
+        //   来源 local-data/recon/v31runs/py_u_mid.txt（RichText 原文）+ 槽数组 0x1C911A0 直读。
+        //   关键：H<B 时 qk 仍是 1.414（B 口径），若按 min(B,H) 会得 1.285 → 全线偏移。
+        var r = UnitBeamEngine.Compute(1.285, 1100, 1000, G, AlphaBeijing, Top, Bottom, false, Top);
+
+        Assert.Equal(1.414, r.Qk);
+        Assert.Equal(2.306, r.Qy);
+        Assert.Equal(58_987.5, r.Mx, 6);
+        Assert.Equal(232_521.667, r.My, 3);
+        Assert.Equal(214.5, r.Vv, 6);
+        Assert.Equal(317.075, r.Vh2, 6);
+
+        Assert.Equal(36.301, r.SigmaTop);
+        Assert.Equal(20.184, r.SigmaBottom);
+        Assert.Equal(3.030, r.TauTopX);
+        Assert.Equal(1.109, r.TauTopY);
+        Assert.Equal(3.030, r.TauBottomX);
+        Assert.Equal(0.0, r.TauBottomY);
+        Assert.Equal(0.996, r.DeflectionH);
+        Assert.Equal(0.706, r.DeflectionV);
+        Assert.Equal(6.111, r.LimitH);
+        Assert.Equal(4.4, r.LimitV);
+
+        Assert.Equal(62.147, r.MidSigma!.Value);
+        Assert.Equal(1.992, r.MidDeflectionH!.Value);
+        Assert.Equal(0.952, r.MidDeflectionV!.Value);
+        Assert.Equal(6.059, r.MidTauX!.Value);
+        Assert.Equal(1.497, r.MidTauY!.Value);
+    }
+
+    [Fact]
+    public void 中横自重高度是常量1350_不随界面尺寸变()
+    {
+        // 实测：上分格改 1500 / 1000，中横 5 个量全部不变；
+        // 第一页第三组尺寸改 1500 也无效 ⇒ 常量 1350（0x96797A2 实参 1350×0.0003=0.405）
+        var a = UnitBeamEngine.Compute(1.285, 1100, 1380, G, AlphaBeijing, Top, Bottom, false, Top);
+        var b = UnitBeamEngine.Compute(1.285, 1100, 1500, G, AlphaBeijing, Top, Bottom, false, Top);
+        var c = UnitBeamEngine.Compute(1.285, 1100, 1000, G, AlphaBeijing, Top, Bottom, false, Top);
+
+        Assert.Equal(a.MidSigma, b.MidSigma);
+        Assert.Equal(a.MidSigma, c.MidSigma);
+        Assert.Equal(a.MidTauY, c.MidTauY);
+        Assert.Equal(1350.0, UnitBeamEngine.MidGridHeightMm);
+    }
+
+    [Fact]
+    public void 无中横时中横字段为空()
+    {
+        var r = UnitBeamEngine.Compute(1.285, 1100, 1380, G, AlphaBeijing, Top, Bottom);
+        Assert.Null(r.MidSigma);
+    }
+
+    [Fact]
     public void 自重只进上框_下框不含竖向分量()
     {
         // 把上分格高翻倍：竖向弯矩/剪力/上框应力应随之变，下框应力完全不动

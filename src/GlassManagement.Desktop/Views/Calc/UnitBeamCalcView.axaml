@@ -15,8 +15,9 @@
         单元中横梁参数   Frame (10,302) 653x110 └ DataGrid (13,315) 645x91
         预演输出 RichText (666,80) 274x283
         按钮 预演(816,368) 上一步(876,368) 退出(816,392) 下一步(876,392) 均 59x24
-    中横框型材可选（参数库「单元横框三」），但**其计算段未取证**，预演只出上下框 17 量，
-    结果面板末尾会显式标注。code-behind 仅 InitializeComponent。
+    中横框型材取自参数库「单元横框三（中横框）」：第一页选「有中横结构」时，
+    预演在上下框 17 量之后追加中横框 5 量（62.147 / 1.992 / 0.952 / 6.059 / 1.497 已逐位闭合）；
+    选「无中横结构」时该段不出现。code-behind 仅 InitializeComponent。
   -->
   <DockPanel>
     <Border Classes="hbTitleBar" DockPanel.Dock="Top">
@@ -118,7 +119,7 @@
           </DataGrid.Columns>
         </DataGrid>
 
-        <!-- ══ 单元中横梁参数 Frame (10,302) 653x110（型材可选，计算段未取证） ══ -->
+        <!-- ══ 单元中横梁参数 Frame (10,302) 653x110（有中横时追加 5 个量） ══ -->
         <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="302" Width="653" Height="110"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="295" Text="单元中横梁参数"/>
         <DataGrid Canvas.Left="13" Canvas.Top="315" Width="645" Height="91"
@@ -129,7 +130,7 @@
                   RowHeight="18" ColumnHeaderHeight="20" FontSize="11"
                   CanUserSortColumns="False" CanUserReorderColumns="False"
                   Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1"
-                  ToolTip.Tip="中横框计算段（+10 个量）尚未取证，选择不影响当前预演结果">
+                  ToolTip.Tip="中横框（参数库「单元横框三」）。第一页选「有中横结构」时追加 5 个量；选「无中横结构」时该段不出现在预演结果里">
           <DataGrid.Columns>
             <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
             <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="90"/>

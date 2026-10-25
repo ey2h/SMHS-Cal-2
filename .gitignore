@@ -36,3 +36,6 @@ nul
 docs/recon/specs/
 docs/recon/attachments/
 docs/recon/template/
+
+# 桌面 VM headless 测试的独立输出目录
+.tmpbuild_dt/

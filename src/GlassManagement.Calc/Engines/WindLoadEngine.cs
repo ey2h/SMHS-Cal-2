@@ -106,20 +106,35 @@ public static class WindLoadEngine
     /// <summary>
     /// V31/V35 的 <c>rtcRound</c> 等价实现（<b>double</b> 语义，2026-10-25 实机定案）。
     ///
-    /// <para><b>算法（用 V31 自己的 rtcRound 逐位对齐反推并验证 4/4 位模式全等）</b>：</para>
+    /// <para><b>算法（2026-10-26 定案，9/9 实机点位逐位命中）</b>：</para>
     /// <code>
-    /// y = x;  重复 digits 次  y *= 10      // ★ 必须逐次乘 10，不能一次乘 10^digits
-    /// n = 四舍六入五成双(y)
-    /// return n / 10^digits                 // 除法，不是乘法
+    /// p = 10^digits                         // 精确的 1000.0 / 10000.0
+    /// y = x * p                             // ★ 一次乘完，不能拆成重复 ×10
+    /// n = 四舍六入五成双(y)                  // 半偶只对「恰好 .5」生效
+    /// return n / p                          // 除法，不是乘 0.001（位模式不同）
     /// </code>
     ///
-    /// <para><b>为什么"逐次乘 10"是关键</b>：qd = rtcRound(qk×1.5) 的四个平局点，
-    /// 一次乘 1000 与逐次乘 10 得到不同的末位：</para>
+    /// <para><b>① 缩放只有一次 double 乘法（IEEE 双精度），不是 x87 80 位。</b>
+    /// 判别证据：<c>4.1325000000000003 × 1000</c> 在 double 下舍回<b>精确的 4132.5</b>（走半偶→4132，与 V31 一致）；
+    /// 若按 80 位中间结果计算则是 4132.500000000000284，必然进位成 4133 —— 与实机矛盾。
+    /// 故 msvbvm60 的 rtcRound 内部缩放是 SSE2 双精度。</para>
+    ///
+    /// <para><b>② 为什么不能「逐次 ×10」</b>（早前实现，曾在此处栽过）：逐次乘会引入额外舍入，
+    /// 把 <c>0.5265000000000001 ×10³</c> 压成<b>精确的 526.5</b>，于是被当成平局走半偶得 526；
+    /// 而正确的一次乘得 526.5000000000001（确真大于半），进位 527 —— 单元式中横 σ 曾因此差 0.042。</para>
+    ///
+    /// <para><b>③ 为什么不能用 decimal 近似</b>：decimal 路径对 2.0474999999999999（×1000 = 2047.4999…98）
+    /// 与 qd 链的位模式对不上，会破坏 B10 已闭合的平局语义。</para>
+    ///
+    /// <para><b>实测对齐表</b>（左=V31 实机返回值，右=本实现）：</para>
     /// <list type="table">
-    /// <item><term>4.0514999999999999</term><description>×1000=4051.4999999999995→4051；逐次×10 得 4051.5 → 4052 ✅</description></item>
-    /// <item><term>2.0474999999999999</term><description>×1000=2047.5（看似平局）→2048；逐次×10 得 2047.4999999999998 → 2047 ✅</description></item>
-    /// <item><term>3.0495000000000001</term><description>→ 3050 ✅（V31 实际 3.05）</description></item>
-    /// <item><term>4.1325000000000003</term><description>→ 4132（半偶）✅（V31 实际 4.132）</description></item>
+    /// <item><term>3.0495000000000001</term><description>3049.5 平局(奇)→3050 → 3.050 ✅</description></item>
+    /// <item><term>4.0514999999999999</term><description>4051.5 平局(奇)→4052 → 4.052 ✅</description></item>
+    /// <item><term>4.1325000000000003</term><description>4132.5 平局(偶)→4132 → 4.132 ✅</description></item>
+    /// <item><term>2.0474999999999999</term><description>2047.4999999999998 小于半→2047 → 2.047 ✅</description></item>
+    /// <item><term>0.5265000000000001</term><description>526.5000000000001 大于半→527 → 0.527 ✅</description></item>
+    /// <item><term>2.7005000000000003</term><description>2700.5000000000005 大于半→2701 → 2.701 ✅（早前误记为"做不到"，其实单次乘天然正确）</description></item>
+    /// <item><term>2.0329067 / 2.7009134 / 2.7550760 / 1.36496</term><description>非平局 → 2033/2701/2755/1365 ✅</description></item>
     /// </list>
     ///
     /// <para>实证手段：Frida 直接调用 V31 的 <c>0x41371A</c>（见 <c>v31_frida_round.py</c> /
@@ -129,16 +144,16 @@ public static class WindLoadEngine
     public static double VbaRound(double v, int digits)
     {
         if (double.IsNaN(v) || double.IsInfinity(v)) return v;
+        if (digits <= 0) return Math.Round(v, MidpointRounding.ToEven);
 
-        // ★ 逐次乘 10：这是与 Math.Round(v, digits) 的唯一实质区别
-        double y = v;
-        for (int i = 0; i < digits; i++) y *= 10.0;
+        // p 用循环累乘得到精确的 10^digits（Math.Pow(10,3) 不保证恰好 1000.0）
+        double p = 1.0;
+        for (int i = 0; i < digits; i++) p *= 10.0;
 
-        double n = Math.Round(y, MidpointRounding.ToEven);
-
-        double div = 1.0;
-        for (int i = 0; i < digits; i++) div *= 10.0;
-        return n / div;
+        // ★ 只做一次乘法：与 msvbvm60 的 double 缩放完全同构（详见上方 ①②③）
+        double scaled = v * p;
+        double n = Math.Round(scaled, MidpointRounding.ToEven);   // 恰好 .5 才走半偶
+        return n / p;                                            // 除法，保留 V31 的位模式
     }
 
     /// <summary>V35 的 rtcRound（= <see cref="VbaRound"/>，double 语义）。</summary>

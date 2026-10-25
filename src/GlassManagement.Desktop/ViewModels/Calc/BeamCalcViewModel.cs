@@ -268,11 +268,15 @@ public partial class BeamCalcViewModel : ObservableObject
         Add($"抗剪强度计算值ty:{r.TauV:0.###}MPa", ColorNormal);
         Add(r.TauV <= fv ? "满足要求(√)" : "不满足要求(×)", r.TauV <= fv ? ColorOk : ColorFail);
 
-        // 取证备注（不参与判定，便于与 V31 对拍）
-        Add("", ColorNote);
-        Add($"[取证] r=min(B,H)={Math.Min(Session.BeamSpanMm, Session.BeamUpperGridHeightMm):0.###}，"
-            + $"u=r/(2B)={r.U:0.0000}，弯矩系数=(3−(r/B)²)/24={(r.My / (r.Qy * Session.BeamSpanMm * Session.BeamSpanMm)):0.00000}",
-            ColorNote);
+        // 取证备注（不参与判定，便于与 V31 对拍）。★ 默认不输出：V31 结果区没有这两行，
+        // 打开即破坏「输出逐行一致」，只在排查时临时开 ShowTrace。
+        if (ShowTrace)
+        {
+            Add("", ColorNote);
+            Add($"[取证] r=min(B,H)={Math.Min(Session.BeamSpanMm, Session.BeamUpperGridHeightMm):0.###}，"
+                + $"u=r/(2B)={r.U:0.0000}，弯矩系数=(3−(r/B)²)/24={(r.My / (r.Qy * Session.BeamSpanMm * Session.BeamSpanMm)):0.00000}",
+                ColorNote);
+        }
 
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(PlaceholderText));
@@ -309,4 +313,7 @@ public partial class BeamCalcViewModel : ObservableObject
     [RelayCommand] private void Exit() => _wizard.CloseForm();
 
     private void Add(string text, IBrush color) => Results.Add(new PreviewLine(text, color));
+
+    /// <summary>是否输出「[取证] …」诊断行（默认关闭，保持与 V31 结果区逐行一致）。</summary>
+    public bool ShowTrace { get; set; }
 }

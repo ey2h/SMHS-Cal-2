@@ -178,5 +178,35 @@ public class HorizontalBeamTests
         Assert.Equal(0.4, HorizontalBeamEngine.SeismicFactor * AlphaShanghai, 12);
     }
 
+    [Fact]
+    public void 玻璃自重为集中力_两点集中力变换()
+    {
+        // 实测（B=1100、上分格 H=1500、g=300、a=150）：
+        //   Wx 预选 983.125→536.25、Ix 预选 27852.958→17779.018、df_v 1.058→0.675、σ 64.509→53.527
+        //   水平向全部不变（集中力只作用于自重方向，手册 B03 第 2 节）
+        var r = HorizontalBeamEngine.Compute(1.285, 1100, 1500, G, AlphaBeijing, F, P4060,
+                                             concentratedGravity: true, pointDistanceMm: 150);
+
+        Assert.Equal(48262.5, r.Mx, 6);            // P_des·a = 321.75×150
+        Assert.Equal(536.25, R3(r.WxRequired));
+        Assert.Equal(17779.018, R3(r.IxRequired));
+        Assert.Equal(0.675, R3(r.DeflectionV));
+        Assert.Equal(53.527, r.Sigma);
+        // 水平向不受影响
+        Assert.Equal(2583.574, R3(r.WyRequired));
+        Assert.Equal(40330.033, R3(r.IyRequired));
+        Assert.Equal(1.993, R3(r.DeflectionH));
+        Assert.Equal(1.664, r.TauV);
+    }
+
+    [Fact]
+    public void 集中力距离a参与弯矩线性()
+    {
+        // M_x = P_des·a，a 由界面「受力点到横梁与立柱连接点距离」给定
+        var a150 = HorizontalBeamEngine.Compute(1.285, 1100, 1500, G, AlphaBeijing, F, P4060, true, 150);
+        var a300 = HorizontalBeamEngine.Compute(1.285, 1100, 1500, G, AlphaBeijing, F, P4060, true, 300);
+        Assert.Equal(2.0, a300.Mx / a150.Mx, 9);
+    }
+
     private static double R3(double v) => WindLoadEngine.VbaRound(v, 3);
 }

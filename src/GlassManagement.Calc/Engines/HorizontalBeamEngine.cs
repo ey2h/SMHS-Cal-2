@@ -150,8 +150,15 @@ public static class HorizontalBeamEngine
     /// </param>
     /// <param name="f">抗弯强度设计值 MPa。</param>
     /// <param name="p">型材截面。</param>
+    /// <param name="concentratedGravity">
+    /// 自重按<b>两点集中力</b>传递（V31 横梁页「玻璃自重为集中力」复选框）。
+    /// 帮助 <c>html/B03.htm</c> 第 2 节：半隐框/明框的<b>自重方向</b>、或背栓/短槽连接的双向，
+    /// 横梁上有两个集中力受力点，需输入受力点到支座的距离。
+    /// </param>
+    /// <param name="pointDistanceMm">受力点到支座（横梁与立柱连接点）的距离 a，默认 150 mm。</param>
     public static BeamResult Compute(
-        double wkKPa, double B, double H, double gravityNmm2, double alphaMax, double f, BeamProfile p)
+        double wkKPa, double B, double H, double gravityNmm2, double alphaMax, double f, BeamProfile p,
+        bool concentratedGravity = false, double pointDistanceMm = 150.0)
     {
         // —— 形状参数：r = min(B,H) 决定"线荷载取多宽"，u = r/(2B) 决定分布形状 ——
         double r = Math.Min(B, H);
@@ -170,10 +177,32 @@ public static class HorizontalBeamEngine
         double my = qy * B * B * kM;
         double wyReq = my / f;
 
-        // —— 竖向弯矩：恒用上分格高 H，均布 /8 ——
+        // —— 竖向弯矩：恒用上分格高 H ——
         double qx = R3(H * gravityNmm2 * VerticalFactor);
-        double mx = qx * B * B / 8.0;
-        double wxReq = mx / f;
+        double mx, wxReq, ixReq, dfV;
+        if (concentratedGravity)
+        {
+            // 两点集中力（V31 槽值直读：a=150、B=1100、H=1500、g=0.0003）
+            //   槽[19]=H·g·B/2=247.5（标准值 P）  槽[20]=round3(H·g·1.3)·B/2=321.75（设计值 P）
+            //   槽[21]=P_des·a=48262.5            槽[22]=槽[21]/f=536.25
+            //   槽[30]=P_std·a·(3B²−4a²)/(24·E·lim_v)=17779.018，df_v=0.675
+            double pStd = H * gravityNmm2 * B / 2.0;
+            double pDes = qx * B / 2.0;
+            double a = pointDistanceMm;
+            mx = pDes * a;
+            wxReq = mx / f;
+            double shape = 3.0 * B * B - 4.0 * a * a;
+            ixReq = pStd * a * shape / (24.0 * E * (B / LimVDiv));
+            dfV = pStd * a * shape / (24.0 * E * p.Ix);
+        }
+        else
+        {
+            // —— 均布：M = q·B²/8，f = 5qB⁴/(384EI) ——
+            mx = qx * B * B / 8.0;
+            wxReq = mx / f;
+            ixReq = 5.0 * (H * gravityNmm2) * Math.Pow(B, 4.0) / (384.0 * E * (B / LimVDiv));
+            dfV = 5.0 * (H * gravityNmm2) * Math.Pow(B, 4.0) / (384.0 * E * p.Ix);
+        }
 
         // —— 挠度限值：都以跨度 B 为基准 ——
         double limV = B / LimVDiv;
@@ -184,9 +213,7 @@ public static class HorizontalBeamEngine
         double iyReq = qk * Math.Pow(B, 4.0) * kDf / (E * limH);
         double dfH = qk * Math.Pow(B, 4.0) * kDf / (E * p.Iy);
 
-        // —— 竖向挠度：5/384 均布，荷载用标准值 H·g（不带 1.3）——
-        double ixReq = 5.0 * (H * gravityNmm2) * Math.Pow(B, 4.0) / (384.0 * E * limV);
-        double dfV = 5.0 * (H * gravityNmm2) * Math.Pow(B, 4.0) / (384.0 * E * p.Ix);
+        // —— 竖向挠度已在上面按分支算好（均布 5/384 或集中力 Pa(3B²−4a²)/24EI）——
 
         // —— 剪力：竖向 V_v = H·(B·g·1.3)/2（两分支同式）——
         double vv = H * (B * gravityNmm2 * VerticalFactor) / 2.0;

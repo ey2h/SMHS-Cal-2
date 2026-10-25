@@ -21,6 +21,7 @@ public sealed class ViewLocator : IDataTemplate
             BasicParamsViewModel vm => new BasicParamsView { DataContext = vm },
             ColumnCalcViewModel vm => new ColumnCalcView { DataContext = vm },
             MultiSpanViewModel vm => new MultiSpanInputView { DataContext = vm },
+            BeamCalcViewModel vm => new BeamCalcView { DataContext = vm },
             _ => new TextBlock { Text = "未找到视图: " + data?.GetType().Name },
         };
         return view ?? (Control?)data;

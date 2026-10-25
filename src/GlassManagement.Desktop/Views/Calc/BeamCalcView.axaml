@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.BeamCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-横梁计算」MVVM 视图：**只做绑定，不含任何业务逻辑**。
+      · 输入区 → 绑定 CalcSession（BeamLeftBayMm / BeamRightBayMm / BeamUpperGridHeightMm），
+        跨度由 VM 的 BeamSpanMm 计算（左右取大）
+      · 型材表 → 绑定 ViewModel.Profiles / SelectedProfile（参数库「横框」）
+      · 结果 → 绑定 ViewModel.Results（PreviewLine: Text/Color/Decoration）
+      · 全部命令 → PreviewCommand / PrevCommand / NextCommand / ExitCommand / FindProfileCommand
+    视觉细化（间距/配色/响应式）交由 UI 技能处理，本文件只保证语义与绑定正确。
+  -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙计算-横梁计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    </Border>
+
+    <!-- 顶部：输入摘要（只读，全部来自会话与参数库） -->
+    <Border DockPanel.Dock="Top" Background="#F7F9FC" BorderBrush="#C8D0DC" BorderThickness="0,0,0,1" Padding="8,4">
+      <TextBlock Text="{Binding InputSummary}" TextWrapping="Wrap" Foreground="#25303B"/>
+    </Border>
+
+    <!-- 状态栏 -->
+    <Border DockPanel.Dock="Bottom" Background="#F0F3F8" BorderBrush="#C8D0DC" BorderThickness="0,1,0,0" Padding="8,3">
+      <TextBlock Text="{Binding StatusText}" Foreground="#334155" TextWrapping="Wrap"/>
+    </Border>
+
+    <!-- 按钮栏 -->
+    <Border DockPanel.Dock="Bottom" Background="#EDF1F7" BorderBrush="#C8D0DC" BorderThickness="0,1,0,0" Padding="6,4">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Button Content="预演" Command="{Binding PreviewCommand}" Width="70"/>
+        <Button Content="快速查找型材" Command="{Binding FindProfileCommand}" Width="96"/>
+        <Button Content="上一步" Command="{Binding PrevCommand}" Width="70"/>
+        <Button Content="下一步" Command="{Binding NextCommand}" Width="70"/>
+        <Button Content="退出" Command="{Binding ExitCommand}" Width="70"/>
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="*,360" Margin="6">
+      <!-- 左：型材输入 + 截面对照 -->
+      <DockPanel Grid.Column="0" Margin="0,0,6,0">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="6" Margin="0,0,0,4">
+          <TextBlock Text="型材代号" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding ProfileKeyword, Mode=TwoWay}" Width="140"/>
+          <TextBlock Text="{Binding SectionSummary}" Foreground="#475569" TextWrapping="Wrap" VerticalAlignment="Center"/>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding Profiles}"
+                  SelectedItem="{Binding SelectedProfile, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="All" HeadersVisibility="Column"
+                  CanUserResizeColumns="True" FontSize="11">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
+            <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="90"/>
+            <DataGridTextColumn Header="Iy" Binding="{Binding Iy, StringFormat={}{0:0.###}}" Width="90"/>
+            <DataGridTextColumn Header="Wx1" Binding="{Binding Wx1, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="Wx2" Binding="{Binding Wx2, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="Wy1" Binding="{Binding Wy1, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="Wy2" Binding="{Binding Wy2, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="Sx" Binding="{Binding Sx, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="Sy" Binding="{Binding Sy, StringFormat={}{0:0.###}}" Width="80"/>
+            <DataGridTextColumn Header="tx" Binding="{Binding Tx, StringFormat={}{0:0.###}}" Width="60"/>
+            <DataGridTextColumn Header="ty" Binding="{Binding Ty, StringFormat={}{0:0.###}}" Width="60"/>
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+
+      <!-- 右：预演结果（与 V31 富文本面板同位置语义） -->
+      <Border Grid.Column="1" Classes="hbResultPanel" Background="#C0FFFF" BorderBrush="#7A7A7A" BorderThickness="1">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="4,2">
+          <ItemsControl ItemsSource="{Binding Results}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
+                           TextDecorations="{Binding Decoration}" FontFamily="SimSun" FontSize="12"
+                           LineHeight="15" TextWrapping="Wrap" Margin="0,0,0,1"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+      <TextBlock Grid.Column="1" Text="{Binding PlaceholderText}" Margin="8,6"
+                 Foreground="#6B6B6B" TextWrapping="Wrap"
+                 IsVisible="{Binding !HasResults}"/>
+    </Grid>
+  </DockPanel>
+</UserControl>

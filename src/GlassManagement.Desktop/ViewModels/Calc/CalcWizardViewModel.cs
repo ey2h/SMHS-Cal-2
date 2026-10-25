@@ -22,6 +22,7 @@ public partial class CalcWizardViewModel : ObservableObject
     private BasicParamsViewModel? _basic;
     private ColumnCalcViewModel? _column;
     private MultiSpanViewModel? _multi;
+    private BeamCalcViewModel? _beam;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -64,6 +65,18 @@ public partial class CalcWizardViewModel : ObservableObject
         CurrentContent = _column;
         StatusText = $"向导 2/3：幕墙计算-立柱计算（沿用基本参数：wk={Session.WindStandardKpa:0.###}KPa"
                    + $"｜{Session.WindStandardSource}）";
+    }
+
+    /// <summary>向导 3/3：横梁计算屏（MVVM 版，计算在 HorizontalBeamEngine）。</summary>
+    [RelayCommand]
+    public void GoBeamCalc()
+    {
+        _beam ??= new BeamCalcViewModel(Session, this);
+        MirrorStatus(_beam);
+        CurrentContent = _beam;
+        StatusText = $"向导 3/3：幕墙计算-横梁计算（跨度={Session.BeamSpanMm:0.###}mm"
+                   + $"｜上分格高={Session.BeamUpperGridHeightMm:0.###}mm｜wk={Session.WindStandardKpa:0.###}KPa"
+                   + $"｜αmax={Session.AlphaMax:0.###}｜参数库 {GlassManagement.Calc.Data.ParamLibrary.SourceNote}）";
     }
 
     public void GoMultiSpan()
@@ -633,11 +646,12 @@ public partial class CalcWizardViewModel : ObservableObject
     public void StepFromColumnNext()
     {
         if (Session.ModelMultiStatic) GoMultiSpan();
-        else
-        {
-            StatusText = "立柱计算：当前力学模型不是「多跨铰接连续静定梁」；V35 该分支下「预演」直接可用（复刻未接该分支计算）";
-        }
+        else GoBeamCalc();      // 立柱之后进入横梁屏（V31 向导顺序：基本参数 → 立柱 → 横梁 → …）
     }
 
     public void StepFromBasicNext() => GoColumnCalc();
+
+    /// <summary>横梁屏「下一步」：横梁之后是玻璃页（尚未复刻计算，先提示）。</summary>
+    public void StepFromBeamNext()
+        => StatusText = "横梁计算：已完成；玻璃/连接/埋件/胶类四屏尚未复刻（按计划逐面板推进）";
 }

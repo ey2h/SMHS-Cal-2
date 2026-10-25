@@ -457,4 +457,34 @@ public partial class CalcSession : ObservableObject
     /// <summary>自重表类别名（界面显示用，含适用范围）。</summary>
     public string DeadLoadCaption =>
         $"{DeadLoad.Category}（立柱及主体自重 {DeadLoad.ColumnWeight} N/m²，计算横梁时 {DeadLoad.TransomWeight} N/m²；{DeadLoad.Scope}）";
+
+    // ============================================================
+    // ③ 横梁计算屏
+    // 尺寸口径实机取证（docs/V31_BEAM_UI.md 四之二）：
+    //   跨度 B = 立柱左右两侧分格宽的**大值**（改 900/1100 → 用 1100；1200/1100 → 用 1200）
+    //   自重高度 H = **上**分格高，不取平均（上 1500/下 1380 → 槽 [19]=0.450=1500×g）
+    // ============================================================
+
+    /// <summary>立柱左侧分格宽 mm（第一页「龙骨间距」上排宽）。</summary>
+    [ObservableProperty] private double _beamLeftBayMm = 1100;
+
+    /// <summary>立柱右侧分格宽 mm（第一页「龙骨间距」下排宽）。</summary>
+    [ObservableProperty] private double _beamRightBayMm = 1100;
+
+    /// <summary>上分格高 mm（横梁自重取值来源，不取平均）。</summary>
+    [ObservableProperty] private double _beamUpperGridHeightMm = 1380;
+
+    /// <summary>横梁材质牌号（默认 6063-T5 → f=90 / fv=55，与 V31 横梁页默认输出一致）。</summary>
+    [ObservableProperty] private string _beamMaterial = "6063-T5";
+
+    /// <summary>横梁跨度 mm = 左右分格宽取大（帮助 html/B03.htm：自动选最大一跨，不计立柱宽）。</summary>
+    public double BeamSpanMm => Math.Max(BeamLeftBayMm, BeamRightBayMm);
+
+    /// <summary>
+    /// 地震影响系数最大值 αmax —— 参数库「地区参数」表 αmax 列。
+    /// 实机取证：全局 0x1C913D8 存的就是它（北京 8 度 0.16 / 上海 7 度 0.08），
+    /// 改地区到上海后横梁预选 Wy 2583.574→3007.074。
+    /// </summary>
+    public double AlphaMax =>
+        GlassManagement.Calc.Data.ParamLibrary.FindRegion(RegionName)?.AlphaMax ?? 0.16;
 }

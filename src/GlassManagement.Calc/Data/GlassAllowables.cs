@@ -1,43 +1,32 @@
 namespace GlassManagement.Calc.Data;
 
 /// <summary>
-/// 玻璃强度设计值表 —— V31 玻璃屏「选用玻璃的强度设计值」那一行。
+/// 玻璃强度设计值 —— V31 玻璃屏「选用玻璃的强度设计值」那一行。
 ///
-/// <para><b>取证</b>：V31 实机 6mm 钢化 → `84MPa(钢化玻璃)`，槽数组 <c>0x1C911BC slot[19]</c> 直读 = 84
-/// （见 docs/V31_GLASS_PAGE.md 第二节）。厚 ≥12mm 降一档的口径与
-/// <c>GlassManagement.Api/Controllers/ContourController.cs</c> 的 <c>GetDesignStrength</c> 一致。</para>
+/// <para><b>数值来源</b>：参数库目录下的 <c>玻璃材料（复刻补充）.csv</c>
+/// （<c>参数库.mdb</c> 的 59 张表全是型材/板材截面表，没有玻璃材料表；
+/// 两处 mdb 的 MD5 一致、全量导出、无「强度设计值」列，已核对）。
+/// 本类只做转发，<b>不再持有任何字面量强度值</b>。</para>
 ///
-/// <para><b>不要</b>复用型材的 <c>MaterialAllowables</c>（那是 6063-T5 等铝合金，语义不同）。</para>
+/// <para><b>实机取证</b>：6mm 钢化 → <c>84MPa(钢化玻璃)</c>，槽 <c>0x1C911BC [19]</c> 直读 = 84
+/// （docs/V31_GLASS_PAGE.md 第二节）。</para>
 ///
-/// <para>⚠ 参数库里<b>没有</b>玻璃强度表（<c>local-data/hb_mdb/</c> 只有 U型玻璃/钢管点玻等型材表），
-/// 故此处按 V31 的两档常量实现。半钢化/浮法的具体档位来自 API 层既有实现，
-/// 尚未与 V31 实机逐档对拍（只验过钢化 6mm=84）。</para>
+/// <para><b>种类档是程序常量</b>（V31 玻璃屏「种类」5 个单选，非参数库数据）。</para>
 /// </summary>
 public static class GlassAllowables
 {
-    /// <summary>降档厚度阈值 mm：≥12 取低档。</summary>
-    public const double ThicknessBreakMm = 12.0;
-
-    /// <summary>玻璃种类（与界面 5 档一致）。</summary>
+    /// <summary>玻璃种类 5 档 —— V31 窗体单选固定项（程序常量，非参数库）。</summary>
     public static readonly string[] Kinds =
     {
         "普通玻璃", "浮法玻璃", "半钢化玻璃", "钢化玻璃", "夹丝玻璃",
     };
 
-    /// <summary>强度设计值 f_g（MPa）。</summary>
+    /// <summary>降档厚度阈值 mm（参数库「强度分界厚度」，默认 12）：≥ 该值取厚侧强度。</summary>
+    public static double ThicknessBreakMm => ParamLibrary.GlassStrengthBreakThickness;
+
+    /// <summary>强度设计值 f_g（MPa）—— 查参数库「强度设计值」段。</summary>
     public static double Bending(string kind, double thicknessMm)
-    {
-        bool thick = thicknessMm >= ThicknessBreakMm;
-        return kind switch
-        {
-            "钢化玻璃" => thick ? 72.0 : 84.0,
-            "半钢化玻璃" => thick ? 38.0 : 41.0,
-            "浮法玻璃" => thick ? 24.0 : 28.0,
-            "普通玻璃" => thick ? 24.0 : 28.0,
-            "夹丝玻璃" => thick ? 24.0 : 28.0,   // 夹丝按普通玻璃档（未逐档对拍）
-            _ => thick ? 24.0 : 28.0,
-        };
-    }
+        => ParamLibrary.GlassBendingStrength(kind, thicknessMm);
 
     /// <summary>屏幕文案里的括号标注，如 <c>84MPa(钢化玻璃)</c>。</summary>
     public static string Caption(string kind, double thicknessMm)

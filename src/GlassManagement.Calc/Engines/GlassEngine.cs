@@ -86,10 +86,12 @@ public readonly record struct CompositeGlassResult(
 public static class GlassEngine
 {
     /// <summary>玻璃密度：25.6 kN/m³ → 2.56e-5 N/mm³（常量池 <c>0x402818</c>）。</summary>
-    public const double DensityNmm3 = 2.56e-5;
+    /// <para>玻璃密度 N/mm³ —— 从参数库「玻璃密度」读（不写死）。</para>
+    public static double DensityNmm3 => GlassManagement.Calc.Data.ParamLibrary.GlassDensity;
 
     /// <summary>玻璃弹性模量 N/mm²（代码里以 VT_I4 立即数 0x11940 = 72000 传入，0xA21266）。</summary>
-    public const double E = 72_000.0;
+    /// <para>玻璃弹性模量 N/mm² —— 从参数库「弹性模量」读（不写死）。</para>
+    public static double E => GlassManagement.Calc.Data.ParamLibrary.GlassElasticModulus;
 
     /// <summary>12(1−ν²)，ν=0.2 → 11.52（常量 0xA21D5E 的除数）。</summary>
     public const double PlateFactor = 11.52;

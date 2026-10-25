@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,6 +59,9 @@ public partial class OtherGlassCalcViewModel : ObservableObject
 
     /// <summary>厚度下拉 10 档（与 V31 一致，默认索引 3 = 6mm）。</summary>
     public static readonly double[] ThicknessOptions = { 3.2, 4, 5, 6, 8, 10, 12, 15, 19, 20 };
+
+    /// <summary>供 XAML 绑定的实例视图（静态字段不能直接绑）。</summary>
+    public IReadOnlyList<double> ThicknessList => ThicknessOptions;
 
     public OtherGlassCalcViewModel()
     {

@@ -39,7 +39,7 @@
         <TextBox Classes="hbInput" Canvas.Left="100" Canvas.Top="90" Width="41" Height="18"
                  Text="{Binding WindKpa, Mode=TwoWay}"/>
 
-        <TextBlock Canvas.Left="25" Canvas.Top="165" Text="αmax"/>
+        <TextBlock Canvas.Left="25" Canvas.Top="166" Text="αmax" TextWrapping="NoWrap"/>
         <TextBox Classes="hbInput" Canvas.Left="83" Canvas.Top="162" Width="49" Height="18"
                  Text="{Binding AlphaMax, Mode=TwoWay}"/>
 
@@ -92,7 +92,7 @@
         <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="259" Width="110" Height="167"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="252" Text="外片玻璃"/>
         <ComboBox Canvas.Left="59" Canvas.Top="279" Width="57" Height="20"
-                  SelectedIndex="3" SelectionChanged="OnOuterThicknessChanged" Name="OuterThickness"/>
+                  ItemsSource="{Binding ThicknessList}" SelectedItem="{Binding T1, Mode=TwoWay}" Name="OuterThickness"/>
         <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="303" Width="89" Height="17" GroupName="OG1" Content="普通玻璃" IsChecked="False" Tag="1"/>
         <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="325" Width="89" Height="17" GroupName="OG1" Content="浮法玻璃" IsChecked="False" Tag="1"/>
         <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="348" Width="89" Height="17" GroupName="OG1" Content="半钢化玻璃" IsChecked="False" Tag="1"/>
@@ -103,7 +103,7 @@
         <Border Classes="hbFrame" Canvas.Left="131" Canvas.Top="259" Width="110" Height="167"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="137" Canvas.Top="252" Text="次外片玻璃"/>
         <ComboBox Canvas.Left="171" Canvas.Top="279" Width="57" Height="20"
-                  SelectedIndex="3" SelectionChanged="OnOuter2ThicknessChanged" Name="Outer2Thickness"/>
+                  ItemsSource="{Binding ThicknessList}" SelectedItem="{Binding T2, Mode=TwoWay}" Name="Outer2Thickness"/>
         <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="303" Width="89" Height="17" GroupName="OG2" Content="普通玻璃" IsChecked="False" Tag="2"/>
         <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="325" Width="89" Height="17" GroupName="OG2" Content="浮法玻璃" IsChecked="False" Tag="2"/>
         <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="348" Width="89" Height="17" GroupName="OG2" Content="半钢化玻璃" IsChecked="False" Tag="2"/>
@@ -114,7 +114,7 @@
         <Border Classes="hbFrame" Canvas.Left="243" Canvas.Top="259" Width="110" Height="167"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="249" Canvas.Top="252" Text="次内片玻璃"/>
         <ComboBox Canvas.Left="283" Canvas.Top="279" Width="57" Height="20"
-                  SelectedIndex="3" SelectionChanged="OnInner2ThicknessChanged" Name="Inner2Thickness"/>
+                  ItemsSource="{Binding ThicknessList}" SelectedItem="{Binding T3, Mode=TwoWay}" Name="Inner2Thickness"/>
         <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="303" Width="89" Height="17" GroupName="OG3" Content="普通玻璃" IsChecked="False" Tag="3"/>
         <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="325" Width="89" Height="17" GroupName="OG3" Content="浮法玻璃" IsChecked="False" Tag="3"/>
         <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="348" Width="89" Height="17" GroupName="OG3" Content="半钢化玻璃" IsChecked="False" Tag="3"/>
@@ -125,7 +125,7 @@
         <Border Classes="hbFrame" Canvas.Left="355" Canvas.Top="259" Width="110" Height="167"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="361" Canvas.Top="252" Text="内片玻璃"/>
         <ComboBox Canvas.Left="395" Canvas.Top="279" Width="57" Height="20"
-                  SelectedIndex="3" SelectionChanged="OnInnerThicknessChanged" Name="InnerThickness"/>
+                  ItemsSource="{Binding ThicknessList}" SelectedItem="{Binding T4, Mode=TwoWay}" Name="InnerThickness"/>
         <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="303" Width="89" Height="17" GroupName="OG4" Content="普通玻璃" IsChecked="False" Tag="4"/>
         <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="325" Width="89" Height="17" GroupName="OG4" Content="浮法玻璃" IsChecked="False" Tag="4"/>
         <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="348" Width="89" Height="17" GroupName="OG4" Content="半钢化玻璃" IsChecked="False" Tag="4"/>

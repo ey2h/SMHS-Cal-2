@@ -1,0 +1,226 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.SealantCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-胶类、伸缩及紧固计算」MVVM 视图（V31 客户区 784×537）。
+    坐标源：v31runs/dump_sealant_after.txt + shot_sealant_after.png
+      公用参数 Frame(11,29)395x77 ─ 框架(87,42)311x20 / 20(87,77) / 计算副框(158,66)
+                                     / 不计算压板(278,66) / 开放式(158,84)
+      全隐框参数 Frame(11,106)395x230 ─ 按JGJ102(35,143)180x20
+        结构胶参数 子Frame(19,170)213x163 ─ 06(153,178)/08(153,200)/06(153,222 en0)
+                                            /08(153,244 en0)/0.1(153,266)/0.01(153,288)/0.2(163,310)
+        耐候胶胶缝 子Frame(237,122)161x68 ─ 0.25(349,141)/16(349,162)
+        板块间对接方式 子Frame(237,215)161x42 ─ 玻璃对接(244,233✓)/铝框对接(323,233)
+        中空玻璃形式 子Frame(237,282)161x41 en=0 ─ 等片(245,299✓)/不等片(326,299)
+      压板参数 Frame(11,339)395x183 ─ 50(91,352)/45(91,371)/6(219,352)/350(219,371)
+                                       /6063-T5(298,368) + DataGrid(19,392)383x124
+      输出 RichText(411,34)364x423 ；按钮 预演(659,476)/上一步(719,476)/退出(659,500)/下一步(719,500)
+  -->
+  <UserControl.Styles>
+    <Style Selector="DataGrid">
+      <Setter Property="RowHeight" Value="16"/>
+      <Setter Property="ColumnHeaderHeight" Value="20"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-胶类、伸缩及紧固计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding Note}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding Note}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="784" Height="537" Background="#F0F0F0" ClipToBounds="True">
+
+        <!-- ══ 公用参数 (11,29) 395x77 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="29" Width="395" Height="77"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="22" Text="公用参数"/>
+        <TextBlock Canvas.Left="22" Canvas.Top="45" Text="幕墙形式"/>
+        <ComboBox Canvas.Left="87" Canvas.Top="42" Width="311" Height="20"
+                  ItemsSource="{Binding FrameTypes}"
+                  SelectedIndex="{Binding FrameTypeIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="22" Canvas.Top="80" Text="板块尺寸"/>
+        <TextBox Classes="hb" Canvas.Left="87" Canvas.Top="77" Width="41" Height="18"
+                 Text="{Binding PanelSizeText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="132" Canvas.Top="80" Text="mm"/>
+        <CheckBox Classes="hb" Canvas.Left="158" Canvas.Top="66" Width="120" Height="14"
+                  Content="计算副框和承托件" IsChecked="{Binding CalcSubFrame, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="278" Canvas.Top="66" Width="117" Height="14"
+                  Content="不计算压板(耳板)" IsChecked="{Binding SkipClamp, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="158" Canvas.Top="84" Width="58" Height="14"
+                  Content="开放式" IsChecked="{Binding OpenStyle, Mode=TwoWay}"/>
+
+        <!-- ══ 全隐框参数 (11,106) 395x230 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="106" Width="395" Height="230"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="99" Text="全隐框参数"/>
+        <ComboBox Canvas.Left="35" Canvas.Top="143" Width="180" Height="20"
+                  ItemsSource="{Binding CodeOptions}"
+                  SelectedIndex="{Binding CodeIndex, Mode=TwoWay}"/>
+
+        <!-- 结构胶参数 子Frame (19,170) 213x163 -->
+        <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="170" Width="213" Height="163"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="163" Text="结构胶参数"/>
+
+        <TextBlock Canvas.Left="27" Canvas.Top="181" Text="宽(计算)"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="178" Width="73" Height="20"
+                  ItemsSource="{Binding StructuralW}"
+                  SelectedIndex="{Binding StructWidthIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="203" Text="厚(计算)"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="200" Width="73" Height="20"
+                  ItemsSource="{Binding StructuralT}"
+                  SelectedIndex="{Binding StructThicknessIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="225" Text="宽(实际)"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="222" Width="73" Height="20" IsEnabled="False"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="247" Text="厚(实际)"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="244" Width="73" Height="20" IsEnabled="False"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="269" Text="变位能力"/>
+        <TextBox Canvas.Left="153" Canvas.Top="266" Width="73" Height="18"
+                  Text="{Binding WeatherMovementText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="291" Text="位移(%)"/>
+        <TextBox Canvas.Left="153" Canvas.Top="288" Width="73" Height="18"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="313" Text="实际宽/厚"/>
+        <TextBox Canvas.Left="163" Canvas.Top="310" Width="63" Height="18"
+                  Text="{Binding ActualWidthText, Mode=TwoWay}"/>
+
+        <!-- 耐候胶胶缝 子Frame (237,122) 161x68 -->
+        <Border Classes="hbFrame" Canvas.Left="237" Canvas.Top="122" Width="161" Height="68"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="243" Canvas.Top="115" Text="耐候胶胶缝"/>
+        <TextBlock Canvas.Left="245" Canvas.Top="144" Text="位移%"/>
+        <TextBox Classes="hb" Canvas.Left="349" Canvas.Top="141" Width="41" Height="18"
+                 Text="{Binding WeatherMovementText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="245" Canvas.Top="165" Text="实际缝"/>
+        <TextBox Classes="hb" Canvas.Left="349" Canvas.Top="162" Width="41" Height="18"
+                 Text="{Binding WeatherActualText, Mode=TwoWay}"/>
+
+        <!-- 板块间对接方式 子Frame (237,215) 161x42 -->
+        <Border Classes="hbFrame" Canvas.Left="237" Canvas.Top="215" Width="161" Height="42"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="243" Canvas.Top="208" Text="板块间对接方式"/>
+        <RadioButton Classes="hb" Canvas.Left="244" Canvas.Top="233" Width="75" Height="15"
+                     GroupName="Butt" Content="玻璃对接"
+                     IsChecked="{Binding GlassButt, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="323" Canvas.Top="233" Width="69" Height="15"
+                     GroupName="Butt" Content="铝框对接"/>
+
+        <!-- 中空玻璃形式 子Frame (237,282) 161x41（实机 en=0） -->
+        <Border Classes="hbFrame" Canvas.Left="237" Canvas.Top="282" Width="161" Height="41"
+                IsEnabled="False"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="243" Canvas.Top="275" Text="中空玻璃形式"
+                   IsEnabled="False"/>
+        <RadioButton Classes="hb" Canvas.Left="245" Canvas.Top="299" Width="54" Height="15"
+                     GroupName="Ig" Content="等片" IsChecked="True" IsEnabled="False"/>
+        <RadioButton Classes="hb" Canvas.Left="326" Canvas.Top="299" Width="59" Height="15"
+                     GroupName="Ig" Content="不等片" IsEnabled="False"/>
+
+        <CheckBox Classes="hb" Canvas.Left="43" Canvas.Top="122" Width="169" Height="17"
+                  Content="不考虑自重对结构胶的影响"/>
+
+        <!-- ══ 压板参数 (11,339) 395x183 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="339" Width="395" Height="183"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="332"
+                   Text="全隐框幕墙用玻璃板块压板参数"/>
+        <TextBlock Canvas.Left="22" Canvas.Top="355" Text="压板间距"/>
+        <TextBox Classes="hb" Canvas.Left="91" Canvas.Top="352" Width="41" Height="18"
+                 Text="{Binding ClampSpacingText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="137" Canvas.Top="355" Text="mm"/>
+        <TextBlock Canvas.Left="22" Canvas.Top="374" Text="压板悬臂"/>
+        <TextBox Classes="hb" Canvas.Left="91" Canvas.Top="371" Width="41" Height="18"
+                 Text="{Binding ClampArmText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="137" Canvas.Top="374" Text="mm"/>
+
+        <TextBlock Canvas.Left="170" Canvas.Top="355" Text="压板宽"/>
+        <TextBox Classes="hb" Canvas.Left="219" Canvas.Top="352" Width="41" Height="18"
+                 Text="{Binding ClampWidthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="265" Canvas.Top="355" Text="mm"/>
+        <TextBlock Canvas.Left="170" Canvas.Top="374" Text="螺栓间距"/>
+        <TextBox Classes="hb" Canvas.Left="219" Canvas.Top="371" Width="41" Height="18"
+                 Text="{Binding ClampPitchText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="265" Canvas.Top="374" Text="mm"/>
+        <ComboBox Canvas.Left="298" Canvas.Top="368" Width="65" Height="20"
+                  ItemsSource="{Binding ClampMaterials}"
+                  SelectedIndex="{Binding ClampMaterialIndex, Mode=TwoWay}"/>
+
+        <!-- 压板截面表（实机 DataGrid 383x124）：三行常用压板规格 -->
+        <StackPanel Canvas.Left="19" Canvas.Top="392" Width="383">
+          <TextBlock Text="压板规格" TextAlignment="Center" Height="16" FontSize="11"
+                     Background="#E8E8E8"/>
+          <Border Background="White" BorderBrush="#9AA0A6" BorderThickness="1" Height="104">
+            <StackPanel>
+              <Grid ColumnDefinitions="60,70,70,70,80" Height="20" Background="#F5F5F5">
+                <TextBlock Grid.Column="0" Text="型号" FontSize="10" TextAlignment="Center"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="宽度" FontSize="10" TextAlignment="Center"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="厚度" FontSize="10" TextAlignment="Center"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="截面模量" FontSize="10" TextAlignment="Center"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="材质" FontSize="10" TextAlignment="Center"
+                           VerticalAlignment="Center"/>
+              </Grid>
+              <Grid ColumnDefinitions="60,70,70,70,80" Height="18">
+                <TextBlock Grid.Column="0" Text="6×45" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="6" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="45" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="44" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="6063-T5" FontSize="10" TextAlignment="Center"/>
+              </Grid>
+              <Grid ColumnDefinitions="60,70,70,70,80" Height="18">
+                <TextBlock Grid.Column="0" Text="8×50" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="8" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="50" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="64" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="6063-T5" FontSize="10" TextAlignment="Center"/>
+              </Grid>
+              <Grid ColumnDefinitions="60,70,70,70,80" Height="18">
+                <TextBlock Grid.Column="0" Text="10×60" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="10" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="60" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="96" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Grid.Column="4" Text="6063-T5" FontSize="10" TextAlignment="Center"/>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- ══ 输出 (411,34) 364x423 ══ -->
+        <Border Canvas.Left="411" Canvas.Top="34" Width="364" Height="423"
+                Background="White" BorderBrush="#9AA0A6" BorderThickness="1">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="11"
+                             TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <TextBlock Canvas.Left="415" Canvas.Top="40" Text="{Binding PlaceholderText}"
+                   Foreground="#808080" FontSize="11" IsHitTestVisible="False"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="659" Canvas.Top="476" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="719" Canvas.Top="476" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="659" Canvas.Top="500" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hb" Canvas.Left="719" Canvas.Top="500" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

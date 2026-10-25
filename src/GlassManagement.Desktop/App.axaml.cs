@@ -51,6 +51,32 @@ public partial class App : Application
                     GlassManagement.Desktop.Views.Calc.CalcMainWindow.DumpPreviewPath =
                         dump.Substring("--dump-preview=".Length);
                 }
+                // 诊断/批量入口：--calcbook=<path> 直接出一份计算书后退出（无窗口）
+                var bookPath = System.Array.Find(args, a => a.StartsWith("--calcbook="));
+                if (bookPath is not null)
+                {
+                    var target = bookPath.Substring("--calcbook=".Length);
+                    // 仅用于复现 V31「全隐框」对拍工程那组参数（wk 1.285 / 1100×1380 / 支点 3000）
+                    if (System.Array.Exists(args, a => a == "--v31sample"))
+                    {
+                        var s0 = GlassManagement.Desktop.ViewModels.Calc.CalcSession.Default;
+                        s0.WindStandardKpa = 1.285;
+                        s0.WindStandardRawKpa = 1.285;
+                        s0.ColumnBayWidthMm = 1100;
+                        s0.ColumnSpanMm = 3000;
+                        s0.BeamUpperGridHeightMm = 1380;
+                        s0.BeamLeftBayMm = 1100;
+                        s0.BeamRightBayMm = 1100;
+                    }
+                    var made = GlassManagement.Desktop.ViewModels.Calc.CalcWizardViewModel
+                        .Default.GenerateCalcBook(string.IsNullOrWhiteSpace(target) ? null : target);
+                    System.Console.WriteLine(made is null ? "CALCBOOK FAILED" : "CALCBOOK " + made);
+                    System.Console.Out.Flush();
+                    // 用 Environment.Exit 而不是 desktop.Shutdown()：后者会回到 Dispatcher 主循环
+                    // 再抛 "Dispatcher shut down"，退出码变成非 0，批量脚本不好判。
+                    System.Environment.Exit(made is null ? 1 : 0);
+                }
+
                 desktop.MainWindow = new GlassManagement.Desktop.Views.Calc.CalcMainWindow();
             }
             else

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GlassManagement.Calc.Book;
+using GlassManagement.Calc.Engines;
 
 namespace GlassManagement.Desktop.ViewModels.Calc;
 
@@ -27,6 +30,8 @@ public partial class CalcWizardViewModel : ObservableObject
     private UnitBeamCalcViewModel? _unitBeam;
     private GlassCalcViewModel? _glass;
     private ConnectCalcViewModel? _connect;
+    private EmbedCalcViewModel? _embed;
+    private SealantCalcViewModel? _sealant;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -730,6 +735,96 @@ public partial class CalcWizardViewModel : ObservableObject
 
     /// <summary>玻璃屏「下一步」：玻璃之后是连接页。</summary>
     public void StepFromGlassNext() => GoConnectCalc();
+
+    /// <summary>向导 6：埋件与焊缝计算屏（P2）。</summary>
+    [RelayCommand]
+    public void GoEmbedCalc()
+    {
+        _embed ??= new EmbedCalcViewModel(Session, this);
+        MirrorStatus(_embed);
+        CurrentContent = _embed;
+        StatusText = "向导 6：幕墙计算-埋件与焊缝计算";
+    }
+
+    /// <summary>连接屏「下一步」：连接之后是埋件页。</summary>
+    public void StepFromConnectNext() => GoEmbedCalc();
+
+    /// <summary>向导 7：胶类、伸缩及紧固计算屏（P3）。</summary>
+    [RelayCommand]
+    public void GoSealantCalc()
+    {
+        _sealant ??= new SealantCalcViewModel(Session, this);
+        MirrorStatus(_sealant);
+        CurrentContent = _sealant;
+        StatusText = "向导 7：幕墙计算-胶类、伸缩及紧固计算";
+    }
+
+    /// <summary>埋件屏「下一步」：埋件之后是胶类页。</summary>
+    public void StepFromEmbedNext() => GoSealantCalc();
+
+    /// <summary>
+    /// 生成计算书 docx（各屏先点过「预演」才有内容）。
+    /// 输出目录：仓库根 <c>计算书输出/</c>，文件名带时间戳，不覆盖旧稿。
+    /// </summary>
+    public string? GenerateCalcBook(string? outputPath = null)
+    {
+        try
+        {
+            // 用户没逐屏点「预演」时，用当前会话参数补齐（一键出书 / 批量出书）
+            if (Session.LastConnectResult is null)
+                Session.LastConnectResult = ConnectEngine.Compute(
+                    (_connect ??= new ConnectCalcViewModel(Session, this)).BuildInputs());
+            if (Session.LastEmbedResult is null)
+                Session.LastEmbedResult = EmbedEngine.Compute(
+                    (_embed ??= new EmbedCalcViewModel(Session, this)).BuildInputs());
+            if (Session.LastSealantResult is null)
+                Session.LastSealantResult = SealantEngine.Compute(
+                    (_sealant ??= new SealantCalcViewModel(Session, this)).BuildInputs());
+
+            var input = new CalcBookInput
+            {
+                ProjectName = "全隐框玻璃幕墙",
+                WkKpa = Session.WindStandardKpa,
+                WkPanelKpa = Session.PanelWindKpa,
+                WindSource = Session.PanelWindSource,
+                Connect = Session.LastConnectResult,
+                Embed = Session.LastEmbedResult as GlassManagement.Calc.Engines.EmbedResult?,
+                Sealant = Session.LastSealantResult as GlassManagement.Calc.Engines.SealantResult?,
+            };
+
+            if (outputPath is null)
+            {
+                var root = FindRepoRoot() ?? Directory.GetCurrentDirectory();
+                var dir = Path.Combine(root, "计算书输出");
+                Directory.CreateDirectory(dir);
+                outputPath = Path.Combine(dir,
+                    $"计算书_{DateTime.Now:yyyyMMdd_HHmmss}.docx");
+            }
+
+            CalcBookWriter.Write(
+                CalcBookComposer.Compose(input), outputPath);
+            LastCalcBookPath = outputPath;
+            return outputPath;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>最近一次生成的计算书路径（供 UI 打开）。</summary>
+    public string? LastCalcBookPath { get; private set; }
+
+    private static string? FindRepoRoot()
+    {
+        var d = new DirectoryInfo(AppContext.BaseDirectory);
+        while (d is not null)
+        {
+            if (File.Exists(Path.Combine(d.FullName, "global.json"))) return d.FullName;
+            d = d.Parent;
+        }
+        return null;
+    }
 
 
 }

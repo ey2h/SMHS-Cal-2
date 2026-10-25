@@ -230,6 +230,10 @@ public partial class CalcMainWindow : Window
                 _wizard.GoGlassCalc(); ShowWizard(); return;
             case "幕墙计算-连接计算":
                 _wizard.GoConnectCalc(); ShowWizard(); return;
+            case "幕墙计算-埋件与焊缝计算":
+                _wizard.GoEmbedCalc(); ShowWizard(); return;
+            case "幕墙计算-胶类、伸缩及紧固计算":
+                _wizard.GoSealantCalc(); ShowWizard(); return;
         }
         // 「玻璃幕墙」顶级/「全隐框」子项：向导第一屏
         if (_wizard.OpenMenuPath(top, sub)) { ShowWizard(); return; }

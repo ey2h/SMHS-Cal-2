@@ -37,9 +37,19 @@ public static class CalcFormCatalog
                 DataContext = new ConnectCalcViewModel(
                     CalcSession.Default, CalcWizardViewModel.Default),
             }),
-        new("幕墙计算-埋件与焊缝计算", 136, 788, 490, () => new CW16_Form16()),
+        new("幕墙计算-埋件与焊缝计算", 136, 788, 490,
+            () => new EmbedCalcView
+            {
+                DataContext = new EmbedCalcViewModel(
+                    CalcSession.Default, CalcWizardViewModel.Default),
+            }),
         new("埋件系统计算", 139, 787, 489, () => new CW17_Form17()),
-        new("幕墙计算-胶类、伸缩及紧固计算", 129, 784, 537, () => new CW18_Form18()),
+        new("幕墙计算-胶类、伸缩及紧固计算", 129, 784, 537,
+            () => new SealantCalcView
+            {
+                DataContext = new SealantCalcViewModel(
+                    CalcSession.Default, CalcWizardViewModel.Default),
+            }),
         new("幕墙（门窗）物理性能计算", 106, 885, 541, () => new CW19_Form19()),
         new("常用建筑结构静力计算(按《建筑结构静力计算手册》第二版计算)", 24, 899, 494, () => new CW20_Form20()),
         new("文件引用规范设置：", 169, 780, 500, () => new CW21_Form21()),

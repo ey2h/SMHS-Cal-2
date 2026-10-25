@@ -297,9 +297,7 @@ public partial class ConnectCalcViewModel : ObservableObject
     private double BoltCountValue => CountOptions[Math.Clamp(MainBoltCountIndex, 0, CountOptions.Count - 1)];
 
     [RelayCommand] private void Prev() => _wizard.GoGlassCalc();
-    // 埋件屏引擎尚未落地，先把链路串到玻璃屏（下一步在埋件落地后改回 GoEmbedCalc）
-    [RelayCommand] private void Next()
-        => StatusText = "连接计算：已完成（15 值逐位）；埋件与焊缝屏为下一块";
+    [RelayCommand] private void Next() => _wizard.GoEmbedCalc();
     [RelayCommand] private void Exit() => _wizard.CloseForm();
 
     private void Judge(bool ok) => Add(ok ? "满足要求(√)" : "不满足要求(×)", ok ? ColorOk : ColorFail);

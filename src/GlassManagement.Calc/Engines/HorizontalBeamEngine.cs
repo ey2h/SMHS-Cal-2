@@ -83,20 +83,24 @@ public sealed record BeamResult(
 /// </para>
 ///
 /// <para>
-/// **对拍 53/53 逐位一致**（<c>local-data/recon/verify_beam_trap.py</c>）：
-/// 1100×1380（三角形）、1500×1000、2000×800、1200×1000（中间比）、1000×1000（临界 r=B）。
+/// **对拍 64/64 逐位一致**（<c>local-data/recon/verify_beam_trap.py</c>）：
+/// 1100×1380（三角形）、1500×1000、2000×800、1200×1000（中间比）、1000×1000（临界 r=B）、
+/// 以及**上海地区**（αmax=0.08，验证 5αmax 联动）。
 /// </para>
 ///
 /// <para>
 /// **四个容易踩的点**：
 /// <list type="bullet">
-/// <item>竖向与水平向的自重/风高度不同：竖向 <c>q_x = round3(H·g·1.3)</c> 恒用<b>上分格高 H</b>
+/// <item>竖向与水平向的荷载高度不同：竖向 <c>q_x = round3(H·g·1.3)</c> 恒用<b>上分格高 H</b>
 ///       （非挂式横梁承上部板块自重，帮助 <c>html/B03.htm</c> 原文），水平向用 <c>r=min(B,H)</c>。</item>
+/// <item><b>水平向加的那一项是地震作用，不是自重</b>：系数 <c>5·αmax</c>
+///       （<c>0x8AED5D</c> 的 <c>0.16×5</c>，0.16 读自全局 <c>0x1C913D8</c> = 参数库「地区参数」表 αmax）。
+///       改地区到上海（αmax 0.16→0.08）后该系数 0.8→0.4，Wy 预选 2583.574→3007.074 可证。</item>
 /// <item><c>q_y = round3(qd + gp)</c> 要多取一次整：1.6255 → 1.626 才会进弯矩
 ///       （<c>0x8CE664</c> 得 1.6255，<c>0x8CE886</c> 用的是 1.626，2000×800 组唯一能暴露）。</item>
 /// <item>剪力的风荷载项用 <b>B</b>（不是 r）：<c>V_h风 = 1.5·qk·B·(1−u)/2</c>
 ///       （<c>0x8D5324</c> 1500×1.264=1896 → <c>0x8D539E</c> /2=632 → <c>0x8D5483</c> ×1.5=948）；
-///       自重项才用 r：<c>B·(r·g·0.8)·(1−u)/2·1.4·0.5</c>（<c>0x8D5617</c> 1500×0.24=360 → 84）。</item>
+///       地震项才用 r：<c>B·(r·g·5αmax)·(1−u)/2·1.4·0.5</c>（<c>0x8D5617</c> 1500×0.24=360 → 84）。</item>
 /// <item>打印标签 <c>tx</c> 对应<b>水平向</b>剪应力、<c>ty</c> 对应<b>竖向</b>（与直觉相反），
 ///       且 <c>τ_h = V_h·Sy/(Iy·ty)</c>、<c>τ_v = V_v·Sx/(Ix·tx)</c>（各自用对面方向的腹板宽）。</item>
 /// </list>
@@ -110,10 +114,16 @@ public static class HorizontalBeamEngine
     /// <summary>荷载分项系数（<c>0x8CE019</c>）。</summary>
     public const double LoadFactor = 1.5;
 
-    /// <summary>自重线荷载折算系数（<c>0x8CE32C</c>：0.16×5=0.8）。</summary>
-    public const double GravityFactor = 0.8;
+    /// <summary>
+    /// **地震作用放大系数 5**（<c>0x8AED5D</c> / <c>0x8CE32C</c>：`0.16 × 5 = 0.8` 中的 5）。
+    /// 与之相乘的 0.16 是全局 <c>0x1C913D8</c>，实测等于参数库「地区参数」表的 <b>αmax</b>：
+    /// 北京(8 度) αmax=0.16 → 0.8；把地区改成上海(7 度) αmax=0.08 后该系数变 0.4，
+    /// 横梁 Wy 预选 2583.574 → 3007.074、σ 62.568 → 69.182（2026-10-25 实机联动验证）。
+    /// 因此 <b>水平向 q_y 里加的这项是「地震作用」，不是自重</b>。
+    /// </summary>
+    public const double SeismicFactor = 5.0;
 
-    /// <summary>自重分项系数（<c>0x8CE534</c>）。</summary>
+    /// <summary>地震作用分项系数（<c>0x8CE534</c>）。</summary>
     public const double DeadFactor = 1.4;
 
     /// <summary>竖向自重活荷载系数（<c>0x8CEAE9</c>：1.3）。</summary>
@@ -134,20 +144,25 @@ public static class HorizontalBeamEngine
     /// <param name="B">横梁跨度 mm = 立柱左右两侧分格宽取<b>大</b>值（帮助：自动选最大一跨，不计立柱宽）。</param>
     /// <param name="H">自重高度 mm = <b>上</b>分格高（非挂式横梁承上部板块自重，不取平均）。</param>
     /// <param name="gravityNmm2">自重面荷载 N/mm²（参数库「幕墙自重参数」计算横梁时自重 / 1e6）。</param>
+    /// <param name="alphaMax">
+    /// 地震影响系数最大值 αmax（参数库「地区参数」表同名列；北京 8 度 0.16、上海 7 度 0.08）。
+    /// 水平向的地震作用 = 5·αmax·g。
+    /// </param>
     /// <param name="f">抗弯强度设计值 MPa。</param>
     /// <param name="p">型材截面。</param>
     public static BeamResult Compute(
-        double wkKPa, double B, double H, double gravityNmm2, double f, BeamProfile p)
+        double wkKPa, double B, double H, double gravityNmm2, double alphaMax, double f, BeamProfile p)
     {
         // —— 形状参数：r = min(B,H) 决定"线荷载取多宽"，u = r/(2B) 决定分布形状 ——
         double r = Math.Min(B, H);
         double u = r / (2.0 * B);
         double sw = 1.0 - u;
 
-        // —— 水平向线荷载（用 r 取宽）——
+        // —— 水平向线荷载（用 r 取宽）+ 地震作用（5αmax·g）——
         double qk = R3(r * wkKPa / 1000.0);
         double qd = R3(qk * LoadFactor);
-        double gp = R3(r * gravityNmm2 * GravityFactor * DeadFactor) / 2.0;
+        double kq = SeismicFactor * alphaMax;
+        double gp = R3(r * gravityNmm2 * kq * DeadFactor) / 2.0;
         double qy = R3(qd + gp);   // ★ 二次取整，2000×800 组可暴露
 
         // —— 水平向弯矩：系数 (3 − (r/B)²)/24，r=B 时退化为 1/12 ——
@@ -175,9 +190,9 @@ public static class HorizontalBeamEngine
 
         // —— 剪力：竖向 V_v = H·(B·g·1.3)/2（两分支同式）——
         double vv = H * (B * gravityNmm2 * VerticalFactor) / 2.0;
-        // 水平：风项用 B，自重项用 r
+        // 水平：风项用 B，地震项用 r
         double vh = LoadFactor * qk * B * sw / 2.0
-                    + B * (r * gravityNmm2 * GravityFactor) * sw / 2.0 * DeadFactor * 0.5;
+                    + B * (r * gravityNmm2 * kq) * sw / 2.0 * DeadFactor * 0.5;
 
         // —— 抗弯：两方向正应力直接相加（非平方和、非取大）——
         double sigma = R3(mx / p.WxBending + my / p.WyBending);

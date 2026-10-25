@@ -25,8 +25,12 @@ public class HorizontalBeamTests
 
     private const double F = 90.0;   // 抗弯强度设计值 MPa
 
-    private static BeamResult Run(double wk, double B, double H)
-        => HorizontalBeamEngine.Compute(wk, B, H, G, F, P4060);
+    /// <summary>参数库「地区参数」表 αmax：北京(8 度)=0.16、上海(7 度)=0.08。</summary>
+    private const double AlphaBeijing = 0.16;
+    private const double AlphaShanghai = 0.08;
+
+    private static BeamResult Run(double wk, double B, double H, double alpha = AlphaBeijing)
+        => HorizontalBeamEngine.Compute(wk, B, H, G, alpha, F, P4060);
 
     [Fact]
     public void 三角形分布_基线_1100x1380()
@@ -144,6 +148,34 @@ public class HorizontalBeamTests
 
         var flat = Run(1.243, 2000, 40);   // H 极小，接近均布（仅验证系数趋势，不比对 V31）
         Assert.True(flat.My / (flat.Qy * 2000 * 2000) > 0.124);
+    }
+
+    [Fact]
+    public void 上海地区_alphaMax0点08_地震项减半()
+    {
+        // 改地区到上海后实测：wk 1.285→1.571（风压 450→550），αmax 0.16→0.08
+        // 地震项系数 0.8→0.4 ⇒ gp 0.185→0.0925，Wy 预选 2583.574→3007.074
+        var r = Run(1.571, 1100, 1380, AlphaShanghai);
+
+        Assert.Equal(904.139, R3(r.WxRequired));       // 竖向不受风/地震影响
+        Assert.Equal(3007.074, R3(r.WyRequired));
+        Assert.Equal(25624.721, R3(r.IxRequired));
+        Assert.Equal(49285.925, R3(r.IyRequired));
+        Assert.Equal(0.974, R3(r.DeflectionV));        // 竖向不变
+        Assert.Equal(2.436, R3(r.DeflectionH));
+        Assert.Equal(4.4, R3(r.LimitV));
+        Assert.Equal(6.111, r.LimitH);
+        Assert.Equal(69.182, r.Sigma);
+        Assert.Equal(7.057, r.TauH);
+        Assert.Equal(1.531, r.TauV);                   // 竖向剪力不变
+    }
+
+    [Fact]
+    public void 地震项系数等于五倍alphaMax()
+    {
+        // 北京 αmax=0.16 → 5αmax=0.8；上海 0.08 → 0.4
+        Assert.Equal(0.8, HorizontalBeamEngine.SeismicFactor * AlphaBeijing, 12);
+        Assert.Equal(0.4, HorizontalBeamEngine.SeismicFactor * AlphaShanghai, 12);
     }
 
     private static double R3(double v) => WindLoadEngine.VbaRound(v, 3);

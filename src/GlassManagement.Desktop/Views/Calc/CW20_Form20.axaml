@@ -11,7 +11,7 @@
     <Canvas Width="899" Height="494" Background="#F0F0F0" ClipToBounds="True">
       <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="7" Width="761" Height="489"/>
       <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="0" Text="植筋计算(仅适用于带肋的植筋)"/>
-      <TextBlock Classes="hb" Canvas.Left="225" Canvas.Top="7" Width="93" Height="26" Text="软件所监测到本机物理硬件" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="225" Canvas.Top="7" Width="120" Height="26" Text="软件所监测到本机物理硬件" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <Border Classes="hbFrame" Canvas.Left="49" Canvas.Top="9" Width="779" Height="457"/>
       <TextBlock Classes="hbFrameTitle" Canvas.Left="55" Canvas.Top="0" Text="力学模型选择"/>
       <Border Classes="hbFrame" Canvas.Left="433" Canvas.Top="13" Width="459" Height="456"/>
@@ -34,14 +34,14 @@
       <TextBlock Classes="hb" Canvas.Left="468" Canvas.Top="202" Width="84" Height="13" Text="荷载组合设计值" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="206" Width="67" Height="18" FontSize="12" Text="1250000"/>
       <TextBlock Classes="hb" Canvas.Left="666" Canvas.Top="209" Width="48" Height="13" Text="惯性矩：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-      <TextBlock Classes="hb" Canvas.Left="459" Canvas.Top="222" Width="166" Height="27" Text="对于集中荷载，单位为：N   对于均布荷载，单位为：N/mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="459" Canvas.Top="222" Width="184" Height="27" Text="对于集中荷载，单位为：N   对于均布荷载，单位为：N/mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <TextBox Classes="hb" Canvas.Left="728" Canvas.Top="230" Width="67" Height="18" FontSize="12" Text="53000"/>
       <TextBlock Classes="hb" Canvas.Left="666" Canvas.Top="233" Width="48" Height="13" Text="抗弯矩：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <TextBox Classes="hb" Canvas.Left="439" Canvas.Top="261" Width="380" Height="200" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
       <Button Classes="hb" Canvas.Left="825" Canvas.Top="263" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="825" Canvas.Top="312" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <TextBlock Classes="hb" Canvas.Left="13" Canvas.Top="317" Width="137" Height="13" Text="如有疑问请联系我：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-      <CheckBox Classes="hb" Canvas.Left="315" Canvas.Top="327" Width="137" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="使用快固型粘结剂" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox Classes="hb" Canvas.Left="315" Canvas.Top="327" Width="137" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="使用快固型粘结剂" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
       <Button Classes="hb" Canvas.Left="825" Canvas.Top="344" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="保存" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="825" Canvas.Top="390" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="825" Canvas.Top="422" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>

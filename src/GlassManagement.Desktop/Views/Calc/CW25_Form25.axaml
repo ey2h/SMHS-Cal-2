@@ -21,7 +21,7 @@
           <TextBlock Classes="hbFrameTitle" Canvas.Left="252" Canvas.Top="0" Text="肋简支类型选择(?)"/>
           <Border Classes="hbFrame" Canvas.Left="368" Canvas.Top="8" Width="110" Height="60"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="374" Canvas.Top="0" Text="肋稳定性计算"/>
-          <Button Classes="hb" Canvas.Left="482" Canvas.Top="8" Width="41" MinHeight="65" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="完善吊挂参数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="482" Canvas.Top="8" Width="45" MinHeight="65" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="完善吊挂参数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <TextBlock Classes="hb" Canvas.Left="208" Canvas.Top="26" Width="12" Height="13" Text="mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <RadioButton Classes="hb" Canvas.Left="126" Canvas.Top="28" Width="116" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="与面板平齐或突出" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="252" Canvas.Top="28" Width="94" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按对边简支" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
@@ -43,17 +43,17 @@
           <Border Classes="hbFrame" Canvas.Left="408" Canvas.Top="88" Width="117" Height="61"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="414" Canvas.Top="79" Text="玻璃肋参数"/>
           <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="100" Width="57" Height="20"/>
-          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="100" Width="57" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="无肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="100" Width="57" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="无肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="14" Canvas.Top="104" Width="72" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空玻璃" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="86" Canvas.Top="104" Width="88" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双夹层-中空" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBlock Classes="hb" Canvas.Left="152" Canvas.Top="104" Width="48" Height="13" Text="吊挂方式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="101" Canvas.Top="108" Width="72" Height="13" Text="强度设计值：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <RadioButton Classes="hb" Canvas.Left="253" Canvas.Top="115" Width="88" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双夹层-中空" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="115" Width="57" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="115" Width="57" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="182" Canvas.Top="119" Width="133" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="322" Canvas.Top="119" Width="70" Height="20"/>
           <RadioButton Classes="hb" Canvas.Left="14" Canvas.Top="120" Width="163" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空+夹层（外夹层）玻璃" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="129" Width="49" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="440" Canvas.Top="129" Width="49" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双肋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="182" Canvas.Top="131" Width="163" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空+夹层（外夹层）玻璃" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="232" Canvas.Top="133" Width="57" Height="20"/>
           <RadioButton Classes="hb" Canvas.Left="14" Canvas.Top="136" Width="163" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空+夹层（内夹层）玻璃" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
@@ -91,32 +91,32 @@
           <ComboBox Classes="hb" Canvas.Left="335" Canvas.Top="221" Width="57" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="18" Canvas.Top="225" Width="60" Height="13" Text="次外片厚度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="266" Canvas.Top="225" Width="60" Height="13" Text="次内片厚度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="230" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="230" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="208" Canvas.Top="235" Width="69" Height="20"/>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="236" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="236" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBlock Classes="hb" Canvas.Left="152" Canvas.Top="238" Width="144" Height="13" Text="螺栓直径              mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="245" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="245" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="246" Width="81" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="254" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="261" Width="81" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="261" Width="81" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="263" Width="88" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="245" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="245" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="246" Width="81" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="254" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="261" Width="81" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="261" Width="81" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="263" Width="88" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="264" Canvas.Top="267" Width="69" Height="20" FontSize="12" Text="100"/>
           <TextBlock Classes="hb" Canvas.Left="152" Canvas.Top="271" Width="204" Height="13" Text="螺栓抗剪强度设计值             MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="271" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="278" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="278" Width="88" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="279" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="289" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="294" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="294" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="271" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="278" Width="97" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="278" Width="88" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="半钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="165" Canvas.Top="279" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="289" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="294" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="280" Canvas.Top="294" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="396" Canvas.Top="300" Width="45" Height="20" FontSize="12" Text="12000"/>
           <TextBlock Classes="hb" Canvas.Left="152" Canvas.Top="304" Width="300" Height="13" Text="吊件厂家提供的每个吊件的自重承载力设计值         N" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="307" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法双夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="307" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="浮法双夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <Border Classes="hbFrame" Canvas.Left="8" Canvas.Top="323" Width="398" Height="82"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="14" Canvas.Top="314" Text="胶缝计算参数(?)"/>
-          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="325" Width="89" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化双夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="422" Canvas.Top="325" Width="89" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢化双夹层" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <Border Classes="hbFrame" Canvas.Left="127" Canvas.Top="331" Width="125" Height="60"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="133" Canvas.Top="322" Text="玻璃肋连接方法"/>
           <ComboBox Classes="hb" Canvas.Left="122" Canvas.Top="338" Width="275" Height="20"/>
@@ -127,7 +127,7 @@
           <Button Classes="hb" Canvas.Left="820" Canvas.Top="352" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="245" Canvas.Top="359" Width="51" Height="18" FontSize="12" Text="10"/>
           <TextBlock Classes="hb" Canvas.Left="35" Canvas.Top="362" Width="204" Height="13" Text="含玻璃及中空层的玻璃面板总厚度(mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="600" Canvas.Top="363" Width="113" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="600" Canvas.Top="363" Width="136" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <TextBlock Classes="hb" Canvas.Left="417" Canvas.Top="364" Width="60" Height="13" Text="肋截面高度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Button Classes="hb" Canvas.Left="818" Canvas.Top="364" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <RadioButton Classes="hb" Canvas.Left="133" Canvas.Top="368" Width="106" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="后置或齐缝" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>

@@ -47,7 +47,6 @@
           <TextBlock Classes="hb" Canvas.Left="547" Canvas.Top="75" Width="48" Height="13" Text="建筑长度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <ComboBox Classes="hb" Canvas.Left="360" Canvas.Top="79" Width="68" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="211" Canvas.Top="80" Width="45" Height="18" FontSize="12" Text="200"/>
-          <TextBox Classes="hb" Canvas.Left="661" Canvas.Top="80" Width="316" Height="309" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBlock Classes="hb" Canvas.Left="259" Canvas.Top="81" Width="12" Height="13" Text="mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="297" Canvas.Top="85" Width="41" Height="18" FontSize="12"/>
           <TextBox Classes="hb" Canvas.Left="440" Canvas.Top="85" Width="41" Height="18" FontSize="12"/>
@@ -126,12 +125,12 @@
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="145" Height="77" Background="#F0F0F0" ClipToBounds="True">
           <CheckBox Classes="hb" Canvas.Left="20" Canvas.Top="11" Width="176" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="编辑下面表格数据" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
-          <CheckBox Classes="hb" Canvas.Left="13" Canvas.Top="16" Width="122" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="墙体外为玻璃结构" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="13" Canvas.Top="16" Width="122" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="墙体外为玻璃结构" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBox Classes="hb" Canvas.Left="72" Canvas.Top="22" Width="47" Height="18" FontSize="12" Text="北京"/>
           <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="37" Width="49" Height="18" FontSize="12" Text="2.58"/>
           <ComboBox Classes="hb" Canvas.Left="72" Canvas.Top="43" Width="109" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="86" Canvas.Top="64" Width="72" Height="20"/>
-          <CheckBox Classes="hb" Canvas.Left="13" Canvas.Top="161" Width="122" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="墙体外为玻璃结构" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="13" Canvas.Top="161" Width="122" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="墙体外为玻璃结构" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="185" Width="66" Height="13" Text="玻璃结构U值" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="80" Canvas.Top="201" Width="48" Height="13" Text="W/m^2·K" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           </Canvas>
@@ -168,9 +167,9 @@
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="185" Height="40" Background="#F0F0F0" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="147" Canvas.Top="7" Width="49" Height="18" FontSize="12"/>
-          <RadioButton Classes="hb" Canvas.Left="10" Canvas.Top="16" Width="82" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="水平遮阳板" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="10" Canvas.Top="16" Width="82" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="水平遮阳板" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="37" Canvas.Top="16" Width="55" Height="20"/>
-          <RadioButton Classes="hb" Canvas.Left="94" Canvas.Top="16" Width="82" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="垂直遮阳板" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="94" Canvas.Top="16" Width="82" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="垂直遮阳板" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="147" Canvas.Top="25" Width="49" Height="18" FontSize="12"/>
           </Canvas>
           </ScrollViewer>

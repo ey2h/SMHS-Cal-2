@@ -94,6 +94,10 @@
             <Setter Property="BorderBrush" Value="#2F6FED"/>
         </Style>
 
+        <!-- ★ 2026-10-25：ComboBox 此前只改属性、没换模板，Fluent 模板自带
+             32px 箭头列 + 32px 高的 ComboBoxItem。本项目下拉框宽度多为 57/65/73px，
+             文本区被箭头挤到 25-40px，展开列表也不符合 VB6 密度。
+             这里换成 VB6 紧凑模板：右侧 12px 实心三角 + 18px 高列表项。 -->
         <Style Selector="ComboBox">
             <Setter Property="FontFamily" Value="SimSun"/>
             <Setter Property="FontSize" Value="12"/>
@@ -105,9 +109,84 @@
             <Setter Property="Padding" Value="2,0"/>
             <Setter Property="MinHeight" Value="0"/>
             <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="MaxDropDownHeight" Value="240"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid Name="Root" ColumnDefinitions="*,12">
+                        <Border Name="Bg" Grid.ColumnSpan="2"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"/>
+                        <ContentControl Name="PART_ContentPresenter"
+                                        Grid.Column="0"
+                                        Margin="3,0,1,0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        VerticalContentAlignment="Center"
+                                        Content="{TemplateBinding SelectionBoxItem}"
+                                        ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                        <Path Grid.Column="1"
+                              Data="M 0,0 L 6,0 L 3,4 Z"
+                              Fill="#404040"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              IsHitTestVisible="False"/>
+                        <Popup Name="PART_Popup"
+                               PlacementTarget="{Binding #Root}"
+                               Placement="Bottom"
+                               HorizontalOffset="-1" VerticalOffset="1"
+                               IsOpen="{TemplateBinding IsDropDownOpen}">
+                            <Border Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1"
+                                    MinWidth="{Binding $parent[ComboBox].Bounds.Width}">
+                                <ScrollViewer MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                              HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
         </Style>
         <Style Selector="ComboBox:pointerover">
             <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="ComboBox:focus">
+            <Setter Property="BorderBrush" Value="#2F6FED"/>
+        </Style>
+        <Style Selector="ComboBox:disabled">
+            <Setter Property="Foreground" Value="#9A9A9A"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#C8C8C8"/>
+        </Style>
+        <Style Selector="ComboBox:disabled /template/ Path">
+            <Setter Property="Fill" Value="#C8C8C8"/>
+        </Style>
+
+        <!-- 下拉列表项：VB6 列表项高 ~16-18px，选中态蓝底白字（#316AC5） -->
+        <Style Selector="ComboBoxItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#DEE7F5"/>
+            <Setter Property="TextBlock.Foreground" Value="#1F2937"/>
+        </Style>
+        <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="#316AC5"/>
+            <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#316AC5"/>
+            <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
         </Style>
 
         <!-- 选择类：VB6 OptionButton / CheckBox 紧凑模板

@@ -25,7 +25,6 @@
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="768" Height="502" Background="#F0F0F0" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="400" Canvas.Top="5" Width="364" Height="423" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
-          <TextBox Classes="hb" Canvas.Left="393" Canvas.Top="13" Width="364" Height="422" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <Border Classes="hbFrame" Canvas.Left="407" Canvas.Top="435" Width="233" Height="65"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="413" Canvas.Top="426" Text="平均间隙(单位mm)"/>
           <Button Classes="hb" Canvas.Left="617" Canvas.Top="446" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
@@ -61,7 +60,7 @@
         <TabItem Header="Frame7">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="395" Height="236" Background="#F0F0F0" ClipToBounds="True">
-          <CheckBox Classes="hb" Canvas.Left="28" Canvas.Top="63" Width="169" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="28" Canvas.Top="63" Width="169" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="68" Width="120" Height="13" Text="与铝框连接结构胶厚度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="91" Width="120" Height="13" Text="与铝框连接结构胶宽度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="230" Canvas.Top="91" Width="84" Height="13" Text="耐候胶位移能力" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -78,8 +77,8 @@
         <TabItem Header="全隐框参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="395" Height="230" Background="#F0F0F0" ClipToBounds="True">
-          <CheckBox Classes="hb" Canvas.Left="21" Canvas.Top="12" Width="169" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
-          <CheckBox Classes="hb" Canvas.Left="32" Canvas.Top="16" Width="169" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="21" Canvas.Top="12" Width="169" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="32" Canvas.Top="16" Width="169" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <Border Classes="hbFrame" Canvas.Left="226" Canvas.Top="16" Width="161" Height="68"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="232" Canvas.Top="7" Text="耐候胶胶缝"/>
           <Border Classes="hbFrame" Canvas.Left="4" Canvas.Top="22" Width="387" Height="403"/>
@@ -101,7 +100,7 @@
           <Border Classes="hbFrame" Canvas.Left="216" Canvas.Top="72" Width="159" Height="67"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="222" Canvas.Top="63" Text="耐候胶胶缝"/>
           <TextBlock Classes="hb" Canvas.Left="18" Canvas.Top="75" Width="120" Height="13" Text="与铝框连接结构胶厚度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <CheckBox Classes="hb" Canvas.Left="40" Canvas.Top="79" Width="169" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="40" Canvas.Top="79" Width="169" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不考虑自重对结构胶的影响" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBox Classes="hb" Canvas.Left="135" Canvas.Top="87" Width="41" Height="18" FontSize="12" Text="0.25"/>
           <TextBox Classes="hb" Canvas.Left="296" Canvas.Top="87" Width="41" Height="18" FontSize="12" Text="16"/>
           <ComboBox Classes="hb" Canvas.Left="147" Canvas.Top="88" Width="57" Height="20"/>
@@ -129,13 +128,13 @@
           <TextBlock Classes="hb" Canvas.Left="18" Canvas.Top="163" Width="84" Height="13" Text="结构胶位移能力" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="92" Canvas.Top="163" Width="41" Height="18" FontSize="12" Text="50"/>
           <TextBox Classes="hb" Canvas.Left="220" Canvas.Top="163" Width="41" Height="18" FontSize="12" Text="6"/>
-          <RadioButton Classes="hb" Canvas.Left="242" Canvas.Top="167" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="玻璃对接" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="242" Canvas.Top="167" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="玻璃对接" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <Border Classes="hbFrame" Canvas.Left="226" Canvas.Top="176" Width="161" Height="41"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="232" Canvas.Top="167" Text="中空玻璃形式"/>
           <ComboBox Classes="hb" Canvas.Left="151" Canvas.Top="181" Width="52" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="152" Canvas.Top="182" Width="63" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="18" Canvas.Top="185" Width="126" Height="13" Text="长期荷载强度设计值MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="242" Canvas.Top="187" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="铝框对接" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="242" Canvas.Top="187" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="铝框对接" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="310" Canvas.Top="188" Width="65" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="92" Canvas.Top="189" Width="41" Height="18" FontSize="12" Text="45"/>
           <TextBox Classes="hb" Canvas.Left="220" Canvas.Top="189" Width="41" Height="18" FontSize="12" Text="350"/>
@@ -217,7 +216,7 @@
           <Button Classes="hb" Canvas.Left="310" Canvas.Top="139" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="304" Canvas.Top="146" Width="41" Height="18" FontSize="12" Text="12"/>
           <TextBlock Classes="hb" Canvas.Left="145" Canvas.Top="148" Width="144" Height="13" Text="玻璃与左右框平均间隙(mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="150" Width="60" Height="26" Text="每个板块嵌槽螺钉总数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="150" Width="71" Height="26" Text="每个板块嵌槽螺钉总数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="154" Width="41" Height="18" FontSize="12"/>
           <TextBox Classes="hb" Canvas.Left="304" Canvas.Top="163" Width="41" Height="18" FontSize="12" Text="12"/>
           <TextBlock Classes="hb" Canvas.Left="145" Canvas.Top="165" Width="144" Height="13" Text="玻璃与上下框平均间隙(mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>

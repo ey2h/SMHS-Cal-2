@@ -37,7 +37,7 @@
       <TextBox Classes="hb" Canvas.Left="391" Canvas.Top="252" Width="49" Height="18" FontSize="12" Text="600"/>
       <TextBox Classes="hb" Canvas.Left="283" Canvas.Top="275" Width="33" Height="18" FontSize="12" Text="25"/>
       <ComboBox Classes="hb" Canvas.Left="379" Canvas.Top="299" Width="73" Height="20"/>
-      <CheckBox Classes="hb" Canvas.Left="315" Canvas.Top="327" Width="137" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="使用快固型粘结剂" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox Classes="hb" Canvas.Left="315" Canvas.Top="327" Width="137" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="使用快固型粘结剂" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
       <Button Classes="hb" Canvas.Left="522" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一页" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="605" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一页" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="720" Canvas.Top="436" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>

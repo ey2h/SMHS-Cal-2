@@ -12,7 +12,7 @@
       <TextBox Classes="hb" Canvas.Left="435" Canvas.Top="14" Width="346" Height="407" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
       <Button Classes="hb" Canvas.Left="657" Canvas.Top="433" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="717" Canvas.Top="433" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-      <TextBlock Classes="hb" Canvas.Left="451" Canvas.Top="439" Width="145" Height="33" Text="frame6必须在前才行，否则半栓半焊出错" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="451" Canvas.Top="439" Width="183" Height="33" Text="frame6必须在前才行，否则半栓半焊出错" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <Button Classes="hb" Canvas.Left="657" Canvas.Top="457" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <Button Classes="hb" Canvas.Left="717" Canvas.Top="457" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <!-- 互斥参数面板（源程序按选项切换显示），共 4 套 -->
@@ -36,11 +36,11 @@
           <TextBox Classes="hb" Canvas.Left="295" Canvas.Top="323" Width="45" Height="18" FontSize="12" Text="10"/>
           <TextBlock Classes="hb" Canvas.Left="31" Canvas.Top="326" Width="54" Height="13" Text="尺寸参数A" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="207" Canvas.Top="326" Width="72" Height="13" Text="单元挂件壁厚" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <CheckBox Classes="hb" Canvas.Left="16" Canvas.Top="338" Width="110" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单侧转接件" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="16" Canvas.Top="338" Width="110" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单侧转接件" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBlock Classes="hb" Canvas.Left="25" Canvas.Top="338" Width="58" Height="13" Text="角片材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="94" Canvas.Top="338" Width="48" Height="13" Text="角片壁厚" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="148" Canvas.Top="338" Width="60" Height="13" Text="竖框螺栓数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <TextBlock Classes="hb" Canvas.Left="213" Canvas.Top="338" Width="57" Height="39" Text="立柱与每个螺栓接触面面数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="213" Canvas.Top="338" Width="62" Height="39" Text="立柱与每个螺栓接触面面数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="103" Canvas.Top="347" Width="45" Height="18" FontSize="12" Text="35"/>
           <ComboBox Classes="hb" Canvas.Left="276" Canvas.Top="347" Width="55" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="295" Canvas.Top="347" Width="45" Height="18" FontSize="12" Text="8"/>
@@ -67,7 +67,7 @@
           <TextBlock Classes="hb" Canvas.Left="207" Canvas.Top="399" Width="132" Height="13" Text="单元立柱侧面连接面壁厚" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="171" Canvas.Top="420" Width="37" Height="18" FontSize="12" Text="320"/>
           <TextBlock Classes="hb" Canvas.Left="31" Canvas.Top="423" Width="132" Height="13" Text="挂轴材料抗弯强度设计值" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <TextBlock Classes="hb" Canvas.Left="243" Canvas.Top="431" Width="94" Height="30" Text="连接件与立柱螺栓个数（单侧）" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="243" Canvas.Top="431" Width="105" Height="30" Text="连接件与立柱螺栓个数（单侧）" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="349" Canvas.Top="433" Width="36" Height="18" FontSize="12" Text="2"/>
           <TextBox Classes="hb" Canvas.Left="171" Canvas.Top="444" Width="37" Height="18" FontSize="12" Text="265"/>
           <TextBlock Classes="hb" Canvas.Left="31" Canvas.Top="447" Width="132" Height="13" Text="螺栓材料抗剪强度设计值" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>

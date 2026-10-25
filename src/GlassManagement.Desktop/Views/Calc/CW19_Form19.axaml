@@ -42,7 +42,6 @@
           <TextBlock Classes="hbFrameTitle" Canvas.Left="266" Canvas.Top="191" Text="下层金属板参数"/>
           <TextBox Classes="hb" Canvas.Left="353" Canvas.Top="213" Width="33" Height="19" FontSize="12" Text="0.5"/>
           <TextBox Classes="hb" Canvas.Left="465" Canvas.Top="214" Width="33" Height="19" FontSize="12" Text="3"/>
-          <TextBox Classes="hb" Canvas.Left="504" Canvas.Top="216" Width="364" Height="233" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="217" Width="198" Height="13" Text="下层金属板厚度       mm,腹板数n2=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="293" Canvas.Top="233" Width="33" Height="19" FontSize="12" Text="2"/>
           <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="233" Width="33" Height="19" FontSize="12" Text="2"/>
@@ -186,7 +185,7 @@
           <Border Classes="hbFrame" Canvas.Left="0" Canvas.Top="56" Width="163" Height="159"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="6" Canvas.Top="47" Text="计算选项"/>
           <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="58" Width="48" Height="13" Text="结构类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <CheckBox Classes="hb" Canvas.Left="25" Canvas.Top="64" Width="182" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="台风袭击区（见GB50178）" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="25" Canvas.Top="64" Width="182" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="台风袭击区（见GB50178）" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <ComboBox Classes="hb" Canvas.Left="80" Canvas.Top="76" Width="73" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="77" Width="48" Height="13" Text="安全等级" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <RadioButton Classes="hb" Canvas.Left="17" Canvas.Top="77" Width="126" Height="14" FontSize="11" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="只计算玻璃的隔声" FontSize="11" TextTrimming="CharacterEllipsis"/></RadioButton>

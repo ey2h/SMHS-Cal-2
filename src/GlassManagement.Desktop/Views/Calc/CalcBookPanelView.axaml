@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CalcBookPanelView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「生成计算书（支持微软office及金山wps office）」MVVM 视图（V31 客户区 603×330）。
+    坐标源：CW22_officewpsoffice.axaml 静态复刻（26 控件）
+      预览框 (6,10) 587x229 只读
+      计算书参数设置 Frame (11,15) 576x142 ─ 工程名称(11,15) / 输入框(75,49)233x25
+                                             / 第二输入框(75,89)233x25
+                                             / Office优先级(19,131) + ComboBox(131,127)161x20
+      计算书正文字体设置 Frame (315,23) 263x127 ─ 小四(331,39)/五号(411,39)/小五(475,39)
+        A3幅面(451,55) / 给定行间距(331,63) + 15.6(363,80) / 繁体(451,74)
+        不输出附录(451,94) / 结构图(451,113) / 左边距2.5(395,104) / 右边距1.5(395,127)
+      按钮 生成计算书(143,195)297x41 / 上一步(531,247)59x24 / 退出(531,279)59x24
+  -->
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="生成计算书（支持微软office及金山wps office）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding LastPath}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding LastPath}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="603" Height="330" Background="#F0F0F0" ClipToBounds="True">
+
+        <!-- ══ 预览区（原 (6,10)587x229 与参数 Frame 完全重叠，移到按钮下方） ══ -->
+        <Border Canvas.Left="11" Canvas.Top="245" Width="510" Height="80"
+                Background="White" BorderBrush="#9AA0A6" BorderThickness="1">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Preview}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="11"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+
+        <!-- ══ 计算书参数设置 (11,15) 576x142 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="15" Width="576" Height="142"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="8" Text="计算书参数设置"/>
+
+        <TextBlock Canvas.Left="14" Canvas.Top="54" Text="工程名称" FontSize="11"/>
+        <TextBlock Canvas.Left="14" Canvas.Top="94" Text="幕墙类型" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="49" Width="233" Height="25"
+                 Text="{Binding ProjectName, Mode=TwoWay}"/>
+        <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="89" Width="233" Height="25"
+                 Text="{Binding ProjectSub, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="19" Canvas.Top="131" Text="Office优先级设置" FontSize="11"/>
+        <ComboBox Canvas.Left="131" Canvas.Top="127" Width="161" Height="20"
+                  ItemsSource="{Binding OfficePriorities}"
+                  SelectedIndex="{Binding OfficePriorityIndex, Mode=TwoWay}"/>
+
+        <TextBox Classes="hb" Canvas.Left="11" Canvas.Top="159" Width="500" Height="25"
+                 IsReadOnly="True" FontSize="11"
+                 Text="输出目录：计算书输出\\（文件名带时间戳，不覆盖旧稿）"/>
+
+        <!-- ══ 计算书正文字体设置 (315,23) 263x127 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="315" Canvas.Top="23" Width="263" Height="127"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="321" Canvas.Top="16"
+                   Text="计算书正文字体设置"/>
+
+        <RadioButton Classes="hb" Canvas.Left="331" Canvas.Top="39" Width="77" Height="15"
+                     GroupName="Font" Content="小四号"
+                     IsChecked="{Binding FontSmallFour, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="39" Width="53" Height="15"
+                     GroupName="Font" Content="五号"
+                     IsChecked="{Binding FontFive, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="475" Canvas.Top="39" Width="75" Height="15"
+                     GroupName="Font" Content="小五号"
+                     IsChecked="{Binding FontSmallFive, Mode=TwoWay}"/>
+
+        <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="55" Width="112" Height="17"
+                  Content="A3幅面输出" IsChecked="{Binding A3, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="331" Canvas.Top="63" Width="97" Height="16"
+                  Content="给定行间距" IsChecked="{Binding GivenLineSpacing, Mode=TwoWay}"/>
+        <TextBox Classes="hb" Canvas.Left="363" Canvas.Top="80" Width="49" Height="18"
+                 IsEnabled="{Binding GivenLineSpacing}"
+                 Text="{Binding LineSpacingText, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="74" Width="112" Height="17"
+                  Content="繁体文字输出" IsChecked="{Binding Traditional, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="94" Width="112" Height="17"
+                  Content="不输出附录" IsChecked="{Binding NoAppendix, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="331" Canvas.Top="106" Text="页面左边距" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="395" Canvas.Top="104" Width="41" Height="18"
+                 Text="{Binding MarginLeftText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="331" Canvas.Top="130" Text="页面右边距" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="395" Canvas.Top="127" Width="41" Height="18"
+                 Text="{Binding MarginRightText, Mode=TwoWay}"/>
+
+        <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="110" Width="126" Height="40"
+                  Content="计算书合并后整理文档结构图"
+                  IsChecked="{Binding OutlineStructure, Mode=TwoWay}"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="143" Canvas.Top="195" Width="297" Height="41"
+                FontSize="14" Content="生成计算书" Command="{Binding GenerateCommand}"/>
+        <Button Classes="hb" Canvas.Left="531" Canvas.Top="247" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="531" Canvas.Top="279" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

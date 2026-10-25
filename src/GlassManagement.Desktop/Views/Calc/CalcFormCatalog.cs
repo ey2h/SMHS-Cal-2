@@ -53,7 +53,11 @@ public static class CalcFormCatalog
         new("幕墙（门窗）物理性能计算", 106, 885, 541, () => new CW19_Form19()),
         new("常用建筑结构静力计算(按《建筑结构静力计算手册》第二版计算)", 24, 899, 494, () => new CW20_Form20()),
         new("文件引用规范设置：", 169, 780, 500, () => new CW21_Form21()),
-        new("生成计算书（支持微软office及金山wps office）", 33, 603, 330, () => new CW22_officewpsoffice()),
+        new("生成计算书（支持微软office及金山wps office）", 26, 603, 330,
+            () => new CalcBookPanelView
+            {
+                DataContext = new CalcBookPanelViewModel(CalcWizardViewModel.Default),
+            }),
         new("截面特性计算(支持AUTOCAD、中望CAD、浩辰CAD)", 40, 854, 499, () => new CW23_AUTOCADCADCAD()),
         new("建筑护栏计算", 157, 904, 578, () => new CW24_Form24()),
         new("全玻璃幕墙设计计算", 89, 903, 438, () => new CW25_Form25()),

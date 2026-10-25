@@ -234,6 +234,8 @@ public partial class CalcMainWindow : Window
                 _wizard.GoEmbedCalc(); ShowWizard(); return;
             case "幕墙计算-胶类、伸缩及紧固计算":
                 _wizard.GoSealantCalc(); ShowWizard(); return;
+            case "生成计算书（支持微软office及金山wps office）":
+                _wizard.GoBookPanel(); ShowWizard(); return;
         }
         // 「玻璃幕墙」顶级/「全隐框」子项：向导第一屏
         if (_wizard.OpenMenuPath(top, sub)) { ShowWizard(); return; }

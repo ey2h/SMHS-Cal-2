@@ -36,6 +36,28 @@ public sealed record BookBlock(BookBlockKind Kind, string Text,
 public enum BookBlockKind { H1, H2, H3, P, Table, PageBreak }
 
 /// <summary>
+/// 生成计算书面板（V31 603×330，CW22）上的排版设置。
+/// 控件与字段的对应见 <c>docs/V31_P2_P3_P4_CODE_MAP.md</c> 第四节。
+/// </summary>
+public sealed record BookPageSetup
+{
+    /// <summary>正文字号（半磅）：小四 24 / 五号 21 / 小五 18。</summary>
+    public int BodyHalfPoints { get; init; } = 21;
+    /// <summary>页面左边距 cm（面板默认 2.5）。</summary>
+    public double MarginLeftCm { get; init; } = 2.5;
+    /// <summary>页面右边距 cm（面板默认 1.5）。</summary>
+    public double MarginRightCm { get; init; } = 1.5;
+    /// <summary>上下边距 cm（面板未暴露，按左右均值取）。</summary>
+    public double MarginTopBottomCm { get; init; } = 2.0;
+    /// <summary>A3 幅面输出（面板复选框）。</summary>
+    public bool A3 { get; init; }
+    /// <summary>给定行间距（磅）；0 = 单倍行距。</summary>
+    public double LineSpacingPt { get; init; }
+
+    public static BookPageSetup Default => new();
+}
+
+/// <summary>
 /// 最小 OOXML(.docx) 生成器 —— 只依赖 BCL，不引 DocumentFormat.OpenXml。
 ///
 /// 为什么手写：桌面端没有 OpenXml 依赖，而计算书只需要「标题 + 段落 + 分页」三种块，
@@ -46,7 +68,8 @@ public static class CalcBookWriter
     private const string W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
     /// <summary>把块序列写成 .docx 文件。</summary>
-    public static void Write(IReadOnlyList<BookBlock> blocks, string path)
+    public static void Write(IReadOnlyList<BookBlock> blocks, string path,
+                             BookPageSetup? setup = null)
     {
         var dir = Path.GetDirectoryName(path);
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
@@ -57,7 +80,7 @@ public static class CalcBookWriter
         Add(zip, "[Content_Types].xml", ContentTypes);
         Add(zip, "_rels/.rels", RootRels);
         Add(zip, "word/_rels/document.xml.rels", DocRels);
-        Add(zip, "word/document.xml", BuildDocument(blocks));
+        Add(zip, "word/document.xml", BuildDocument(blocks, setup ?? BookPageSetup.Default));
     }
 
     private static void Add(ZipArchive zip, string name, string content)
@@ -68,7 +91,7 @@ public static class CalcBookWriter
         s.Write(bytes, 0, bytes.Length);
     }
 
-    private static string BuildDocument(IReadOnlyList<BookBlock> blocks)
+    private static string BuildDocument(IReadOnlyList<BookBlock> blocks, BookPageSetup setup)
     {
         var sb = new StringBuilder();
         sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
@@ -81,33 +104,38 @@ public static class CalcBookWriter
                     sb.Append("<w:p><w:r><w:br w:type=\"page\"/></w:r></w:p>");
                     break;
                 case BookBlockKind.H1:
-                    sb.Append(Para(b.Text, 28, true, true));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 8, true, true, setup));
                     break;
                 case BookBlockKind.H2:
-                    sb.Append(Para(b.Text, 24, true, false));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 3, true, false, setup));
                     break;
                 case BookBlockKind.H3:
-                    sb.Append(Para(b.Text, 22, true, false));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints, true, false, setup));
                     break;
                 case BookBlockKind.Table:
                     sb.Append(Table(b.Headers ?? Array.Empty<string>(),
-                                    b.Rows ?? Array.Empty<string[]>()));
+                                    b.Rows ?? Array.Empty<string[]>(), setup));
                     break;
                 default:
-                    sb.Append(Para(b.Text, 21, false, false));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints, false, false, setup));
                     break;
             }
         }
-        // 一节 A4 纵向
-        sb.Append("<w:sectPr><w:pgSz w:w=\"11906\" w:h=\"16838\"/>")
-          .Append("<w:pgMar w:top=\"1134\" w:right=\"1134\" w:bottom=\"1134\" w:left=\"1134\"/>")
+        // 纸张：A4 11906×16838 twip / A3 16838×23811 twip；边距 cm→twip（1cm = 567）
+        int w = setup.A3 ? 16838 : 11906;
+        int h = setup.A3 ? 23811 : 16838;
+        int ml = (int)Math.Round(setup.MarginLeftCm * 567);
+        int mr = (int)Math.Round(setup.MarginRightCm * 567);
+        int mt = (int)Math.Round(setup.MarginTopBottomCm * 567);
+        sb.Append($"<w:sectPr><w:pgSz w:w=\"{w}\" w:h=\"{h}\"/>")
+          .Append($"<w:pgMar w:top=\"{mt}\" w:right=\"{mr}\" w:bottom=\"{mt}\" w:left=\"{ml}\"/>")
           .Append("</w:sectPr>");
         sb.Append("</w:body></w:document>");
         return sb.ToString();
     }
 
     /// <summary>单线边框表格；单元格内必须有 &lt;w:p&gt;，否则 Word 判为损坏。</summary>
-    private static string Table(string[] headers, string[][] rows)
+    private static string Table(string[] headers, string[][] rows, BookPageSetup setup)
     {
         const string borders =
             "<w:tblBorders>" +
@@ -130,26 +158,26 @@ public static class CalcBookWriter
         sb.Append("<w:tblGrid>");
         for (int i = 0; i < cols; i++) sb.Append("<w:gridCol w:w=\"1700\"/>");
         sb.Append("</w:tblGrid>");
-        if (headers.Length > 0) sb.Append(Row(headers, true));
-        foreach (var r in rows) sb.Append(Row(r, false));
+        if (headers.Length > 0) sb.Append(Row(headers, true, setup));
+        foreach (var r in rows) sb.Append(Row(r, false, setup));
         sb.Append("</w:tbl>");
         // 表后补一个空段落，避免两张表贴在一起
         sb.Append("<w:p/>");
         return sb.ToString();
     }
 
-    private static string Row(string[] cells, bool bold)
+    private static string Row(string[] cells, bool bold, BookPageSetup setup)
     {
         var sb = new StringBuilder("<w:tr>");
         foreach (var c in cells)
         {
             sb.Append("<w:tc><w:tcPr><w:tcW w:w=\"0\" w:type=\"auto\"/></w:tcPr><w:p><w:pPr>");
             sb.Append("<w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
-            sb.Append("<w:sz w:val=\"18\"/>");
+            sb.Append($"<w:sz w:val=\"{Math.Max(16, setup.BodyHalfPoints - 2)}\"/>");
             if (bold) sb.Append("<w:b/>");
             sb.Append("</w:rPr></w:pPr><w:r><w:rPr>");
             sb.Append("<w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
-            sb.Append("<w:sz w:val=\"18\"/>");
+            sb.Append($"<w:sz w:val=\"{Math.Max(16, setup.BodyHalfPoints - 2)}\"/>");
             if (bold) sb.Append("<w:b/>");
             sb.Append("</w:rPr><w:t xml:space=\"preserve\">").Append(Esc(c)).Append("</w:t></w:r></w:p></w:tc>");
         }
@@ -157,11 +185,14 @@ public static class CalcBookWriter
         return sb.ToString();
     }
 
-    private static string Para(string text, int halfPoints, bool bold, bool center)
+    private static string Para(string text, int halfPoints, bool bold, bool center,
+                               BookPageSetup setup)
     {
         var sb = new StringBuilder();
         sb.Append("<w:p><w:pPr>");
         if (center) sb.Append("<w:jc w:val=\"center\"/>");
+        if (setup.LineSpacingPt > 0)
+            sb.Append($"<w:spacing w:line=\"{(int)Math.Round(setup.LineSpacingPt * 20)}\" w:lineRule=\"exact\"/>");
         sb.Append("<w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
         sb.Append("<w:sz w:val=\"").Append(halfPoints).Append("\"/>");
         if (bold) sb.Append("<w:b/>");

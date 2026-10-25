@@ -197,16 +197,9 @@ public partial class SealantCalcViewModel : ObservableObject
     }
 
     [RelayCommand] private void Prev() => _wizard.GoEmbedCalc();
-    /// <summary>胶类屏「下一步」= 生成计算书（V31 向导链的最后一屏）。</summary>
+    /// <summary>胶类屏「下一步」= 进入「生成计算书」面板（V31 的最后一屏）。</summary>
     [RelayCommand]
-    private void Next()
-    {
-        var path = _wizard.GenerateCalcBook();
-        StatusIsWarning = string.IsNullOrEmpty(path);
-        StatusText = string.IsNullOrEmpty(path)
-            ? "计算书生成失败（先在各屏点「预演」）"
-            : $"计算书已生成：{path}";
-    }
+    private void Next() => _wizard.StepFromSealantNext();
     [RelayCommand] private void Exit() => _wizard.CloseForm();
 
     private void Judge(bool ok) => Add(ok ? "满足要求(√)" : "不满足要求(×)", ok ? ColorOk : ColorFail);

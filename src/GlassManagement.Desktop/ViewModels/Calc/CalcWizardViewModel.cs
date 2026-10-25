@@ -32,6 +32,7 @@ public partial class CalcWizardViewModel : ObservableObject
     private ConnectCalcViewModel? _connect;
     private EmbedCalcViewModel? _embed;
     private SealantCalcViewModel? _sealant;
+    private CalcBookPanelViewModel? _bookPanel;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -762,11 +763,26 @@ public partial class CalcWizardViewModel : ObservableObject
     /// <summary>埋件屏「下一步」：埋件之后是胶类页。</summary>
     public void StepFromEmbedNext() => GoSealantCalc();
 
+    /// <summary>向导 8：生成计算书面板（V31 603×330，CW22）。</summary>
+    [RelayCommand]
+    public void GoBookPanel()
+    {
+        _bookPanel ??= new CalcBookPanelViewModel(this);
+        CurrentContent = _bookPanel;
+        StatusText = "向导 8：生成计算书（支持微软 office 及金山 wps office）";
+    }
+
+    /// <summary>胶类屏「下一步」：胶类之后是生成计算书面板。</summary>
+    public void StepFromSealantNext() => GoBookPanel();
+
     /// <summary>
     /// 生成计算书 docx（各屏先点过「预演」才有内容）。
     /// 输出目录：仓库根 <c>计算书输出/</c>，文件名带时间戳，不覆盖旧稿。
     /// </summary>
-    public string? GenerateCalcBook(string? outputPath = null)
+    public string? GenerateCalcBook(string? outputPath = null,
+                                    BookPageSetup? setup = null,
+                                    bool noAppendix = false,
+                                    CalcBookMeta? meta = null)
     {
         try
         {
@@ -810,13 +826,20 @@ public partial class CalcWizardViewModel : ObservableObject
 
             var input = new CalcBookInput
             {
-                ProjectName = "全隐框玻璃幕墙",
+                ProjectName = meta?.ProjectName ?? "北京xx幕墙装饰工程",
+                ProjectSub = meta?.ProjectSub ?? "全隐框玻璃幕墙",
+                Company = meta?.Company ?? "",
+                Designer = meta?.Designer ?? "",
+                Checker = meta?.Checker ?? "",
+                Approver = meta?.Approver ?? "",
+                Ratifier = meta?.Ratifier ?? "",
                 WkKpa = Session.WindStandardKpa,
                 WkPanelKpa = Session.PanelWindKpa,
                 WindSource = Session.PanelWindSource,
                 ColumnSummary = Session.LastColumnSummary,
                 BeamSummary = Session.LastBeamSummary,
                 GlassSummary = Session.LastGlassSummary,
+                NoAppendix = noAppendix,
                 Connect = Session.LastConnectResult,
                 Embed = Session.LastEmbedResult as GlassManagement.Calc.Engines.EmbedResult?,
                 Sealant = Session.LastSealantResult as GlassManagement.Calc.Engines.SealantResult?,

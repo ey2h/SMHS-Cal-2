@@ -74,14 +74,24 @@ public class DoubleLaminatedInsulatedTests
     }
 
     [Fact]
-    public void 等效厚度_差距万分之七未定位()
+    public void 等效厚度_三点实测证明不是齐次函数()
     {
-        // ⚠ 实测 9.04875，本实现 9.04814（t_e³: 740.91 vs 740.77）。
-        // 按 (Σ(0.95tᵢ)³)^(1/3) = (4×185.193)^(1/3) = 9.04814，与实测差 7e-5。
-        // 不硬凑：这里锁住「公式结构正确、差距在 1e-4 以内」，待改厚度取两点定系数。
+        // 三点实测（glass_dblinsul_te.py，改外夹层首片 6→8→10）：
+        //   6/6/6/6  Σt³=864   t_e=9.04875   t_e³/Σt³=0.857535
+        //   8/6/6/6  Σt³=1160  t_e=9.98260   t_e³/Σt³=0.857577
+        //   10/6/6/6 Σt³=1648  t_e=11.22140  t_e³/Σt³=0.857401
+        // 比值不恒定 → t_e 不是 Σt³ 的齐次函数；0.95³=0.857375 最近但残差符号正负交替。
+        // 改任意一片结果相同（4 片对 t_e 等价）。
+        //
+        // 按纪律不硬凑：本实现 (Σ(0.95tᵢ)³)^(1/3) 与实测差 6e-4，
+        // 影响面只有槽位 θ_δ（4.156 vs 4.155）；D / df / 四片 σ / θ / η 全部逐位。
         var r = Run();
         Assert.InRange(r.EquivalentThickness, 9.048, 9.049);
         Assert.InRange(System.Math.Abs(r.EquivalentThickness - 9.04875), 0.0, 0.001);
+
+        // 0.95 系数在 1e-4 内成立（作为近似值锁住，不作为"已逐位"结论）
+        double sumT3 = 4 * 216.0;
+        Assert.InRange(r.EquivalentThickness / System.Math.Pow(sumT3, 1.0 / 3.0), 0.9498, 0.9502);
     }
 
     [Fact]

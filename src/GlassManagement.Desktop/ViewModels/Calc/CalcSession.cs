@@ -516,21 +516,31 @@ public partial class CalcSession : ObservableObject
     // ============================================================
 
     /// <summary>
-    /// 玻璃部分风荷载标准值（kPa）。
-    /// <para><b>⚠ 现状（2026-10-25 实测）</b>：V31 玻璃屏的 wk 与<b>面板尺寸无关</b>
-    /// （1100×1380 与 1100×1500 都是 1.37），说明它的从属面积不是面板面积，而是另一固定口径
-    /// （疑与立柱口径 0x1C91168 的 slot[0x0a] 共用）。该口径尚未挖出，故此处暂取横梁口径
-    /// <see cref="WindStandardKpa"/>（1.285），UI 与测试均标注「待接入」。
-    /// 绝不允许为了对齐 1.37 而改成硬编码常数。</para>
+    /// 玻璃部分风荷载标准值（kPa）—— 由第一页在算完风荷载时一并写入。
+    ///
+    /// <para><b>★ 2026-10-25 根因定位（三屏对比 + DAG 追踪）</b></para>
+    /// <para>V31 玻璃屏的 wk 与立柱/横梁<b>不是两套参数</b>，而是<b>少乘了体型系数项</b>：</para>
+    /// <code>
+    /// 立柱：w0 × βgz × μz × (μs1·ψ + μs_int) = 0.45×1.6929×1.4983×1.126 = 1.285
+    /// 玻璃：w0 × βgz × μz × (1    + μs_int) = 0.45×1.6929×1.4983×1.200 = 1.370
+    ///                                 ↑ 这里 μs1·ψ 被当成 1.0，漏乘了
+    /// </code>
+    /// <para>证据链：<c>0x85F07E</c> <c>10^0.44 = 2.7542</c>（C 类 μz 指数）、
+    /// <c>0x85F08B</c> <c>0.544 × 2.7542 = 1.4983</c>（0.544 = C 类 μz 系数 C），
+    /// 即 <c>slot[0x0a]</c> 是 <b>μz</b> 而不是 μs；玻璃 wk 的乘数链见 <c>0xA7D00C–0xA7D07C</c>。</para>
+    ///
+    /// <para><b>处理口径</b>：按 V31 实测值复刻（保持逐位），并登记为「V31 自身缺陷：玻璃 wk 漏乘 μs1·ψ」。
+    /// 若日后要按规范修正，应改为乘 <see cref="WindStandardKpa"/> 那一套 μs合，
+    /// 但那会与实机数字不一致，需单独评审，不能默认开启。</para>
     /// </summary>
-    public double GlassWindKpa => WindStandardKpa;
+    [ObservableProperty] private double _glassWindKpa;
 
-    /// <summary>玻璃 wk 是否已接入真实口径（false 时 UI 显示「待接入」）。</summary>
-    public bool GlassWindResolved => false;
+    /// <summary>玻璃 wk 是否已由第一页写入（false 时 UI 显示「待接入」）。</summary>
+    public bool GlassWindResolved => GlassWindKpa > 0;
 
     public string GlassWindSource => GlassWindResolved
-        ? $"{WindStandardSource}"
-        : $"{WindStandardSource}（玻璃口径待接入，暂用横梁 wk）";
+        ? $"{WindStandardSource}｜玻璃口径：w0·βgz·μz·(1+μs内压)，不含 μs1·ψ"
+        : $"{WindStandardSource}（玻璃口径未写入，暂用立柱 wk {WindStandardKpa:F3}）";
 
     /// <summary>尺寸来源：<c>true</c>=用第一页传入的分格尺寸下拉；<c>false</c>=自定义宽高。二者互斥。</summary>
     [ObservableProperty] private bool _glassUsePresetSize = true;

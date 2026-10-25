@@ -291,6 +291,19 @@ public partial class BasicParamsViewModel : ObservableObject
         Session.WindStandardKpa = wk;
         Session.WindStandardResolved = true;          // 计算链门禁：第一屏已出结论
 
+        // ── 玻璃屏专用 wk（V31 0xA7D00C–0xA7D07C 的乘数链）──
+        //   wk_glass = w0 · βgz · 地形 · μz · (1 + μs内压) · K1 · K2
+        //   ★ 与 WindStandardKpa 的唯一差别：这里 **不乘 μs1·ψ**（V31 缺陷，实测 1.37 vs 1.285）。
+        //     证据：0x85F07E 10^0.44 = 2.7542（μz 指数）、0x85F08B 0.544×2.7542 = 1.4983（μz 本金），
+        //     而玻璃链把它当 μz 用、把 μs 项当 1.0，故 1.2 = 1+0.2 就是最后那个乘数。
+        //   取 round3 与屏上「玻璃部分风荷载标准值为:1.37KPa」一致。
+        double wkGlassRaw = w0Lib
+                            * WindLoadEngine.BetaGz(terrain, z, peakFactor)
+                            * WindLoadEngine.MuZ(terrain, z)
+                            * (1.0 + muInt)
+                            * k1 * k2;
+        Session.GlassWindKpa = WindLoadEngine.RoundLikeV35(wkGlassRaw, WindLoadEngine.DigitsWk);
+
         // ── 过程参数留痕（用户要求：所有过程参数都要能列表，不能只给结果）──
         ChainTerrain = terrain.ToString();
         ChainW0 = w0Lib; ChainK1 = k1; ChainK2 = k2; ChainZ = z;

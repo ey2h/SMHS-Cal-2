@@ -451,7 +451,9 @@ public partial class GlassCalcViewModel : ObservableObject
 
         StatusIsWarning = !Session.GlassWindResolved;
         StatusText = $"预演完成：{Session.GlassCaption}"
-                   + (Session.GlassWindResolved ? "" : "（玻璃 wk 口径待接入，暂用横梁 wk）");
+                   + (Session.GlassWindResolved
+                        ? "（wk 取玻璃口径，已按 V31 实机链复刻）"
+                        : "（第一页尚未写入玻璃 wk，暂用立柱口径）");
     }
 
     [RelayCommand] private void Prev() => _wizard.GoBeamCalc();

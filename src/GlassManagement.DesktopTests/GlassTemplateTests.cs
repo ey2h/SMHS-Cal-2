@@ -6,9 +6,10 @@ namespace GlassManagement.DesktopTests;
 /// <summary>
 /// 玻璃计算屏模板与联动门禁。
 ///
-/// <para><b>已知限制</b>：玻璃屏的 wk 口径尚未接入（V31 实机 1.37，复刻暂用横梁口径 1.285），
-/// 所以<b>与 wk 相关的数值断言一律标 <c>[Ignore]</c> 并写明实机期望值</b>，
-/// 绝不允许把期望值改成用 1.285 算出来的数让测试变绿。</para>
+/// <para><b>wk 口径（已闭合）</b>：V31 玻璃屏 <c>0xA7D00C–0xA7D07C</c> 的乘数链<b>不含 μs1·ψ</b>，
+/// 故玻璃 wk = 1.37 而立柱 wk = 1.285（同一 w0/βgz/μz，仅体型系数项差 1.20 vs 1.126）。
+/// 这是 V31 自身缺陷，复刻按实测口径实现，测试直接喂 1.37 锁定数值；
+/// <b>绝不允许</b>改用 1.285 后调低期望值。</para>
 ///
 /// <para><b>可断言的部分</b>：输出行数与文案、分隔符长度、片位可用性矩阵、尺寸候选顺序、模式互斥。</para>
 /// </summary>
@@ -24,7 +25,8 @@ public class GlassTemplateTests
     {
         var wiz = new CalcWizardViewModel();
         var s = wiz.Session;
-        s.WindStandardKpa = 1.285;         // 横梁口径（玻璃口径待接入）
+        s.WindStandardKpa = 1.285;         // 立柱/横梁口径
+        s.GlassWindKpa = 1.37;             // 玻璃口径（V31 实机：漏乘 μs1·ψ）
         s.BeamLeftBayMm = 1100;
         s.BeamRightBayMm = 1100;
         s.BeamUpperGridHeightMm = 1380;
@@ -204,7 +206,6 @@ public class GlassTemplateTests
     // ---------------- 数值（wk 未接入，标 Ignore）----------------
 
     [Test]
-    [Ignore("玻璃 wk 口径待接入：实机 wk=1.37，复刻暂用横梁口径 1.285。引擎本身已在 GlassEngineTests 用 1.37 逐位验证。")]
     public void 单片_数值逐位_实机137()
     {
         Assert.That(Render(), Does.Contain("玻璃强度计算值:24.793MPa"));
@@ -213,12 +214,31 @@ public class GlassTemplateTests
     }
 
     [Test]
-    [Ignore("同上：需要玻璃口径 wk=1.37")]
     public void 中空_数值逐位_实机137()
     {
+        // wk = 1.37（玻璃口径）作为输入：6+6 中空、1100×1380、钢化
+        // 实机期望值来自 V31 玻璃屏中空分支（0xA26000–0xA2DB00）
+        // 这里按内容匹配而非下标，避免模板行序调整导致断言错位
         var got = Render(s => { s.GlassMono = false; s.GlassInsulated = true; });
-        Assert.That(got[3], Is.EqualTo("外片玻璃强度计算值:14.697MPa"));
-        Assert.That(got[7], Is.EqualTo("内片玻璃强度计算值:13.51MPa"));
-        Assert.That(got[10], Is.EqualTo("玻璃挠度计算值:5.029mm"));
+        Assert.That(got, Has.Some.EqualTo("外片玻璃强度计算值:14.697MPa"));
+        Assert.That(got, Has.Some.EqualTo("内片玻璃强度计算值:13.51MPa"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度计算值:5.029mm"));
+        Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm(中空玻璃)"));
+    }
+
+    [Test]
+    public void 玻璃wk公式_W0乘Beta乘MuZ乘1加内压()
+    {
+        // V31 0xA7D00C–0xA7D07C 的乘数链：w0 · βgz · 地形 · μz · (1+μs内压)
+        // 与横梁 wk 的唯一差别是「不乘 μs1·ψ」——这是 V31 缺陷，实测 1.37 vs 1.285
+        var terrain = GlassManagement.Calc.Engines.TerrainCategory.C;
+        double beta = GlassManagement.Calc.Engines.WindLoadEngine.BetaGz(terrain, 100.0, 2.5);
+        double muz = GlassManagement.Calc.Engines.WindLoadEngine.MuZ(terrain, 100.0);
+        Assert.That(beta, Is.EqualTo(1.6929).Within(0.00005));   // 0x85EEFA
+        Assert.That(muz, Is.EqualTo(1.4983).Within(0.00005));    // 0x85F08B（0.544×2.7542）
+
+        double wkGlass = 0.45 * beta * muz * (1.0 + 0.2);
+        Assert.That(wkGlass, Is.EqualTo(1.3697).Within(0.0005)); // 屏上 1.37
+        Assert.That(System.Math.Round(wkGlass, 3), Is.EqualTo(1.37));
     }
 }

@@ -80,14 +80,22 @@
   限值也不同：垂直 B/250、水平 B/180；
   **预选 Ix/Iy 与挠度同构**（解出 I、lim 要先 round3）；**抗剪输出标签 tx/ty 与实际方向相反**；
   `V_v = H·(B·g·1.3)/2`（用 H 作跨度）、`V_h = 1.5·qk·B/4 + B·(B·g·0.8)/4·1.4/2`；
-  回归 `verify_beam.py` **30/30**；横梁 12 个输出量已全部逐位一致（`docs/V31_BEAM_UI.md` 四之三）；
+  回归 `verify_beam.py` **30/30** + `verify_beam_trap.py` **53/53**（5 组尺寸含中间比、临界）；
+  **引擎 `HorizontalBeamEngine.cs` + `HorizontalBeamTests.cs`（7 例），Calc 单测 79/79**；
+  横梁 12 个输出量已全部逐位一致（`docs/V31_BEAM_UI.md` 四之三 + 水平向梯形分支）；
   **尺寸取法**：B = 立柱左右两侧分格宽取大值、**自重高度取上分格（不平均）**；
-  **分布形式**：自重=均布(1/8,5/384)、风=对称三角形(1/12,1/120)；详见 `docs/BEAM_LOAD_MODEL_NOTES.md`；
+  **分布形式统一式**（`r=min(B,H)`、`u=r/(2B)`，两端连续）：
+  **`M_y = q_y·B²·(3−(r/B)²)/24`**（r=B→1/12、r→0→1/8）、
+  **`k_df = (3.125−5u²+2u⁴)/240`**（u=0.5→1/120）；
+  `qk = round3(r·wk/1000)`、**`q_y = round3(qd+gp)` 需二次取整**、
+  `V_h = 1.5·qk·B·(1−u)/2 + B·(r·g·0.8)·(1−u)/2·1.4·0.5`（风项用 B、自重项用 r）；
+  **B>H 分支整段换到 `0x8CDF34`**（B≤H 在 0x8AEA00）；
   **第一页玻璃配置强联动**（改中空+夹层 → 竖向一组 +83%），取证必须固定第一页；
   单元式「有/无中横结构」待实测 → `docs/V31_BEAM_UI.md`
 - **钢铝结合**：`docs/V31_ALLOY_CODE.md` + `Engines/AlloyColumnEngine.cs`；
   函数区 `0xCE08FA–0xCE6BE2`；口径 M_钢 最后 /1.05、抵抗矩取 min(Wx1,Wx2)、钢份额用 qd
-- 横梁/玻璃/连接/埋件/胶类五面板：零实现（Pure XAML，0 Binding）
+- **横梁公式已全闭合**：`Engines/HorizontalBeamEngine.cs` + `docs/V31_BEAM_UI.md`（含梯形分支）
+- 玻璃/连接/埋件/胶类四面板：零实现（Pure XAML，0 Binding）
 - 待落盘：`ida_out` 产物生成脚本（可复现性）
 
 ## 六、文档索引（细节看这里）

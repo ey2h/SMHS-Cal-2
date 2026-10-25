@@ -30,7 +30,13 @@ public static class CalcFormCatalog
         new("其它玻璃计算", 62, 763, 500,
             () => new OtherGlassCalcView { DataContext = new OtherGlassCalcViewModel() }),
         new("金属板幕墙计算-板块计算", 55, 795, 526, () => new CW14_Form14()),
-        new("幕墙计算-连接计算", 59, 796, 513, () => new CW15_Form15()),
+        // ★ 连接屏已 MVVM 化（计算在 ConnectEngine），与其它玻璃计算同属需要 DataContext 的条目
+        new("幕墙计算-连接计算", 31, 796, 510,
+            () => new ConnectCalcView
+            {
+                DataContext = new ConnectCalcViewModel(
+                    CalcSession.Default, CalcWizardViewModel.Default),
+            }),
         new("幕墙计算-埋件与焊缝计算", 136, 788, 490, () => new CW16_Form16()),
         new("埋件系统计算", 139, 787, 489, () => new CW17_Form17()),
         new("幕墙计算-胶类、伸缩及紧固计算", 129, 784, 537, () => new CW18_Form18()),

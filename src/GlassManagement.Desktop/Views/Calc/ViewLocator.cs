@@ -24,6 +24,7 @@ public sealed class ViewLocator : IDataTemplate
             BeamCalcViewModel vm => new BeamCalcView { DataContext = vm },
             UnitBeamCalcViewModel vm => new UnitBeamCalcView { DataContext = vm },
             GlassCalcViewModel vm => new GlassCalcView { DataContext = vm },
+            ConnectCalcViewModel vm => new ConnectCalcView { DataContext = vm },
             _ => new TextBlock { Text = "未找到视图: " + data?.GetType().Name },
         };
         return view ?? (Control?)data;

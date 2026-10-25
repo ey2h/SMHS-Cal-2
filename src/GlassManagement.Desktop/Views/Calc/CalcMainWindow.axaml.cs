@@ -226,6 +226,10 @@ public partial class CalcMainWindow : Window
                 _wizard.GoColumnCalc(); ShowWizard(); return;
             case "多跨数据输入（立柱计算·可操作复刻）":
                 _wizard.GoMultiSpan(); ShowWizard(); return;
+            case "幕墙计算-玻璃计算":
+                _wizard.GoGlassCalc(); ShowWizard(); return;
+            case "幕墙计算-连接计算":
+                _wizard.GoConnectCalc(); ShowWizard(); return;
         }
         // 「玻璃幕墙」顶级/「全隐框」子项：向导第一屏
         if (_wizard.OpenMenuPath(top, sub)) { ShowWizard(); return; }

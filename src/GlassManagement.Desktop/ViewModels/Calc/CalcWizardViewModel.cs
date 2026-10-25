@@ -26,6 +26,7 @@ public partial class CalcWizardViewModel : ObservableObject
     private BeamCalcViewModel? _beam;
     private UnitBeamCalcViewModel? _unitBeam;
     private GlassCalcViewModel? _glass;
+    private ConnectCalcViewModel? _connect;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -715,4 +716,20 @@ public partial class CalcWizardViewModel : ObservableObject
 
     /// <summary>横梁屏「下一步」：横梁之后是玻璃页。</summary>
     public void StepFromBeamNext() => GoGlassCalc();
+
+    /// <summary>向导 5：连接计算屏（MVVM 版，计算在 ConnectEngine）。</summary>
+    [RelayCommand]
+    public void GoConnectCalc()
+    {
+        _connect ??= new ConnectCalcViewModel(Session, this);
+        MirrorStatus(_connect);
+        CurrentContent = _connect;
+        StatusText = $"向导 5：幕墙计算-连接计算（wk={Session.WindStandardKpa:0.###}KPa｜"
+                   + $"{Session.BeamSpanMm:0.###}×{Session.BeamUpperGridHeightMm:0.###}mm）";
+    }
+
+    /// <summary>玻璃屏「下一步」：玻璃之后是连接页。</summary>
+    public void StepFromGlassNext() => GoConnectCalc();
+
+
 }

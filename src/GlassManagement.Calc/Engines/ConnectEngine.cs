@@ -66,6 +66,9 @@ public sealed record ConnectInputs
     /// <summary>立柱与主体：螺栓有效直径 mm（槽63 = 10.35821）。</summary>
     public double MainBoltEffectiveDiameter { get; init; } = 10.35821;
 
+    /// <summary>立柱与主体：螺栓抗剪强度设计值 N/mm²（槽62 = 190）。</summary>
+    public double MainShearMpa { get; init; } = 190.0;
+
     /// <summary>横梁/立柱与角码：螺栓受剪面数（轨迹 0xA936C4 段无前置 ×2 ⇒ 单剪 = 1）。</summary>
     public double BeamShearPlanes { get; init; } = 1.0;
 
@@ -199,7 +202,7 @@ public static class ConnectEngine
         double mainDead = R(x.DeadFactor * mainDeadBase);                                // 槽59
         double mainForce = R(Math.Sqrt(mainWindCombo * mainWindCombo + mainDead * mainDead)); // 槽60
 
-        double mainCap = BoltCapacity(x.MainBoltEffectiveDiameter, x.BoltShearMpa,
+        double mainCap = BoltCapacity(x.MainBoltEffectiveDiameter, x.MainShearMpa,
                                       x.MainShearPlanes);                                // 槽64
         double mainBolt = R(mainForce / mainCap);                                        // 槽65
         // 0xA9D65A: 2×2 → ×d → ×t(3) → ×185

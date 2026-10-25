@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using GlassManagement.Calc.Engines;
 
 namespace GlassManagement.Desktop.ViewModels.Calc;
 
@@ -681,6 +682,25 @@ public partial class CalcSession : ObservableObject
     partial void OnGlassCustomHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassHeightMm));
     partial void OnGlassPresetWidthMmChanged(double value) => OnPropertyChanged(nameof(GlassWidthMm));
     partial void OnGlassPresetHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassHeightMm));
+    // ============================================================
+    // ⑤ 连接 / 埋件 / 胶类三屏（P1–P3）
+    // ============================================================
+
+    /// <summary>
+    /// 立柱（或横梁）壁厚 mm —— 连接屏「被承压板厚」、埋件屏转接件厚度的来源。
+    /// V31 连接屏槽 26/43 恒为 3，与本值一致；由横梁屏写入，没有则用 3。
+    /// </summary>
+    [ObservableProperty] private string _webWallThicknessText = "3";
+
+    /// <summary>连接屏最近一次预演结果（埋件屏的受力取值需要它）。</summary>
+    public ConnectResult? LastConnectResult { get; set; }
+
+    /// <summary>埋件屏最近一次预演结果。</summary>
+    public object? LastEmbedResult { get; set; }
+
+    /// <summary>胶类屏最近一次预演结果。</summary>
+    public object? LastSealantResult { get; set; }
+
     partial void OnBeamLeftBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
     partial void OnBeamRightBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
     partial void OnBeamUpperGridHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));

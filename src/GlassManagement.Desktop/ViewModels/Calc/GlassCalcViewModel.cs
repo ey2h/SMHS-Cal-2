@@ -545,8 +545,8 @@ public partial class GlassCalcViewModel : ObservableObject
     }
 
     [RelayCommand] private void Prev() => _wizard.GoBeamCalc();
-    [RelayCommand] private void Next()
-        => StatusText = "玻璃计算：已完成；连接/埋件/胶类三屏尚未复刻（按面板顺序推进）";
+    /// <summary>玻璃屏「下一步」：进入连接计算屏（向导 5）。</summary>
+    [RelayCommand] private void Next() => _wizard.StepFromGlassNext();
     [RelayCommand] private void Exit() => _wizard.CloseForm();
 
     private void Judge(bool ok) => Add(ok ? "满足要求(√)" : "不满足要求(×)", ok ? ColorOk : ColorFail);

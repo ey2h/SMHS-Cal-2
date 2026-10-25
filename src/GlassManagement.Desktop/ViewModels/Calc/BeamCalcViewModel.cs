@@ -97,6 +97,15 @@ public partial class BeamCalcViewModel : ObservableObject
         }
     }
 
+    /// <summary>玻璃厚度显示（V31 玻璃配置框只读，实际配置由第一页传入）。</summary>
+    public string GlassThicknessText => "—";
+
+    /// <summary>抗弯强度设计值文本（材质切换后刷新；V31 的 f 框）。</summary>
+    public string BendingText => MaterialAllowables.Bending(Session.BeamMaterial).ToString("0.###");
+
+    /// <summary>抗剪强度设计值文本（V31 的 fv 框）。</summary>
+    public string ShearText => MaterialAllowables.Shear(Session.BeamMaterial).ToString("0.###");
+
     /// <summary>预演是否可用（无 wk 时禁用，并给出原因 —— 与立柱屏同一套做法）。</summary>
     public bool PreviewEnabled => Session.WindStandardKpa > 0 && SelectedProfile is not null;
 
@@ -281,6 +290,18 @@ public partial class BeamCalcViewModel : ObservableObject
         if (hit is null) return;
         SelectedProfile = hit;
         StatusText = $"定位型材：{hit.Code}";
+    }
+
+    /// <summary>材质单选组（9 个 RadioButton 共享 Session.BeamMaterial）。</summary>
+    [RelayCommand]
+    private void SetMaterial(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return;
+        Session.BeamMaterial = name;
+        OnPropertyChanged(nameof(MaterialAllowText));
+        OnPropertyChanged(nameof(BendingText));
+        OnPropertyChanged(nameof(ShearText));
+        Invalidate("材质已切换");
     }
 
     [RelayCommand] private void Prev() => _wizard.GoColumnCalc();

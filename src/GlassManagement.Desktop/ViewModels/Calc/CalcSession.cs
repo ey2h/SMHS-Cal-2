@@ -508,4 +508,142 @@ public partial class CalcSession : ObservableObject
     /// </summary>
     public double AlphaMax =>
         GlassManagement.Calc.Data.ParamLibrary.FindRegion(RegionName)?.AlphaMax ?? 0.16;
+
+    // ============================================================
+    // ④ 玻璃计算屏（V31「幕墙计算-玻璃计算」，函数区 0xA1EBF5 起 + 3 个分支）
+    //    控件坐标见 local-data/recon/v31runs/dump_玻璃.txt（43 控件，客户区 936×442）
+    //    尺寸流转见 docs/V31_GLASS_SIZE_FLOW.md；公式见 docs/V31_GLASS_PAGE.md
+    // ============================================================
+
+    /// <summary>
+    /// 玻璃部分风荷载标准值（kPa）。
+    /// <para><b>⚠ 现状（2026-10-25 实测）</b>：V31 玻璃屏的 wk 与<b>面板尺寸无关</b>
+    /// （1100×1380 与 1100×1500 都是 1.37），说明它的从属面积不是面板面积，而是另一固定口径
+    /// （疑与立柱口径 0x1C91168 的 slot[0x0a] 共用）。该口径尚未挖出，故此处暂取横梁口径
+    /// <see cref="WindStandardKpa"/>（1.285），UI 与测试均标注「待接入」。
+    /// 绝不允许为了对齐 1.37 而改成硬编码常数。</para>
+    /// </summary>
+    public double GlassWindKpa => WindStandardKpa;
+
+    /// <summary>玻璃 wk 是否已接入真实口径（false 时 UI 显示「待接入」）。</summary>
+    public bool GlassWindResolved => false;
+
+    public string GlassWindSource => GlassWindResolved
+        ? $"{WindStandardSource}"
+        : $"{WindStandardSource}（玻璃口径待接入，暂用横梁 wk）";
+
+    /// <summary>尺寸来源：<c>true</c>=用第一页传入的分格尺寸下拉；<c>false</c>=自定义宽高。二者互斥。</summary>
+    [ObservableProperty] private bool _glassUsePresetSize = true;
+    [ObservableProperty] private bool _glassUseCustomSize;
+
+    /// <summary>自定义宽/高 mm（默认 1000 / 1280，与 V31 两个 disabled 框的回显一致）。</summary>
+    [ObservableProperty] private double _glassCustomWidthMm = 1000;
+    [ObservableProperty] private double _glassCustomHeightMm = 1280;
+
+    /// <summary>下拉选中项<b>值</b>（不是索引）。V31 换第一页尺寸后索引不重置会漂移，复刻按值记忆。</summary>
+    [ObservableProperty] private double _glassPresetWidthMm = 1100;
+    [ObservableProperty] private double _glassPresetHeightMm = 1380;
+
+    /// <summary>
+    /// 分格尺寸候选 —— 第一页「龙骨间距」两个宽 × 两个高的<b>全组合</b>，
+    /// <b>外层是高、内层是宽</b>（实证：改宽② 1100→900 后候选变 [1100,900,1100,900]；
+    /// 若内层是高则会是 [1100,1100,900,900]）。
+    /// </summary>
+    public List<(double W, double H)> GlassSizeCandidates
+    {
+        get
+        {
+            var w = new[] { BeamLeftBayMm, BeamRightBayMm };
+            var h = new[] { BeamUpperGridHeightMm, BeamUpperGridHeightMm };
+            var list = new List<(double, double)>(4);
+            foreach (var hh in h)
+                foreach (var ww in w)
+                    list.Add((ww, hh));
+            return list;
+        }
+    }
+
+    /// <summary>本屏实际参与计算的宽 / 高 mm（按模式取值）。</summary>
+    public double GlassWidthMm => GlassUseCustomSize ? GlassCustomWidthMm : GlassPresetWidthMm;
+    public double GlassHeightMm => GlassUseCustomSize ? GlassCustomHeightMm : GlassPresetHeightMm;
+
+    /// <summary>短边 / 长边 mm（引擎的 a / b，顺序无关）。</summary>
+    public double GlassShortSpanMm => Math.Min(GlassWidthMm, GlassHeightMm);
+    public double GlassLongSpanMm => Math.Max(GlassWidthMm, GlassHeightMm);
+
+    /// <summary>三片厚度 mm（V31 厚度下拉 10 档：3.2/4/5/6/8/10/12/15/19/20，默认 6）。</summary>
+    [ObservableProperty] private double _glassOuterThicknessMm = 6;
+    [ObservableProperty] private double _glassMidThicknessMm = 6;
+    [ObservableProperty] private double _glassInnerThicknessMm = 6;
+
+    /// <summary>三片玻璃种类（5 档：普通/浮法/半钢化/钢化/夹丝，默认钢化）。</summary>
+    [ObservableProperty] private string _glassOuterKind = "钢化玻璃";
+    [ObservableProperty] private string _glassMidKind = "钢化玻璃";
+    [ObservableProperty] private string _glassInnerKind = "钢化玻璃";
+
+    /// <summary>胶片类型（PVB 不参与受力 / SGP 参与，二者走不同函数区）。</summary>
+    [ObservableProperty] private GlassManagement.Calc.Engines.InterlayerKind _interlayerKind
+        = GlassManagement.Calc.Engines.InterlayerKind.Pvb;
+
+    /// <summary>胶片厚度 mm（PVB 下 V31 该框 en=False，SGP 才启用；默认 0.76）。</summary>
+    [ObservableProperty] private double _filmThicknessMm = 0.76;
+
+    /// <summary>
+    /// 玻璃构造 → 走哪个引擎分支（由第一页「玻璃配置」六选一决定）。
+    /// 双中空 / 双夹层-中空的 σ 尚未闭合，映射里会走到不支持分支。
+    /// </summary>
+    public GlassBuildKind GlassBuildKind
+    {
+        get
+        {
+            if (GlassMono) return GlassBuildKind.Single;
+            if (GlassInsulated) return GlassBuildKind.Insulated;
+            if (GlassLaminated) return GlassBuildKind.Laminated;
+            if (GlassInsulLam)
+                return InterlayerKind == GlassManagement.Calc.Engines.InterlayerKind.Sgp
+                    ? GlassBuildKind.InsulLamSgp : GlassBuildKind.InsulLamPvb;
+            if (GlassDoubleInsul) return GlassBuildKind.DoubleInsulated;
+            if (GlassDoubleLam) return GlassBuildKind.DoubleLaminated;
+            return GlassBuildKind.Single;
+        }
+    }
+
+    // ---- 玻璃屏：两种尺寸模式互斥（V31 实测：选分格→下拉 en=1 宽高框 en=0；选自定义→反之）----
+    partial void OnGlassUsePresetSizeChanged(bool value)
+    {
+        if (value) GlassUseCustomSize = false;
+        OnPropertyChanged(nameof(GlassWidthMm));
+        OnPropertyChanged(nameof(GlassHeightMm));
+        OnPropertyChanged(nameof(GlassShortSpanMm));
+        OnPropertyChanged(nameof(GlassLongSpanMm));
+    }
+
+    partial void OnGlassUseCustomSizeChanged(bool value)
+    {
+        if (value) GlassUsePresetSize = false;
+        OnPropertyChanged(nameof(GlassWidthMm));
+        OnPropertyChanged(nameof(GlassHeightMm));
+        OnPropertyChanged(nameof(GlassShortSpanMm));
+        OnPropertyChanged(nameof(GlassLongSpanMm));
+    }
+
+    partial void OnGlassCustomWidthMmChanged(double value) => OnPropertyChanged(nameof(GlassWidthMm));
+    partial void OnGlassCustomHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassHeightMm));
+    partial void OnGlassPresetWidthMmChanged(double value) => OnPropertyChanged(nameof(GlassWidthMm));
+    partial void OnGlassPresetHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassHeightMm));
+    partial void OnBeamLeftBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
+    partial void OnBeamRightBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
+    partial void OnBeamUpperGridHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
+}
+
+/// <summary>玻璃构造分支（决定玻璃屏用哪个引擎方法）。</summary>
+public enum GlassBuildKind
+{
+    Single = 0,          // 单片玻璃  — GlassEngine.Compute
+    Insulated,           // 中空玻璃  — ComputeInsulated
+    Laminated,           // 夹层玻璃  — ComputeLaminated
+    InsulLamPvb,         // 中空+夹层 PVB — ComputeComposite
+    InsulLamSgp,         // 中空+夹层 SGP — ComputeCompositeSgp
+    DoubleInsulated,     // 双中空（σ 未闭合）
+    DoubleLaminated,     // 双夹层-中空（未挖）
 }

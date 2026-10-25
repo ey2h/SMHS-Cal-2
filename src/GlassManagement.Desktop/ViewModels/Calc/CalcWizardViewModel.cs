@@ -25,6 +25,7 @@ public partial class CalcWizardViewModel : ObservableObject
     private MultiSpanViewModel? _multi;
     private BeamCalcViewModel? _beam;
     private UnitBeamCalcViewModel? _unitBeam;
+    private GlassCalcViewModel? _glass;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -700,7 +701,18 @@ public partial class CalcWizardViewModel : ObservableObject
 
     public void StepFromBasicNext() => GoColumnCalc();
 
-    /// <summary>横梁屏「下一步」：横梁之后是玻璃页（尚未复刻计算，先提示）。</summary>
-    public void StepFromBeamNext()
-        => StatusText = "横梁计算：已完成；玻璃/连接/埋件/胶类四屏尚未复刻（按计划逐面板推进）";
+    /// <summary>向导 4：玻璃计算屏（MVVM 版，计算在 GlassEngine）。</summary>
+    [RelayCommand]
+    public void GoGlassCalc()
+    {
+        _glass ??= new GlassCalcViewModel(Session, this);
+        MirrorStatus(_glass);
+        CurrentContent = _glass;
+        StatusText = $"向导 4：幕墙计算-玻璃计算（{Session.GlassCaption}｜"
+                   + $"{Session.GlassWidthMm:0.###}×{Session.GlassHeightMm:0.###}mm"
+                   + $"｜wk={Session.GlassWindKpa:0.###}KPa）";
+    }
+
+    /// <summary>横梁屏「下一步」：横梁之后是玻璃页。</summary>
+    public void StepFromBeamNext() => GoGlassCalc();
 }

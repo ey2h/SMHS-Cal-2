@@ -51,6 +51,27 @@ public readonly record struct LaminatedGlassResult(
     double Deflection,
     double Limit);
 
+/// <summary>胶片类型（V31 玻璃屏「夹层配置」下拉，ctrl id=5，项序 0=PVB / 1=SGP）。</summary>
+public enum InterlayerKind
+{
+    /// <summary>PVB（聚乙烯醇缩丁醛）：**不参与受力**，胶片厚度下拉 en=0（不可输入）。</summary>
+    Pvb = 0,
+
+    /// <summary>SGP（离子型间层）：**参与受力**，胶片厚度下拉 en=1（必须输入）。</summary>
+    Sgp = 1,
+}
+
+/// <summary>复合玻璃（中空 + 单侧夹胶）整片结果。</summary>
+public readonly record struct CompositeGlassResult(
+    GlassPlyResult[] Plies,       // 按「室外 → 室内」顺序，逐片 σ
+    double TotalStiffness,        // 全部玻璃片 Σt³（分配分母）
+    double EquivalentThickness,   // t_e，round3
+    double ThetaDefl,
+    double EtaDefl,
+    double Stiffness,             // D
+    double Deflection,
+    double Limit);
+
 /// <summary>
 /// 玻璃面板（四边简支）计算 —— V31「幕墙计算-玻璃计算」屏。
 ///
@@ -316,5 +337,83 @@ public static class GlassEngine
         double limit = R3(a / DeflectionDivisor);
 
         return new LaminatedGlassResult(ply, te, thetaD, etaD, d, df, limit);
+    }
+
+    /// <summary>
+    /// 复合玻璃（中空 + 单侧夹胶，共 3 片）—— 走**第四段函数区** <c>0xA46000–0xA49B00</c>（17 个定稿点）。
+    ///
+    /// <para><b>三级受力流程（V31 的合并实现，与「先分侧、再分片」数学等价）</b></para>
+    ///
+    /// <list type="number">
+    /// <item><b>第一级：总刚度</b> S = Σ tᵢ³（把全部玻璃片一起算，实测分母 648 = 3×216）。
+    /// V31 直接算每片 wᵢ = 1.1?·wk·tᵢ³/S；而「先按侧刚度 S_side/S 分到侧、再按 tᵢ³/S_side 分到片」
+    /// 乘起来恰等于 tᵢ³/S ——所以两种写法结果相同，V31 省了一层。</item>
+    /// <item><b>第二级：外片放大</b> 只有**最外侧那片**乘 1.1（0xA46001：1.1×wk×216）。</item>
+    /// <item><b>第三级：逐片组合与强度</b> W标准ᵢ=round6(wᵢ+0.5Q)、W强度ᵢ=round6(1.5wᵢ+0.7Q)、
+    /// θᵢ=round3(W标准ᵢ·a⁴/(E·tᵢ⁴))、σᵢ=round3(6·m·W强度ᵢ·a²·ηᵢ/tᵢ²)。</item>
+    /// </list>
+    ///
+    /// <para><b>挠度</b>不分片：<c>t_e = round3(0.95·(Σtᵢ³)^(1/3))</c>（实测 0.95×8.6532 = 8.2208 → 8.221），
+    /// 再 θ_δ=6.099 → η=0.991 → D=3472593.612 → df=3.469。</para>
+    ///
+    /// <para><b>实测工况</b>（中空+夹层、三片均 6mm、wk=0.00137、αmax=0.16、1100×1380、PVB）：
+    /// 外侧夹胶片 w=0.000502 → W标准 0.000564 / W强度 0.000839 / θ 8.849 / σ=10.345（两片同值）；
+    /// 室内单片 w=0.000457 → 0.000518 / 0.000772 / θ 8.128 / σ=9.578。</para>
+    ///
+    /// <para>⚠ <b>SGP 未实现</b>：实测 SGP 走另一段（0xA52xxx–0xA54Axx），
+    /// <c>t_e = 0.95×(12³+6³)^(1/3)</c>（把夹层侧两片合成 12mm）→ 11.856，
+    /// 但 σ 内部用的 t = <b>11.969</b> 来源尚未定位，不得臆造，故此处显式抛异常。</para>
+    /// </summary>
+    /// <param name="plyThicknesses">按「室外 → 室内」顺序的玻璃厚度 mm（3 片）。</param>
+    public static CompositeGlassResult ComputeComposite(
+        double wkNmm2, double aMm, double bMm, double[] plyThicknesses,
+        InterlayerKind interlayer, double alphaMax)
+    {
+        if (interlayer == InterlayerKind.Sgp)
+        {
+            throw new NotSupportedException(
+                "SGP 分支未闭合：V31 函数区 0xA52xxx–0xA54Axx，t_e=0.95×(Σt³)^(1/3) 已实测，" +
+                "但 σ 公式里的 t=11.969 来源未定位（见 docs/V31_GLASS_PAGE.md 9.6）。");
+        }
+        if (plyThicknesses.Length < 2)
+        {
+            throw new ArgumentException("复合玻璃至少需要 2 片", nameof(plyThicknesses));
+        }
+
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R(plyThicknesses[0] * DensityNmm3, 6);        // 0xA46476（单份）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);         // 0xA46599
+
+        double sum3 = 0;
+        foreach (var t in plyThicknesses) sum3 += Math.Pow(t, 3.0);   // 0xA4608D 648
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var plies = new GlassPlyResult[plyThicknesses.Length];
+        for (int i = 0; i < plyThicknesses.Length; i++)
+        {
+            double t = plyThicknesses[i];
+            double wkFactor = i == 0 ? InsulatedOuterFactor : 1.0;    // 只有最外片 ×1.1
+            double wShare = R(R(wkFactor * wkNmm2, 6) * Math.Pow(t, 3.0) / sum3, 6);
+            double wStr = R(1.5 * wShare + 0.7 * qe, 6);
+            double wDef = R(wShare + 0.5 * qe, 6);
+            double theta = R3(wDef * Math.Pow(a, 4.0) / (E * Math.Pow(t, 4.0)));
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (t * t));
+            plies[i] = new GlassPlyResult(t, wShare, wStr, wDef, theta, eta, sigma);
+        }
+
+        double te = R3(InsulatedThicknessFactor * Math.Pow(sum3, 1.0 / 3.0));   // 8.221
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double etaD = Eta(thetaD);
+        double d = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum3, te, thetaD, etaD, d, df, limit);
     }
 }

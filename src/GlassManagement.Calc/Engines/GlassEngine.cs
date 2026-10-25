@@ -407,6 +407,31 @@ public static class GlassEngine
     }
 
     /// <summary>
+    /// **双中空玻璃**的挠度等效厚度 —— 逐层衰减，不是简单乘一个 0.95。
+    ///
+    /// <para>V31 函数区 <c>0xA5Cxxx–0xA5F2xx</c>。四点实测定案（1100×1380、wk=0.00137）：</para>
+    /// <list type="table">
+    /// <item><term>6/6/6</term><description>t_e = 7.952</description></item>
+    /// <item><term>8/6/6</term><description>t_e = 9.112</description></item>
+    /// <item><term>6/8/6</term><description>t_e = 8.964</description></item>
+    /// <item><term>6/6/8</term><description>t_e = 8.964</description></item>
+    /// </list>
+    ///
+    /// <para>拟合结果：<c>t_e = [ (0.95·t₁)³ + (0.95²·t₂)³ + (0.95²·t₃)³ ]^(1/3)</c> ——
+    /// 每穿过一层中空腔厚度打 0.95 折：外片 1 层（0.95），中/内片 2 层（0.95²）。四点全部落在 round3 内。</para>
+    ///
+    /// <para>⚠ 与「中空+夹层」不同：后者是 <c>0.95·(Σt³)^(1/3)</c>（全体折一次，实测 8.221）。
+    /// V31 两种配置的等效厚度口径不一致，按实测各记各的。</para>
+    /// </summary>
+    public static double DoubleInsulatedThickness(double t1, double t2, double t3)
+    {
+        double e1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+        double e2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
+        double e3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
+        return R3(Math.Pow(e1 + e2 + e3, 1.0 / 3.0));
+    }
+
+    /// <summary>
     /// 复合玻璃（中空 + 单侧夹胶，共 3 片）—— 走**第四段函数区** <c>0xA46000–0xA49B00</c>（17 个定稿点）。
     ///
     /// <para><b>三级受力流程（V31 的合并实现，与「先分侧、再分片」数学等价）</b></para>

@@ -61,9 +61,8 @@ public class DoubleInsulatedTests
         var r = GlassEngine.ComputeDoubleInsulated(0.00137, 1100, 1380, 6, 6, 6, 0.16);
         Assert.Equal(0.000617, r.Plies[0].WDeflection);   // 槽[14]
         Assert.Equal(0.000919, r.Plies[0].WStrength);     // 槽[15]
-        Assert.InRange(r.Plies[1].WDeflection, 0.000494, 0.000495);   // 槽[21]=0.000495（round6 边界）
-        // ⚠ 实测 0.000736，当前算 0.000735（份额权重精度差 0.1%，见文档 8.6）
-        Assert.InRange(r.Plies[1].WStrength, 0.000734, 0.000737);
+        Assert.Equal(0.000495, r.Plies[1].WDeflection);   // 槽[21]
+        Assert.Equal(0.000736, r.Plies[1].WStrength);     // 槽[22]
     }
 
     [Fact]
@@ -73,10 +72,9 @@ public class DoubleInsulatedTests
         Assert.Equal(9.681, r.Plies[0].Theta);   // 槽[30]
         Assert.Equal(0.963, r.Plies[0].Eta);     // 槽[31]
         Assert.Equal(11.262, r.Plies[0].Sigma);  // 屏：外片 11.262MPa
-        Assert.InRange(r.Plies[1].Theta, 7.75, 7.77);   // 槽[38]=7.767
+        Assert.Equal(7.767, r.Plies[1].Theta);   // 槽[38]
         Assert.Equal(0.978, r.Plies[1].Eta);     // 槽[39]
-        // ⚠ 实测 9.16，当前算 9.147（差 0.14%，份额权重未逐位，见文档 8.6）
-        Assert.InRange(r.Plies[1].Sigma, 9.14, 9.17);
+        Assert.Equal(9.16, r.Plies[1].Sigma);    // 槽[40]：屏上中片 9.16MPa
         Assert.Equal(r.Plies[1].Sigma, r.Plies[2].Sigma);   // 同厚同值
     }
 
@@ -95,8 +93,15 @@ public class DoubleInsulatedTests
         var a = GlassEngine.ComputeDoubleInsulated(0.00137, 1100, 1380, 6, 6, 6, 0.16);
         var c = GlassEngine.ComputeDoubleInsulated(0.00137, 1100, 1380, 6, 6, 8, 0.16);
         Assert.Equal(a.Plies[1].Sigma, a.Plies[2].Sigma);      // 同厚 → 同 σ
-        Assert.NotEqual(c.Plies[1].Sigma, c.Plies[2].Sigma);   // 6/6/8 → 分离（实测 8.511 vs 6.818）
-        // ⚠ 6/6/8 的绝对值尚未对上（实测 σ中 8.511 / σ内 6.818），这里只锁「会分离」这一事实
-        Assert.InRange(c.Plies[0].Sigma, 8.2, 8.6);            // 实测 8.352，当前 8.38 量级
+        Assert.NotEqual(c.Plies[1].Sigma, c.Plies[2].Sigma);   // 6/6/8 → 分离
+
+        // 6/6/8 实测（文档 8.5）：第二片 σ = 6.818。
+        // ⚠ 该行只测到第二片；「8.511 属于中片还是内片」当时未记录，且 8/6/6 与 6/8/6
+        //   两行的外片都写 8.352（一个外片 8mm、一个 6mm，不可能同值），故该表的外片列存疑。
+        //   这里只锁有实测依据的那一个值，其余待 V31 双中空屏三片 σ 实测后再补。
+        Assert.Equal(6.818, c.Plies[1].Sigma);
+
+        // 物理方向自检：内片加厚 → 该片分到的荷载按 t³ 上升，σ ∝ t³/t² = t ⇒ 内片 σ 大于中片
+        Assert.True(c.Plies[2].Sigma > c.Plies[1].Sigma, "内片加厚后 σ 应更大");
     }
 }

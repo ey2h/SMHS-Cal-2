@@ -114,17 +114,17 @@ public class GlassTemplateTests
     }
 
     [Test]
-    public void 双中空_给出未支持提示而不崩()
+    public void 双中空_三片各一组_43星分隔()
     {
-        var wiz = new CalcWizardViewModel();
-        var s = wiz.Session;
-        s.WindStandardKpa = 1.285;
-        s.GlassMono = false; s.GlassDoubleInsul = true;
-        var vm = new GlassCalcViewModel(s, wiz);
-        vm.PreviewCommand.Execute(null);
-        Assert.That(vm.StatusIsWarning, Is.True);
-        Assert.That(vm.StatusText, Does.Contain("双中空"));
-        Assert.That(vm.Results, Is.Empty);
+        // 三玻双中空：取消「未支持」后按三片输出，等效厚度逐层衰减。
+        // ⚠ 文案（「1#/2#/3#玻璃强度计算值」）是按三片构型类推的，V31 双中空屏尚未 dump 原文核对。
+        var got = Render(s => { s.GlassMono = false; s.GlassDoubleInsul = true; });
+        Assert.That(got[0], Is.EqualTo(Sep43));
+        Assert.That(got[1], Does.StartWith("玻璃部分风荷载标准值为:"));
+        Assert.That(got[3], Does.StartWith("1#玻璃强度计算值:"));
+        Assert.That(got, Has.Some.StartsWith("2#玻璃强度计算值:"));
+        Assert.That(got, Has.Some.StartsWith("3#玻璃强度计算值:"));
+        Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm(双中空玻璃)"));
     }
 
     // ---------------- 片位可用性矩阵 ----------------

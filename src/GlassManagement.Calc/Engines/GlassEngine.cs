@@ -430,8 +430,10 @@ public static class GlassEngine
         double b = Math.Max(aMm, bMm);
 
         double qg = R(t1 * DensityNmm3, 6);                     // 用首片厚度（槽[7]=0.000154）
-        double qeRaw = qg * (SeismicFactor * alphaMax);          // 未取整
-        double qe = R(qeRaw, 6);                                 // 0.000123（阈值显示用）
+        // ★ 地震项必须基于 **round6 后的 qg** 再算再 round6 —— 槽[7]=0.000154 就是 round6 结果。
+        //   实测校验：0.000154×5×0.16 = 0.0001232（若用未取整的 0.0001536 得 0.00012288，
+        //   会让中片 W标准 掉到 0.000494，与实测 0.000495 不符）。
+        double qe = R(qg * SeismicFactor * alphaMax, 6);         // 0.0001232 → 槽上显示 0.000123
 
         double d1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
         double d2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
@@ -448,13 +450,15 @@ public static class GlassEngine
         for (int i = 0; i < 3; i++)
         {
             double f = i == 0 ? InsulatedOuterFactor : 1.0;
-            double wRaw = f * wkNmm2 * ds[i] / sum;              // 不先取整
-            double wStr = R(1.5 * wRaw + 0.7 * qeRaw, 6);
-            double wStd = R(wRaw + 0.5 * qeRaw, 6);
+            // ★ 份额先 round6 再进组合：槽[13]=0.000555 / 槽[20]=0.000433 都是 round6 值，
+            //   而 1.5×w 与 0.5×qe 都建立在这个 round6 值上（否则中片两项都差 1e-6）。
+            double w = R(f * wkNmm2 * ds[i] / sum, 6);
+            double wStr = R(1.5 * w + 0.7 * qe, 6);
+            double wStd = R(w + 0.5 * qe, 6);
             double theta = R3(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)));
             double eta = Eta(theta);
             double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
-            plies[i] = new GlassPlyResult(ts[i], R(wRaw, 6), wStr, wStd, theta, eta, sigma);
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
         }
 
         double te = R3(Math.Pow(sum, 1.0 / 3.0));
@@ -462,7 +466,6 @@ public static class GlassEngine
         double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
         double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
         double limit = R3(a / DeflectionDivisor);
-        _ = qe;
         return (plies, te, df, limit);
     }
 

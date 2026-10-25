@@ -432,11 +432,34 @@ public partial class GlassCalcViewModel : ObservableObject
                     Add(Sep43, ColorRule);
                     break;
                 }
+                case GlassBuildKind.DoubleInsulated:
+                {
+                    // 三玻双中空：三片各算一组，等效厚度逐层衰减（每穿一层腔 ×0.95）
+                    var r = GlassEngine.ComputeDoubleInsulated(wk, a, b,
+                        Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm,
+                        alpha);
+                    var kinds = new[] { Session.GlassOuterKind, Session.GlassMidKind, Session.GlassInnerKind };
+                    var ths = new[] { Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm };
+                    Add(Sep43, ColorRule);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
+                    Add(Sep43, ColorRule);
+                    for (int i = 0; i < r.Plies.Length; i++)
+                    {
+                        Add($"{i + 1}#玻璃强度计算值:{r.Plies[i].Sigma:0.###}MPa", ColorNormal);
+                        Add($"选用的{i + 1}#玻璃强度设计值:{GlassAllowables.Caption(kinds[i], ths[i])}", ColorNormal);
+                        Judge(r.Plies[i].Sigma <= GlassAllowables.Bending(kinds[i], ths[i]));
+                        if (i < r.Plies.Length - 1) Add(Dash, ColorRule);
+                    }
+                    Add(Sep43, ColorRule);
+                    Add($"玻璃挠度计算值:{r.Deflection:0.###}mm", ColorNormal);
+                    Add($"选用玻璃挠度容许值:{r.Limit:0.###}mm(双中空玻璃)", ColorNormal);
+                    Judge(r.Deflection <= r.Limit);
+                    Add(Sep43, ColorRule);
+                    break;
+                }
                 default:
                     StatusIsWarning = true;
-                    StatusText = Kind == GlassBuildKind.DoubleInsulated
-                        ? "双中空玻璃的强度分配尚未闭合（中/内片差 0.1%），暂不支持预演"
-                        : "双夹层-中空玻璃的计算未挖，暂不支持预演";
+                    StatusText = "双夹层-中空玻璃的计算未挖，暂不支持预演";
                     return;
             }
 

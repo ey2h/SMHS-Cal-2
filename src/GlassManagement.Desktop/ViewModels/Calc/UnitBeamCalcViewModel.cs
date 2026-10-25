@@ -35,8 +35,10 @@ public partial class UnitBeamCalcViewModel : ObservableObject
         _wizard = wizard;
         TopProfiles = ParamLibrary.UnitBeamTop;
         BottomProfiles = ParamLibrary.UnitBeamBottom;
+        MidProfiles = ParamLibrary.UnitBeamMid;
         _topProfile = TopProfiles.FirstOrDefault();
         _bottomProfile = BottomProfiles.FirstOrDefault();
+        _midProfile = MidProfiles.FirstOrDefault();
 
         Session.PropertyChanged += (_, e) =>
         {
@@ -51,6 +53,8 @@ public partial class UnitBeamCalcViewModel : ObservableObject
                 case nameof(CalcSession.IgnoreSeismic):
                     Invalidate("上游参数已变化");
                     OnPropertyChanged(nameof(MaterialAllowText));
+                    OnPropertyChanged(nameof(BendingText));
+                    OnPropertyChanged(nameof(ShearText));
                     break;
             }
         };
@@ -64,8 +68,12 @@ public partial class UnitBeamCalcViewModel : ObservableObject
     /// <summary>下横框型材（参数库「单元横框二」）。</summary>
     public IReadOnlyList<BeamProfile> BottomProfiles { get; }
 
+    /// <summary>中横框型材（参数库「单元横框三（中横框）」）。</summary>
+    public IReadOnlyList<BeamProfile> MidProfiles { get; }
+
     [ObservableProperty] private BeamProfile? _topProfile;
     [ObservableProperty] private BeamProfile? _bottomProfile;
+    [ObservableProperty] private BeamProfile? _midProfile;
 
     /// <summary>可选材质牌号（与构件式共用 MaterialAllowables）。</summary>
     public IReadOnlyList<string> MaterialOptions => MaterialAllowables.Options;
@@ -78,6 +86,24 @@ public partial class UnitBeamCalcViewModel : ObservableObject
             var a = MaterialAllowables.Get(Session.BeamMaterial);
             return $"f={a.Bending:0.###} MPa，fv={a.Shear:0.###} MPa";
         }
+    }
+
+    /// <summary>抗弯强度设计值文本（V31 的 f 框）。</summary>
+    public string BendingText => MaterialAllowables.Bending(Session.BeamMaterial).ToString("0.###");
+
+    /// <summary>抗剪强度设计值文本（V31 的 fv 框）。</summary>
+    public string ShearText => MaterialAllowables.Shear(Session.BeamMaterial).ToString("0.###");
+
+    /// <summary>材质单选组（6 个 RadioButton 共享 Session.BeamMaterial）。</summary>
+    [RelayCommand]
+    private void SetMaterial(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return;
+        Session.BeamMaterial = name;
+        OnPropertyChanged(nameof(MaterialAllowText));
+        OnPropertyChanged(nameof(BendingText));
+        OnPropertyChanged(nameof(ShearText));
+        Invalidate("材质已切换");
     }
 
     /// <summary>不做地震作用（复刻版修正 V31 该开关对横梁不生效的问题）。</summary>

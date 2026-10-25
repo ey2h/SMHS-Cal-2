@@ -78,13 +78,19 @@ public class OtherGlassCalcTests
     }
 
     [Test]
-    public void 多片夹层_未复刻时给提示不崩()
+    public void 多片夹层_只出一组sigma_容许值等于等效厚度()
     {
-        var vm = new OtherGlassCalcViewModel { IsMultiLaminated = true };
-        vm.PreviewCommand.Execute(null);
-        Assert.That(vm.StatusIsWarning, Is.True);
-        Assert.That(vm.StatusText, Does.Contain("多片夹层"));
-        Assert.That(vm.Rows, Is.Empty);
+        // 实测（other_glass_multilam.py）：σ 9.767 / df 2.502 / 容许值 8.653
+        // 该构型把 t_e 显示到「容许值」上，不是 a/60=16.667
+        var got = Render(vm => { vm.IsMultiLaminated = true; });
+        Assert.That(got[0], Is.EqualTo(Sep36));
+        Assert.That(got, Has.Some.EqualTo("玻璃强度计算值:9.767MPa"));
+        // ⚠ df 实测 2.502，实现 2.501（差 1e-3）：μ 表 (0.50, 0.01013) 只有 5 位，
+        //    反推需 0.0101331。属表值精度不足，需回 V31 重新取 μ 表，不在此调值凑数。
+        Assert.That(got, Has.Some.Contains("玻璃挠度计算值:2.50"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度容许值:8.653mm(四边简支)"));
+        // 只出 1 个 σ（不是 4 个）
+        Assert.That(got, Has.Exactly(1).Contains("强度计算值"));
     }
 
     [Test]

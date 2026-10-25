@@ -61,6 +61,17 @@ public enum InterlayerKind
     Sgp = 1,
 }
 
+/// <summary>「其它玻璃计算」多片夹层的结果（只出一组 σ）。</summary>
+public readonly record struct MultiLaminatedResult(
+    GlassPlyResult Ply,           // 单片结果（各片同厚同值）
+    int PlyCount,                 // 参与等效的片数（实测 3）
+    double EquivalentThickness,   // t_e = (n·t³)^(1/3)，round3
+    double ThetaDefl,
+    double EtaDefl,
+    double Stiffness,             // D
+    double Deflection,
+    double Limit);                // ⚠ 实测 = t_e（V31 把等效厚度显示成了容许值）
+
 /// <summary>复合玻璃（中空 + 单侧夹胶）整片结果。</summary>
 public readonly record struct CompositeGlassResult(
     GlassPlyResult[] Plies,       // 按「室外 → 室内」顺序，逐片 σ
@@ -515,6 +526,64 @@ public static class GlassEngine
         double e2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
         double e3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
         return R3(Math.Pow(e1 + e2 + e3, 1.0 / 3.0));
+    }
+
+    /// <summary>
+    /// **多片夹层**（「其它玻璃计算」第 3 构型）。
+    ///
+    /// <para><b>实测</b>（1000×2000、wk=1.0KPa、αmax=0.16，改单厚度取多点）：</para>
+    /// <list type="table">
+    /// <item><term>6mm</term><description>σ 9.767，df 2.502，容许值 8.653</description></item>
+    /// <item><term>8mm</term><description>σ 5.756，df 1.055，容许值 11.538</description></item>
+    /// </list>
+    ///
+    /// <para><b>三条已定案的结论</b>（都与实测精确吻合）：</para>
+    /// <list type="number">
+    /// <item><b>是 3 片等效，不是 4 片</b>：<c>t_e = (3·t³)^(1/3) = 3^(1/3)·t</c>
+    /// → 6mm 得 8.6535（实测 8.653）、8mm 得 11.5380（实测 11.538）。若按 4 片得 9.524 / 12.699，差很远。</item>
+    /// <item><b>每片均分且没有 1.1 倍</b>：<c>w = wk/3</c>；
+    /// <c>wStr = 1.5×(0.001/3)+0.7×0.00012288 = 0.000586016</c>，反推实测 σ 得 0.000586020，完全一致。</item>
+    /// <item><b>「挠度容许值」显示的是 t_e</b>：<c>lim = round3(t_e)</c>。
+    /// 6mm 的 lim 8.653 就是 t_e，8mm 的 11.538 也是 —— 这是 V31 该构型的行为
+    /// （疑似把等效厚度误显示到容许值），复刻照录。</item>
+    /// </list>
+    ///
+    /// <para><b>⚠ 未闭合</b>：8mm 的 σ 实测 5.756，本实现按 <c>σ∝1/t²</c> 得 5.494（差 4.8%）。
+    /// 6mm 基准逐位，8mm 待反编译确认（该构型函数入口尚未定位）。</para>
+    /// </summary>
+    public static MultiLaminatedResult ComputeMultiLaminated(
+        double wkNmm2, double aMm, double bMm, double tMm, double alphaMax, int plyCount = 3)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = tMm * DensityNmm3;
+        double qe = qg * SeismicFactor * alphaMax;
+
+        double sum = plyCount * Math.Pow(tMm, 3.0);
+        double te = R(Math.Pow(sum, 1.0 / 3.0), 6);
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        // 每片均分，**无 1.1 倍**（实测：改任意一片结果相同，且 3 片均分即命中）
+        double wRaw = wkNmm2 / plyCount;
+        double w = R6Exact(wRaw);
+        double wStd = R6Exact(wRaw + 0.5 * qe);
+        double wStr = R6Exact(1.5 * w + 0.7 * qe);
+        double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(tMm, 4.0)), 4);
+        double eta = Eta(theta);
+        double sigma = R3(6.0 * m * wStr * a * a * eta / (tMm * tMm));
+        var ply = new GlassPlyResult(tMm, w, wStr, wStd, theta, eta, sigma);
+
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        // ★ 实测该构型的「挠度容许值」= t_e（不是 a/60）
+        double limit = R3(te);
+
+        return new MultiLaminatedResult(ply, plyCount, te, thetaD, Eta(thetaD), stiff, df, limit);
     }
 
     /// <summary>

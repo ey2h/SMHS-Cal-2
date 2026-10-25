@@ -138,10 +138,8 @@ public partial class OtherGlassCalcViewModel : ObservableObject
                                   : IsInnerLaminated ? "四玻内夹层双中空"
                                   : "多片夹层";
 
-    public bool PreviewEnabled => WidthMm > 0 && HeightMm > 0 && WindKpa > 0 && !IsMultiLaminated;
-    public string PreviewBlockedReason => IsMultiLaminated
-        ? "「多片夹层」构型尚未复刻（只做了四玻外/内夹层双中空）"
-        : WidthMm <= 0 || HeightMm <= 0 ? "玻璃尺寸无效"
+    public bool PreviewEnabled => WidthMm > 0 && HeightMm > 0 && WindKpa > 0;
+    public string PreviewBlockedReason => WidthMm <= 0 || HeightMm <= 0 ? "玻璃尺寸无效"
         : WindKpa <= 0 ? "请填写风荷载标准值" : "";
 
     // ---------------- 命令 ----------------
@@ -186,8 +184,21 @@ public partial class OtherGlassCalcViewModel : ObservableObject
         {
             if (IsMultiLaminated)
             {
-                StatusIsWarning = true;
-                StatusText = PreviewBlockedReason;
+                // 多片夹层：只出一组 σ，t_e = (3t³)^(1/3)，容许值显示 = t_e（V31 行为）
+                var ml = GlassEngine.ComputeMultiLaminated(wk, WidthMm, HeightMm, T1, AlphaMax);
+                Add(Sep36, ColorRule);
+                Add($"玻璃部分风荷载标准值为:{WindKpa:0.###}KPa", ColorNormal);
+                Add(Sep36, ColorRule);
+                Add($"玻璃强度计算值:{ml.Ply.Sigma:0.###}MPa", ColorNormal);
+                Add($"选用的玻璃强度设计值:{GlassAllowables.Caption(Kind1, T1)}", ColorNormal);
+                Judge(ml.Ply.Sigma <= GlassAllowables.Bending(Kind1, T1));
+                Add(Sep36, ColorRule);
+                Add($"玻璃挠度计算值:{ml.Deflection:0.###}mm", ColorNormal);
+                Add($"玻璃挠度容许值:{ml.Limit:0.###}mm(四边简支)", ColorNormal);
+                Judge(ml.Deflection <= ml.Limit);
+                Add(Sep36, ColorRule);
+                StatusIsWarning = false;
+                StatusText = $"预演完成：多片夹层（{ml.PlyCount} 片等效，四边简支）";
                 return;
             }
 

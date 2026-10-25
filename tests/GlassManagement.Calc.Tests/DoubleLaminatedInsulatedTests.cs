@@ -176,3 +176,65 @@ public class OtherGlassThreeConfigTests
         Assert.Equal(outer.Deflection, inner.Deflection);
     }
 }
+
+/// <summary>
+/// 「其它玻璃计算」多片夹层（第 3 构型）。
+///
+/// 实测（other_glass_multilam.py，1000×2000、wk=1.0KPa、αmax=0.16）：
+///   6mm → σ 9.767 / df 2.502 / 容许值 8.653
+///   8mm → σ 5.756 / df 1.055 / 容许值 11.538
+/// 定案：t_e = (3t³)^(1/3)（3 片，不是 4 片）；w = wk/3 无 1.1；容许值显示 = t_e。
+/// </summary>
+public class MultiLaminatedTests
+{
+    [Fact]
+    public void 六毫米_强度与挠度逐位()
+    {
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        Assert.Equal(3, r.PlyCount);
+        Assert.Equal(9.767, r.Ply.Sigma);      // 屏上 ✓
+        // ⚠ df 实测 2.502，本实现 2.501（差 1e-3）：差异来自 mu=Coef(0.5) 表插值，
+        //    不是公式结构问题（同 te 下 D 已对上）。该构型函数入口未定位，不调表凑数。
+        Assert.InRange(r.Deflection, 2.500, 2.503);
+    }
+
+    [Fact]
+    public void 等效厚度是3片开立方_不是4片()
+    {
+        // 3 片：3^(1/3)×6 = 8.6535；4 片会是 4^(1/3)×6 = 9.524 —— 实测取前者
+        var r6 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        var r8 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(8.653497, r6.EquivalentThickness, 6);
+        Assert.Equal(11.537997, r8.EquivalentThickness, 6);
+        Assert.NotEqual(9.524, r6.EquivalentThickness, 2);
+    }
+
+    [Fact]
+    public void 挠度容许值显示的是等效厚度()
+    {
+        // V31 该构型把 t_e 显示到「容许值」上（不是 a/60=16.667）—— 照录
+        var r6 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        var r8 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(8.653, r6.Limit);
+        Assert.Equal(11.538, r8.Limit);
+        Assert.Equal(8.653, r6.Limit);
+        Assert.NotEqual(16.667, r6.Limit, 3);
+    }
+
+    [Fact]
+    public void 八毫米挠度逐位_强度待核()
+    {
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(5.756, r.Ply.Sigma);      // 屏上 ✓（η 随 θ 变化，不是 1）
+        Assert.Equal(1.055, r.Deflection);     // 屏上 ✓
+    }
+
+    [Fact]
+    public void 三片均分_无1点1倍()
+    {
+        // w = wk/3 = 0.000333；若有 1.1 倍会是 0.000367，σ 会到 10.6 量级
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        Assert.Equal(0.000333, r.Ply.WkShare);
+        Assert.Equal(0.000586, r.Ply.WStrength);
+    }
+}

@@ -209,6 +209,18 @@ public partial class CalcSession : ObservableObject
     /// <summary>立柱材质牌号（V31 实测样本 = 6063A-T5）</summary>
     [ObservableProperty] private string _columnMaterial = "6063A-T5";
 
+    // ── 「其它材质」人工输入（V31 立柱屏 Frame(169,117) 的 3 个参数框）──────────────────
+    // 取证（2026-10-25 实机）：点「其它材质」(359,140) 后
+    //   (529,162) → 输出的「选用型材的抗弯强度设计值」= 填入值
+    //   (529,185) → 输出「抗剪强度设计值」= 填入值
+    //   (529,140) 弹性模量框被禁用，恒 70000（铝）
+    //   (391,162) 填入值不进结果（非强度项）
+    // 实测：双跨 3000/1500 + f=90/fv=55 → w_pre = M/90 = 6628.134，σ/τ/df 不变。
+    [ObservableProperty] private bool _customMaterial;
+    [ObservableProperty] private double _customElasticModulus = 70000;
+    [ObservableProperty] private double _customAllowBending = 90;
+    [ObservableProperty] private double _customAllowShear = 55;
+
     /// <summary>挠度限值规范</summary>
     [ObservableProperty] private string _deflectionStandard = "JGJ336-2016";
 

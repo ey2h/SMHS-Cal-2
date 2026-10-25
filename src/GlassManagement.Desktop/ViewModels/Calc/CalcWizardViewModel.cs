@@ -500,6 +500,7 @@ public partial class CalcWizardViewModel : ObservableObject
             ("双跨梁", 3000, 1499), ("双跨梁", 3000, 1200), ("双跨梁", 3000, 900),
             ("双跨梁", 3000, 600), ("双跨梁", 4500, 2000), ("双跨梁", 2500, 1000),
             ("双跨梁", 4000, 1500),
+            ("连续梁", 3000, 1500), ("连续梁", 4000, 2000), ("连续梁", 2500, 1250),
         };
 
         var sb = new System.Text.StringBuilder();
@@ -509,6 +510,7 @@ public partial class CalcWizardViewModel : ObservableObject
             Session.ModelSingleTension = model == "单跨受拉";
             Session.ModelSingleCompression = model == "单跨受压";
             Session.ModelDoubleSpan = model == "双跨梁";
+            Session.ModelContinuous3Span = model == "连续梁";
             Session.ColumnSpanMm = l1;
             if (l2 > 0) Session.ShortSpanMm = l2;
 
@@ -529,6 +531,63 @@ public partial class CalcWizardViewModel : ObservableObject
             sb.AppendLine($"{model},{l1},{(l2 > 0 ? l2 : 0)},{G("wk")},{G("w_pre")},{G("i_pre")},{G("df")},{G("lim")},{G("sigma")},{G("tau")}");
         }
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// 诊断（对拍用）：「其它材质」人工参数 + 换型材。
+    /// V31 实机（双跨 3000/1500、wk=1.285、60/80系列、E=70000、f=90、fv=55）：
+    /// w_pre=6628.134（=M/90）、i_pre=66756.466、df=0.628、lim=8.339、σ=27.808、τ=5.092。
+    /// </summary>
+    public string SelfTestCustomMaterial()
+    {
+        SelfTestColumnPreview();
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("case,wk,w_pre,i_pre,df,lim,sigma,fAllow,tau,fvAllow,I,W");
+
+        // ① 自定义材质 f=90 / fv=55（E 保持 70000）
+        Session.ModelDoubleSpan = true;
+        Session.ColumnSpanMm = 3000;
+        Session.ShortSpanMm = 1500;
+        Session.CustomMaterial = true;
+        Session.CustomElasticModulus = 70000;
+        Session.CustomAllowBending = 90;
+        Session.CustomAllowShear = 55;
+        _basic?.Recalculate();
+        _column!.PreviewCommand.Execute(null);
+        sb.AppendLine("custom_f90_fv55," + CollectRow());
+
+        // ② 回到内置材质（6063A-T5），确认能复原
+        Session.CustomMaterial = false;
+        _basic?.Recalculate();
+        _column!.PreviewCommand.Execute(null);
+        sb.AppendLine("builtin_6063A_T5," + CollectRow());
+        return sb.ToString();
+    }
+
+    /// <summary>把立柱页当前结果的 7 个量 + 材质/型材设计值抽成一行 CSV（内部用）。</summary>
+    private string CollectRow()
+    {
+        var map = new System.Collections.Generic.Dictionary<string, string>();
+        foreach (var r in _column!.Results)
+        {
+            string t = r.Text ?? "";
+            foreach (var (key, pat) in Patterns)
+            {
+                var m = System.Text.RegularExpressions.Regex.Match(t, pat);
+                if (m.Success) { map[key] = m.Groups[1].Value; break; }
+            }
+            var mi = System.Text.RegularExpressions.Regex.Match(t, @"选用型材的惯性矩设计值为[：:]([0-9.]+)");
+            if (mi.Success) map["I"] = mi.Groups[1].Value;
+            var mw = System.Text.RegularExpressions.Regex.Match(t, @"选用型材的抗弯矩设计值为[：:]([0-9.]+)");
+            if (mw.Success) map["W"] = mw.Groups[1].Value;
+            var mb = System.Text.RegularExpressions.Regex.Match(t, @"抗弯强度设计值为[：:]([0-9.]+)");
+            if (mb.Success) map["fAllow"] = mb.Groups[1].Value;
+            var mv = System.Text.RegularExpressions.Regex.Match(t, @"抗剪强度设计值为[：:]([0-9.]+)");
+            if (mv.Success) map["fvAllow"] = mv.Groups[1].Value;
+        }
+        string G(string k) => map.TryGetValue(k, out var v) ? v : "";
+        return string.Join(",", new[] { G("wk"), G("w_pre"), G("i_pre"), G("df"), G("lim"),
+                                        G("sigma"), G("fAllow"), G("tau"), G("fvAllow"), G("I"), G("W") });
     }
 
     private static readonly (string key, string pat)[] Patterns =

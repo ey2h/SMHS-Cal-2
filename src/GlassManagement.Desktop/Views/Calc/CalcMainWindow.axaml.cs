@@ -153,6 +153,10 @@ public partial class CalcMainWindow : Window
                     {
                         dumpText = _wizard.SelfTestColumnMatrix();  // 模型×跨度矩阵（每组先回第一页重算）
                     }
+                    else if (string.Equals(SelfTestOnStartup, "col-custom", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        dumpText = _wizard.SelfTestCustomMaterial();  // 「其它材质」人工参数
+                    }
                     else
                     {
                         _wizard.SelfTestColumnPreview();

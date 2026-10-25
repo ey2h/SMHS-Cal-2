@@ -122,7 +122,9 @@ public partial class ColumnCalcViewModel : ObservableObject
             double k2 = Session.WindDirFactor > 0 ? Session.WindDirFactor : 1.0;
             double bay = Session.ColumnBayWidthMm;                     // 立柱从属宽度 mm
             double L = Session.ColumnSpanMm;                           // 立柱跨度 mm
-            double E = double.TryParse(ElasticModulusText, out double e) && e > 0 ? e : Session.ElasticModulusMpa;
+            double E = double.TryParse(ElasticModulusText, out double e) && e > 0
+                ? e
+                : Session.CustomMaterial ? Session.CustomElasticModulus : Session.ElasticModulusMpa;
 
             // ★★ 2026-10-25 实机定案（Frida 直读 V31 立柱函数 0xD1E9E0）：
             //   qd 这一步是 **double**：qd 输入 = qk(double) × 1.5，实测 VT_R8（slot8=1.414 → 输入 2.121）。
@@ -173,8 +175,11 @@ public partial class ColumnCalcViewModel : ObservableObject
             //   ⇒ M = round3(q · L² / 8)，弯矩本身要取 3 位；随后才由 0x18CF05A 打印
             //   「最大弯矩为：M=qL^2/8=」。复刻此前不取整（L=3000 时结果相同，
             //   但其它跨度/非千分位 qd 会差 0.001，故按代码取整）。
-            double fAllow = MaterialAllowables.Bending(Session.ColumnMaterial);
-            double fvAllow = MaterialAllowables.Shear(Session.ColumnMaterial);
+            // ★ 「其它材质」：人工填的 [σ]/[τ]/E 直接覆盖材料表（V31 实机：w_pre = M/填入值，σ/τ/df 用填的许用值判定）
+            double fAllow = Session.CustomMaterial ? Session.CustomAllowBending
+                                                   : MaterialAllowables.Bending(Session.ColumnMaterial);
+            double fvAllow = Session.CustomMaterial ? Session.CustomAllowShear
+                                                    : MaterialAllowables.Shear(Session.ColumnMaterial);
             double M, V, df, lim, wReq, iReq;
             if (Session.ModelDoubleSpan && !Session.StructUnit)
             {
@@ -188,6 +193,19 @@ public partial class ColumnCalcViewModel : ObservableObject
                 lim = WindLoadEngine.VbaRound(ds.Limit, 3);
                 wReq = ds.RequiredW;
                 iReq = ds.RequiredI;
+            }
+            else if (Session.ModelContinuous3Span && !Session.StructUnit)
+            {
+                // ── 连续梁（四点三跨）：公式来自 V31 函数 0xD42762，见 ContinuousBeamColumnEngine ──
+                //   M=0.1·qd·L²、V=0.6·qk_raw·L·1.5（剪力吃**未取整** qk）、df=qk·0.00677·L⁴/(EI)
+                var cb = ContinuousBeamColumnEngine.Compute(
+                    L, wk * bay / 1000.0, (double)qk, (double)qd, E, I, fAllow);
+                M = cb.Moment;
+                V = cb.Shear;
+                df = cb.Deflection;
+                lim = WindLoadEngine.VbaRound(cb.Limit, 3);
+                wReq = cb.RequiredW;
+                iReq = cb.RequiredI;
             }
             else
             {

@@ -67,8 +67,8 @@
     <DockPanel>
 
       <!-- ── 0 标题条（与立柱屏逐像素一致） ── -->
-      <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-        <TextBlock Text="幕墙计算-横梁计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+      <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+        <TextBlock Classes="hbTitleText" Text="幕墙计算-横梁计算"/>
       </Border>
 
       <!-- 客户区：936×442（V31 实测值，多出的一条「计算依据」带由内部弹性区吸收） -->
@@ -76,15 +76,13 @@
         <DockPanel>
 
           <!-- ── 5 状态栏：左=本次操作结果，右=参数库来源（长路径省略 + ToolTip） ── -->
-          <Border DockPanel.Dock="Bottom" Background="#F0F0F0" BorderBrush="#A0A0A0" BorderThickness="0,1,0,0"
-                  Padding="8,2">
+          <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
             <Grid ColumnDefinitions="*,Auto">
-              <TextBlock Text="{Binding StatusText}" Foreground="#1F2937"
+              <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
                          Classes.warning="{Binding StatusIsWarning}"
-                         TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding StatusText}"/>
-              <TextBlock Grid.Column="1" Text="{Binding ParamSourceNote}" FontSize="11" Foreground="#6B7280"
-                         Margin="16,0,0,0" MaxWidth="380" TextTrimming="CharacterEllipsis"
-                         ToolTip.Tip="{Binding ParamSourceNote}"/>
+                         ToolTip.Tip="{Binding StatusText}"/>
+              <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding ParamSourceNote}"
+                         Margin="16,0,0,0" MaxWidth="380" ToolTip.Tip="{Binding ParamSourceNote}"/>
             </Grid>
           </Border>
 
@@ -92,14 +90,14 @@
           <Border DockPanel.Dock="Bottom" Padding="8,6,8,4">
             <StackPanel HorizontalAlignment="Right" Spacing="6">
               <StackPanel Orientation="Horizontal" Spacing="6">
-                <Button Content="预演" Width="62" Height="24" Command="{Binding PreviewCommand}"
+                <Button Content="预演" Classes="hbBtn" Command="{Binding PreviewCommand}"
                         IsEnabled="{Binding PreviewEnabled}"
                         ToolTip.Tip="{Binding PreviewBlockedReason}"/>
-                <Button Content="上一步" Width="62" Height="24" Command="{Binding PrevCommand}"/>
+                <Button Content="上一步" Classes="hbBtn" Command="{Binding PrevCommand}"/>
               </StackPanel>
               <StackPanel Orientation="Horizontal" Spacing="6">
-                <Button Content="退出" Width="62" Height="24" Command="{Binding ExitCommand}"/>
-                <Button Content="下一步" Width="62" Height="24" Command="{Binding NextCommand}"/>
+                <Button Content="退出" Classes="hbBtn" Command="{Binding ExitCommand}"/>
+                <Button Content="下一步" Classes="hbBtn" Command="{Binding NextCommand}"/>
               </StackPanel>
             </StackPanel>
           </Border>
@@ -130,7 +128,7 @@
                          Text="{Binding ProfileKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <!-- 单位提示：横梁表列名短，靠这一句避免误读量纲 -->
                 <TextBlock Grid.Column="2" Text="单位：Ix/Iy mm⁴　Wx/Wy/S mm³　tx/ty mm"
-                           FontSize="11" Foreground="#6B7280" HorizontalAlignment="Right"
+                           FontSize="11" Foreground="#6B6B6B" HorizontalAlignment="Right"
                            TextTrimming="CharacterEllipsis"/>
               </Grid>
 
@@ -141,7 +139,7 @@
                           ItemsSource="{Binding MaterialOptions}"
                           SelectedItem="{Binding Session.BeamMaterial, Mode=TwoWay}"/>
                 <TextBlock Grid.Column="2" Text="{Binding MaterialAllowText}" Margin="8,0,0,0"
-                           FontSize="11" Foreground="#6B7280" VerticalAlignment="Center"/>
+                           FontSize="11" Foreground="#6B6B6B" VerticalAlignment="Center"/>
                 <CheckBox Grid.Column="3" Content="玻璃自重为集中力" Margin="12,0,0,0" FontSize="12"
                           IsChecked="{Binding ConcentratedGravity, Mode=TwoWay}"/>
                 <TextBlock Grid.Column="4" Text="受力点距离" Margin="10,0,4,0"
@@ -150,7 +148,7 @@
                          IsEnabled="{Binding PointDistanceEnabled}"
                          Text="{Binding PointDistanceMm, Mode=TwoWay}"/>
                 <TextBlock Grid.Column="6" Text="mm（仅集中力模型可用）" Margin="6,0,0,0"
-                           FontSize="11" Foreground="#6B7280" VerticalAlignment="Center"/>
+                           FontSize="11" Foreground="#6B6B6B" VerticalAlignment="Center"/>
               </Grid>
 
               <!-- 2.2 型材表（参数库「横框」）：11 列固定宽，合计 616 ≤ 可用 624 -->

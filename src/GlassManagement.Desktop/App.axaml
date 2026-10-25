@@ -366,6 +366,75 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="0"/>
         </Style>
+        <!-- ── 统一外壳（四屏共用，2026-10-25 归一）──
+             标题条 / 状态栏的坐标与配色取自 V31 实测：高 19、底 #E8EEF7、下边线 #A0A0A0、
+             标题 11px #1F2937；状态栏 #F0F0F0、上边线 #A0A0A0、内边距 8,2。 -->
+        <!-- 兼容历史空类：V31 导出的控件普遍带 Classes="hb"，此前无对应样式（靠全局兜底）。
+             这里显式定义，保证「带 hb 类」与「不带」在四屏内视觉完全一致。 -->
+        <Style Selector="Button.hb">
+            <Setter Property="Width" Value="59"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBox.hb">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Border.hbTitleBar">
+            <Setter Property="Height" Value="19"/>
+            <Setter Property="Background" Value="#E8EEF7"/>
+            <Setter Property="BorderBrush" Value="#A0A0A0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="TextBlock.hbTitleText">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Margin" Value="8,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style Selector="Border.hbStatusBar">
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#A0A0A0"/>
+            <Setter Property="BorderThickness" Value="0,1,0,0"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="TextBlock.hbStatus">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.hbStatusHint">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <!-- 底部按钮：V31 统一 59×24、方角（横梁页原先 62 宽，已归一） -->
+        <Style Selector="Button.hbBtn">
+            <Setter Property="Width" Value="59"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
         <Style Selector="Border.hbPanel">
             <Setter Property="Background" Value="#F0F0F0"/>
         </Style>

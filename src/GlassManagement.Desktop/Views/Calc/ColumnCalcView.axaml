@@ -9,8 +9,8 @@
     同窗体其余互斥视图（单元幕墙参数/钢铝结合型材参数/上海地方标准…）不并入本屏。
   -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="幕墙计算-立柱计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-立柱计算"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">

@@ -11,8 +11,8 @@
     （V35 未注册 → 全部 visible=0），本屏按首视图呈现，互斥 Frame 不叠加。
   -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="幕墙计算-基本参数输入" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-基本参数输入"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <Canvas Width="907" Height="612" Background="#F0F0F0" ClipToBounds="True">

@@ -1,13 +1,18 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GlassManagement.Desktop.Views.Calc.MultiSpanInputView"
-             FontFamily="SimSun" FontSize="12"
-             Width="919" Height="408">
+             FontFamily="SimSun" FontSize="12">
   <!--
     V31「多跨数据输入」面板复刻（复刻自 2026-10-23 V31 实测 PrintWindow 截图）。
     坐标基准：客户区左上角（窗体 936x442，Frame1 位于客户区 9,29，尺寸 919x408）。
     本控件自身画布 919x408 = Frame1 客户区，坐标为 Frame 内相对坐标。
   -->
+  <DockPanel>
+    <!-- 统一外壳：标题条与立柱/横梁屏一致（19px、#E8EEF7、下边线 #A0A0A0、11px 标题） -->
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-多跨数据输入"/>
+    </Border>
+
   <Canvas Width="919" Height="408" Background="#F0F0F0" ClipToBounds="True">
 
     <!-- 示意图（自绘 PictureBoxDC，519x103，底色实测 #00FFFF） -->
@@ -147,4 +152,5 @@
     <Button Classes="hb" Canvas.Left="851" Canvas.Top="378" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"
             Content="下一步" Command="{Binding WizardNextCommand}"/>
   </Canvas>
+  </DockPanel>
 </UserControl>

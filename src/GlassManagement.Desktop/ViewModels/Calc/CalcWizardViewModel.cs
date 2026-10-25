@@ -710,7 +710,7 @@ public partial class CalcWizardViewModel : ObservableObject
         CurrentContent = _glass;
         StatusText = $"向导 4：幕墙计算-玻璃计算（{Session.GlassCaption}｜"
                    + $"{Session.GlassWidthMm:0.###}×{Session.GlassHeightMm:0.###}mm"
-                   + $"｜wk={Session.GlassWindKpa:0.###}KPa）";
+                   + $"｜wk={Session.PanelWindKpa:0.###}KPa）";
     }
 
     /// <summary>横梁屏「下一步」：横梁之后是玻璃页。</summary>

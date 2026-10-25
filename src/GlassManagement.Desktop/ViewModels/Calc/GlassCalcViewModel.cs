@@ -33,7 +33,7 @@ public partial class GlassCalcViewModel : ObservableObject
         {
             switch (e.PropertyName)
             {
-                case nameof(CalcSession.WindStandardKpa):
+                case nameof(CalcSession.PanelWindKpa):
                 case nameof(CalcSession.BeamLeftBayMm):
                 case nameof(CalcSession.BeamRightBayMm):
                 case nameof(CalcSession.BeamUpperGridHeightMm):
@@ -275,9 +275,9 @@ public partial class GlassCalcViewModel : ObservableObject
         $"玻璃：{Session.GlassCaption}｜{Session.GlassWidthMm:0.###}×{Session.GlassHeightMm:0.###}mm"
         + $"（短边 {Session.GlassShortSpanMm:0.###}）"
         + $"｜厚 {Session.GlassOuterThicknessMm:0.##}/{Session.GlassMidThicknessMm:0.##}/{Session.GlassInnerThicknessMm:0.##}mm"
-        + $"｜wk={Session.GlassWindKpa:0.###}kPa｜αmax={Session.AlphaMax:0.###}";
+        + $"｜wk={Session.PanelWindKpa:0.###}kPa｜αmax={Session.AlphaMax:0.###}";
 
-    public string WindNote => Session.GlassWindSource;
+    public string WindNote => Session.PanelWindSource;
 
     // ---------------- 结果 ----------------
 
@@ -288,9 +288,9 @@ public partial class GlassCalcViewModel : ObservableObject
     [ObservableProperty] private string _statusText = "";
     [ObservableProperty] private bool _statusIsWarning;
 
-    public bool PreviewEnabled => Session.GlassWindKpa > 0 && Session.GlassShortSpanMm > 0;
+    public bool PreviewEnabled => Session.PanelWindKpa > 0 && Session.GlassShortSpanMm > 0;
 
-    public string PreviewBlockedReason => Session.GlassWindKpa <= 0
+    public string PreviewBlockedReason => Session.PanelWindKpa <= 0
         ? "上游未算出风荷载标准值，请先在第一页点「计算荷载」"
         : Session.GlassShortSpanMm <= 0 ? "玻璃尺寸无效，请检查分格尺寸或自定义宽高" : "";
 
@@ -328,7 +328,7 @@ public partial class GlassCalcViewModel : ObservableObject
         if (!PreviewEnabled) { StatusIsWarning = true; StatusText = PreviewBlockedReason; return; }
 
         double a = Session.GlassShortSpanMm, b = Session.GlassLongSpanMm;
-        double wk = Session.GlassWindKpa / 1000.0;      // kPa → N/mm²
+        double wk = Session.PanelWindKpa / 1000.0;      // kPa → N/mm²
         double alpha = Session.AlphaMax;
 
         Results.Clear();
@@ -340,7 +340,7 @@ public partial class GlassCalcViewModel : ObservableObject
                 {
                     var r = GlassEngine.Compute(wk, a, b, Session.GlassOuterThicknessMm, alpha);
                     Add(Sep47, ColorRule);
-                    Add($"玻璃部分风荷载标准值为:{Session.GlassWindKpa:0.###}KPa", ColorNormal);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
                     Add(Sep47, ColorRule);
                     Add($"玻璃强度计算值:{r.Sigma:0.###}MPa", ColorNormal);
                     Add($"选用玻璃的强度设计值:{GlassAllowables.Caption(Session.GlassOuterKind, Session.GlassOuterThicknessMm)}", ColorNormal);
@@ -357,7 +357,7 @@ public partial class GlassCalcViewModel : ObservableObject
                     var r = GlassEngine.ComputeInsulated(wk, a, b, Session.GlassOuterThicknessMm,
                                                         Session.GlassInnerThicknessMm, alpha);
                     Add(Sep43, ColorRule);
-                    Add($"玻璃部分风荷载标准值为:{Session.GlassWindKpa:0.###}KPa", ColorNormal);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
                     Add(Sep43, ColorRule);
                     Add($"外片玻璃强度计算值:{r.Outer.Sigma:0.###}MPa", ColorNormal);
                     Add($"选用的外片玻璃强度设计值:{GlassAllowables.Caption(Session.GlassOuterKind, Session.GlassOuterThicknessMm)}", ColorNormal);
@@ -378,7 +378,7 @@ public partial class GlassCalcViewModel : ObservableObject
                     var r = GlassEngine.ComputeLaminated(wk, a, b, Session.GlassOuterThicknessMm,
                                                         Session.GlassInnerThicknessMm, alpha);
                     Add(Sep47, ColorRule);
-                    Add($"玻璃部分风荷载标准值为:{Session.GlassWindKpa:0.###}KPa", ColorNormal);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
                     Add(Sep47, ColorRule);
                     Add($"玻璃强度计算值:{r.Ply.Sigma:0.###}MPa", ColorNormal);
                     Add($"选用玻璃的强度设计值:{GlassAllowables.Caption(Session.GlassOuterKind, Session.GlassOuterThicknessMm)}", ColorNormal);
@@ -398,7 +398,7 @@ public partial class GlassCalcViewModel : ObservableObject
                     var kinds = new[] { Session.GlassOuterKind, Session.GlassMidKind, Session.GlassInnerKind };
                     var ths = new[] { Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm };
                     Add(Sep43, ColorRule);
-                    Add($"玻璃部分风荷载标准值为:{Session.GlassWindKpa:0.###}KPa", ColorNormal);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
                     Add(Sep43, ColorRule);
                     for (int i = 0; i < r.Plies.Length; i++)
                     {
@@ -420,7 +420,7 @@ public partial class GlassCalcViewModel : ObservableObject
                         Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm,
                         Session.FilmThicknessMm, alpha);
                     Add(Sep43, ColorRule);
-                    Add($"玻璃部分风荷载标准值为:{Session.GlassWindKpa:0.###}KPa", ColorNormal);
+                    Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
                     Add(Sep43, ColorRule);
                     Add($"1#玻璃(夹层偏室外侧)强度计算值:{r.Plies[0].Sigma:0.###}MPa", ColorNormal);
                     Add($"选用的1#玻璃强度设计值:{GlassAllowables.Caption(Session.GlassOuterKind, Session.GlassOuterThicknessMm)}", ColorNormal);
@@ -441,7 +441,7 @@ public partial class GlassCalcViewModel : ObservableObject
             }
 
             if (ShowTrace)
-                Add($"[取证] a={a:0.###} b={b:0.###} t_e 见 doc｜w0 口径={Session.GlassWindSource}", ColorRule);
+                Add($"[取证] a={a:0.###} b={b:0.###} t_e 见 doc｜w0 口径={Session.PanelWindSource}", ColorRule);
         }
         finally
         {
@@ -449,11 +449,11 @@ public partial class GlassCalcViewModel : ObservableObject
             OnPropertyChanged(nameof(PlaceholderText));
         }
 
-        StatusIsWarning = !Session.GlassWindResolved;
+        StatusIsWarning = !Session.PanelWindResolved;
         StatusText = $"预演完成：{Session.GlassCaption}"
-                   + (Session.GlassWindResolved
-                        ? "（wk 取玻璃口径，已按 V31 实机链复刻）"
-                        : "（第一页尚未写入玻璃 wk，暂用立柱口径）");
+                   + (Session.PanelWindResolved
+                        ? "（wk 取面板口径：μsl=1.0 不折减 ψ）"
+                        : "（第一页尚未写入面板 wk，暂用支承口径）");
     }
 
     [RelayCommand] private void Prev() => _wizard.GoBeamCalc();

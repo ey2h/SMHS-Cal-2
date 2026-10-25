@@ -49,7 +49,12 @@ public partial class CalcSession : ObservableObject
     [ObservableProperty] private bool _windManual;
     [ObservableProperty] private double _windManualKpa = 1.0;
 
-    /// <summary>风荷载标准值（KPa）—— 预演输出口，前置屏算完写这里。<b>已 round 3 位</b>，用于显示与留痕。</summary>
+    /// <summary>
+    /// <b>支承结构口径</b>风荷载标准值（KPa）—— 立柱 / 横梁 / 连接 / 埋件 四屏共用。
+    /// 前置屏算完写这里，<b>已 round 3 位</b>。
+    /// <para>★ 不是全局唯一值：面板（玻璃 / 胶类）另有一套 <see cref="PanelWindKpa"/>。
+    /// 六组参数 × 六屏实测见该类注释里的对照表，四屏恒等、面板恒偏离。</para>
+    /// </summary>
     [ObservableProperty] private double _windStandardKpa = 1.0;
 
     /// <summary>
@@ -516,31 +521,57 @@ public partial class CalcSession : ObservableObject
     // ============================================================
 
     /// <summary>
-    /// 玻璃部分风荷载标准值（kPa）—— 由第一页在算完风荷载时一并写入。
+    /// 面板部分风荷载标准值（kPa）—— 玻璃屏与胶类屏共用，由第一页算完风荷载时一并写入。
     ///
-    /// <para><b>★ 2026-10-25 根因定位（三屏对比 + DAG 追踪）</b></para>
-    /// <para>V31 玻璃屏的 wk 与立柱/横梁<b>不是两套参数</b>，而是<b>少乘了体型系数项</b>：</para>
+    /// <para><b>★ 2026-10-25 口径定案：V31 的 wk 不是全局唯一值，按「计算对象」分两套</b></para>
+    ///
+    /// <para>六组第一页参数 × 六屏实机扫描（<c>local-data/recon/wk_scan.py</c>，
+    /// 原始数据 <c>v31runs/wk_matrix_all.psv</c>）得到同一规律：</para>
     /// <code>
-    /// 立柱：w0 × βgz × μz × (μs1·ψ + μs_int) = 0.45×1.6929×1.4983×1.126 = 1.285
-    /// 玻璃：w0 × βgz × μz × (1    + μs_int) = 0.45×1.6929×1.4983×1.200 = 1.370
-    ///                                 ↑ 这里 μs1·ψ 被当成 1.0，漏乘了
+    /// 组            立柱    横梁    连接    埋件  ‖  玻璃    胶类
+    /// G1 默认       1.514   1.514   1.514   1.514 ‖  1.598   1.598
+    /// G2 角边       2.118   2.118   2.118   2.118 ‖  2.237   —
+    /// G4 人工0.6      1       1       1       1   ‖    1      —
+    /// G5 内压0.30   1.970   1.970   1.970   1.970 ‖  2.055   —
+    /// G6 内压0.10   1.742   1.742   1.742   1.742 ‖  1.826   —
+    ///                    ↑ 支承结构口径（4 屏恒等）      ↑ 面板口径（玻璃=胶类）
     /// </code>
-    /// <para>证据链：<c>0x85F07E</c> <c>10^0.44 = 2.7542</c>（C 类 μz 指数）、
-    /// <c>0x85F08B</c> <c>0.544 × 2.7542 = 1.4983</c>（0.544 = C 类 μz 系数 C），
-    /// 即 <c>slot[0x0a]</c> 是 <b>μz</b> 而不是 μs；玻璃 wk 的乘数链见 <c>0xA7D00C–0xA7D07C</c>。</para>
     ///
-    /// <para><b>处理口径</b>：按 V31 实测值复刻（保持逐位），并登记为「V31 自身缺陷：玻璃 wk 漏乘 μs1·ψ」。
-    /// 若日后要按规范修正，应改为乘 <see cref="WindStandardKpa"/> 那一套 μs合，
-    /// 但那会与实机数字不一致，需单独评审，不能默认开启。</para>
+    /// <para>程序文案也是两套，坐实「设计上分开」而非巧合：<c>0x4D22D4</c>「风荷载标准值为:」、
+    /// <c>0x4D3FF4</c>「玻璃部分风荷载标准值为:」、<c>0x4D81B0</c>「面板部分风荷载标准值为:」；
+    /// 另有 <c>0x4E9FAC</c> 同屏并列「(计算玻璃时)/(计算珩架时)」、
+    /// <c>0x4F9EFA</c>「计算支承结构时/计算玻璃面板时」，证明 V31 全域都是按对象取 wk。</para>
+    ///
+    /// <para><b>两口径的差别只在体型系数项</b>（w0·βgz·μz·K1·K2 完全相同）：</para>
+    /// <code>
+    /// 支承结构：wk = P · (μs1·ψ(A) + μs_int)      ← A 为分格面积，ψ 折减
+    /// 面板    ：wk = P · (1.0      + μs_int)      ← 局部体型系数恒 1.0，不做 ψ 折减
+    /// </code>
+    /// <para>自洽校验：1.37/1.285 = 1.0661 = 1.200/1.126，而 1.126 = 0.926 + 0.2 ✓；
+    /// G1 同理 1.598/1.514 = 1.0555 = 1.2/1.1369，1.1369 = 0.9369 + 0.2 ✓。</para>
+    ///
+    /// <para><b>⚠ 更正</b>：此前把玻璃屏「不含 μs1·ψ」登记为「V31 缺陷 / 漏乘」，那是<b>误判</b>。
+    /// 面板本来就该取局部体型系数 1.0 且不折减（面板从属面积小，ψ 不参与）。
+    /// 现已改为按「面板口径」正向建模，不再称缺陷。</para>
     /// </summary>
-    [ObservableProperty] private double _glassWindKpa;
+    [ObservableProperty] private double _panelWindKpa;
 
-    /// <summary>玻璃 wk 是否已由第一页写入（false 时 UI 显示「待接入」）。</summary>
-    public bool GlassWindResolved => GlassWindKpa > 0;
+    /// <summary>面板口径未取整值（留痕用，便于核对 round3 前后）。</summary>
+    [ObservableProperty] private double _panelWindRawKpa;
 
-    public string GlassWindSource => GlassWindResolved
-        ? $"{WindStandardSource}｜玻璃口径：w0·βgz·μz·(1+μs内压)，不含 μs1·ψ"
-        : $"{WindStandardSource}（玻璃口径未写入，暂用立柱 wk {WindStandardKpa:F3}）";
+    /// <summary>面板 wk 是否已由第一页写入。</summary>
+    public bool PanelWindResolved => PanelWindKpa > 0;
+
+    /// <summary>
+    /// 面板局部体型系数 μsl —— V31 恒取 1.0。
+    /// <para>行为判定（非数值反推）：改玻璃尺寸 1100×1380 → 1100×1500，
+    /// 屏上 wk 恒为 1.37 不变，说明面板口径<b>不按面板面积折减 ψ</b>，即 μsl 与 A 无关。</para>
+    /// </summary>
+    public const double PanelShapeCoef = 1.0;
+
+    public string PanelWindSource => PanelWindResolved
+        ? $"{WindStandardSource}｜面板口径：μsl=1.000（不折减 ψ）+ μs内压，面板={PanelWindKpa:0.###}KPa"
+        : $"{WindStandardSource}（面板口径未写入，暂用支承 wk {WindStandardKpa:F3}）";
 
     /// <summary>尺寸来源：<c>true</c>=用第一页传入的分格尺寸下拉；<c>false</c>=自定义宽高。二者互斥。</summary>
     [ObservableProperty] private bool _glassUsePresetSize = true;

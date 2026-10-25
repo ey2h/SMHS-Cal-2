@@ -195,6 +195,10 @@ public partial class BasicParamsViewModel : ObservableObject
         {
             Session.WindStandardKpa = Session.WindManualKpa;
             Session.WindStandardRawKpa = Session.WindManualKpa;   // 人工给定即精确值，无取整问题
+            // 人工给定取代整条派生链 ⇒ 面板口径同样取该值（两口径只在体型系数项上分岔，
+            // 人工给定后已无从区分，V31 行为也是全屏同值）。
+            Session.PanelWindKpa = Session.WindManualKpa;
+            Session.PanelWindRawKpa = Session.WindManualKpa;
             Session.WindStandardSource = "基本参数输入屏·人工给定";
             Session.WindStandardResolved = true;      // 计算链门禁：第一屏已出结论
             // 过程参数：人工给定直接取代，整条派生链不参与，置空以示区别
@@ -291,18 +295,29 @@ public partial class BasicParamsViewModel : ObservableObject
         Session.WindStandardKpa = wk;
         Session.WindStandardResolved = true;          // 计算链门禁：第一屏已出结论
 
-        // ── 玻璃屏专用 wk（V31 0xA7D00C–0xA7D07C 的乘数链）──
-        //   wk_glass = w0 · βgz · 地形 · μz · (1 + μs内压) · K1 · K2
-        //   ★ 与 WindStandardKpa 的唯一差别：这里 **不乘 μs1·ψ**（V31 缺陷，实测 1.37 vs 1.285）。
-        //     证据：0x85F07E 10^0.44 = 2.7542（μz 指数）、0x85F08B 0.544×2.7542 = 1.4983（μz 本金），
-        //     而玻璃链把它当 μz 用、把 μs 项当 1.0，故 1.2 = 1+0.2 就是最后那个乘数。
-        //   取 round3 与屏上「玻璃部分风荷载标准值为:1.37KPa」一致。
-        double wkGlassRaw = w0Lib
+        // ── 面板口径 wk（玻璃屏 / 胶类屏共用；V31 0xA7D00C–0xA7D07C 的乘数链）──
+        //   wk_panel = w0 · βgz · 地形 · μz · (μsl + μs内压) · K1 · K2
+        //   ★ 与支承口径的唯一差别：这里用**局部体型系数 μsl = 1.0 且不做 ψ 折减**，
+        //     支承口径用 μs1·ψ(A)（A = 分格面积，ψ<1 故支承 wk 更小）。
+        //
+        //   实测依据（六组参数 × 六屏，local-data/recon/wk_scan.py）：
+        //     立柱=横梁=连接=埋件 恒等；玻璃=胶类 恒等且恒大于前者。
+        //     G1: 支承 1.514 / 面板 1.598；1.598/1.514 = 1.2/1.1369，1.1369 = 0.9369+0.2 ✓
+        //     G5: 支承 1.970 / 面板 2.055；2.055/1.300 = 1.5808 = P，1.97/1.5808 = 1.2462 = 0.9462+0.3 ✓
+        //
+        //   ⚠ 更正：早前把「玻璃屏不含 μs1·ψ」当成 V31 缺陷/漏乘，属误判。
+        //     面板取 μsl=1.0 不折减本身就是 V31 的口径，本轮已按正向建模。
+        double wkPanelRaw = w0Lib
                             * WindLoadEngine.BetaGz(terrain, z, peakFactor)
                             * WindLoadEngine.MuZ(terrain, z)
-                            * (1.0 + muInt)
+                            * (CalcSession.PanelShapeCoef + muInt)
                             * k1 * k2;
-        Session.GlassWindKpa = WindLoadEngine.RoundLikeV35(wkGlassRaw, WindLoadEngine.DigitsWk);
+        // 下限与支承同口径：按规范不小于 1.0KPa（G4 人工 0.6 时两屏都撞 1.0，实测确认）
+        double wkPanelRawFinal = Session.WindByCalcResult
+            ? wkPanelRaw
+            : Math.Max(wkPanelRaw, WindLoadEngine.WindStandardFloorKpa);
+        Session.PanelWindRawKpa = wkPanelRawFinal;
+        Session.PanelWindKpa = WindLoadEngine.RoundLikeV35(wkPanelRawFinal, WindLoadEngine.DigitsWk);
 
         // ── 过程参数留痕（用户要求：所有过程参数都要能列表，不能只给结果）──
         ChainTerrain = terrain.ToString();

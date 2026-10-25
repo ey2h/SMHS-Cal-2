@@ -233,3 +233,13 @@ double VbaRound(x, d):
 - ★ **thunk 名纠正**（用 IAT 指针−0x734D0000 对 msvbvm60 导出表）：0x41377A=`__vbaVarSub`、
   0x4136BA=**`__vbaFreeVarList`**（此前误当 Add，209 条记录全是噪声）、0x4135BE=`__vbaVarCopy`、
   0x4137F2/FE/F8=`rtcCos/rtcAtn/rtcSqr`。语义统一 `out=c2 op c1`。
+
+### 多跨静定 挠度（2026-10-25 续）
+- `df1 = df1mid + df₂C`；记 `r=A/L`：
+  `N₂ = A²·V1·L/3`、`c₁ = 1−4r²−3r³`、`c₂ = 1+r`、
+  `df1mid = [(1+r)N₂ − c₁·A·qk·L³/24]/(2EI)`、`df₂C = 5qkL⁴/(384EI)·(1−2.4r²)`。
+  证据：`0xD66109–0xD662D2`、`0xD65B27–0xD65BA1`。
+- `df2` 结构已明（`0xD6B7AF–0xD6C513`）：`df2 = df2mid + (df₂C − X₂/(EI))`，
+  `df2mid` 用 `arr84[4]`；**X₂ 公式未解**（A=600 → 575,480,072,250；A=800 → 663,969,190,500）。
+- 迭代不动点 `x∞ = qd·A(L−A)/(2L)`（实测吻合），但 df2 取第 2 步迭代值。
+- 残差：r=0.2（A=600/L=3000）df1 差 6e-4、σ₂折算差 3e-3，未定位。

@@ -79,19 +79,19 @@
           <TextBox Classes="hb" Canvas.Left="292" Canvas.Top="248" Width="49" Height="18" FontSize="12" Text="1380"/>
           <RadioButton Classes="hb" Canvas.Left="397" Canvas.Top="251" Width="89" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="标准设防类" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="525" Canvas.Top="251" Width="89" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="重点设防类" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="251" Width="105" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单片玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="251" Width="105" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空+夹层玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="251" Width="105" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单片玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="251" Width="105" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空+夹层玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="114" Canvas.Top="268" Width="49" Height="18" FontSize="12" Text="1100"/>
           <TextBox Classes="hb" Canvas.Left="292" Canvas.Top="268" Width="49" Height="18" FontSize="12" Text="1380"/>
           <RadioButton Classes="hb" Canvas.Left="397" Canvas.Top="271" Width="89" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊设防类" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="525" Canvas.Top="271" Width="89" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="适度设防类" FontSize="10" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="274" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="274" Width="100" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="274" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="274" Width="100" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="461" Canvas.Top="296" Width="105" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="114" Canvas.Top="297" Width="49" Height="18" FontSize="12" Text="1350"/>
           <TextBox Classes="hb" Canvas.Left="292" Canvas.Top="297" Width="49" Height="18" FontSize="12" Text="1350"/>
-          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="298" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="夹层玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="298" Width="113" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双夹层-中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="673" Canvas.Top="298" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="夹层玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="765" Canvas.Top="298" Width="113" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="双夹层-中空玻璃" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBlock Classes="hb" Canvas.Left="397" Canvas.Top="299" Width="48" Height="13" Text="场地类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Border Classes="hbFrame" Canvas.Left="2" Canvas.Top="329" Width="887" Height="220"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="8" Canvas.Top="320" Text="地区参数(新版GB18306-2015中，抗震参数细分到街道与乡镇，表中地震参数仅供参考，以结构说明或新版规范为准)"/>

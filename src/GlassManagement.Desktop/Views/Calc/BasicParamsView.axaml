@@ -204,22 +204,22 @@
       <!-- ── Frame 玻璃配置 (648,265) 249x88 ── -->
       <Border Classes="hbFrame" Canvas.Left="648" Canvas.Top="265" Width="249" Height="88"/>
       <TextBlock Classes="hbFrameTitle" Canvas.Left="654" Canvas.Top="256" Text="玻璃配置"/>
-      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="280" Width="105" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="280" Width="105" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassMono, Mode=TwoWay}" Content="单片玻璃"/>
-      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="280" Width="105" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="280" Width="105" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassInsulLam, Mode=TwoWay}" Content="中空+夹层玻璃"/>
-      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="303" Width="73" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="303" Width="73" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassInsulated, Mode=TwoWay}" Content="中空玻璃"/>
-      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="303" Width="100" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="303" Width="100" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassDoubleInsul, Mode=TwoWay}" Content="双中空玻璃"/>
-      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="327" Width="73" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="681" Canvas.Top="327" Width="73" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassLaminated, Mode=TwoWay}" Content="夹层玻璃"/>
-      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="327" Width="113" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="773" Canvas.Top="327" Width="113" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="玻璃配置"
                    IsChecked="{Binding Session.GlassDoubleLam, Mode=TwoWay}" Content="双夹层-中空玻璃"/>
 

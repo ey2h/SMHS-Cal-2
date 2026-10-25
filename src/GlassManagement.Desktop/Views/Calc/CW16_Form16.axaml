@@ -61,13 +61,13 @@
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="161" Height="57" Background="#F0F0F0" ClipToBounds="True">
           <ComboBox Classes="hb" Canvas.Left="87" Canvas.Top="3" Width="94" Height="20"/>
-          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="14" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="土建预埋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="14" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="后补锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="14" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="土建预埋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="14" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="后补锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="100" Canvas.Top="25" Width="60" Height="19" FontSize="12" Text="300"/>
-          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="27" Width="71" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="77" Canvas.Top="27" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="33" Width="71" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="33" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="27" Width="71" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="77" Canvas.Top="27" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="33" Width="71" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="33" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="100" Canvas.Top="46" Width="60" Height="19" FontSize="12" Text="40.5"/>
           </Canvas>
           </ScrollViewer>
@@ -185,20 +185,20 @@
           <Border Classes="hbFrame" Canvas.Left="112" Canvas.Top="108" Width="235" Height="78"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="118" Canvas.Top="99" Text="锚栓类型"/>
           <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="118" Width="48" Height="13" Text="焊缝形式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="122" Width="80" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扩底型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <RadioButton Classes="hb" Canvas.Left="208" Canvas.Top="122" Width="135" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扭矩控制膨胀型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="122" Width="80" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扩底型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="208" Canvas.Top="122" Width="135" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扭矩控制膨胀型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="72" Canvas.Top="127" Width="57" Height="20" FontSize="12" Text="200"/>
           <TextBox Classes="hb" Canvas.Left="240" Canvas.Top="128" Width="33" Height="18" FontSize="12" Text="110"/>
           <TextBox Classes="hb" Canvas.Left="47" Canvas.Top="137" Width="49" Height="18" FontSize="12" Text="200"/>
-          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="137" Width="96" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通化学锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="137" Width="96" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通化学锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="196" Canvas.Top="137" Width="60" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="92" Canvas.Top="139" Width="90" Height="13" Text="每埋件T型螺栓数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="152" Width="216" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(JGJ145算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="152" Width="216" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(JGJ145算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="61" Canvas.Top="160" Width="129" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="145" Canvas.Top="160" Width="60" Height="19" FontSize="12" Text="130"/>
           <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="162" Width="57" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="72" Canvas.Top="163" Width="57" Height="20" FontSize="12" Text="60000"/>
-          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="167" Width="216" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(GB50367算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="167" Width="216" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(GB50367算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="97" Canvas.Top="180" Width="53" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="145" Canvas.Top="181" Width="60" Height="19" FontSize="12" Text="80"/>
           <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="182" Width="180" Height="13" Text="焊缝有效截面积            mm^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>

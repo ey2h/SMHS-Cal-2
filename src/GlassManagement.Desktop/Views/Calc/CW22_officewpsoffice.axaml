@@ -19,12 +19,12 @@
       <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="39" Width="53" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="五号" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
       <RadioButton Classes="hb" Canvas.Left="475" Canvas.Top="39" Width="61" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="小五号" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
       <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="49" Width="233" Height="25" FontSize="12"/>
-      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="55" Width="97" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="A3幅面输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="55" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="A3幅面输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
       <CheckBox Classes="hb" Canvas.Left="331" Canvas.Top="63" Width="97" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="给定行间距" FontSize="10" TextTrimming="CharacterEllipsis"/></CheckBox>
-      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="74" Width="97" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="繁体文字输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="74" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="繁体文字输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
       <TextBox Classes="hb" Canvas.Left="363" Canvas.Top="80" Width="49" Height="18" FontSize="12" Text="15.6"/>
       <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="89" Width="233" Height="25" FontSize="12"/>
-      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="94" Width="97" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不输出附录" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="94" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不输出附录" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
       <TextBox Classes="hb" Canvas.Left="395" Canvas.Top="104" Width="41" Height="18" FontSize="12" Text="2.5"/>
       <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="106" Width="60" Height="13" Text="页面左边距" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <CheckBox Classes="hb" Canvas.Left="451" Canvas.Top="113" Width="113" MinHeight="33" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="计算书合并后整理文档结构图" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>

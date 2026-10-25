@@ -86,31 +86,31 @@
       <!-- ── Frame 立柱选材 (169,117) 460x104 ── -->
       <Border Classes="hbFrame" Canvas.Left="169" Canvas.Top="117" Width="460" Height="104"/>
       <TextBlock Classes="hbFrameTitle" Canvas.Left="175" Canvas.Top="108" Text="立柱选材"/>
-      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="131" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="131" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6063T5, Mode=TwoWay}" Content="6063-T5"/>
-      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="148" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="148" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6063T6, Mode=TwoWay}" Content="6063-T6"/>
-      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="166" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="166" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding MatQ235, Mode=TwoWay}" Content="Q235"/>
-      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="183" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="177" Canvas.Top="183" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding MatQ355, Mode=TwoWay}" Content="Q355"/>
-      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="131" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="131" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6061T4, Mode=TwoWay}" Content="6061-T4"/>
-      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="148" Width="65" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="148" Width="65" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6061T6, Mode=TwoWay}" Content="6061-T6"/>
-      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="166" Width="73" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="166" Width="73" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6063AT5, Mode=TwoWay}" Content="6063A-T5"/>
-      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="183" Width="81" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="249" Canvas.Top="183" Width="81" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding Mat6063AT6, Mode=TwoWay}" Content="6063A-T6"/>
-      <RadioButton Classes="hb" Canvas.Left="359" Canvas.Top="140" Width="73" Height="15" FontSize="12"
+      <RadioButton Classes="hb" Canvas.Left="359" Canvas.Top="140" Width="73" Height="17" FontSize="12"
                    HorizontalContentAlignment="Left" GroupName="立柱选材"
                    IsChecked="{Binding MatOther, Mode=TwoWay}" Content="其它材质"/>
       <CheckBox Classes="hb" Canvas.Left="277" Canvas.Top="203" Width="49" Height="13" FontSize="12"

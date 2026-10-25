@@ -19,7 +19,7 @@
           <TextBox Classes="hb" Canvas.Left="504" Canvas.Top="194" Width="313" Height="25" FontSize="12" Text="北京**大厦**立面**型材套裁优化"/>
           <TextBox Classes="hb" Canvas.Left="656" Canvas.Top="312" Width="33" Height="33" FontSize="12" Text="否"/>
           <Button Classes="hb" Canvas.Left="468" Canvas.Top="360" Width="113" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="删除选定项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="236" Canvas.Top="376" Width="126" MinHeight="29" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="左侧表中参数保存到项目中" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="236" Canvas.Top="376" Width="90" MinHeight="29" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="左侧表中参数保存到项目中" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <Button Classes="hb" Canvas.Left="360" Canvas.Top="376" Width="80" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="删除项目" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Button Classes="hb" Canvas.Left="520" Canvas.Top="480" Width="153" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按算法一优化(优选算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Button Classes="hb" Canvas.Left="680" Canvas.Top="480" Width="113" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="结果保存到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
@@ -37,7 +37,7 @@
           <TextBlock Classes="hb" Canvas.Left="432" Canvas.Top="200" Width="60" Height="13" Text="新建项目名" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Button Classes="hb" Canvas.Left="741" Canvas.Top="324" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Button Classes="hb" Canvas.Left="801" Canvas.Top="324" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="600" Canvas.Top="333" Width="136" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <Button Classes="hb" Canvas.Left="600" Canvas.Top="333" Width="113" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <Button Classes="hb" Canvas.Left="741" Canvas.Top="348" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Button Classes="hb" Canvas.Left="801" Canvas.Top="348" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           </Canvas>

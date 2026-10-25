@@ -10,7 +10,7 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <Canvas Width="792" Height="437" Background="#F0F0F0" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 3 套 -->
-      <TabControl Canvas.Left="-4" Canvas.Top="6" Width="796" Height="414">
+      <TabControl Canvas.Left="-4" Canvas.Top="6" Width="800" Height="414">
         <TabItem Header="Frame2">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <Canvas Width="791" Height="414" Background="#F0F0F0" ClipToBounds="True">

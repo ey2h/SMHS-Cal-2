@@ -67,9 +67,11 @@
 
 ## 五、当前状态（2026-10-25）
 
-- 第一页 40 案：**279/280 逐位（99.6%）**，仅 B10 未定位（qd 2.0475 平局；立柱函数只读控件文本，
-  qk/qd 计算在窗体层另一函数 → 未找到就不凑）
-- 立柱页：单跨简支/悬挑/单元式已逐位；缺 G1 双跨梁、G2 连续梁、G3 轴力 N、G4 挠度规范下拉、G5 钢铝结合
+- 第一页 40 案：**280/280 逐位**（B10 已随 qd 链定位闭合）
+- 立柱页：单跨简支（受拉/受压）、双跨梁、连续梁、多跨静定（43/44，仅 σeq 一处残差）、
+  多跨超静定（30/30）、**钢铝结合（60/60）** 均已逐位；型材矩阵 105/105、自定义材质 11/11
+- **钢铝结合**：`docs/V31_ALLOY_CODE.md` + `Engines/AlloyColumnEngine.cs`；
+  函数区 `0xCE08FA–0xCE6BE2`；口径 M_钢 最后 /1.05、抵抗矩取 min(Wx1,Wx2)、钢份额用 qd
 - 横梁/玻璃/连接/埋件/胶类五面板：零实现（Pure XAML，0 Binding）
 - 待落盘：`ida_out` 产物生成脚本（可复现性）
 
@@ -81,6 +83,7 @@
   01=悬臂15种 / 02=简支21种 / 03=带悬臂简支9种（依据帮助 B24 原文）；图号↔界面模型仍待定位
 - 取整对齐 `docs/ROUNDING_ALIGNMENT_V35.md`；第一页 40 案 `docs/COMPARE_BASIC_PAGE40.md`
 - 风荷载代码地图 `docs/WINDLOAD_CODE_MAP.md`；槽映射 `docs/V31_SLOT_MAP.md`；模板字典 `docs/FORMULA_TEMPLATE_DICTIONARY.md`
+- **钢铝结合 `docs/V31_ALLOY_CODE.md`**（含四面对拍 + 静力学形式对照 + 未闭合清单）
 - 单元式 `docs/COMPARE_UNIT_COLUMN_CODE.md`；工具链 `docs/RE_TOOLCHAIN_SETUP.md`；流程参数表 `docs/PROCESS_PARAM_TABLE.md`
 
 ## 七、工具（`local-data/recon/`）

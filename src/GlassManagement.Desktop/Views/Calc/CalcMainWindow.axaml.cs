@@ -153,6 +153,11 @@ public partial class CalcMainWindow : Window
                     {
                         dumpText = _wizard.SelfTestColumnMatrix();  // 模型×跨度矩阵（每组先回第一页重算）
                     }
+                    else if (string.Equals(SelfTestOnStartup, "beam", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        _wizard.SelfTestBeamPreview();          // 第一屏→立柱→横梁→预演
+                        dumpText = _wizard.DumpBeamPreviewText();
+                    }
                     else if (string.Equals(SelfTestOnStartup, "col-custom", System.StringComparison.OrdinalIgnoreCase))
                     {
                         dumpText = _wizard.SelfTestCustomMaterial();  // 「其它材质」人工参数

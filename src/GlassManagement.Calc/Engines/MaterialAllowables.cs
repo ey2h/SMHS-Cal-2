@@ -31,6 +31,12 @@ public static class MaterialAllowables
     /// <summary>其它材质：V35 允许人工填弹性模量/强度，缺省按 Q235 档给（界面会显示具体值）。</summary>
     private static readonly Allow Fallback = new(90, 55);
 
+    /// <summary>可选材质牌号（界面单选/下拉用，顺序固定）。</summary>
+    public static IReadOnlyList<string> Options { get; } = new[]
+    {
+        "6063-T5", "6063-T6", "6061-T4", "6061-T6", "6063A-T5", "6063A-T6", "Q235", "Q355",
+    };
+
     public static Allow Get(string? material)
         => material is not null && Table.TryGetValue(material, out var a) ? a : Fallback;
 

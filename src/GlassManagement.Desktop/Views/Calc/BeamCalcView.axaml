@@ -3,86 +3,215 @@
              x:Class="GlassManagement.Desktop.Views.Calc.BeamCalcView"
              FontFamily="SimSun" FontSize="12">
   <!--
-    「幕墙计算-横梁计算」MVVM 视图：**只做绑定，不含任何业务逻辑**。
-      · 输入区 → 绑定 CalcSession（BeamLeftBayMm / BeamRightBayMm / BeamUpperGridHeightMm），
-        跨度由 VM 的 BeamSpanMm 计算（左右取大）
-      · 型材表 → 绑定 ViewModel.Profiles / SelectedProfile（参数库「横框」）
-      · 结果 → 绑定 ViewModel.Results（PreviewLine: Text/Color/Decoration）
-      · 全部命令 → PreviewCommand / PrevCommand / NextCommand / ExitCommand / FindProfileCommand
-    视觉细化（间距/配色/响应式）交由 UI 技能处理，本文件只保证语义与绑定正确。
+    ============================================================================
+    「幕墙计算-横梁计算」视觉稿（草稿，不覆盖 src 下的真实文件）
+    与 src/.../Views/Calc/BeamCalcView.axaml 的差异只在「布局与视觉」，绑定契约零变更：
+      · ItemsSource={Binding Profiles} / SelectedItem={Binding SelectedProfile, TwoWay}
+      · Text={Binding ProfileKeyword, TwoWay} / Command={Binding FindProfileCommand}
+      · Results / HasResults / PlaceholderText / InputSummary / SectionSummary
+      · StatusText / ParamSourceNote / PreviewCommand / PrevCommand / NextCommand / ExitCommand
+    无 Click=、无 code-behind、无新 NuGet、无新样式类（只复用 App.axaml 的 hb* 类）。
+
+    结构（对齐 V31 窗体客户区 936×442）：
+      0  标题条            936×19   #E8EEF7
+      1  计算依据带（新增）  ~936×28  hbFrame + hbFrameTitle 骑线
+      2  左：横梁选料区      642×319  hbFrame + hbFrameTitle
+           2.1 检索行      105×24 按钮 + 96×18 文本框 + 单位提示
+           2.2 型材表      DataGrid 11 列，行高 18 / 表头 20
+           2.3 截面摘要    单行 11px，超长省略 + ToolTip
+      3  右：预演结果       270×319  hbResultPanel(#C0FFFF)
+      4  按钮区 2×2 右对齐  124×54   （预演/上一步 · 退出/下一步）
+      5  状态栏            936×20   左 StatusText，右 ParamSourceNote
+
+    若宿主日后改为拉伸（去掉 Width="936" / Height="442" 改 MinWidth/MinHeight），
+    内部 * 栅格与 11 列固定宽仍可用，详见 docs/ui/BEAM_UI_SPEC.md 第 6 节。
+    ============================================================================
   -->
-  <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="幕墙计算-横梁计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
-    </Border>
+  <UserControl.Styles>
+    <!-- 状态栏告警态：参数失效/预演被拒时转红 -->
+    <Style Selector="TextBlock.warning">
+      <Setter Property="Foreground" Value="#C00000"/>
+    </Style>
+    <!-- 型材表：VB6 DataGrid 观感（表头 20、行高 18、直角、浅灰细网格、选中浅青） -->
+    <Style Selector="DataGrid#profileGrid DataGridColumnHeader">
+      <Setter Property="Height" Value="20"/>
+      <Setter Property="Padding" Value="4,0"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="BorderBrush" Value="#A0A0A0"/>
+      <Setter Property="BorderThickness" Value="0,0,1,1"/>
+      <Setter Property="HorizontalContentAlignment" Value="Left"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="DataGrid#profileGrid DataGridCell">
+      <Setter Property="Padding" Value="4,0"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style Selector="DataGrid#profileGrid DataGridRow">
+      <Setter Property="MinHeight" Value="18"/>
+      <Setter Property="Background" Value="#FFFFFF"/>
+    </Style>
+    <Style Selector="DataGrid#profileGrid DataGridRow:pointerover">
+      <Setter Property="Background" Value="#E4F5F5"/>
+    </Style>
+    <!-- 选中行：与立柱屏自绘表一致取 #C0FFFF，全应用统一"选中=浅青"语义 -->
+    <Style Selector="DataGrid#profileGrid DataGridRow:selected">
+      <Setter Property="Background" Value="#C0FFFF"/>
+      <Setter Property="Foreground" Value="#000000"/>
+    </Style>
+  </UserControl.Styles>
 
-    <!-- 顶部：输入摘要（只读，全部来自会话与参数库） -->
-    <Border DockPanel.Dock="Top" Background="#F7F9FC" BorderBrush="#C8D0DC" BorderThickness="0,0,0,1" Padding="8,4">
-      <TextBlock Text="{Binding InputSummary}" TextWrapping="Wrap" Foreground="#25303B"/>
-    </Border>
+  <!-- 固定窗体宽度：与 ColumnCalcView 同为 936，居中出现于 MDI 客户区 -->
+  <Border Width="936" Background="#F0F0F0" ClipToBounds="True">
+    <DockPanel>
 
-    <!-- 状态栏 -->
-    <Border DockPanel.Dock="Bottom" Background="#F0F3F8" BorderBrush="#C8D0DC" BorderThickness="0,1,0,0" Padding="8,3">
-      <TextBlock Text="{Binding StatusText}" Foreground="#334155" TextWrapping="Wrap"/>
-    </Border>
-
-    <!-- 按钮栏 -->
-    <Border DockPanel.Dock="Bottom" Background="#EDF1F7" BorderBrush="#C8D0DC" BorderThickness="0,1,0,0" Padding="6,4">
-      <StackPanel Orientation="Horizontal" Spacing="6">
-        <Button Content="预演" Command="{Binding PreviewCommand}" Width="70"/>
-        <Button Content="快速查找型材" Command="{Binding FindProfileCommand}" Width="96"/>
-        <Button Content="上一步" Command="{Binding PrevCommand}" Width="70"/>
-        <Button Content="下一步" Command="{Binding NextCommand}" Width="70"/>
-        <Button Content="退出" Command="{Binding ExitCommand}" Width="70"/>
-      </StackPanel>
-    </Border>
-
-    <Grid ColumnDefinitions="*,360" Margin="6">
-      <!-- 左：型材输入 + 截面对照 -->
-      <DockPanel Grid.Column="0" Margin="0,0,6,0">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="6" Margin="0,0,0,4">
-          <TextBlock Text="型材代号" VerticalAlignment="Center"/>
-          <TextBox Text="{Binding ProfileKeyword, Mode=TwoWay}" Width="140"/>
-          <TextBlock Text="{Binding SectionSummary}" Foreground="#475569" TextWrapping="Wrap" VerticalAlignment="Center"/>
-        </StackPanel>
-        <DataGrid ItemsSource="{Binding Profiles}"
-                  SelectedItem="{Binding SelectedProfile, Mode=TwoWay}"
-                  AutoGenerateColumns="False" IsReadOnly="True"
-                  GridLinesVisibility="All" HeadersVisibility="Column"
-                  CanUserResizeColumns="True" FontSize="11">
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
-            <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="90"/>
-            <DataGridTextColumn Header="Iy" Binding="{Binding Iy, StringFormat={}{0:0.###}}" Width="90"/>
-            <DataGridTextColumn Header="Wx1" Binding="{Binding Wx1, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="Wx2" Binding="{Binding Wx2, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="Wy1" Binding="{Binding Wy1, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="Wy2" Binding="{Binding Wy2, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="Sx" Binding="{Binding Sx, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="Sy" Binding="{Binding Sy, StringFormat={}{0:0.###}}" Width="80"/>
-            <DataGridTextColumn Header="tx" Binding="{Binding Tx, StringFormat={}{0:0.###}}" Width="60"/>
-            <DataGridTextColumn Header="ty" Binding="{Binding Ty, StringFormat={}{0:0.###}}" Width="60"/>
-          </DataGrid.Columns>
-        </DataGrid>
-      </DockPanel>
-
-      <!-- 右：预演结果（与 V31 富文本面板同位置语义） -->
-      <Border Grid.Column="1" Classes="hbResultPanel" Background="#C0FFFF" BorderBrush="#7A7A7A" BorderThickness="1">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="4,2">
-          <ItemsControl ItemsSource="{Binding Results}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
-                           TextDecorations="{Binding Decoration}" FontFamily="SimSun" FontSize="12"
-                           LineHeight="15" TextWrapping="Wrap" Margin="0,0,0,1"/>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </ScrollViewer>
+      <!-- ── 0 标题条（与立柱屏逐像素一致） ── -->
+      <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+        <TextBlock Text="幕墙计算-横梁计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
       </Border>
-      <TextBlock Grid.Column="1" Text="{Binding PlaceholderText}" Margin="8,6"
-                 Foreground="#6B6B6B" TextWrapping="Wrap"
-                 IsVisible="{Binding !HasResults}"/>
-    </Grid>
-  </DockPanel>
+
+      <!-- 客户区：936×442（V31 实测值，多出的一条「计算依据」带由内部弹性区吸收） -->
+      <Border Height="442">
+        <DockPanel>
+
+          <!-- ── 5 状态栏：左=本次操作结果，右=参数库来源（长路径省略 + ToolTip） ── -->
+          <Border DockPanel.Dock="Bottom" Background="#F0F0F0" BorderBrush="#A0A0A0" BorderThickness="0,1,0,0"
+                  Padding="8,2">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="{Binding StatusText}" Foreground="#1F2937"
+                         Classes.warning="{Binding StatusIsWarning}"
+                         TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding StatusText}"/>
+              <TextBlock Grid.Column="1" Text="{Binding ParamSourceNote}" FontSize="11" Foreground="#6B7280"
+                         Margin="16,0,0,0" MaxWidth="380" TextTrimming="CharacterEllipsis"
+                         ToolTip.Tip="{Binding ParamSourceNote}"/>
+            </Grid>
+          </Border>
+
+          <!-- ── 4 按钮区：V31 (801/861, 382/406) 的 2×2，整体贴右 ── -->
+          <Border DockPanel.Dock="Bottom" Padding="8,6,8,4">
+            <StackPanel HorizontalAlignment="Right" Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="预演" Width="62" Height="24" Command="{Binding PreviewCommand}"
+                        IsEnabled="{Binding PreviewEnabled}"
+                        ToolTip.Tip="{Binding PreviewBlockedReason}"/>
+                <Button Content="上一步" Width="62" Height="24" Command="{Binding PrevCommand}"/>
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="退出" Width="62" Height="24" Command="{Binding ExitCommand}"/>
+                <Button Content="下一步" Width="62" Height="24" Command="{Binding NextCommand}"/>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+
+          <!-- ── 1 计算依据带：骑线标题 Frame，承载 InputSummary（只读摘要） ── -->
+          <Grid DockPanel.Dock="Top" Margin="8,11,8,0">
+            <Border Classes="hbFrame"/>
+            <TextBlock Classes="hbFrameTitle" Text="计算依据"
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-7,0,0"/>
+            <TextBlock Text="{Binding InputSummary}" TextWrapping="Wrap" VerticalAlignment="Top"
+                       Margin="10,6,10,7" Foreground="#25303B"/>
+          </Grid>
+
+          <!-- ── 2 / 3 主区：左型材 642 ｜ 8px 缝 ｜ 右预演结果 270（≈ V31 655/264） ── -->
+          <Grid ColumnDefinitions="*,8,0.42*" Margin="8,10,8,0">
+
+            <!-- ══ 2 横梁选料 ══ -->
+            <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*,Auto" Margin="0,7,0,0">
+              <Border Classes="hbFrame" Grid.RowSpan="4"/>
+              <TextBlock Classes="hbFrameTitle" Text="横梁选料"
+                         HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-7,0,0"/>
+
+              <!-- 2.1 检索行：按钮在左、代号框在右（V31：按钮 (36,179)、框 (151,182)） -->
+              <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*" Margin="9,11,9,6">
+                <Button Content="快速查找型材" Width="105" Height="24" Command="{Binding FindProfileCommand}"/>
+                <TextBox Grid.Column="1" Width="96" Height="18" Margin="6,0,0,0" VerticalAlignment="Center"
+                         Watermark="型材代号"
+                         Text="{Binding ProfileKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- 单位提示：横梁表列名短，靠这一句避免误读量纲 -->
+                <TextBlock Grid.Column="2" Text="单位：Ix/Iy mm⁴　Wx/Wy/S mm³　tx/ty mm"
+                           FontSize="11" Foreground="#6B7280" HorizontalAlignment="Right"
+                           TextTrimming="CharacterEllipsis"/>
+              </Grid>
+
+              <!-- 2.1b 材质与自重模型（V31：材质单选 + 「玻璃自重为集中力」+ 受力点距离 a） -->
+              <Grid Grid.Row="1" ColumnDefinitions="Auto,110,Auto,Auto,54,Auto,*" Margin="9,0,9,6">
+                <TextBlock Text="材质" VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1" Height="18" Margin="6,0,0,0" MinHeight="0" FontSize="12"
+                          ItemsSource="{Binding MaterialOptions}"
+                          SelectedItem="{Binding Session.BeamMaterial, Mode=TwoWay}"/>
+                <TextBlock Grid.Column="2" Text="{Binding MaterialAllowText}" Margin="8,0,0,0"
+                           FontSize="11" Foreground="#6B7280" VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="3" Content="玻璃自重为集中力" Margin="12,0,0,0" FontSize="12"
+                          IsChecked="{Binding ConcentratedGravity, Mode=TwoWay}"/>
+                <TextBlock Grid.Column="4" Text="受力点距离" Margin="10,0,4,0"
+                           VerticalAlignment="Center" FontSize="11"/>
+                <TextBox Grid.Column="5" Width="50" Height="18" VerticalAlignment="Center"
+                         IsEnabled="{Binding PointDistanceEnabled}"
+                         Text="{Binding PointDistanceMm, Mode=TwoWay}"/>
+                <TextBlock Grid.Column="6" Text="mm（仅集中力模型可用）" Margin="6,0,0,0"
+                           FontSize="11" Foreground="#6B7280" VerticalAlignment="Center"/>
+              </Grid>
+
+              <!-- 2.2 型材表（参数库「横框」）：11 列固定宽，合计 616 ≤ 可用 624 -->
+              <DataGrid Grid.Row="2" Name="profileGrid" Margin="9,0,9,0"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding SelectedProfile, Mode=TwoWay}"
+                        AutoGenerateColumns="False" IsReadOnly="True"
+                        SelectionMode="Single" HeadersVisibility="Column"
+                        GridLinesVisibility="All"
+                        HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                        RowHeight="18" ColumnHeaderHeight="20"
+                        CanUserResizeColumns="True" CanUserSortColumns="False" CanUserReorderColumns="False"
+                        Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="96"/>
+                  <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Iy" Binding="{Binding Iy, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Wx1" Binding="{Binding Wx1, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Wx2" Binding="{Binding Wx2, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Wy1" Binding="{Binding Wy1, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Wy2" Binding="{Binding Wy2, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Sx" Binding="{Binding Sx, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="Sy" Binding="{Binding Sy, StringFormat={}{0:0.###}}" Width="52"/>
+                  <DataGridTextColumn Header="tx" Binding="{Binding Tx, StringFormat={}{0:0.###}}" Width="48"/>
+                  <DataGridTextColumn Header="ty" Binding="{Binding Ty, StringFormat={}{0:0.###}}" Width="56"/>
+                </DataGrid.Columns>
+              </DataGrid>
+
+              <!-- 2.3 截面摘要：选中行的派生量（Wx/Wy 取 min 的结果，表里没有这两列） -->
+              <Border Grid.Row="3" Margin="1,6,1,1" Padding="8,3"
+                      BorderBrush="#A0A0A0" BorderThickness="0,1,0,0">
+                <TextBlock Text="{Binding SectionSummary}" FontSize="11" Foreground="#24405E"
+                           TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SectionSummary}"/>
+              </Border>
+            </Grid>
+
+            <!-- ══ 3 预演结果（V31 RichText (672,37) 264×326，底色 #C0FFFF） ══ -->
+            <Border Grid.Column="2" Classes="hbResultPanel">
+              <Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                              Padding="5,3">
+                  <ItemsControl ItemsSource="{Binding Results}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
+                                   TextDecorations="{Binding Decoration}" FontFamily="SimSun" FontSize="12"
+                                   LineHeight="15" TextWrapping="Wrap" Margin="0,0,0,1"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+
+                <!-- 空态 / 失效态：结果被清空后显示 PlaceholderText（VM 已处理 HasResults） -->
+                <TextBlock Text="{Binding PlaceholderText}" Margin="10,8"
+                           Foreground="#6B6B6B" TextWrapping="Wrap" VerticalAlignment="Top"
+                           IsVisible="{Binding !HasResults}"/>
+              </Grid>
+            </Border>
+          </Grid>
+        </DockPanel>
+      </Border>
+    </DockPanel>
+  </Border>
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -99,6 +100,23 @@ public partial class CalcWizardViewModel : ObservableObject
         _basic?.NextCommand.Execute(null);    // 真实「下一步」：内含 ResolveWindStandard + 导航到立柱屏
         _column?.PreviewCommand.Execute(null);
     }
+
+    /// <summary>
+    /// 诊断入口（--selftest=beam）：第一屏 →「下一步」→ 立柱屏 →「下一步」→ 横梁屏 →「预演」。
+    /// 走的是与真实按钮完全相同的命令链，不覆盖任何参数。
+    /// </summary>
+    public void SelfTestBeamPreview()
+    {
+        Session.EnterMenu("玻璃幕墙", "全隐框");
+        GoBasic();
+        _basic?.NextCommand.Execute(null);     // → 立柱屏（内含 ResolveWindStandard）
+        _column?.NextCommand.Execute(null);    // → 横梁屏
+        _beam?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把横梁屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpBeamPreviewText()
+        => _beam is null ? "" : string.Join("\n", _beam.Results.Select(r => r.Text));
 
     /// <summary>
     /// 反面对照（--selftest=column-only）：直接进立柱屏并预演，**故意跳过第一屏**。

@@ -127,7 +127,7 @@
                            TextTrimming="CharacterEllipsis"/>
               </Grid>
 
-              <!-- 2.2 型材表（参数库「横框」）：11 列固定宽，合计 616 ≤ 可用 624 -->
+              <!-- 2.2 型材表（参数库「横框」）：11 列固定宽，合计 616 ≤ 可用 622（642 − 边框 2 − 边距 18） -->
               <DataGrid Grid.Row="1" Name="profileGrid" Margin="9,0,9,0"
                         ItemsSource="{Binding Profiles}"
                         SelectedItem="{Binding SelectedProfile, Mode=TwoWay}"

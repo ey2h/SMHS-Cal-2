@@ -199,7 +199,12 @@ public partial class CalcSession : ObservableObject
     /// <summary>抗震设防分类 / 场地类型 / 地区</summary>
     [ObservableProperty] private string _seismicClass = "标准设防类";
     [ObservableProperty] private string _siteClass = "Ⅱ类";
-    [ObservableProperty] private string _regionName = "上海";
+    /// <summary>
+    /// 地区（参数库「地区参数」表行名）。默认取「北京」——
+    /// 取证：V31 第一页开机默认 50 年基本风压 450（= 北京）、αmax 运行值 0.16（= 北京 8 度），
+    /// 横梁预演 wk=1.285KPa 与之一致。改成「上海」则 αmax 0.08、wk 变 1.571（已实测联动）。
+    /// </summary>
+    [ObservableProperty] private string _regionName = "北京";
     [ObservableProperty] private string _loadStandard = "全国荷载规范";
 
     // ============================================================

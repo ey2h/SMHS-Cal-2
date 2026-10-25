@@ -47,6 +47,7 @@ public partial class BeamCalcViewModel : ObservableObject
                 case nameof(CalcSession.BeamMaterial):
                 case nameof(CalcSession.RegionName):
                     Invalidate("上游参数已变化");
+                    OnPropertyChanged(nameof(MaterialAllowText));
                     break;
             }
         };
@@ -61,6 +62,56 @@ public partial class BeamCalcViewModel : ObservableObject
 
     /// <summary>型材检索关键字（V31「←请在此输入待查找型材代号或其关键字」）。</summary>
     [ObservableProperty] private string _profileKeyword = "";
+
+    /// <summary>可选材质牌号（参数库材料表；默认 6063-T5 → f=90 / fv=55，与 V31 横梁页默认一致）。</summary>
+    public IReadOnlyList<string> MaterialOptions => MaterialAllowables.Options;
+
+    /// <summary>
+    /// 自重按两点集中力（V31 横梁页「玻璃自重为集中力」）。
+    /// 只有玻璃幕墙可用；石材类的「按集中力模型」是双向集中力，属另一套模板（未复刻）。
+    /// </summary>
+    [ObservableProperty] private bool _concentratedGravity;
+
+    /// <summary>受力点到横梁与立柱连接点的距离 a（mm）。V31 默认 150。</summary>
+    [ObservableProperty] private double _pointDistanceMm = 150;
+
+    /// <summary>集中力参数是否可编辑（仅在勾选「玻璃自重为集中力」时启用，与 V31 en=False 行为对齐）。</summary>
+    public bool PointDistanceEnabled => ConcentratedGravity;
+
+    partial void OnConcentratedGravityChanged(bool value)
+    {
+        OnPropertyChanged(nameof(PointDistanceEnabled));
+        Invalidate("自重模型已切换");
+    }
+
+    partial void OnPointDistanceMmChanged(double value) => Invalidate("受力点距离已改");
+
+    /// <summary>当前材质的设计值摘要（f / fv）。</summary>
+    public string MaterialAllowText
+    {
+        get
+        {
+            var a = MaterialAllowables.Get(Session.BeamMaterial);
+            return $"f={a.Bending:0.###} MPa，fv={a.Shear:0.###} MPa";
+        }
+    }
+
+    /// <summary>预演是否可用（无 wk 时禁用，并给出原因 —— 与立柱屏同一套做法）。</summary>
+    public bool PreviewEnabled => Session.WindStandardKpa > 0 && SelectedProfile is not null;
+
+    /// <summary>不能用预演时的原因（空 = 可用）。</summary>
+    public string PreviewBlockedReason
+    {
+        get
+        {
+            if (Session.WindStandardKpa <= 0) return "上游未算出风荷载标准值，请先在第一页点「计算荷载」";
+            if (SelectedProfile is null) return "请先在型材表中选择一行";
+            return "";
+        }
+    }
+
+    /// <summary>状态栏是否处于告警态（参数失效后尚未重新预演）。</summary>
+    [ObservableProperty] private bool _statusIsWarning;
 
     /// <summary>载入参数来源说明（参数库路径 / 内置快照）。</summary>
     public string ParamSourceNote => ParamLibrary.SourceNote;
@@ -102,18 +153,25 @@ public partial class BeamCalcViewModel : ObservableObject
 
     private void Invalidate(string reason)
     {
+        OnPropertyChanged(nameof(PreviewEnabled));
+        OnPropertyChanged(nameof(PreviewBlockedReason));
         if (Results.Count == 0) return;
         Results.Clear();
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(PlaceholderText));
         OnPropertyChanged(nameof(InputSummary));
+        StatusIsWarning = true;
         StatusText = reason + "，请重新预演";
     }
 
     [ObservableProperty] private string _statusText = "";
 
     partial void OnSelectedProfileChanged(BeamProfile? value)
-        => OnPropertyChanged(nameof(SectionSummary));
+    {
+        OnPropertyChanged(nameof(SectionSummary));
+        OnPropertyChanged(nameof(PreviewEnabled));
+        OnPropertyChanged(nameof(PreviewBlockedReason));
+    }
 
     // ---------------- 命令 ----------------
 
@@ -123,17 +181,13 @@ public partial class BeamCalcViewModel : ObservableObject
     [RelayCommand]
     private void Preview()
     {
-        var p = SelectedProfile;
-        if (p is null)
+        if (!PreviewEnabled)
         {
-            StatusText = "请先在型材表中选择一行";
+            StatusIsWarning = true;
+            StatusText = PreviewBlockedReason;
             return;
         }
-        if (Session.WindStandardKpa <= 0)
-        {
-            StatusText = "上游未算出风荷载标准值，请先在第一页「计算荷载」";
-            return;
-        }
+        var p = SelectedProfile!;
 
         var f = MaterialAllowables.Bending(Session.BeamMaterial);
         var fv = MaterialAllowables.Shear(Session.BeamMaterial);
@@ -141,7 +195,9 @@ public partial class BeamCalcViewModel : ObservableObject
 
         var r = HorizontalBeamEngine.Compute(
             Session.WindStandardKpa, Session.BeamSpanMm, Session.BeamUpperGridHeightMm,
-            g, Session.AlphaMax, f, p);
+            g, Session.AlphaMax, f, p,
+            concentratedGravity: ConcentratedGravity,
+            pointDistanceMm: PointDistanceMm);
 
         Results.Clear();
         Add("************************************", ColorRule);
@@ -195,7 +251,10 @@ public partial class BeamCalcViewModel : ObservableObject
 
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(PlaceholderText));
-        StatusText = $"预演完成：型材 {p.Code}，{Session.WindStandardSource}，参数库 {ParamSourceNote}";
+        StatusIsWarning = false;
+        StatusText = $"预演完成：型材 {p.Code}"
+                   + (ConcentratedGravity ? $"（自重点集中力，a={PointDistanceMm:0.###}mm）" : "")
+                   + $"，{Session.WindStandardSource}，参数库 {ParamSourceNote}";
     }
 
     /// <summary>型材检索（V31「快速查找型材」按钮）。</summary>

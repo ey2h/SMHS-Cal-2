@@ -115,17 +115,22 @@ public class GlassTemplateTests
     }
 
     [Test]
-    public void 双中空_三片各一组_43星分隔()
+    public void 双中空_三片各一组_41星分隔()
     {
-        // 三玻双中空：取消「未支持」后按三片输出，等效厚度逐层衰减。
-        // ⚠ 文案（「1#/2#/3#玻璃强度计算值」）是按三片构型类推的，V31 双中空屏尚未 dump 原文核对。
+        // 实测（glass_cfg_scan.py --cases dblinsul，1100×1380、6/6/6、wk=1.37）：
+        //   41 星；片名「外片 / 中片 / 内片」；容许值后缀「(三玻双中空结构)」
         var got = Render(s => { s.GlassMono = false; s.GlassDoubleInsul = true; });
-        Assert.That(got[0], Is.EqualTo(Sep43));
+        Assert.That(got[0], Is.EqualTo(Sep41));
         Assert.That(got[1], Does.StartWith("玻璃部分风荷载标准值为:"));
-        Assert.That(got[3], Does.StartWith("1#玻璃强度计算值:"));
-        Assert.That(got, Has.Some.StartsWith("2#玻璃强度计算值:"));
-        Assert.That(got, Has.Some.StartsWith("3#玻璃强度计算值:"));
-        Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm(双中空玻璃)"));
+        Assert.That(got, Has.Some.EqualTo("外片玻璃强度计算值:11.262MPa"));
+        Assert.That(got, Has.Some.EqualTo("中片玻璃强度计算值:9.16MPa"));
+        Assert.That(got, Has.Some.EqualTo("内片玻璃强度计算值:9.16MPa"));
+        Assert.That(got, Has.Some.EqualTo("选用的外片玻璃强度设计值:84MPa(钢化玻璃)"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度计算值:3.806mm"));
+        Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm(三玻双中空结构)"));
+        // 反例兜底：不能出现编号式片名，也不能用「(双中空玻璃)」这种自造后缀
+        Assert.That(got, Has.None.StartsWith("1#玻璃强度计算值:"));
+        Assert.That(got, Has.None.EqualTo("选用玻璃挠度容许值:18.333mm(双中空玻璃)"));
     }
 
     [Test]
@@ -144,6 +149,33 @@ public class GlassTemplateTests
         Assert.That(got, Has.Some.EqualTo("玻璃挠度计算值:2.625mm"));
         Assert.That(got, Has.Some.EqualTo("选用玻璃挠度容许值:18.333mm"));
         Assert.That(got, Has.None.Contains("(双夹层"), "V31 此构型容许值不带后缀");
+    }
+
+    [Test]
+    public void 第二片厚度_仅四片构型可见且可写入()
+    {
+        // 双夹层-中空是 4 片（外夹层2 + 内夹层2），V31 该构型下外片框/内片框各出 2 个厚度下拉；
+        // 其余构型（≤3 片）不该出现第 4 个输入。
+        var wiz = new CalcWizardViewModel();
+        var s = wiz.Session;
+        s.GlassMono = false; s.GlassInsulated = false; s.GlassLaminated = false;
+        s.GlassInsulLam = false; s.GlassDoubleInsul = false; s.GlassDoubleLam = true;
+        var vm = new GlassCalcViewModel(s, wiz);
+        Assert.That(vm.SecondPlyVisible, Is.True);
+
+        vm.Outer2Thickness = 8;
+        vm.Inner2Thickness = 10;
+        Assert.That(s.GlassOuter2ThicknessMm, Is.EqualTo(8));
+        Assert.That(s.GlassInner2ThicknessMm, Is.EqualTo(10));
+
+        // 切回三片构型 → 第二片输入隐藏
+        s.GlassDoubleLam = false; s.GlassDoubleInsul = true;
+        Assert.That(vm.SecondPlyVisible, Is.False);
+
+        // ⚠ CalcSession.Default 是单例：必须还原，否则污染后续用例（曾把 4 片算成 6/8/6/10）
+        s.GlassOuter2ThicknessMm = 6;
+        s.GlassInner2ThicknessMm = 6;
+        s.GlassDoubleInsul = false;
     }
 
     // ---------------- 片位可用性矩阵 ----------------
@@ -225,7 +257,7 @@ public class GlassTemplateTests
         Assert.That(s.GlassCustomWidthMm, Is.EqualTo(900), "非法值不得写入 Session");
     }
 
-    // ---------------- 数值（wk 未接入，标 Ignore）----------------
+    // ---------------- 数值（wk 已接入：面板口径 1.37，全部真实断言）----------------
 
     [Test]
     public void 单片_数值逐位_实机137()

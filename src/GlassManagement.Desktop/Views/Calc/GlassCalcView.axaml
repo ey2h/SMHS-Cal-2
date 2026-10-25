@@ -101,6 +101,10 @@
                      Command="{Binding SetPaneKindCommand}" CommandParameter="outer|夹丝玻璃"/>
         <ComboBox Canvas.Left="61" Canvas.Top="203" Width="57" Height="20"
                   ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding OuterThickness, Mode=TwoWay}"/>
+        <!-- 双夹层-中空（4 片）时外夹层的第二片（实机 80,225）-->
+        <ComboBox Canvas.Left="61" Canvas.Top="225" Width="57" Height="20"
+                  IsVisible="{Binding SecondPlyVisible}"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding Outer2Thickness, Mode=TwoWay}"/>
 
         <!-- 中片 (164,183) -->
         <Border Classes="hbFrame" Canvas.Left="164" Canvas.Top="183" Width="121" Height="167"
@@ -145,6 +149,10 @@
                      Command="{Binding SetPaneKindCommand}" CommandParameter="inner|夹丝玻璃"/>
         <ComboBox Canvas.Left="357" Canvas.Top="203" Width="57" Height="20"
                   ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding InnerThickness, Mode=TwoWay}"/>
+        <!-- 双夹层-中空（4 片）时内夹层的第二片（实机 375,225）-->
+        <ComboBox Canvas.Left="357" Canvas.Top="225" Width="57" Height="20"
+                  IsVisible="{Binding SecondPlyVisible}"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding Inner2Thickness, Mode=TwoWay}"/>
 
         <!-- ══ 输出 (447,30) 365x270 ══ -->
         <Border Classes="hbResultPanel" Canvas.Left="447" Canvas.Top="30" Width="365" Height="270">

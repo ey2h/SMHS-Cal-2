@@ -43,7 +43,10 @@ public partial class GlassCalcViewModel : ObservableObject
                 case nameof(CalcSession.GlassCustomHeightMm):
                 case nameof(CalcSession.InterlayerKind):
                 case nameof(CalcSession.GlassOuterThicknessMm):
+                case nameof(CalcSession.GlassDoubleLam):
+                case nameof(CalcSession.GlassDoubleInsul):
                     Invalidate("上游参数已变化");
+                    OnPropertyChanged(nameof(SecondPlyVisible));
                     OnPropertyChanged(nameof(SizeItems));
                     OnPropertyChanged(nameof(PaneStateText));
                     OnPropertyChanged(nameof(OuterEnabled));
@@ -172,6 +175,27 @@ public partial class GlassCalcViewModel : ObservableObject
         get => Session.GlassInnerThicknessMm;
         set { Session.GlassInnerThicknessMm = value; OnPropertyChanged(); Invalidate("内片厚度已改"); }
     }
+
+    /// <summary>
+    /// 双夹层-中空（4 片）时外夹层的**第二片**厚度。
+    /// <para>V31 该构型下外片框出现 2 个厚度下拉（实机外框 80,203 + 80,225；
+    /// 内框 376,203 + 375,225），中片框整体禁用。普通构型（≤3 片）不用。</para>
+    /// </summary>
+    public double Outer2Thickness
+    {
+        get => Session.GlassOuter2ThicknessMm;
+        set { Session.GlassOuter2ThicknessMm = value; OnPropertyChanged(); Invalidate("外夹层第二片厚度已改"); }
+    }
+
+    /// <summary>双夹层-中空（4 片）时内夹层的第二片厚度。</summary>
+    public double Inner2Thickness
+    {
+        get => Session.GlassInner2ThicknessMm;
+        set { Session.GlassInner2ThicknessMm = value; OnPropertyChanged(); Invalidate("内夹层第二片厚度已改"); }
+    }
+
+    /// <summary>仅双夹层-中空（4 片）才显示外夹层/内夹层的第二个厚度下拉。</summary>
+    public bool SecondPlyVisible => Kind == GlassBuildKind.DoubleLaminated;
 
     public string OuterKind
     {
@@ -437,26 +461,29 @@ public partial class GlassCalcViewModel : ObservableObject
                 case GlassBuildKind.DoubleInsulated:
                 {
                     // 三玻双中空：三片各算一组，等效厚度逐层衰减（每穿一层腔 ×0.95）
+                    // 文案实测（glass_cfg_scan.py --cases dblinsul）：
+                    //   41 星；片名「外片 / 中片 / 内片」；容许值后缀「(三玻双中空结构)」
                     var r = GlassEngine.ComputeDoubleInsulated(wk, a, b,
                         Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm,
                         alpha);
+                    var name = new[] { "外片", "中片", "内片" };
                     var kinds = new[] { Session.GlassOuterKind, Session.GlassMidKind, Session.GlassInnerKind };
                     var ths = new[] { Session.GlassOuterThicknessMm, Session.GlassMidThicknessMm, Session.GlassInnerThicknessMm };
-                    Add(Sep43, ColorRule);
+                    Add(Sep41, ColorRule);
                     Add($"玻璃部分风荷载标准值为:{Session.PanelWindKpa:0.###}KPa", ColorNormal);
-                    Add(Sep43, ColorRule);
+                    Add(Sep41, ColorRule);
                     for (int i = 0; i < r.Plies.Length; i++)
                     {
-                        Add($"{i + 1}#玻璃强度计算值:{r.Plies[i].Sigma:0.###}MPa", ColorNormal);
-                        Add($"选用的{i + 1}#玻璃强度设计值:{GlassAllowables.Caption(kinds[i], ths[i])}", ColorNormal);
+                        Add($"{name[i]}玻璃强度计算值:{r.Plies[i].Sigma:0.###}MPa", ColorNormal);
+                        Add($"选用的{name[i]}玻璃强度设计值:{GlassAllowables.Caption(kinds[i], ths[i])}", ColorNormal);
                         Judge(r.Plies[i].Sigma <= GlassAllowables.Bending(kinds[i], ths[i]));
                         if (i < r.Plies.Length - 1) Add(Dash, ColorRule);
                     }
-                    Add(Sep43, ColorRule);
+                    Add(Sep41, ColorRule);
                     Add($"玻璃挠度计算值:{r.Deflection:0.###}mm", ColorNormal);
-                    Add($"选用玻璃挠度容许值:{r.Limit:0.###}mm(双中空玻璃)", ColorNormal);
+                    Add($"选用玻璃挠度容许值:{r.Limit:0.###}mm(三玻双中空结构)", ColorNormal);
                     Judge(r.Deflection <= r.Limit);
-                    Add(Sep43, ColorRule);
+                    Add(Sep41, ColorRule);
                     break;
                 }
                 case GlassBuildKind.DoubleLaminated:

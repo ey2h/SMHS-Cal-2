@@ -694,6 +694,6 @@ public enum GlassBuildKind
     Laminated,           // 夹层玻璃  — ComputeLaminated
     InsulLamPvb,         // 中空+夹层 PVB — ComputeComposite
     InsulLamSgp,         // 中空+夹层 SGP — ComputeCompositeSgp
-    DoubleInsulated,     // 双中空（σ 未闭合）
-    DoubleLaminated,     // 双夹层-中空（未挖）
+    DoubleInsulated,     // 三玻双中空：3 片 2 腔，等效厚度逐层衰减 0.95 —— 已逐位
+    DoubleLaminated,     // 双夹层-中空：4 片（外夹层2+腔+内夹层2）—— 已逐位
 }

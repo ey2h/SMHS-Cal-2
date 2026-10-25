@@ -407,6 +407,66 @@ public static class GlassEngine
     }
 
     /// <summary>
+    /// **双中空玻璃**（3 片 2 腔）—— V31 函数区 <c>0xA5Cxxx–0xA5F2xx</c>。
+    ///
+    /// <para><b>分配权重 = 衰减厚度的立方</b>（实测三点定案）：
+    /// <c>D₁=(0.95t₁)³</c>、<c>D₂=D₃=(0.95²t₂)³</c>，
+    /// <c>wᵢ = 1.1?(wk)·Dᵢ/ΣD</c>（只有外片乘 1.1）。</para>
+    ///
+    /// <para>实测 6/6/6（wk=0.00137、Q=0.0001232）：
+    /// D=(185.19, 158.78, 158.78)、Σ=502.75；
+    /// w=(0.000555, 0.000433, 0.000433) → 槽 [13]/[20]；
+    /// W标准=(0.000617, 0.000495, 0.000495) → 槽 [14]/[21]；
+    /// W强度=(0.000919, 0.000736, 0.000736) → 槽 [15]/[22]；
+    /// σ=(11.262, 9.16, 9.16)、df=3.806。</para>
+    ///
+    /// <para><b>注意</b>：w 先不取整（直接进组合），只有 W标准/W强度 取 6 位 ——
+    /// 若先把 w round6 再组合，中片 W标准 会变 0.000494（实测 0.000495）。</para>
+    /// </summary>
+    public static (GlassPlyResult[] Plies, double EquivalentThickness, double Deflection, double Limit)
+        ComputeDoubleInsulated(double wkNmm2, double aMm, double bMm, double t1, double t2, double t3, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R(t1 * DensityNmm3, 6);                     // 用首片厚度（槽[7]=0.000154）
+        double qeRaw = qg * (SeismicFactor * alphaMax);          // 未取整
+        double qe = R(qeRaw, 6);                                 // 0.000123（阈值显示用）
+
+        double d1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+        double d2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
+        double d3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
+        double sum = d1 + d2 + d3;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var ts = new[] { t1, t2, t3 };
+        var ds = new[] { d1, d2, d3 };
+        var plies = new GlassPlyResult[3];
+        for (int i = 0; i < 3; i++)
+        {
+            double f = i == 0 ? InsulatedOuterFactor : 1.0;
+            double wRaw = f * wkNmm2 * ds[i] / sum;              // 不先取整
+            double wStr = R(1.5 * wRaw + 0.7 * qeRaw, 6);
+            double wStd = R(wRaw + 0.5 * qeRaw, 6);
+            double theta = R3(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)));
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], R(wRaw, 6), wStr, wStd, theta, eta, sigma);
+        }
+
+        double te = R3(Math.Pow(sum, 1.0 / 3.0));
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+        _ = qe;
+        return (plies, te, df, limit);
+    }
+
+    /// <summary>
     /// **双中空玻璃**的挠度等效厚度 —— 逐层衰减，不是简单乘一个 0.95。
     ///
     /// <para>V31 函数区 <c>0xA5Cxxx–0xA5F2xx</c>。四点实测定案（1100×1380、wk=0.00137）：</para>

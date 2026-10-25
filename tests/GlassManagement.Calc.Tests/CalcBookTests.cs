@@ -31,7 +31,7 @@ public class CalcBookTests
     };
 
     private static string AllText(CalcBookInput x)
-        => string.Join("\n", CalcBookComposer.Compose(x).Select(b => b.Text));
+        => string.Join("\n", CalcBookComposer.Compose(x).Select(b => b.FlatText));
 
     [Fact]
     public void 各章数值与引擎一致()
@@ -40,31 +40,31 @@ public class CalcBookTests
         var text = AllText(x);
 
         // 连接
-        Assert.Contains("连接螺栓设计值：0.166 个", text);
-        Assert.Contains("横梁壁抗承压能力设计值：6660.000 N", text);
-        Assert.Contains("实际型材受力：633.889 N", text);
-        Assert.Contains("角码壁抗承压能力设计值：11100.000 N", text);
-        Assert.Contains("连接螺栓设计值：0.228 个", text);
-        Assert.Contains("实际型材受力：7304.379 N", text);
+        Assert.Contains("0.166 | 2", text);
+        Assert.Contains("6660.000 | —", text);
+        Assert.Contains("633.889", text);
+        Assert.Contains("11100.000", text);
+        Assert.Contains("0.228 | 2", text);
+        Assert.Contains("7304.379", text);
 
         // 埋件
-        Assert.Contains("剪力设计值：1716.000 N", text);
-        Assert.Contains("轴力设计值：7098.300 N", text);
-        Assert.Contains("弯矩设计值：137280.000 N·mm", text);
-        Assert.Contains("锚筋总截面积计算值：57.911 mm²", text);
-        Assert.Contains("实际锚筋总截面积：452.160 mm²", text);
-        Assert.Contains("基本锚固长度 lab：449.008 mm", text);
-        Assert.Contains("折减后锚固长度 la：57.507 mm", text);
-        Assert.Contains("转接件强度计算值：4.430 MPa", text);
-        Assert.Contains("焊缝强度计算值：12.452 MPa", text);
+        Assert.Contains("剪力设计值 V | 1716.000 | N", text);
+        Assert.Contains("轴力设计值 N | 7098.300 | N", text);
+        Assert.Contains("弯矩设计值 M | 137280.000 | N·mm", text);
+        Assert.Contains("锚筋总截面积 | 57.911 mm² | 452.160 mm²", text);
+        Assert.Contains("452.160 mm²", text);
+        Assert.Contains("基本锚固长度 lab | 449.008 | mm", text);
+        Assert.Contains("折减后锚固长度 la | 57.507 | mm", text);
+        Assert.Contains("转接件强度 | 4.430 MPa | 215.000 MPa", text);
+        Assert.Contains("焊缝强度 | 12.452 MPa | 160.000 MPa", text);
 
         // 胶类
-        Assert.Contains("粘接宽度最小值：6.121 mm", text);
-        Assert.Contains("粘接厚度最小值：5.475 mm", text);
-        Assert.Contains("计算宽度：7.705 mm", text);
-        Assert.Contains("计算值：8.381 mm", text);
-        Assert.Contains("压板最大弯曲应力：43.907 MPa", text);
-        Assert.Contains("连接螺栓抗拉承载力设计值：2409.836 N", text);
+        Assert.Contains("玻璃与铝框间结构胶宽度 | 6.121 mm | 8 mm", text);
+        Assert.Contains("玻璃与铝框间结构胶厚度 | 5.475 mm | 6 mm", text);
+        Assert.Contains("硅酮耐候胶胶缝宽度 | 7.705 mm | 16 mm", text);
+        Assert.Contains("立柱伸缩缝 | 8.381 mm | 20 mm", text);
+        Assert.Contains("压板最大弯曲应力 | 43.907 MPa | 90.000 MPa", text);
+        Assert.Contains("连接螺栓受力 | 1030.356 N | 2409.836 N", text);
     }
 
     /// <summary>立柱/横梁/玻璃三章由各自预演摘要填入，不能再是"本章未参与计算"。</summary>
@@ -119,6 +119,9 @@ public class CalcBookTests
             Assert.Contains("幕墙结构计算书", xml);
             Assert.Contains("57.911", xml);          // 埋件锚筋面积确实落进正文
             Assert.Contains("12.452", xml);          // 焊缝强度
+            Assert.Contains("<w:tbl>", xml);         // 三章已表格化
+            Assert.True(System.Text.RegularExpressions.Regex.Matches(xml, "<w:tbl>").Count >= 7,
+                "表格数应 ≥7（连接1 + 埋件4 + 胶类2）");
             Assert.StartsWith("<?xml", xml);
         }
         finally

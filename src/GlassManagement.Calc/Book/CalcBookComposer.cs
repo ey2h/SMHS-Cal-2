@@ -35,6 +35,8 @@ public sealed class CalcBookInput
 /// </summary>
 public static class CalcBookComposer
 {
+    private static string Yes(bool ok) => ok ? "满足要求(√)" : "不满足要求(×)";
+
     private static string N(double v, int digits = 3)
         => v.ToString("F" + digits, CultureInfo.InvariantCulture);
 
@@ -94,26 +96,20 @@ public static class CalcBookComposer
         b.Add(BookBlock.H2("六、连接计算"));
         if (x.Connect is { } c)
         {
+            b.Add(BookBlock.Table(
+                new[] { "连接部位", "螺栓设计值(个)", "实际用(个)", "被连接件壁抗承压(N)", "角码壁抗承压(N)", "实际受力(N)", "判定" },
+                new[]
+                {
+                    new[] { "横梁与角码", N(c.BeamBoltDesign), "2", N(c.BeamWebBearing), "—",
+                            N(c.BeamForce), Yes(c.BeamBoltDesign <= 2 && c.BeamForce <= c.BeamWebBearing) },
+                    new[] { "立柱与角码", N(c.ColumnBoltDesign), "2", N(c.ColumnWebBearing), N(c.BracketBearing),
+                            N(c.ColumnForce), Yes(c.ColumnBoltDesign <= 2 && c.ColumnForce <= c.BracketBearing) },
+                    new[] { "立柱与主体(钢转接件)", N(c.MainBoltDesign), "2", N(c.MainColumnBearing), N(c.MainBracketBearing),
+                            N(c.MainForce), Yes(c.MainBoltDesign <= 2 && c.MainForce <= c.MainBracketBearing) },
+                }));
             b.Add(BookBlock.P(
-                "1. 横梁与角码\n"
-                + $"   连接螺栓设计值：{N(c.BeamBoltDesign)} 个\n"
-                + $"   横梁壁抗承压能力设计值：{N(c.BeamWebBearing)} N\n"
-                + $"   实际型材受力：{N(c.BeamForce)} N\n"
-                + $"   {(c.BeamBoltDesign <= 2 ? "满足要求(√)" : "不满足要求(×)")}"));
-            b.Add(BookBlock.P(
-                "2. 立柱与角码\n"
-                + $"   连接螺栓设计值：{N(c.ColumnBoltDesign)} 个\n"
-                + $"   立柱壁抗承压能力设计值：{N(c.ColumnWebBearing)} N\n"
-                + $"   立柱与横梁连接处角码壁抗承压能力设计值：{N(c.BracketBearing)} N\n"
-                + $"   实际型材受力：{N(c.ColumnForce)} N\n"
-                + $"   {(c.ColumnBoltDesign <= 2 ? "满足要求(√)" : "不满足要求(×)")}"));
-            b.Add(BookBlock.P(
-                "3. 立柱与主体（钢转接件）\n"
-                + $"   连接螺栓设计值：{N(c.MainBoltDesign)} 个\n"
-                + $"   立柱壁抗承压能力设计值：{N(c.MainColumnBearing)} N\n"
-                + $"   角码壁抗承压能力设计值：{N(c.MainBracketBearing)} N\n"
-                + $"   实际型材受力：{N(c.MainForce)} N\n"
-                + $"   {(c.MainBoltDesign <= 2 ? "满足要求(√)" : "不满足要求(×)")}"));
+                $"注：螺栓单栓承载力按设计值取用（横梁/立柱与角码 {N(c.BeamBoltCapacity)} N，"
+                + $"立柱与主体 {N(c.MainBoltCapacity)} N），螺栓设计值 = 实际受力 / 单栓承载力。"));
         }
         else b.Add(BookBlock.P("本章未参与计算。"));
 
@@ -122,29 +118,56 @@ public static class CalcBookComposer
         b.Add(BookBlock.H2("七、埋件与焊缝计算"));
         if (x.Embed is { } e)
         {
+            b.Add(BookBlock.H3("7.1 内力设计值"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "数值", "单位" },
+                new[]
+                {
+                    new[] { "剪力设计值 V", N(e.ShearDesign), "N" },
+                    new[] { "轴力设计值 N", N(e.AxialDesign), "N" },
+                    new[] { "弯矩设计值 M", N(e.MomentDesign), "N·mm" },
+                }));
+
+            b.Add(BookBlock.H3("7.2 预埋件锚筋"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "计算值", "实配 / 容许值", "判定" },
+                new[]
+                {
+                    new[] { "锚筋总截面积", N(e.RebarAreaRequired) + " mm²", N(e.RebarAreaActual) + " mm²",
+                            Yes(e.RebarAreaRequired <= e.RebarAreaActual) },
+                    new[] { "0.5·fc·A", N(e.ConcreteBearing) + " N", "法向压力 " + N(e.AxialDesign) + " N",
+                            Yes(e.AxialDesign <= e.ConcreteBearing) },
+                }));
+            b.Add(BookBlock.P($"锚筋层数影响系数 αr = {N(e.AlphaR)}；锚板厚度影响系数 αb = {N(e.AlphaB)}。"
+                + "锚筋截面积取「V+N+M/(1.3αb·fy·z)」与「N+M/(0.4αb·fy·z)」两式的较大值。"));
+
+            b.Add(BookBlock.H3("7.3 锚固长度（GB 50010）"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "数值", "单位" },
+                new[]
+                {
+                    new[] { "基本锚固长度 lab", N(e.AnchorLab), "mm" },
+                    new[] { "折减后锚固长度 la", N(e.AnchorLa), "mm" },
+                }));
             b.Add(BookBlock.P(
-                "1. 内力\n"
-                + $"   剪力设计值：{N(e.ShearDesign)} N\n"
-                + $"   轴力设计值：{N(e.AxialDesign)} N\n"
-                + $"   弯矩设计值：{N(e.MomentDesign)} N·mm"));
-            b.Add(BookBlock.P(
-                "2. 预埋件锚筋\n"
-                + $"   锚筋总截面积计算值：{N(e.RebarAreaRequired)} mm²\n"
-                + $"   实际锚筋总截面积：{N(e.RebarAreaActual)} mm²\n"
-                + $"   {(e.RebarAreaRequired <= e.RebarAreaActual ? "满足要求(√)" : "不满足要求(×)")}\n"
-                + $"   0.5fcA：{N(e.ConcreteBearing)} N\n"
-                + $"   法向压力设计值：{N(e.AxialDesign)} N\n"
-                + $"   {(e.AxialDesign <= e.ConcreteBearing ? "满足要求(√)" : "不满足要求(×)")}"));
-            b.Add(BookBlock.P(
-                "3. 锚固长度（GB 50010）\n"
-                + $"   基本锚固长度 lab：{N(e.AnchorLab)} mm\n"
-                + $"   折减后锚固长度 la：{N(e.AnchorLa)} mm\n"
-                + "   抗震设计的幕墙锚筋锚固长度不得小于 200 mm；锚固长度不应小于 15 倍锚筋直径。"));
-            b.Add(BookBlock.P(
-                "4. 转接件与焊缝\n"
-                + $"   转接件强度计算值：{N(e.TransferStress)} MPa（设计值 {N(e.TransferStressLimit)} MPa）\n"
-                + $"   转接件挠度计算值：{N(e.TransferDeflection, 6)} mm（设计值 {N(e.TransferDeflLimit)} mm）\n"
-                + $"   焊缝强度计算值：{N(e.WeldStress)} MPa（设计值 {N(e.WeldStressLimit)} MPa）"));
+                "锚筋末端采用弯钩或机械锚固措施时，包括弯钩和锚固端头在内的锚固长度（投影长度）"
+                + "可取基本锚固长度的 60%，弯钩与机械锚固的形式和技术要求应符合 GB 50010 规定。"
+                + "抗震设计的幕墙锚筋锚固长度不得小于 200 mm；锚固长度不应小于 15 倍锚筋直径；"
+                + "当锚筋配置较多、实配面积超过计算所需 1.4 倍时，锚固长度可适当减少，但不应小于 180 mm。"));
+
+            b.Add(BookBlock.H3("7.4 转接件与焊缝"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "计算值", "设计值", "判定" },
+                new[]
+                {
+                    new[] { "转接件强度", N(e.TransferStress) + " MPa", N(e.TransferStressLimit) + " MPa",
+                            Yes(e.TransferStress <= e.TransferStressLimit) },
+                    new[] { "转接件挠度", N(e.TransferDeflection, 6) + " mm", N(e.TransferDeflLimit) + " mm",
+                            Yes(e.TransferDeflection <= e.TransferDeflLimit) },
+                    new[] { "焊缝强度", N(e.WeldStress) + " MPa", N(e.WeldStressLimit) + " MPa",
+                            Yes(e.WeldStress <= e.WeldStressLimit) },
+                }));
+            b.Add(BookBlock.P($"焊缝计算面积 A = {N(e.WeldArea)} mm²，焊缝截面模量 W = {N(e.WeldSectionModulus)} mm³。"));
         }
         else b.Add(BookBlock.P("本章未参与计算。"));
 
@@ -153,28 +176,37 @@ public static class CalcBookComposer
         b.Add(BookBlock.H2("八、胶类、伸缩及紧固计算"));
         if (x.Sealant is { } s)
         {
+            b.Add(BookBlock.P($"面板部分风荷载标准值：{N(s.WkPanelKpa)} KPa（面板口径）。"));
+            b.Add(BookBlock.H3("8.1 胶缝宽度与厚度"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "计算最小值", "实际取用", "判定" },
+                new[]
+                {
+                    new[] { "玻璃与铝框间结构胶宽度", N(s.StructuralWidth) + " mm", N(s.ActualWidth, 0) + " mm",
+                            Yes(s.StructuralWidth <= s.ActualWidth) },
+                    new[] { "玻璃与铝框间结构胶厚度", N(s.StructuralThickness) + " mm", N(s.ActualThickness, 0) + " mm",
+                            Yes(s.StructuralThickness <= s.ActualThickness) },
+                    new[] { "硅酮耐候胶胶缝宽度", N(s.WeatherWidth) + " mm", N(s.WeatherActual, 0) + " mm",
+                            Yes(s.WeatherWidth <= s.WeatherActual) },
+                    new[] { "立柱伸缩缝", N(s.JointWidth) + " mm", N(s.JointActual, 0) + " mm",
+                            Yes(s.JointWidth <= s.JointActual) },
+                }));
             b.Add(BookBlock.P(
-                "1. 结构胶\n"
-                + $"   面板部分风荷载标准值：{N(s.WkPanelKpa)} KPa\n"
-                + $"   粘接宽度最小值：{N(s.StructuralWidth)} mm；实际取 {N(s.ActualWidth, 0)} mm\n"
-                + $"   粘接厚度最小值：{N(s.StructuralThickness)} mm；实际取 {N(s.ActualThickness, 0)} mm\n"
-                + "   按 JGJ 102-2003 第 5.6.1 条：粘接宽度≥7 mm；12 mm≥粘接厚度≥6 mm；"
-                + "粘接宽度大于厚度且不宜大于厚度的 2 倍。"));
-            b.Add(BookBlock.P(
-                "2. 耐候胶胶缝\n"
-                + $"   计算宽度：{N(s.WeatherWidth)} mm；实际 {N(s.WeatherActual, 0)} mm\n"
-                + $"   {(s.WeatherWidth <= s.WeatherActual ? "满足要求(√)" : "不满足要求(×)")}"));
-            b.Add(BookBlock.P(
-                "3. 立柱伸缩缝\n"
-                + $"   计算值：{N(s.JointWidth)} mm；实际 {N(s.JointActual, 0)} mm\n"
-                + $"   {(s.JointWidth <= s.JointActual ? "满足要求(√)" : "不满足要求(×)")}"));
-            b.Add(BookBlock.P(
-                "4. 压板与连接螺栓\n"
-                + $"   压板最大弯曲应力：{N(s.ClampBending)} MPa（设计值 {N(s.ClampBendingLimit)} MPa）\n"
-                + $"   压板最大剪应力：{N(s.ClampShear)} MPa（设计值 {N(s.ClampShearLimit)} MPa）\n"
-                + $"   连接螺栓抗拉承载力设计值：{N(s.BoltCapacity)} N\n"
-                + $"   连接螺栓实际受力：{N(s.BoltForce)} N\n"
-                + $"   {(s.BoltForce <= s.BoltCapacity ? "满足要求(√)" : "不满足要求(×)")}"));
+                "按 JGJ 102-2003 第 5.6.1 条，硅酮结构胶还应满足：1）粘接宽度 ≥ 7 mm；"
+                + "2）12 mm ≥ 粘接厚度 ≥ 6 mm；3）粘接宽度大于厚度，但不宜大于厚度的 2 倍。"));
+
+            b.Add(BookBlock.H3("8.2 压板与连接螺栓"));
+            b.Add(BookBlock.Table(
+                new[] { "项目", "计算值", "设计值 / 承载力", "判定" },
+                new[]
+                {
+                    new[] { "压板最大弯曲应力", N(s.ClampBending) + " MPa", N(s.ClampBendingLimit) + " MPa",
+                            Yes(s.ClampBending <= s.ClampBendingLimit) },
+                    new[] { "压板最大剪应力", N(s.ClampShear) + " MPa", N(s.ClampShearLimit) + " MPa",
+                            Yes(s.ClampShear <= s.ClampShearLimit) },
+                    new[] { "连接螺栓受力", N(s.BoltForce) + " N", N(s.BoltCapacity) + " N",
+                            Yes(s.BoltForce <= s.BoltCapacity) },
+                }));
         }
         else b.Add(BookBlock.P("本章未参与计算。"));
 

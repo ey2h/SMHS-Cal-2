@@ -516,6 +516,114 @@ public static class GlassEngine
     }
 
     /// <summary>
+    /// **四玻夹层双中空**（「其它玻璃计算」模块专用，输入不依赖第一页）。
+    ///
+    /// <para><b>这是与常规幕墙「双夹层-中空」不同的另一种构型</b></para>
+    /// <list type="table">
+    /// <item><term>常规幕墙 双夹层-中空</term><description>夹层(2) + 腔 + 夹层(2)，**只有 1 个中空腔**</description></item>
+    /// <item><term>本构型 四玻夹层双中空</term><description>夹层(2) + 腔 + 片 + 腔 + 片，**2 个中空腔**</description></item>
+    /// </list>
+    ///
+    /// <para><b>实测</b>（「其它计算 → 其它玻璃计算」菜单 id=168；四玻外夹层双中空、
+    /// 1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16、四边简支）：</para>
+    /// <code>
+    /// 外片 8.833 / 次外片 8.833 / 次内片 7.217 / 内片 7.217
+    /// 挠度 2.356   容许值 16.667mm(四边简支)   分隔符 36 星
+    /// </code>
+    ///
+    /// <para><b>分配规则（外夹层）</b>：夹层侧两片先夹胶成一个整体（不折减），
+    /// 另两片各穿中空腔故折 0.95；外侧整体再乘 1.1。</para>
+    /// <code>
+    /// D外   = t₁³ + t₂³              （夹层整体，无折减）
+    /// D次内 = (0.95·t₃)³
+    /// D内   = (0.95·t₄)³
+    /// ΣD    = D外 + D次内 + D内
+    /// w₁=w₂ = 1.1·wk·D外/ΣD/2       （夹层内部均分）
+    /// w₃    = wk·D次内/ΣD
+    /// w₄    = wk·D内/ΣD
+    /// t_e   = 0.95·ΣD^(1/3)
+    /// </code>
+    /// <para>实测校验：ΣD=802.38 → w₁=0.0002961 → wStr=0.000530 → σ=8.833 ✓；
+    /// w₃=0.0002308 → wStr=0.000433 → σ=7.217 ✓；t_e=8.8255 → df=2.356 ✓。</para>
+    ///
+    /// <para><b>⚠ 未实测</b>：「四玻内夹层双中空」按镜像处理（D内 = t₃³+t₄³ 不折、
+    /// D外两片各折 0.95），待实机确认后再启用 <paramref name="laminatedOuter"/>=false。</para>
+    /// </summary>
+    /// <param name="laminatedOuter"><c>true</c>=四玻外夹层双中空；<c>false</c>=四玻内夹层双中空（未验证）</param>
+    public static CompositeGlassResult ComputeFourPlyLaminatedInsulated(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double t4, double alphaMax,
+        bool laminatedOuter = true)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = t1 * DensityNmm3;                            // 不取整
+        double qe = qg * SeismicFactor * alphaMax;               // 0.00012288
+
+        double d1, d2, d3, d4;
+        if (laminatedOuter)
+        {
+            // 外夹层：1、2 是一个整体（不折减），3、4 各穿一个中空腔
+            d1 = Math.Pow(t1, 3.0) + Math.Pow(t2, 3.0);          // 作为「侧」的合计
+            d2 = 0.0;                                            // 已并入 d1
+            d3 = Math.Pow(InsulatedThicknessFactor * t3, 3.0);
+            d4 = Math.Pow(InsulatedThicknessFactor * t4, 3.0);
+        }
+        else
+        {
+            d1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+            d2 = Math.Pow(InsulatedThicknessFactor * t2, 3.0);
+            d3 = Math.Pow(t3, 3.0) + Math.Pow(t4, 3.0);          // 内夹层整体
+            d4 = 0.0;
+        }
+        double sum = d1 + d2 + d3 + d4;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var ts = new[] { t1, t2, t3, t4 };
+        var shares = new double[4];
+        if (laminatedOuter)
+        {
+            double wOuterEach = InsulatedOuterFactor * wkNmm2 * d1 / sum / 2.0;
+            shares[0] = shares[1] = wOuterEach;
+            shares[2] = wkNmm2 * d3 / sum;
+            shares[3] = wkNmm2 * d4 / sum;
+        }
+        else
+        {
+            double wInnerEach = wkNmm2 * d3 / sum / 2.0;
+            shares[0] = InsulatedOuterFactor * wkNmm2 * d1 / sum;
+            shares[1] = wkNmm2 * d2 / sum;
+            shares[2] = shares[3] = wInnerEach;
+        }
+
+        var plies = new GlassPlyResult[4];
+        for (int i = 0; i < 4; i++)
+        {
+            double wRaw = shares[i];
+            double w = R6Exact(wRaw);
+            double wStd = R6Exact(wRaw + 0.5 * qe);
+            double wStr = R6Exact(1.5 * w + 0.7 * qe);
+            double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)), 4);
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
+        }
+
+        // t_e 用分配分母 ΣD 再折一次 0.95（实测：ΣD=802.38 → t_e=8.8255）
+        double te = R(InsulatedThicknessFactor * Math.Pow(sum, 1.0 / 3.0), 6);
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum, 0.0, te, thetaD, Eta(thetaD), stiff, df, limit);
+    }
+
+    /// <summary>
     /// **双夹层-中空玻璃**（4 片：外夹层 2 片 + 中空腔 + 内夹层 2 片）。
     ///
     /// <para><b>实机取证</b>（2026-10-25，`glass_cfg_scan.py --cases dbllam`，

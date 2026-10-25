@@ -112,3 +112,29 @@ public class DoubleLaminatedInsulatedTests
         Assert.InRange(r.Plies[0].WkShare / r.Plies[2].WkShare, 1.09, 1.11);
     }
 }
+
+/// <summary>
+/// 另一个模块「其它玻璃计算」的构型验证（独立计算器，输入不依赖第一页）。
+/// 实测：四玻外夹层双中空、1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16
+///   外片 8.833 / 次外片 8.833 / 次内片 7.217 / 内片 7.217
+///   挠度 2.356 / 容许值 16.667(四边简支) / 36 星
+/// </summary>
+public class OtherGlassCalcProbeTests
+{
+    [Fact]
+    public void 四玻外夹层双中空_实测对照()
+    {
+        var r = GlassEngine.ComputeFourPlyLaminatedInsulated(0.001, 1000, 2000, 6, 6, 6, 6, 0.16);
+        Console.WriteLine($"PROBE sigma = {string.Join(",", r.Plies.Select(p => p.Sigma))}");
+        Console.WriteLine($"PROBE w     = {string.Join(",", r.Plies.Select(p => p.WkShare))}");
+        Console.WriteLine($"PROBE Wstd  = {string.Join(",", r.Plies.Select(p => p.WDeflection))}");
+        Console.WriteLine($"PROBE Wstr  = {string.Join(",", r.Plies.Select(p => p.WStrength))}");
+        Console.WriteLine($"PROBE theta = {string.Join(",", r.Plies.Select(p => p.Theta))}");
+        Console.WriteLine($"PROBE eta   = {string.Join(",", r.Plies.Select(p => p.Eta))}");
+        Console.WriteLine($"PROBE te={r.EquivalentThickness} df={r.Deflection} lim={r.Limit}");
+        Assert.Equal(8.833, r.Plies[0].Sigma);
+        Assert.Equal(7.217, r.Plies[2].Sigma);
+        Assert.Equal(2.356, r.Deflection);
+        Assert.Equal(16.667, r.Limit);
+    }
+}

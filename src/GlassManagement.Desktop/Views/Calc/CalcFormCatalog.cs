@@ -25,6 +25,7 @@ public static class CalcFormCatalog
         new("幕墙计算-立柱计算", 148, 936, 442, () => new CW11_Form11()),
         new("幕墙计算-横梁计算", 111, 949, 426, () => new CW12_Form12()),
         new("幕墙计算-玻璃计算", 43, 819, 361, () => new CW13_Form13()),
+        new("其它玻璃计算", 62, 763, 500, () => new OtherGlassCalcView()),
         new("金属板幕墙计算-板块计算", 55, 795, 526, () => new CW14_Form14()),
         new("幕墙计算-连接计算", 59, 796, 513, () => new CW15_Form15()),
         new("幕墙计算-埋件与焊缝计算", 136, 788, 490, () => new CW16_Form16()),

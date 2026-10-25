@@ -1,0 +1,162 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.OtherGlassCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「其它玻璃计算」MVVM 视图（V31 窗体 763×500）。
+    坐标源：实机 dump（2026-10-25，窗体 0x7d026a）：
+      Frame 其它玻璃计算（目前只支持四边简支形式） (11,26) 745x465
+      Frame 基本参数 (19,69) 177x169 ─ 风荷载(106,90)41x18 / αmax(83,162) / 宽(83,187) / 高(83,210)
+      Frame 玻璃配置 (203,63) 153x81 ─ 四玻外夹层双中空(211,79) / 四玻内夹层双中空(211,99) / 多片夹层(211,119)
+      Frame 支撑情况 (363,63) 97x81 ─ 四边简支(371,100)
+      Frame 夹层配置 (203,146) 242x97 ─ 胶片类型(303,166)133x20 / 胶片厚度(303,191)70x20 en=0
+      Frame 外片(19,259)/次外片(131,259)/次内片(243,259)/内片(355,259) 各 110x167
+        厚度 ComboBox (x+40,279) 57x20；种类单选 y=306/328/351/373/396
+      输出 (475,50) 277x377；按钮 预演(611,434) 下一步(671,458) 退出(611,458)
+    ⚠ 实机「基本参数」里还有两个 ComboBox (83,113)/(126,138) 含义未定位，暂未复刻。
+  -->
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="其它玻璃计算（目前只支持四边简支形式）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                 Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="763" Height="500" Background="#F0F0F0" ClipToBounds="True">
+
+        <!-- ══ 外框 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="26" Width="745" Height="465"/>
+
+        <!-- ══ 基本参数 Frame (19,69) 177x169 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="69" Width="177" Height="169"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="62" Text="基本参数"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="93" Text="风荷载(kPa)"/>
+        <TextBox Classes="hbInput" Canvas.Left="100" Canvas.Top="90" Width="41" Height="18"
+                 Text="{Binding WindKpa, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="165" Text="αmax"/>
+        <TextBox Classes="hbInput" Canvas.Left="83" Canvas.Top="162" Width="49" Height="18"
+                 Text="{Binding AlphaMax, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="190" Text="宽(mm)"/>
+        <TextBox Classes="hbInput" Canvas.Left="83" Canvas.Top="187" Width="49" Height="18"
+                 Text="{Binding WidthMm, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="213" Text="高(mm)"/>
+        <TextBox Classes="hbInput" Canvas.Left="83" Canvas.Top="210" Width="49" Height="18"
+                 Text="{Binding HeightMm, Mode=TwoWay}"/>
+
+        <!-- ══ 玻璃配置 Frame (203,63) 153x81 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="203" Canvas.Top="63" Width="153" Height="81"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="209" Canvas.Top="56" Text="玻璃配置"/>
+        <RadioButton Classes="hb" Canvas.Left="211" Canvas.Top="76" Width="140" Height="17"
+                     GroupName="OGCfg" Content="四玻外夹层双中空"
+                     IsChecked="{Binding IsOuterLaminated, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="211" Canvas.Top="96" Width="140" Height="17"
+                     GroupName="OGCfg" Content="四玻内夹层双中空"
+                     IsChecked="{Binding IsInnerLaminated, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="211" Canvas.Top="116" Width="100" Height="17"
+                     GroupName="OGCfg" Content="多片夹层"
+                     IsChecked="{Binding IsMultiLaminated, Mode=TwoWay}"/>
+
+        <!-- ══ 支撑情况 Frame (363,63) 97x81 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="363" Canvas.Top="63" Width="97" Height="81"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="369" Canvas.Top="56" Text="支撑情况"/>
+        <RadioButton Classes="hb" Canvas.Left="371" Canvas.Top="97" Width="80" Height="17"
+                     GroupName="OGSup" Content="四边简支" IsChecked="True" IsEnabled="False"/>
+
+        <!-- ══ 夹层配置 Frame (203,146) 242x97 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="203" Canvas.Top="146" Width="242" Height="97"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="209" Canvas.Top="139" Text="夹层配置"/>
+        <ComboBox Canvas.Left="303" Canvas.Top="166" Width="133" Height="20"
+                  SelectedIndex="{Binding InterlayerIndex, Mode=TwoWay}">
+          <ComboBoxItem>PVB(聚乙烯醇缩丁醛)</ComboBoxItem>
+          <ComboBoxItem>SGP(离子型间层)</ComboBoxItem>
+        </ComboBox>
+        <!-- 实测 en=0：本模块胶片厚度不可输入 -->
+        <ComboBox Canvas.Left="303" Canvas.Top="191" Width="70" Height="20" IsEnabled="False" SelectedIndex="1">
+          <ComboBoxItem>0.38</ComboBoxItem>
+          <ComboBoxItem>0.76</ComboBoxItem>
+          <ComboBoxItem>1.14</ComboBoxItem>
+          <ComboBoxItem>1.52</ComboBoxItem>
+          <ComboBoxItem>2.28</ComboBoxItem>
+        </ComboBox>
+
+        <!-- ══ 四片玻璃框 y=259 高 167 ══ -->
+        <!-- 外片 (19,259) -->
+        <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="259" Width="110" Height="167"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="252" Text="外片玻璃"/>
+        <ComboBox Canvas.Left="59" Canvas.Top="279" Width="57" Height="20"
+                  SelectedIndex="3" SelectionChanged="OnOuterThicknessChanged" Name="OuterThickness"/>
+        <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="303" Width="89" Height="17" GroupName="OG1" Content="普通玻璃" IsChecked="False" Tag="1"/>
+        <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="325" Width="89" Height="17" GroupName="OG1" Content="浮法玻璃" IsChecked="False" Tag="1"/>
+        <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="348" Width="89" Height="17" GroupName="OG1" Content="半钢化玻璃" IsChecked="False" Tag="1"/>
+        <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="370" Width="89" Height="17" GroupName="OG1" Content="钢化玻璃" IsChecked="True" Tag="1"/>
+        <RadioButton Classes="hb" Canvas.Left="36" Canvas.Top="393" Width="89" Height="17" GroupName="OG1" Content="夹丝玻璃" IsChecked="False" Tag="1"/>
+
+        <!-- 次外片 (131,259) -->
+        <Border Classes="hbFrame" Canvas.Left="131" Canvas.Top="259" Width="110" Height="167"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="137" Canvas.Top="252" Text="次外片玻璃"/>
+        <ComboBox Canvas.Left="171" Canvas.Top="279" Width="57" Height="20"
+                  SelectedIndex="3" SelectionChanged="OnOuter2ThicknessChanged" Name="Outer2Thickness"/>
+        <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="303" Width="89" Height="17" GroupName="OG2" Content="普通玻璃" IsChecked="False" Tag="2"/>
+        <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="325" Width="89" Height="17" GroupName="OG2" Content="浮法玻璃" IsChecked="False" Tag="2"/>
+        <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="348" Width="89" Height="17" GroupName="OG2" Content="半钢化玻璃" IsChecked="False" Tag="2"/>
+        <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="370" Width="89" Height="17" GroupName="OG2" Content="钢化玻璃" IsChecked="True" Tag="2"/>
+        <RadioButton Classes="hb" Canvas.Left="148" Canvas.Top="393" Width="89" Height="17" GroupName="OG2" Content="夹丝玻璃" IsChecked="False" Tag="2"/>
+
+        <!-- 次内片 (243,259) -->
+        <Border Classes="hbFrame" Canvas.Left="243" Canvas.Top="259" Width="110" Height="167"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="249" Canvas.Top="252" Text="次内片玻璃"/>
+        <ComboBox Canvas.Left="283" Canvas.Top="279" Width="57" Height="20"
+                  SelectedIndex="3" SelectionChanged="OnInner2ThicknessChanged" Name="Inner2Thickness"/>
+        <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="303" Width="89" Height="17" GroupName="OG3" Content="普通玻璃" IsChecked="False" Tag="3"/>
+        <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="325" Width="89" Height="17" GroupName="OG3" Content="浮法玻璃" IsChecked="False" Tag="3"/>
+        <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="348" Width="89" Height="17" GroupName="OG3" Content="半钢化玻璃" IsChecked="False" Tag="3"/>
+        <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="370" Width="89" Height="17" GroupName="OG3" Content="钢化玻璃" IsChecked="True" Tag="3"/>
+        <RadioButton Classes="hb" Canvas.Left="260" Canvas.Top="393" Width="89" Height="17" GroupName="OG3" Content="夹丝玻璃" IsChecked="False" Tag="3"/>
+
+        <!-- 内片 (355,259) -->
+        <Border Classes="hbFrame" Canvas.Left="355" Canvas.Top="259" Width="110" Height="167"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="361" Canvas.Top="252" Text="内片玻璃"/>
+        <ComboBox Canvas.Left="395" Canvas.Top="279" Width="57" Height="20"
+                  SelectedIndex="3" SelectionChanged="OnInnerThicknessChanged" Name="InnerThickness"/>
+        <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="303" Width="89" Height="17" GroupName="OG4" Content="普通玻璃" IsChecked="False" Tag="4"/>
+        <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="325" Width="89" Height="17" GroupName="OG4" Content="浮法玻璃" IsChecked="False" Tag="4"/>
+        <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="348" Width="89" Height="17" GroupName="OG4" Content="半钢化玻璃" IsChecked="False" Tag="4"/>
+        <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="370" Width="89" Height="17" GroupName="OG4" Content="钢化玻璃" IsChecked="True" Tag="4"/>
+        <RadioButton Classes="hb" Canvas.Left="372" Canvas.Top="393" Width="89" Height="17" GroupName="OG4" Content="夹丝玻璃" IsChecked="False" Tag="4"/>
+
+        <!-- ══ 输出 (475,50) 277x377 ══ -->
+        <Border Canvas.Left="475" Canvas.Top="50" Width="277" Height="377"
+                Background="White" BorderBrush="#808080" BorderThickness="1">
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Rows}" Margin="4,2">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
+                             TextDecorations="{Binding Decoration}" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="611" Canvas.Top="434" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"
+                IsEnabled="{Binding PreviewEnabled}"/>
+        <Button Classes="hb" Canvas.Left="671" Canvas.Top="458" Width="59" Height="24"
+                Content="下一步" IsEnabled="False"/>
+        <Button Classes="hb" Canvas.Left="611" Canvas.Top="458" Width="59" Height="24"
+                Content="退出"/>
+
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

@@ -770,6 +770,33 @@ public partial class CalcWizardViewModel : ObservableObject
     {
         try
         {
+            // 立柱/横梁/玻璃三章靠各自预演生成的文本摘要；没预演过就自动跑一次
+            // （失败不影响出书，那章会显示"本章未参与计算"）。
+            TryFillSummary(() =>
+            {
+                if (Session.LastColumnSummary is null)
+                {
+                    _column ??= new ColumnCalcViewModel(Session, this);
+                    _column.PreviewCommand.Execute(null);
+                }
+            });
+            TryFillSummary(() =>
+            {
+                if (Session.LastBeamSummary is null)
+                {
+                    _beam ??= new BeamCalcViewModel(Session, this);
+                    _beam.PreviewCommand.Execute(null);
+                }
+            });
+            TryFillSummary(() =>
+            {
+                if (Session.LastGlassSummary is null)
+                {
+                    _glass ??= new GlassCalcViewModel(Session, this);
+                    _glass.PreviewCommand.Execute(null);
+                }
+            });
+
             // 用户没逐屏点「预演」时，用当前会话参数补齐（一键出书 / 批量出书）
             if (Session.LastConnectResult is null)
                 Session.LastConnectResult = ConnectEngine.Compute(
@@ -787,6 +814,9 @@ public partial class CalcWizardViewModel : ObservableObject
                 WkKpa = Session.WindStandardKpa,
                 WkPanelKpa = Session.PanelWindKpa,
                 WindSource = Session.PanelWindSource,
+                ColumnSummary = Session.LastColumnSummary,
+                BeamSummary = Session.LastBeamSummary,
+                GlassSummary = Session.LastGlassSummary,
                 Connect = Session.LastConnectResult,
                 Embed = Session.LastEmbedResult as GlassManagement.Calc.Engines.EmbedResult?,
                 Sealant = Session.LastSealantResult as GlassManagement.Calc.Engines.SealantResult?,
@@ -810,6 +840,12 @@ public partial class CalcWizardViewModel : ObservableObject
         {
             return null;
         }
+    }
+
+    private void TryFillSummary(Action act)
+    {
+        try { act(); }
+        catch (Exception) { /* 该章留空即可，不阻断出书 */ }
     }
 
     /// <summary>最近一次生成的计算书路径（供 UI 打开）。</summary>

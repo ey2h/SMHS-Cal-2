@@ -695,6 +695,34 @@ public partial class CalcSession : ObservableObject
     /// <summary>连接屏最近一次预演结果（埋件屏的受力取值需要它）。</summary>
     public ConnectResult? LastConnectResult { get; set; }
 
+    /// <summary>立柱屏最近一次预演的文本摘要（计算书"三、立柱计算"章用）。</summary>
+    public string? LastColumnSummary { get; set; }
+
+    /// <summary>横梁屏最近一次预演的文本摘要（计算书"四、横梁计算"章用）。</summary>
+    public string? LastBeamSummary { get; set; }
+
+    /// <summary>玻璃屏最近一次预演的文本摘要（计算书"五、玻璃计算"章用）。</summary>
+    public string? LastGlassSummary { get; set; }
+
+    /// <summary>
+    /// 把预演结果行压成计算书用的纯文本：丢掉分隔线（整行只有 * 或 —）与空行，
+    /// 保留"量：值"与"满足要求(√)"这类判定行。
+    /// </summary>
+    public static string? SummaryOf(IEnumerable<PreviewLine>? lines, int maxLines = 60)
+    {
+        if (lines is null) return null;
+        var kept = new List<string>();
+        foreach (var l in lines)
+        {
+            var t = (l.Text ?? "").Trim();
+            if (t.Length == 0) continue;
+            if (t.All(c => c == '*' || c == '—' || c == '-')) continue;
+            kept.Add(t);
+            if (kept.Count >= maxLines) break;
+        }
+        return kept.Count == 0 ? null : string.Join("\n", kept);
+    }
+
     /// <summary>埋件屏最近一次预演结果。</summary>
     public object? LastEmbedResult { get; set; }
 

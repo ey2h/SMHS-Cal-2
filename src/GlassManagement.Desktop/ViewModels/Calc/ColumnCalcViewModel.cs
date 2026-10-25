@@ -387,6 +387,7 @@ public partial class ColumnCalcViewModel : ObservableObject
 
     private void Finish()
     {
+        Session.LastColumnSummary = CalcSession.SummaryOf(Results);
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(Results));
     }

@@ -25,6 +25,9 @@ public class CalcBookTests
         Connect = ConnectEngine.Compute(ConnectEngine.DefaultInputs()),
         Embed = EmbedEngine.Compute(EmbedEngine.DefaultInputs()),
         Sealant = SealantEngine.Compute(SealantEngine.DefaultInputs()),
+        ColumnSummary = "风荷载标准值为:1.285KPa\n抗弯矩预选:17675mm3\n满足要求(√)",
+        BeamSummary = "风荷载标准值为:1.285KPa\n抗弯矩预选Wx:904.139mm3\n满足要求(√)",
+        GlassSummary = "玻璃部分风荷载标准值为:1.37KPa\n玻璃强度计算值:24.793MPa\n满足要求(√)",
     };
 
     private static string AllText(CalcBookInput x)
@@ -62,6 +65,19 @@ public class CalcBookTests
         Assert.Contains("计算值：8.381 mm", text);
         Assert.Contains("压板最大弯曲应力：43.907 MPa", text);
         Assert.Contains("连接螺栓抗拉承载力设计值：2409.836 N", text);
+    }
+
+    /// <summary>立柱/横梁/玻璃三章由各自预演摘要填入，不能再是"本章未参与计算"。</summary>
+    [Fact]
+    public void 前五章都有内容()
+    {
+        var text = AllText(FullInput());
+        Assert.Contains("抗弯矩预选:17675mm3", text);          // 立柱
+        Assert.Contains("抗弯矩预选Wx:904.139mm3", text);      // 横梁
+        Assert.Contains("玻璃强度计算值:24.793MPa", text);     // 玻璃
+        Assert.DoesNotContain("三、立柱计算\n本章未参与计算", text);
+        Assert.DoesNotContain("四、横梁计算\n本章未参与计算", text);
+        Assert.DoesNotContain("五、玻璃计算\n本章未参与计算", text);
     }
 
     [Fact]

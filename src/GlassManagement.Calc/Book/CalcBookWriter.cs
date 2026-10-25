@@ -90,13 +90,16 @@ public static class CalcBookWriter
         sb.Append("<w:sz w:val=\"").Append(halfPoints).Append("\"/>");
         if (bold) sb.Append("<w:b/>");
         sb.Append("</w:rPr></w:pPr>");
-        foreach (var line in SplitLines(text))
+        var lines = new List<string>(SplitLines(text));
+        for (int i = 0; i < lines.Count; i++)
         {
+            var line = lines[i];
             sb.Append("<w:r><w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
             sb.Append("<w:sz w:val=\"").Append(halfPoints).Append("\"/>");
             if (bold) sb.Append("<w:b/>");
             sb.Append("</w:rPr><w:t xml:space=\"preserve\">").Append(Esc(line)).Append("</w:t></w:r>");
-            sb.Append("<w:r><w:br/></w:r>");
+            // 只在段落内换行处加 <w:br/>；最后一行不加，否则每段末尾多一个空行
+            if (i < lines.Count - 1) sb.Append("<w:r><w:br/></w:r>");
         }
         sb.Append("</w:p>");
         return sb.ToString();

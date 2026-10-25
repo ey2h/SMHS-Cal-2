@@ -278,6 +278,7 @@ public partial class BeamCalcViewModel : ObservableObject
                 ColorNote);
         }
 
+        Session.LastBeamSummary = CalcSession.SummaryOf(Results);
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(PlaceholderText));
         StatusIsWarning = false;

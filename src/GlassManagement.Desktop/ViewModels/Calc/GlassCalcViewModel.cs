@@ -533,6 +533,7 @@ public partial class GlassCalcViewModel : ObservableObject
         }
         finally
         {
+            Session.LastGlassSummary = CalcSession.SummaryOf(Results);
             OnPropertyChanged(nameof(HasResults));
             OnPropertyChanged(nameof(PlaceholderText));
         }

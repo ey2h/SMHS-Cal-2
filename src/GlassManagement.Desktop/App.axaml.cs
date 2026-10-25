@@ -67,6 +67,17 @@ public partial class App : Application
                         s0.BeamUpperGridHeightMm = 1380;
                         s0.BeamLeftBayMm = 1100;
                         s0.BeamRightBayMm = 1100;
+                        // 第一屏的门禁靠这两个标志；样例直接用 V31 实机的两套 wk 覆盖，
+                        // 免得自动跑立柱/玻璃时被"尚未算风荷载"挡回来。
+                        s0.WindManual = true;
+                        s0.WindManualKpa = 1.285;
+                        s0.WindStandardKpa = 1.285;
+                        s0.WindStandardRawKpa = 1.285;
+                        s0.WindStandardSource = "V31 对拍样例（支承口径 1.285）";
+                        s0.WindStandardResolved = true;
+                        // 面板口径：玻璃/胶类用的是 1.37，不是 1.285
+                        s0.PanelWindKpa = 1.37;
+                        s0.PanelWindRawKpa = 1.37;
                     }
                     var made = GlassManagement.Desktop.ViewModels.Calc.CalcWizardViewModel
                         .Default.GenerateCalcBook(string.IsNullOrWhiteSpace(target) ? null : target);

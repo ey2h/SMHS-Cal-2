@@ -482,6 +482,22 @@ public partial class CalcSession : ObservableObject
     /// <summary>横梁材质牌号（默认 6063-T5 → f=90 / fv=55，与 V31 横梁页默认输出一致）。</summary>
     [ObservableProperty] private string _beamMaterial = "6063-T5";
 
+    /// <summary>
+    /// 幕墙结构形式：<c>true</c> = 单元式、<c>false</c> = 构件式（框架式）。
+    /// V31 第一页「幕墙结构」Frame (648,85)：构件式 (653,105) / 单元式 (800,105)。
+    /// 它决定横梁屏用哪套模板（构件式 12 量 / 单元式 17~27 量）。
+    /// </summary>
+    [ObservableProperty] private bool _wallStructureIsUnit;
+
+    /// <summary>
+    /// 计算中不考虑地震作用（V31 第一页同名复选框）。
+    /// <para>
+    /// **V31 自身的 bug**：勾选后横梁 12 个输出一字未变、αmax 仍 0.16（2026-10-25 实测）。
+    /// 复刻版按设计意图修正：勾选后地震项 5αmax·g 置 0，只保留风荷载。
+    /// </para>
+    /// </summary>
+    [ObservableProperty] private bool _ignoreSeismic;
+
     /// <summary>横梁跨度 mm = 左右分格宽取大（帮助 html/B03.htm：自动选最大一跨，不计立柱宽）。</summary>
     public double BeamSpanMm => Math.Max(BeamLeftBayMm, BeamRightBayMm);
 

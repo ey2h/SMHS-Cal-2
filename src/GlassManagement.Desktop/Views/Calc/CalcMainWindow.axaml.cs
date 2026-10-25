@@ -153,6 +153,11 @@ public partial class CalcMainWindow : Window
                     {
                         dumpText = _wizard.SelfTestColumnMatrix();  // 模型×跨度矩阵（每组先回第一页重算）
                     }
+                    else if (string.Equals(SelfTestOnStartup, "unit-beam", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        _wizard.SelfTestUnitBeamPreview();      // 单元式横梁（上下框 17 量）
+                        dumpText = _wizard.DumpUnitBeamPreviewText();
+                    }
                     else if (string.Equals(SelfTestOnStartup, "beam", System.StringComparison.OrdinalIgnoreCase))
                     {
                         _wizard.SelfTestBeamPreview();          // 第一屏→立柱→横梁→预演

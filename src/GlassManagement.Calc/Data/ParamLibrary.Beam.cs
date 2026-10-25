@@ -37,6 +37,48 @@ public static partial class ParamLibrary
                 Area: 449.3),
         });
 
+    /// <summary>单元横框三表共用的内置快照（40/60系列，2 位小数口径）。</summary>
+    private static readonly BeamProfile UnitSnapshot = new BeamProfile("40/60系列",
+        Ix: 115_800, Iy: 123_700,
+        Wx1: 4_100, Wx2: 3_660,
+        Wy1: 5_760, Wy2: 6_640,
+        Sx: 2_994, Sy: 3_546,
+        Tx: 5, Ty: 3,
+        Area: 449.3);
+
+    /// <summary>
+    /// 单元式横梁：上横框（参数库「单元横框一」）。
+    /// 注意该表只有 2 位小数 → Ix 11.58 cm⁴ → **115800** mm⁴（与「横框」表 11.581→115810 不同），
+    /// 实机定稿点 <c>0xA02839</c> 读入 115800 可证。
+    /// </summary>
+    public static IReadOnlyList<BeamProfile> UnitBeamTop { get; } =
+        LoadBeamProfiles("单元横框一.csv", new BeamProfile[] { UnitSnapshot });
+
+    /// <summary>单元式横梁：下横框（参数库「单元横框二」）。</summary>
+    public static IReadOnlyList<BeamProfile> UnitBeamBottom { get; } =
+        LoadBeamProfiles("单元横框二.csv", new BeamProfile[] { UnitSnapshot });
+
+    /// <summary>单元式横梁：中横框（参数库「单元横框三（中横框）」）。</summary>
+    public static IReadOnlyList<BeamProfile> UnitBeamMid { get; } =
+        LoadBeamProfiles("单元横框三（中横框）.csv", new BeamProfile[] { UnitSnapshot });
+
+    /// <summary>按型材号查单元式上横框。</summary>
+    public static BeamProfile? FindUnitBeamTop(string? kw) => FindInBeam(UnitBeamTop, kw);
+
+    /// <summary>按型材号查单元式下横框。</summary>
+    public static BeamProfile? FindUnitBeamBottom(string? kw) => FindInBeam(UnitBeamBottom, kw);
+
+    /// <summary>按型材号查单元式中横框。</summary>
+    public static BeamProfile? FindUnitBeamMid(string? kw) => FindInBeam(UnitBeamMid, kw);
+
+    private static BeamProfile FindInBeam(IReadOnlyList<BeamProfile> table, string? kw)
+    {
+        if (string.IsNullOrWhiteSpace(kw)) return table[0];
+        return table.FirstOrDefault(p => p.Code == kw)
+            ?? table.FirstOrDefault(p => p.Code.Contains(kw!, StringComparison.OrdinalIgnoreCase))
+            ?? table[0];
+    }
+
     /// <summary>按型材号查横梁型材（空关键字 = 表内第一行，与 V31 默认选行一致）。</summary>
     public static BeamProfile? FindBeamProfile(string? keyword)
     {
@@ -62,13 +104,25 @@ public static partial class ParamLibrary
                 if (c.Length < 13 || string.IsNullOrWhiteSpace(c[0])) continue;
                 double F(int k) => double.TryParse(c[k], NumberStyles.Float,
                                                   CultureInfo.InvariantCulture, out var v) ? v : 0;
+
+                // ★ 两张表列位不同（实测表头）：
+                //   「横框.csv」14 列：… 连接面壁厚(7) 截面积(8) Sx(9) Sy(10) tx(11) ty(12) 备注(13)
+                //   「单元横框一/二/三」13 列（**没有连接面壁厚**）：截面积(7) Sx(8) Sy(9) tx(10) ty(11) 备注(12)
+                //   按列数自适应，否则单元表会把 ty 读成备注（→0）导致 τx 除零得 ∞。
+                bool wide = c.Length >= 14;
+                int iArea = wide ? 8 : 7;
+                int iSx = wide ? 9 : 8;
+                int iSy = wide ? 10 : 9;
+                int iTx = wide ? 11 : 10;
+                int iTy = wide ? 12 : 11;
+
                 res.Add(new BeamProfile(c[0].Trim(),
                     Ix: F(1) * 1e4, Iy: F(2) * 1e4,
                     Wx1: F(3) * 1e3, Wx2: F(4) * 1e3,
                     Wy1: F(5) * 1e3, Wy2: F(6) * 1e3,
-                    Sx: F(9) * 1e3, Sy: F(10) * 1e3,
-                    Tx: F(11), Ty: F(12),
-                    Area: F(8)));
+                    Sx: F(iSx) * 1e3, Sy: F(iSy) * 1e3,
+                    Tx: F(iTx), Ty: F(iTy),
+                    Area: F(iArea)));
             }
             if (res.Count > 0)
             {

@@ -156,9 +156,13 @@ public static class HorizontalBeamEngine
     /// 横梁上有两个集中力受力点，需输入受力点到支座的距离。
     /// </param>
     /// <param name="pointDistanceMm">受力点到支座（横梁与立柱连接点）的距离 a，默认 150 mm。</param>
+    /// <param name="ignoreSeismic">
+    /// 「计算中不考虑地震作用」。勾选后 <c>kq = 0</c>（地震项消失），只保留风荷载。
+    /// 注：V31 该开关**不控制横梁页**（实测勾选后输出一字未变），复刻版在此修正。
+    /// </param>
     public static BeamResult Compute(
         double wkKPa, double B, double H, double gravityNmm2, double alphaMax, double f, BeamProfile p,
-        bool concentratedGravity = false, double pointDistanceMm = 150.0)
+        bool concentratedGravity = false, double pointDistanceMm = 150.0, bool ignoreSeismic = false)
     {
         // —— 形状参数：r = min(B,H) 决定"线荷载取多宽"，u = r/(2B) 决定分布形状 ——
         double r = Math.Min(B, H);
@@ -168,7 +172,7 @@ public static class HorizontalBeamEngine
         // —— 水平向线荷载（用 r 取宽）+ 地震作用（5αmax·g）——
         double qk = R3(r * wkKPa / 1000.0);
         double qd = R3(qk * LoadFactor);
-        double kq = SeismicFactor * alphaMax;
+        double kq = ignoreSeismic ? 0.0 : SeismicFactor * alphaMax;   // 0x8AED5D 的地震项
         double gp = R3(r * gravityNmm2 * kq * DeadFactor) / 2.0;
         double qy = R3(qd + gp);   // ★ 二次取整，2000×800 组可暴露
 

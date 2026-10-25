@@ -45,6 +45,7 @@ public partial class BeamCalcViewModel : ObservableObject
                 case nameof(CalcSession.BeamRightBayMm):
                 case nameof(CalcSession.BeamUpperGridHeightMm):
                 case nameof(CalcSession.BeamMaterial):
+                case nameof(CalcSession.IgnoreSeismic):
                 case nameof(CalcSession.RegionName):
                     Invalidate("上游参数已变化");
                     OnPropertyChanged(nameof(MaterialAllowText));
@@ -173,6 +174,20 @@ public partial class BeamCalcViewModel : ObservableObject
         OnPropertyChanged(nameof(PreviewBlockedReason));
     }
 
+    /// <summary>
+    /// 复位「仅构件式适用」的开关。
+    /// V31 的 bug：从石材入口切回玻璃入口后，「按集中力模型」会残留 chk=1（虽被禁用、不参与计算）。
+    /// 复刻版在结构形式切换时主动清掉，避免界面出现「禁用却勾着」的矛盾状态。
+    /// </summary>
+    public void ResetModeSwitches()
+    {
+        if (ConcentratedGravity)
+        {
+            ConcentratedGravity = false;
+            Invalidate("已切换结构形式，原自重集中力设置已复位");
+        }
+    }
+
     // ---------------- 命令 ----------------
 
     /// <summary>
@@ -197,7 +212,8 @@ public partial class BeamCalcViewModel : ObservableObject
             Session.WindStandardKpa, Session.BeamSpanMm, Session.BeamUpperGridHeightMm,
             g, Session.AlphaMax, f, p,
             concentratedGravity: ConcentratedGravity,
-            pointDistanceMm: PointDistanceMm);
+            pointDistanceMm: PointDistanceMm,
+            ignoreSeismic: Session.IgnoreSeismic);
 
         Results.Clear();
         Add("************************************", ColorRule);

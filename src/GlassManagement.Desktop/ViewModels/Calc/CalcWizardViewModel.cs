@@ -24,6 +24,7 @@ public partial class CalcWizardViewModel : ObservableObject
     private ColumnCalcViewModel? _column;
     private MultiSpanViewModel? _multi;
     private BeamCalcViewModel? _beam;
+    private UnitBeamCalcViewModel? _unitBeam;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
     public bool OpenMenuPath(string top, string? sub)
@@ -72,6 +73,18 @@ public partial class CalcWizardViewModel : ObservableObject
     [RelayCommand]
     public void GoBeamCalc()
     {
+        // 横梁屏有两套模板：单元式（上/下横框 + 可选中横框）/ 构件式（单根横梁）
+        if (Session.WallStructureIsUnit)
+        {
+            _beam?.ResetModeSwitches();     // 切走时复位构件式专属开关（V31 有残留勾选的 bug）
+            _unitBeam ??= new UnitBeamCalcViewModel(Session, this);
+            MirrorStatus(_unitBeam);
+            CurrentContent = _unitBeam;
+            StatusText = $"向导 3/3：幕墙计算-横梁计算（单元式｜跨度={Session.BeamSpanMm:0.###}mm"
+                       + $"｜上分格高={Session.BeamUpperGridHeightMm:0.###}mm｜wk={Session.WindStandardKpa:0.###}KPa"
+                       + $"｜αmax={Session.AlphaMax:0.###}）";
+            return;
+        }
         _beam ??= new BeamCalcViewModel(Session, this);
         MirrorStatus(_beam);
         CurrentContent = _beam;
@@ -113,6 +126,24 @@ public partial class CalcWizardViewModel : ObservableObject
         _column?.NextCommand.Execute(null);    // → 横梁屏
         _beam?.PreviewCommand.Execute(null);
     }
+
+    /// <summary>
+    /// 诊断入口（--selftest=unit-beam）：第一屏 →「下一步」→ 立柱 →「下一步」→ 单元式横梁 → 预演。
+    /// 与 V31「单元式·无中横」17 个数字对拍。
+    /// </summary>
+    public void SelfTestUnitBeamPreview()
+    {
+        Session.EnterMenu("玻璃幕墙", "全隐框");
+        Session.WallStructureIsUnit = true;    // 第一页「幕墙结构」= 单元式
+        GoBasic();
+        _basic?.NextCommand.Execute(null);
+        _column?.NextCommand.Execute(null);
+        _unitBeam?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把单元式横梁屏预演结果拼成纯文本。</summary>
+    public string DumpUnitBeamPreviewText()
+        => _unitBeam is null ? "" : string.Join("\n", _unitBeam.Results.Select(r => r.Text));
 
     /// <summary>把横梁屏预演结果拼成纯文本（对拍/落盘用）。</summary>
     public string DumpBeamPreviewText()

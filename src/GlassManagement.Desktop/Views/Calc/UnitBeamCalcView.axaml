@@ -1,0 +1,151 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.UnitBeamCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-横梁计算（单元式）」MVVM 视图 —— 只做绑定。
+    视觉与 BeamCalcView 完全同源：hbTitleBar / hbFrame / hbFrameTitle / hbResultPanel /
+    hbBtn / hbStatusBar / hbStatus / hbStatusHint（全部来自 App.axaml，不新增样式类）。
+    布局分区与构件式横梁屏逐项对齐：936 宽、标题条 19、计算依据带、左型材 ｜ 右结果、按钮 2×2 贴右、状态栏。
+  -->
+  <Border Width="936" Background="#F0F0F0" ClipToBounds="True">
+    <DockPanel>
+
+      <!-- 标题条（统一样式类） -->
+      <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+        <TextBlock Classes="hbTitleText" Text="幕墙计算-横梁计算（单元式）"/>
+      </Border>
+
+      <!-- 状态栏 -->
+      <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                     Classes.warning="{Binding StatusIsWarning}"
+                     ToolTip.Tip="{Binding StatusText}"/>
+          <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding ParamSourceNote}"
+                     Margin="16,0,0,0" MaxWidth="380" ToolTip.Tip="{Binding ParamSourceNote}"/>
+        </Grid>
+      </Border>
+
+      <!-- 按钮区：2×2 贴右，与构件式横梁屏同位置同尺寸 -->
+      <Border DockPanel.Dock="Bottom" Padding="8,6,8,4">
+        <StackPanel HorizontalAlignment="Right" Spacing="6">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Button Content="预演" Classes="hbBtn" Command="{Binding PreviewCommand}"
+                    IsEnabled="{Binding PreviewEnabled}"
+                    ToolTip.Tip="{Binding PreviewBlockedReason}"/>
+            <Button Content="上一步" Classes="hbBtn" Command="{Binding PrevCommand}"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Button Content="切构件式" Classes="hbBtn" Width="72" Command="{Binding SwitchToFrameCommand}"/>
+            <Button Content="下一步" Classes="hbBtn" Command="{Binding NextCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 计算依据带 -->
+      <Grid DockPanel.Dock="Top" Margin="8,11,8,0">
+        <Border Classes="hbFrame"/>
+        <TextBlock Classes="hbFrameTitle" Text="计算依据"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-7,0,0"/>
+        <TextBlock Text="{Binding InputSummary}" TextWrapping="Wrap" VerticalAlignment="Top"
+                   Margin="10,6,10,7" Foreground="#25303B"/>
+      </Grid>
+
+      <Grid ColumnDefinitions="*,8,0.42*" Margin="8,10,8,0">
+
+        <!-- 左：上/下横框选料 -->
+        <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*,Auto" Margin="0,7,0,0">
+          <Border Classes="hbFrame" Grid.RowSpan="4"/>
+          <TextBlock Classes="hbFrameTitle" Text="单元横框选料"
+                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-7,0,0"/>
+
+          <!-- 材质 + 不考虑地震 -->
+          <Grid Grid.Row="0" ColumnDefinitions="Auto,110,Auto,*,Auto" Margin="9,11,9,6">
+            <TextBlock Text="材质" VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1" Height="18" Margin="6,0,0,0" MinHeight="0" FontSize="12"
+                      ItemsSource="{Binding MaterialOptions}"
+                      SelectedItem="{Binding Session.BeamMaterial, Mode=TwoWay}"/>
+            <TextBlock Grid.Column="2" Text="{Binding MaterialAllowText}" Margin="8,0,0,0"
+                       FontSize="11" Foreground="#6B6B6B" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="4" Content="不考虑地震作用" FontSize="12"
+                      IsChecked="{Binding IgnoreSeismic, Mode=TwoWay}"/>
+          </Grid>
+
+          <!-- 上框 / 下框 两张型材表并排 -->
+          <Grid Grid.Row="1" ColumnDefinitions="*,8,*" Margin="9,0,9,4">
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="上横框（单元横框一）" FontSize="11" Foreground="#6B6B6B" Margin="0,0,0,2"/>
+              <DataGrid ItemsSource="{Binding TopProfiles}"
+                        SelectedItem="{Binding TopProfile, Mode=TwoWay}"
+                        AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                        HeadersVisibility="Column" GridLinesVisibility="All"
+                        HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                        RowHeight="18" ColumnHeaderHeight="20"
+                        CanUserSortColumns="False" CanUserReorderColumns="False"
+                        Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1"
+                        MaxHeight="180">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="90"/>
+                  <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="70"/>
+                  <DataGridTextColumn Header="Iy" Binding="{Binding Iy, StringFormat={}{0:0.###}}" Width="70"/>
+                  <DataGridTextColumn Header="Wx" Binding="{Binding WxBending, StringFormat={}{0:0.###}}" Width="60"/>
+                  <DataGridTextColumn Header="Wy" Binding="{Binding WyBending, StringFormat={}{0:0.###}}" Width="60"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="下横框（单元横框二）" FontSize="11" Foreground="#6B6B6B" Margin="0,0,0,2"/>
+              <DataGrid ItemsSource="{Binding BottomProfiles}"
+                        SelectedItem="{Binding BottomProfile, Mode=TwoWay}"
+                        AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                        HeadersVisibility="Column" GridLinesVisibility="All"
+                        HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                        RowHeight="18" ColumnHeaderHeight="20"
+                        CanUserSortColumns="False" CanUserReorderColumns="False"
+                        Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1"
+                        MaxHeight="180">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="90"/>
+                  <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="70"/>
+                  <DataGridTextColumn Header="Iy" Binding="{Binding Iy, StringFormat={}{0:0.###}}" Width="70"/>
+                  <DataGridTextColumn Header="Wx" Binding="{Binding WxBending, StringFormat={}{0:0.###}}" Width="60"/>
+                  <DataGridTextColumn Header="Wy" Binding="{Binding WyBending, StringFormat={}{0:0.###}}" Width="60"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </StackPanel>
+          </Grid>
+
+          <!-- 截面摘要 -->
+          <Border Grid.Row="3" Margin="1,6,1,1" Padding="8,3"
+                  BorderBrush="#A0A0A0" BorderThickness="0,1,0,0">
+            <TextBlock Text="{Binding SectionSummary}" FontSize="11" Foreground="#24405E"
+                       TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding SectionSummary}"/>
+          </Border>
+        </Grid>
+
+        <!-- 右：预演结果（与构件式同款面板） -->
+        <Border Grid.Column="2" Classes="hbResultPanel">
+          <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          Padding="4,2">
+              <ItemsControl ItemsSource="{Binding Results}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
+                               TextDecorations="{Binding Decoration}" FontFamily="SimSun" FontSize="12"
+                               LineHeight="15" TextWrapping="Wrap" Margin="0,0,0,1"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Text="{Binding PlaceholderText}" Margin="8,6" FontSize="12" Foreground="#6B6B6B"
+                       TextWrapping="Wrap" VerticalAlignment="Top"
+                       IsVisible="{Binding !HasResults}"/>
+          </Grid>
+        </Border>
+      </Grid>
+    </DockPanel>
+  </Border>
+</UserControl>

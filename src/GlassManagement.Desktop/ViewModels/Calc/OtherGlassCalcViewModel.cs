@@ -87,7 +87,7 @@ public partial class OtherGlassCalcViewModel : ObservableObject
     [ObservableProperty] private string _kind3 = "钢化玻璃";
     [ObservableProperty] private string _kind4 = "钢化玻璃";
 
-    /// <summary>构型：<c>true</c>=四玻外夹层双中空（实测）；<c>false</c>=四玻内夹层双中空（未实测，暂禁用）。</summary>
+    /// <summary>构型：<c>true</c>=四玻外夹层双中空；<c>false</c>=四玻内夹层双中空。两者均已实机逐位。</summary>
     [ObservableProperty] private bool _isOuterLaminated = true;
     [ObservableProperty] private bool _isInnerLaminated;
     [ObservableProperty] private bool _isMultiLaminated;

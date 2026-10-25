@@ -546,8 +546,9 @@ public static class GlassEngine
     /// <para>实测校验：ΣD=802.38 → w₁=0.0002961 → wStr=0.000530 → σ=8.833 ✓；
     /// w₃=0.0002308 → wStr=0.000433 → σ=7.217 ✓；t_e=8.8255 → df=2.356 ✓。</para>
     ///
-    /// <para><b>⚠ 未实测</b>：「四玻内夹层双中空」按镜像处理（D内 = t₃³+t₄³ 不折、
-    /// D外两片各折 0.95），待实机确认后再启用 <paramref name="laminatedOuter"/>=false。</para>
+    /// <para><b>「四玻内夹层双中空」已实机验证</b>（other_glass_probe.py，同工况）：
+    /// 7.783 / 7.783 / 8.167 / 8.167，df 2.356，限值 16.667 —— 与镜像规则完全一致。
+    /// 注意次外片（片2）也在外侧，**同样要乘 1.1**（否则前两片会不同值，与实测矛盾）。</para>
     /// </summary>
     /// <param name="laminatedOuter"><c>true</c>=四玻外夹层双中空；<c>false</c>=四玻内夹层双中空（未验证）</param>
     public static CompositeGlassResult ComputeFourPlyLaminatedInsulated(
@@ -594,9 +595,11 @@ public static class GlassEngine
         }
         else
         {
+            // 内夹层：3、4 是一个整体（不折减），1、2 各穿一个中空腔
+            // 实测 7.783 / 7.783 / 8.167 / 8.167 —— 前两片同值（都在外侧，均乘 1.1），后两片同值
             double wInnerEach = wkNmm2 * d3 / sum / 2.0;
             shares[0] = InsulatedOuterFactor * wkNmm2 * d1 / sum;
-            shares[1] = wkNmm2 * d2 / sum;
+            shares[1] = InsulatedOuterFactor * wkNmm2 * d2 / sum;   // ★ 次外片同样在外侧，也要乘 1.1
             shares[2] = shares[3] = wInnerEach;
         }
 

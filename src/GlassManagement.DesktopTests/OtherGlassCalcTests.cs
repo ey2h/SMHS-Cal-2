@@ -65,6 +65,19 @@ public class OtherGlassCalcTests
     }
 
     [Test]
+    public void 四玻内夹层双中空_屏上数值逐位()
+    {
+        // 实测（other_glass_probe.py --inner_lam）：7.783 / 7.783 / 8.167 / 8.167、df 2.356
+        var got = Render(vm => { vm.IsInnerLaminated = true; });
+        Assert.That(got, Has.Some.EqualTo("外片玻璃强度计算值:7.783MPa"));
+        Assert.That(got, Has.Some.EqualTo("次外片玻璃强度计算值:7.783MPa"));
+        Assert.That(got, Has.Some.EqualTo("次内片玻璃强度计算值:8.167MPa"));
+        Assert.That(got, Has.Some.EqualTo("内片玻璃强度计算值:8.167MPa"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度计算值:2.356mm"));
+        Assert.That(got, Has.Some.EqualTo("玻璃挠度容许值:16.667mm(四边简支)"));
+    }
+
+    [Test]
     public void 多片夹层_未复刻时给提示不崩()
     {
         var vm = new OtherGlassCalcViewModel { IsMultiLaminated = true };

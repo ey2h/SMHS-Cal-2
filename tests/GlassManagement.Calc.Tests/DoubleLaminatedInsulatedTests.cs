@@ -138,3 +138,41 @@ public class OtherGlassCalcProbeTests
         Assert.Equal(16.667, r.Limit);
     }
 }
+
+/// <summary>
+/// 「其它玻璃计算」三种构型实测对照（other_glass_probe.py，2026-10-25）。
+/// 工况：1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16、四边简支。
+///   四玻外夹层：8.833 / 8.833 / 7.217 / 7.217   df 2.356  限 16.667
+///   四玻内夹层：7.783 / 7.783 / 8.167 / 8.167   df 2.356  限 16.667
+///   多片夹层  ：9.767（仅 1 个 σ）              df 2.502  限 8.653（未复刻）
+/// </summary>
+public class OtherGlassThreeConfigTests
+{
+    [Fact]
+    public void 四玻内夹层双中空_实测对照()
+    {
+        var r = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: false);
+        Assert.Equal(7.783, r.Plies[0].Sigma);
+        Assert.Equal(7.783, r.Plies[1].Sigma);   // 次外片同样在外侧，也乘 1.1
+        Assert.Equal(8.167, r.Plies[2].Sigma);
+        Assert.Equal(8.167, r.Plies[3].Sigma);
+        Assert.Equal(2.356, r.Deflection);
+        Assert.Equal(16.667, r.Limit);
+    }
+
+    [Fact]
+    public void 内外夹层互换_外侧总是更强()
+    {
+        var outer = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: true);
+        var inner = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: false);
+        // 夹层在哪侧，哪侧的 σ 就更小（整体刚度大 → 分到的每片荷载小）
+        Assert.True(outer.Plies[0].Sigma > outer.Plies[2].Sigma, "外夹层：外片 σ 更大");
+        Assert.True(inner.Plies[0].Sigma < inner.Plies[2].Sigma, "内夹层：内片 σ 更大");
+        // 两者 t_e 与挠度相同（同尺寸同厚度，只是夹层位置换边）
+        Assert.Equal(outer.EquivalentThickness, inner.EquivalentThickness);
+        Assert.Equal(outer.Deflection, inner.Deflection);
+    }
+}

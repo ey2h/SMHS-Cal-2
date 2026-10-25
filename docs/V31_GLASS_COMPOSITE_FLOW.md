@@ -601,7 +601,7 @@ t_e   = 0.95·ΣD^(1/3)           = 8.8255
 | `GlassEngine.ComputeFourPlyLaminatedInsulated` | ✅ 四玻外夹层双中空逐位 |
 | `OtherGlassCalcView` / `OtherGlassCalcViewModel` | ✅ 面板按实机 763×500 布局 |
 | `CalcFormCatalog` + `CalcMenuMap` | ✅ 菜单「其它计算/其它玻璃计算」正确指向新窗体（原先错指常规玻璃屏）|
-| 四玻内夹层双中空 | ⚠ 引擎按镜像实现，**未实测**，界面可选但结果待核 |
+| 四玻内夹层双中空 | ✅ 已实测逐位（7.783/7.783/8.167/8.167、df 2.356）|
 | 多片夹层 | ❌ 未复刻，选中时给提示 |
 | 基本参数里两个 ComboBox (83,113)/(126,138) | ❌ 含义未定位，未复刻 |
 

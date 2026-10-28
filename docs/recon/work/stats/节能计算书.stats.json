@@ -1,0 +1,31 @@
+{
+    "book":  "节能计算书",
+    "source":  "C:\\code\\Glass\\docs\\recon\\calcbooks\\raw\\节能计算书.DOC",
+    "ok":  true,
+    "error":  null,
+    "paragraphs":  1262,
+    "tables":  12,
+    "tableFailures":  [
+
+                      ],
+    "tableCells":  455,
+    "lines":  1262,
+    "linesWithEquals":  175,
+    "linesWithStressUnit":  0,
+    "linesWithClause":  61,
+    "headings":  116,
+    "emptyLines":  229,
+    "embeddedObjectLines":  12,
+    "fields":  66,
+    "omaths":  0,
+    "shapes":  0,
+    "inlineShapes":  12,
+    "footnotes":  0,
+    "endnotes":  0,
+    "outlineOnlyHeadings":  31,
+    "styleHeadings":  0,
+    "patternOnlyHeadings":  85,
+    "seconds":  69.6,
+    "closeError":  null,
+    "quitError":  null
+}

@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.FloorGlassCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <UserControl.Styles>
+    <Style Selector="ComboBox">
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="地板玻璃结构计算"/>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                 Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="945" Height="542" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- 地板玻璃计算(按JGJ113规范算法) (19,42) 553x493 -->
+        <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="42" Width="553" Height="493"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="35" Text="地板玻璃计算(按JGJ113规范算法)"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="71" Text="活荷载" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="171" Canvas.Top="68" Width="65" Height="18"
+                 Text="{Binding LiveLoadText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="238" Canvas.Top="71" Text="KPa" FontSize="9"/>
+        <Button Classes="hb" Canvas.Left="419" Canvas.Top="58" Width="139" Height="24" FontSize="10"
+                Content="活荷载取值介绍"/>
+
+        <TextBlock Canvas.Left="25" Canvas.Top="100" Text="支承类型" FontSize="9"/>
+        <ComboBox Classes="hb" Canvas.Left="147" Canvas.Top="97" Width="129" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="四边支承"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="25" Canvas.Top="129" Text="玻璃构型" FontSize="9"/>
+        <ComboBox Classes="hb" Canvas.Left="147" Canvas.Top="126" Width="97" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="双片夹层玻璃"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="25" Canvas.Top="159" Text="玻璃种类" FontSize="9"/>
+        <ComboBox Classes="hb" Canvas.Left="147" Canvas.Top="156" Width="97" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="钢化玻璃"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="300" Canvas.Top="100" Text="玻璃厚度" FontSize="9"/>
+        <ComboBox Classes="hb" Canvas.Left="403" Canvas.Top="97" Width="97" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="8"/></ComboBox.Items>
+        </ComboBox>
+
+        <TextBlock Canvas.Left="300" Canvas.Top="130" Text="短边" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="379" Canvas.Top="127" Width="57" Height="18"
+                 Text="{Binding ShortSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="438" Canvas.Top="130" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="300" Canvas.Top="160" Text="长边" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="379" Canvas.Top="157" Width="57" Height="18"
+                 Text="{Binding LongSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="438" Canvas.Top="160" Text="mm" FontSize="9"/>
+
+        <!-- 夹层配置 (155,194) 242x97 -->
+        <Border Classes="hbFrame" Canvas.Left="155" Canvas.Top="194" Width="242" Height="97"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="161" Canvas.Top="187" Text="夹层配置"/>
+        <TextBlock Canvas.Left="161" Canvas.Top="217" Text="胶片类型" FontSize="9"/>
+        <ComboBox Classes="hb" Canvas.Left="255" Canvas.Top="214" Width="133" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="PVB(聚乙烯醇缩丁醛)"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="161" Canvas.Top="242" Text="胶片厚" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="255" Canvas.Top="239" Width="70" Height="20" Text="0.38" IsReadOnly="True"/>
+
+        <!-- 输出 RichText (575,51) 345x416 -->
+        <Border Classes="hbResultPanel" Canvas.Left="575" Canvas.Top="51" Width="345" Height="416"/>
+        <TextBlock Canvas.Left="579" Canvas.Top="55" Text="计算结果" FontSize="10" Foreground="{DynamicResource HbTextMuted}"/>
+        <ScrollViewer Canvas.Left="577" Canvas.Top="73" Width="341" Height="391">
+          <ItemsControl ItemsSource="{Binding Results}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Text}" FontFamily="Consolas" FontSize="11"
+                           Foreground="{Binding Color}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+        <TextBlock Canvas.Left="579" Canvas.Top="73" Text="{Binding PlaceholderText}"
+                   FontSize="11" Foreground="{DynamicResource HbTextSubtle}" TextWrapping="Wrap" MaxWidth="335"
+                   IsVisible="{Binding HasResults, Converter={x:Static BoolConverters.Not}}"/>
+
+        <!-- 按钮 -->
+        <Button Classes="hb" Canvas.Left="776" Canvas.Top="476" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="835" Canvas.Top="501" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+        <Button Classes="hb" Canvas.Left="776" Canvas.Top="501" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

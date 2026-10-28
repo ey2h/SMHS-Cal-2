@@ -12,7 +12,7 @@ public class AdminTests : TestBase
         await LoginAsAdmin();
         await Page.GotoAsync($"{BaseUrl}/admin");
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-        await Task.Delay(500);
+        await 44Task.Delay(500);
     }
 
     [Test]

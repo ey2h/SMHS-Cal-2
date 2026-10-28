@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW05_Form5"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 帮助(退出本帮助窗口后 ，程序才可继续操作) | client 592x316 | 2 nodes (0 labels) |  declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="帮助(退出本帮助窗口后 ，程序才可继续操作)" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="592" Height="316" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+      <Border Classes="hbPanel" Canvas.Left="8" Canvas.Top="12" Width="577" Height="45"/>
+      <ComboBox Classes="hb" Canvas.Left="11" Canvas.Top="32" Width="253" Height="20"/>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

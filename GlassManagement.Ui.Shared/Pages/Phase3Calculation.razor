@@ -1,0 +1,361 @@
+@page "/phase3"
+@using GlassManagement.Ui.Shared.Models
+@inject System.Net.Http.HttpClient Http
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using System.Text.Json
+@using System.Text
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+<div class="phase3" style="padding:16px;">
+  <h3>Phase 3 - 草案入口</h3>
+
+  <RegionsSelector @bind-SelectedRegion="SelectedRegion3" />
+
+  @if (!string.IsNullOrEmpty(ValidationError))
+  {
+    <div class="alert alert-danger" style="margin-top:8px;">@ValidationError</div>
+  }
+
+  <div class="panels-builder" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+    @foreach (var p in Panels3)
+    {
+      <div class="panel-row" style="display:flex; gap:8px; align-items:center;">
+        <input class="form-control" placeholder="PanelId" style="width:120px;" @bind="p.PanelId" />
+        <select class="form-control" style="width:160px;" @bind="p.Type">
+          <option value="Single">Single</option>
+          <option value="Laminated">Laminated</option>
+          <option value="Insulating">Insulating</option>
+          <option value="LaminatedInsulating">LaminatedInsulating</option>
+        </select>
+        <input class="form-control" placeholder="Width" style="width:100px;" @bind="p.Width" type="number" />
+        <input class="form-control" placeholder="Height" style="width:100px;" @bind="p.Height" type="number" />
+        <input class="form-control" placeholder="Thickness" style="width:90px;" @bind="p.Thickness" type="number" />
+        <button class="btn btn-danger btn-sm" @onclick="() => RemovePanel(p)" title="Remove">-</button>
+      </div>
+    }
+  </div>
+
+  <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;">
+    <button class="btn btn-secondary" @onclick="AddPanel">Add Panel</button>
+    <button class="btn btn-secondary" @onclick="LoadSample">加载示例面板</button>
+    <button class="btn btn-secondary" @onclick="ClearAll">清空</button>
+    <button class="btn btn-secondary" @onclick="PasteInputJsonAsync">粘贴输入 JSON</button>
+    <button class="btn btn-secondary" @onclick="CopyInputJsonAsync">复制当前输入 JSON</button>
+    <button class="btn btn-secondary" @onclick="ExportInputJsonAsync">导出输入 JSON</button>
+  </div>
+
+  <button class="btn btn-primary" style="margin-top:12px;" @onclick="SubmitPhase3" disabled="@(!Phase3IsSubmittable)">提交阶段3</button>
+
+  <CloudVizPane CloudViz="phase3CloudVizUI" />
+
+  <div class="phase3-status" style="margin-top:8px; color:#555; min-height:20px;">@Phase3Status</div>
+</div>
+
+@code {
+  private string SelectedRegion3 { get; set; }
+  private string Phase3Status { get; set; } = string.Empty;
+  private string ValidationError { get; set; } = string.Empty;
+  private bool IsSubmitting { get; set; }
+  private List<PanelUI3> Panels3 { get; set; } = new()
+  {
+    new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 }
+  };
+  private CloudVizData phase3CloudVizUI;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var regs = await Http.GetFromJsonAsync<List<RegionInfo>>("/api/regions");
+      if (regs != null && regs.Count > 0)
+      {
+        SelectedRegion3 = regs[0].RegionId;
+      }
+    }
+    catch
+    {
+      SelectedRegion3 = "default";
+    }
+  }
+
+  private void AddPanel()
+  {
+    int next = Panels3.Count + 1;
+    Panels3.Add(new PanelUI3 { PanelId = $"p3-{next}", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    ValidationError = string.Empty;
+  }
+
+  private void RemovePanel(PanelUI3 p)
+  {
+    Panels3.Remove(p);
+    ValidationError = string.Empty;
+  }
+
+  private string BuildPhase3InputJson()
+  {
+    var input = new GlassInput
+    {
+      ProjectId = "demo-phase3",
+      RegionId = SelectedRegion3 ?? "default",
+      Panels = new List<GlassPanelInput>()
+    };
+    foreach (var p in Panels3)
+    {
+      if (Enum.TryParse<GlassPanelType>(p.Type, true, out var panelType))
+      {
+        input.Panels.Add(new GlassPanelInput
+        {
+          PanelId = p.PanelId,
+          Type = panelType,
+          Width = p.Width,
+          Height = p.Height,
+          Thickness = p.Thickness,
+          Layers = new List<GlassLayerInput> { new GlassLayerInput { MaterialId = "default", Thickness = p.Thickness } }
+        });
+      }
+    }
+    return JsonSerializer.Serialize(input, new JsonSerializerOptions { WriteIndented = true });
+  }
+
+  private async Task CopyInputJsonAsync()
+  {
+    var json = BuildPhase3InputJson();
+    try
+    {
+      await JS.InvokeVoidAsync("navigator.clipboard.writeText", json);
+      Phase3Status = "输入 JSON 已复制到剪贴板";
+    }
+    catch
+    {
+      Phase3Status = "复制失败，请手动复制";
+    }
+  }
+
+  private async Task ExportInputJsonAsync()
+  {
+    var json = BuildPhase3InputJson();
+    var fileName = $"phase3-input-{DateTime.Now:yyyyMMddHHmmss}.json";
+    try
+    {
+      await JS.InvokeVoidAsync("downloadFile", fileName, json);
+      Phase3Status = $"输入 JSON 已导出为 {fileName}";
+    }
+    catch
+    {
+      Phase3Status = "导出失败";
+    }
+  }
+
+  private async Task PasteInputJsonAsync()
+  {
+    try
+    {
+      var json = await JS.InvokeAsync<string>("navigator.clipboard.readText");
+      if (string.IsNullOrWhiteSpace(json))
+      {
+        Phase3Status = "剪贴板没有文本";
+        return;
+      }
+      var input = JsonSerializer.Deserialize<GlassInput>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+      if (input == null)
+      {
+        Phase3Status = "无法解析输入 JSON";
+        return;
+      }
+      SelectedRegion3 = input.RegionId;
+      Panels3.Clear();
+      if (input.Panels != null && input.Panels.Count > 0)
+      {
+        foreach (var p in input.Panels)
+        {
+          Panels3.Add(new PanelUI3
+          {
+            PanelId = p.PanelId,
+            Type = p.Type.ToString(),
+            Width = p.Width,
+            Height = p.Height,
+            Thickness = p.Thickness
+          });
+        }
+      }
+      ValidationError = string.Empty;
+      Phase3Status = "从剪贴板粘贴成功";
+    }
+    catch
+    {
+      Phase3Status = "粘贴失败";
+    }
+  }
+
+  private bool Phase3InputIsValid()
+  {
+    if (string.IsNullOrWhiteSpace(SelectedRegion3)) return false;
+    if (Panels3 == null || Panels3.Count == 0) return false;
+    foreach (var p in Panels3)
+    {
+      if (string.IsNullOrWhiteSpace(p.PanelId)) return false;
+      if (!Enum.TryParse<GlassPanelType>(p.Type, true, out var _)) return false;
+      if (p.Width <= 0 || p.Height <= 0 || p.Thickness <= 0) return false;
+    }
+    return true;
+  }
+
+  private bool ArePanelIdsUnique()
+  {
+    var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    foreach (var p in Panels3)
+    {
+      if (string.IsNullOrWhiteSpace(p.PanelId)) return false;
+      if (!seen.Add(p.PanelId)) return false;
+    }
+    return true;
+  }
+
+  private bool Phase3IsSubmittable => Phase3InputIsValid() && ArePanelIdsUnique() && !IsSubmitting;
+
+  private async Task SubmitPhase3()
+  {
+    ValidationError = string.Empty;
+
+    if (!Phase3InputIsValid())
+    {
+      if (string.IsNullOrWhiteSpace(SelectedRegion3))
+      {
+        ValidationError = "区域未选择";
+      }
+      else if (Panels3 == null || Panels3.Count == 0)
+      {
+        ValidationError = "Panel 为空";
+      }
+      else
+      {
+        foreach (var p in Panels3)
+        {
+          if (string.IsNullOrWhiteSpace(p.PanelId))
+          {
+            ValidationError = "PanelId 不能为空";
+            return;
+          }
+          if (!Enum.TryParse<GlassPanelType>(p.Type, true, out var _))
+          {
+            ValidationError = $"Panel Type 非法: {p.Type}";
+            return;
+          }
+          if (p.Width <= 0 || p.Height <= 0 || p.Thickness <= 0)
+          {
+            ValidationError = "Panel 尺寸必须大于 0";
+            return;
+          }
+        }
+      }
+      Phase3Status = ValidationError;
+      return;
+    }
+
+    if (!ArePanelIdsUnique())
+    {
+      ValidationError = "PanelId 重复";
+      Phase3Status = ValidationError;
+      return;
+    }
+
+    IsSubmitting = true;
+    Phase3Status = "正在提交...";
+
+    try
+    {
+      var input = new GlassInput
+      {
+        ProjectId = "demo-phase3",
+        RegionId = SelectedRegion3 ?? "default",
+        Panels = new List<GlassPanelInput>()
+      };
+      foreach (var p in Panels3)
+      {
+        if (Enum.TryParse<GlassPanelType>(p.Type, true, out var panelType))
+        {
+          input.Panels.Add(new GlassPanelInput
+          {
+            PanelId = p.PanelId,
+            Type = panelType,
+            Width = p.Width,
+            Height = p.Height,
+            Thickness = p.Thickness,
+            Layers = new List<GlassLayerInput> { new GlassLayerInput { MaterialId = "default", Thickness = p.Thickness } }
+          });
+        }
+      }
+
+      var json = JsonSerializer.Serialize(input);
+      var content = new StringContent(json, Encoding.UTF8, "application/json");
+      var resp = await Http.PostAsync("/api/calculation/phase3", content);
+
+      if (resp.IsSuccessStatusCode)
+      {
+        var body = await resp.Content.ReadAsStringAsync();
+        var output = JsonSerializer.Deserialize<GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (output != null)
+        {
+          var pts = new List<CloudVizPoint>();
+          int idx = 0;
+          foreach (var pr in output.PanelsResults)
+          {
+            double x = idx * 60;
+            double y = Math.Max(0, pr.Metrics.Deflection * 100);
+            double v = pr.Metrics.MaxStress;
+            pts.Add(new CloudVizPoint { X = x, Y = y, Value = v });
+            idx++;
+          }
+          phase3CloudVizUI = new CloudVizData { Points = pts };
+          Phase3Status = $"提交成功 - {output.PanelsResults.Count} 个面板计算完成";
+        }
+        else
+        {
+          Phase3Status = "提交成功，但响应数据为空";
+        }
+      }
+      else
+      {
+        var errorBody = await resp.Content.ReadAsStringAsync();
+        Phase3Status = $"提交失败 ({(int)resp.StatusCode}): {errorBody}";
+      }
+    }
+    catch (Exception ex)
+    {
+      Phase3Status = $"提交异常: {ex.Message}";
+    }
+    finally
+    {
+      IsSubmitting = false;
+    }
+  }
+
+  private void LoadSample()
+  {
+    Panels3.Clear();
+    Panels3.Add(new PanelUI3 { PanelId = "p3-1", Type = "Single", Width = 1200, Height = 2400, Thickness = 6 });
+    Panels3.Add(new PanelUI3 { PanelId = "p3-2", Type = "Laminated", Width = 1500, Height = 3000, Thickness = 12 });
+    SelectedRegion3 = "default";
+    ValidationError = string.Empty;
+    Phase3Status = "已加载示例面板";
+  }
+
+  private void ClearAll()
+  {
+    Panels3.Clear();
+    SelectedRegion3 = null;
+    phase3CloudVizUI = null;
+    ValidationError = string.Empty;
+    Phase3Status = "已清空";
+  }
+
+  private class PanelUI3
+  {
+    public string PanelId { get; set; } = "p3-1";
+    public string Type { get; set; } = "Single";
+    public double Width { get; set; } = 1200;
+    public double Height { get; set; } = 2400;
+    public double Thickness { get; set; } = 6;
+  }
+}

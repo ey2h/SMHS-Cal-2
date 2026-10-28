@@ -1,0 +1,218 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW19_Form19"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 幕墙（门窗）物理性能计算 | client 885x541 | 160 nodes (90 labels) | pairs=38 spread=16px dropped=0 declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙（门窗）物理性能计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="885" Height="541" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+      <!-- 互斥参数面板（源程序按选项切换显示），共 6 套 -->
+      <TabControl Canvas.Left="6" Canvas.Top="10" Width="873" Height="507">
+        <TabItem Header="金属面夹芯板计算">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="873" Height="507" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBox Classes="hb" Canvas.Left="449" Canvas.Top="8" Width="413" Height="433" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <Border Classes="hbFrame" Canvas.Left="504" Canvas.Top="8" Width="355" Height="201"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="510" Canvas.Top="0" Text="点图可缩放"/>
+          <Border Classes="hbFrame" Canvas.Left="260" Canvas.Top="16" Width="241" Height="177"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="266" Canvas.Top="7" Text="上层金属板参数"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="33" Width="198" Height="13" Text="上层金属板厚度       mm,腹板数n1=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="53" Width="192" Height="13" Text="d11=       mm,d12=       mm,φ1=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Border Classes="hbFrame" Canvas.Left="173" Canvas.Top="56" Width="274" Height="191"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="179" Canvas.Top="47" Text="玻璃组成"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="72" Width="204" Height="13" Text="上层金属板惯性矩              mm^4" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="92" Width="204" Height="13" Text="上层金属板截面积              mm^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="5" Canvas.Top="107" Width="838" Height="344" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <ComboBox Classes="hb" Canvas.Left="367" Canvas.Top="108" Width="57" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="112" Width="84" Height="13" Text="上层金属板材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="367" Canvas.Top="129" Width="89" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="256" Canvas.Top="131" Width="57" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="314" Canvas.Top="131" Width="57" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="373" Canvas.Top="131" Width="57" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="132" Width="84" Height="13" Text="上层金属板颜色" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="150" Width="73" Height="19" FontSize="12" Text="70000"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="152" Width="216" Height="13" Text="上层金属板弹性模量               MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="413" Canvas.Top="169" Width="40" Height="19" FontSize="12" Text="90"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="172" Width="216" Height="13" Text="上层金属板抗拉强度设计值         MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="294" Canvas.Top="175" Width="57" Height="20"/>
+          <Border Classes="hbFrame" Canvas.Left="260" Canvas.Top="200" Width="241" Height="177"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="266" Canvas.Top="191" Text="下层金属板参数"/>
+          <TextBox Classes="hb" Canvas.Left="353" Canvas.Top="213" Width="33" Height="19" FontSize="12" Text="0.5"/>
+          <TextBox Classes="hb" Canvas.Left="465" Canvas.Top="214" Width="33" Height="19" FontSize="12" Text="3"/>
+          <TextBox Classes="hb" Canvas.Left="504" Canvas.Top="216" Width="364" Height="233" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="217" Width="198" Height="13" Text="下层金属板厚度       mm,腹板数n2=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="293" Canvas.Top="233" Width="33" Height="19" FontSize="12" Text="2"/>
+          <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="233" Width="33" Height="19" FontSize="12" Text="2"/>
+          <TextBox Classes="hb" Canvas.Left="463" Canvas.Top="233" Width="33" Height="19" FontSize="12" Text="30"/>
+          <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="237" Width="249" Height="160"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="228" Text="支座参数"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="237" Width="192" Height="13" Text="d21=       mm,d22=       mm,φ2=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="112" Canvas.Top="253" Width="49" Height="19" FontSize="12" Text="15"/>
+          <TextBox Classes="hb" Canvas.Left="367" Canvas.Top="253" Width="73" Height="19" FontSize="12" Text="1600"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="255" Width="168" Height="13" Text="支座的支撑宽度Ls          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="256" Width="204" Height="13" Text="下层金属板惯性矩              mm^4" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="367" Canvas.Top="272" Width="73" Height="19" FontSize="12" Text="560"/>
+          <TextBox Classes="hb" Canvas.Left="112" Canvas.Top="273" Width="49" Height="19" FontSize="12" Text="1.2"/>
+          <TextBlock Classes="hb" Canvas.Left="356" Canvas.Top="273" Width="90" Height="13" Text="c=           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="275" Width="168" Height="13" Text="支座连接处厚度t1          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="276" Width="204" Height="13" Text="下层金属板截面积              mm^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="377" Canvas.Top="292" Width="73" Height="19" FontSize="12" Text="530"/>
+          <TextBox Classes="hb" Canvas.Left="105" Canvas.Top="293" Width="49" Height="19" FontSize="12" Text="6"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="295" Width="156" Height="13" Text="紧固件公称直径          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="295" Width="216" Height="13" Text="下层金属板净截面积              mm^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="372" Canvas.Top="312" Width="57" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="150" Canvas.Top="313" Width="49" Height="19" FontSize="12" Text="10"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="315" Width="204" Height="13" Text="紧固件垫圈或钉头直径            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="315" Width="84" Height="13" Text="下层金属板材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="332" Width="81" Height="19" FontSize="12" Text="70000"/>
+          <TextBox Classes="hb" Canvas.Left="150" Canvas.Top="333" Width="49" Height="19" FontSize="12" Text="205"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="335" Width="210" Height="13" Text="支撑构件抗拉强度设计值          MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="335" Width="216" Height="13" Text="下层金属板弹性模量               MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="420" Canvas.Top="352" Width="40" Height="19" FontSize="12" Text="90"/>
+          <TextBox Classes="hb" Canvas.Left="150" Canvas.Top="353" Width="49" Height="19" FontSize="12" Text="8"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="355" Width="132" Height="13" Text="一个BL范围内紧固件数量" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="355" Width="216" Height="13" Text="下层金属板抗拉强度设计值         MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="185" Canvas.Top="373" Width="40" Height="19" FontSize="12" Text="50"/>
+          <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="375" Width="234" Height="13" Text="支座处金属面板局部稳定设计值        MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Border Classes="hbFrame" Canvas.Left="260" Canvas.Top="381" Width="241" Height="120"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="266" Canvas.Top="372" Text="芯材参数"/>
+          <ComboBox Classes="hb" Canvas.Left="320" Canvas.Top="397" Width="133" Height="20"/>
+          <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="400" Width="249" Height="60"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="391" Text="紧固件边(间)距参数"/>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="401" Width="48" Height="13" Text="芯材材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="46" Canvas.Top="415" Width="49" Height="19" FontSize="12" Text="20"/>
+          <TextBox Classes="hb" Canvas.Left="146" Canvas.Top="415" Width="49" Height="19" FontSize="12" Text="20"/>
+          <TextBlock Classes="hb" Canvas.Left="29" Canvas.Top="418" Width="180" Height="13" Text="e1          mm e2           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="320" Canvas.Top="418" Width="49" Height="19" FontSize="12" Text="37"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="420" Width="150" Height="13" Text="芯材密度          kg/m^3" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="46" Canvas.Top="437" Width="49" Height="19" FontSize="12" Text="20"/>
+          <TextBox Classes="hb" Canvas.Left="146" Canvas.Top="437" Width="49" Height="19" FontSize="12" Text="20"/>
+          <TextBox Classes="hb" Canvas.Left="413" Canvas.Top="437" Width="49" Height="19" FontSize="12" Text="3.5"/>
+          <TextBlock Classes="hb" Canvas.Left="29" Canvas.Top="440" Width="180" Height="13" Text="u1          mm u2           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="441" Width="216" Height="13" Text="芯材拉伸和压缩模量平均值         MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Button Classes="hb" Canvas.Left="744" Canvas.Top="448" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="728" Canvas.Top="453" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="353" Canvas.Top="457" Width="49" Height="19" FontSize="12" Text="50"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="461" Width="162" Height="13" Text="芯材剪切强度值          MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Button Classes="hb" Canvas.Left="104" Canvas.Top="464" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="计算" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="168" Canvas.Top="464" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="336" Canvas.Top="464" Width="273" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="规范中关于幕墙抗风压性能的具体要求" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="600" Canvas.Top="464" Width="65" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="计算说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="760" Canvas.Top="464" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="27" Canvas.Top="468" Width="205" Height="33" FontSize="12" Text="绿色框参数表示此参数需要按规范JGJ/T453-2019附录A的试验确定"/>
+          <Button Classes="hb" Canvas.Left="744" Canvas.Top="472" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="808" Canvas.Top="472" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="808" Canvas.Top="472" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="353" Canvas.Top="477" Width="49" Height="19" FontSize="12" Text="50"/>
+          <Button Classes="hb" Canvas.Left="728" Canvas.Top="477" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="788" Canvas.Top="477" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBlock Classes="hb" Canvas.Left="265" Canvas.Top="480" Width="180" Height="13" Text="芯材承压强度值          MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="建筑玻璃空气声隔声计算（只适用于玻璃构件）">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="873" Height="507" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBlock Classes="hb" Canvas.Left="193" Canvas.Top="70" Width="72" Height="13" Text="玻璃组成形式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="193" Canvas.Top="113" Width="156" Height="13" Text="由外向内各玻璃厚度(单位mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="15" Canvas.Top="136" Width="141" Height="14" Text="墙面积（不含玻璃部分）" FontSize="11" TextWrapping="Wrap" LineHeight="14"/>
+          <TextBlock Classes="hb" Canvas.Left="193" Canvas.Top="156" Width="168" Height="13" Text="由外向内各中空层厚度(单位mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="128" Canvas.Top="159" Width="26" Height="13" Text="平米" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="15" Canvas.Top="182" Width="93" Height="15" Text="玻璃部分面积" FontSize="12" TextWrapping="Wrap" LineHeight="15"/>
+          <TextBlock Classes="hb" Canvas.Left="193" Canvas.Top="199" Width="138" Height="13" Text="夹层玻璃PVB厚度(单位mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="抗风压性能">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="873" Height="507" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="规范相关规定">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="873" Height="507" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Border Classes="hbFrame" Canvas.Left="7" Canvas.Top="43" Width="415" Height="282"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="13" Canvas.Top="34" Text="横梁与立柱"/>
+          <TextBlock Classes="hb" Canvas.Left="15" Canvas.Top="60" Width="60" Height="13" Text="角焊缝高度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="15" Canvas.Top="88" Width="96" Height="13" Text="总角焊缝有效长度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="162" Canvas.Top="88" Width="12" Height="13" Text="mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="55" Canvas.Top="145" Width="91" Height="13" Text="焊缝截面面积" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="地区及地面类型参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="724" Height="89" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Border Classes="hbFrame" Canvas.Left="463" Canvas.Top="8" Width="241" Height="66"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="469" Canvas.Top="0" Text="地面类型"/>
+          <TextBox Classes="hb" Canvas.Left="343" Canvas.Top="15" Width="33" Height="19" FontSize="12" Text="0.6"/>
+          <TextBox Classes="hb" Canvas.Left="455" Canvas.Top="15" Width="33" Height="19" FontSize="12" Text="3"/>
+          <TextBox Classes="hb" Canvas.Left="358" Canvas.Top="16" Width="41" Height="18" FontSize="12" Text="100"/>
+          <TextBlock Classes="hb" Canvas.Left="19" Canvas.Top="19" Width="48" Height="13" Text="城市名称" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="295" Canvas.Top="19" Width="48" Height="13" Text="计算标高" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="476" Canvas.Top="27" Width="65" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="A类地形" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="556" Canvas.Top="27" Width="65" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="C类地形" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <Button Classes="hb" Canvas.Left="623" Canvas.Top="32" Width="55" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="370" Canvas.Top="34" Width="33" Height="19" FontSize="12" Text="9"/>
+          <TextBox Classes="hb" Canvas.Left="453" Canvas.Top="34" Width="33" Height="19" FontSize="12" Text="30"/>
+          <TextBox Classes="hb" Canvas.Left="283" Canvas.Top="35" Width="33" Height="19" FontSize="12" Text="16"/>
+          <TextBox Classes="hb" Canvas.Left="358" Canvas.Top="40" Width="41" Height="18" FontSize="12" Text="1.5"/>
+          <TextBlock Classes="hb" Canvas.Left="295" Canvas.Top="41" Width="48" Height="13" Text="基本风压" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="19" Canvas.Top="43" Width="72" Height="13" Text="风荷载标准值" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="162" Canvas.Top="43" Width="90" Height="13" Text="KPa(取值到百位)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="413" Canvas.Top="43" Width="18" Height="13" Text="KPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="476" Canvas.Top="48" Width="65" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="B类地形" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="556" Canvas.Top="48" Width="65" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="D类地形" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="357" Canvas.Top="55" Width="73" Height="19" FontSize="12" Text="53800"/>
+          <ComboBox Classes="hb" Canvas.Left="214" Canvas.Top="73" Width="214" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="357" Canvas.Top="74" Width="73" Height="19" FontSize="12" Text="698"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="基本参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="249" Height="217" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBox Classes="hb" Canvas.Left="105" Canvas.Top="14" Width="58" Height="19" FontSize="12" Text="北京"/>
+          <ComboBox Classes="hb" Canvas.Left="80" Canvas.Top="15" Width="167" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="19" Width="60" Height="13" Text="工程所在地" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="80" Canvas.Top="35" Width="89" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="38" Width="72" Height="13" Text="冬季极限温度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="105" Canvas.Top="38" Width="58" Height="19" FontSize="12" Text="2.5"/>
+          <ComboBox Classes="hb" Canvas.Left="80" Canvas.Top="55" Width="89" Height="20"/>
+          <Border Classes="hbFrame" Canvas.Left="0" Canvas.Top="56" Width="163" Height="159"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="6" Canvas.Top="47" Text="计算选项"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="58" Width="48" Height="13" Text="结构类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <CheckBox Classes="hb" Canvas.Left="25" Canvas.Top="64" Width="182" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="台风袭击区（见GB50178）" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <ComboBox Classes="hb" Canvas.Left="80" Canvas.Top="76" Width="73" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="77" Width="48" Height="13" Text="安全等级" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="17" Canvas.Top="77" Width="126" Height="14" FontSize="11" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="只计算玻璃的隔声" FontSize="11" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="17" Canvas.Top="95" Width="133" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="计算组合墙隔声" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="96" Width="49" Height="19" FontSize="12" Text="1.85"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="97" Width="144" Height="13" Text="标准值组合           kPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="115" Width="49" Height="19" FontSize="12" Text="2.75"/>
+          <ComboBox Classes="hb" Canvas.Left="192" Canvas.Top="115" Width="57" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="117" Width="228" Height="13" Text="设计值组合           kPa(不含重要系数)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="93" Canvas.Top="134" Width="49" Height="19" FontSize="12" Text="1000"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="136" Width="156" Height="13" Text="板块宽度尺寸B           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="58" Canvas.Top="139" Width="59" Height="20" FontSize="12" Text="50"/>
+          <TextBox Classes="hb" Canvas.Left="93" Canvas.Top="153" Width="49" Height="19" FontSize="12" Text="1800"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="155" Width="156" Height="13" Text="板块支撑间距L           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="219" Canvas.Top="159" Width="57" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="140" Canvas.Top="173" Width="33" Height="19" FontSize="12" Text="40"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="175" Width="186" Height="13" Text="上、下层金属面板中心距       mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="58" Canvas.Top="186" Width="59" Height="20" FontSize="12" Text="15"/>
+          <TextBox Classes="hb" Canvas.Left="67" Canvas.Top="192" Width="49" Height="19" FontSize="12" Text="5.8"/>
+          <TextBlock Classes="hb" Canvas.Left="5" Canvas.Top="195" Width="162" Height="13" Text="整板密度            kg/m^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="219" Canvas.Top="203" Width="57" Height="20"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

@@ -2,7 +2,7 @@
 using System.IO;
 using NPOI.HWPF;
 
-var dir = @"C:\Program Files (x86)\汇宝幕墙门窗结构计算软件V31.0D\计算书样本文件集";
+var dir = @"C:\Program Files (x86)\幕墙门窗结构计算软件V31.0D\计算书样本文件集";
 foreach (var file in Directory.GetFiles(dir, "*.DOC"))
 {
     Console.WriteLine($"=== {Path.GetFileName(file)} ===");

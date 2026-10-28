@@ -1,0 +1,92 @@
+@page "/phase1/basic"
+@using GlassManagement.Ui.Shared.Models
+@using System.Net.Http.Json
+@inject System.Net.Http.HttpClient Http
+@using System.Text.Json
+@using System.Text
+
+<div class="phase1-basic" style="padding:16px;">
+  <h3>Phase 1 - 基本参数</h3>
+  <div class="g-form">
+    <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start;">
+      <div>
+        <RegionsSelector @bind-SelectedRegion="region" />
+      </div>
+      <div>
+        <label>风压区域</label>
+        <input class="form-control" placeholder="风压区域" @bind="windRegion" />
+      </div>
+      <div>
+        <label>幕墙类型</label>
+        <input class="form-control" placeholder="幕墙类型" @bind="wallType" />
+      </div>
+      <div>
+        <label>龙骨间距</label>
+        <input class="form-control" placeholder="间距" type="number" @bind="memberSpacing" />
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px;" @onclick="HandleValidSubmit">提交</button>
+  </div>
+  <CloudVizPane CloudViz="cloudVizUI" />
+  <div class="status" style="color: #c00; margin-top:8px;">@statusMessage</div>
+</div>
+
+@code {
+    private string region = string.Empty;
+    private string windRegion = string.Empty;
+    private string wallType = string.Empty;
+    private double memberSpacing = 1200;
+    private GlassOutput? apiOutput;
+    private CloudVizData? cloudVizUI;
+    private string statusMessage = string.Empty;
+
+    private async Task HandleValidSubmit()
+    {
+        var panel = new GlassPanelInput
+        {
+            PanelId = "p1",
+            Type = GlassPanelType.Single,
+            Width = 1200,
+            Height = 2400,
+            Thickness = 6.0,
+            Layers = new List<GlassLayerInput> { new() { MaterialId = "default", Thickness = 6.0 } }
+        };
+        var input = new GlassInput
+        {
+            ProjectId = "demo",
+            RegionId = region,
+            Panels = new List<GlassPanelInput> { panel }
+        };
+        var json = JsonSerializer.Serialize(input);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var resp = await Http.PostAsync("/api/calculation/multi", content);
+        if (resp.IsSuccessStatusCode)
+        {
+            var body = await resp.Content.ReadAsStringAsync();
+            apiOutput = JsonSerializer.Deserialize<GlassOutput>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (apiOutput?.CloudViz != null)
+            {
+                var pts = new List<CloudVizPoint>();
+                int idx = 0;
+                foreach (var panelRes in apiOutput.PanelsResults)
+                {
+                    double x = idx * 60;
+                    double y = Math.Max(0, panelRes.Metrics.Deflection * 100);
+                    double v = panelRes.Metrics.MaxStress;
+                    pts.Add(new CloudVizPoint { X = x, Y = y, Value = v });
+                    idx++;
+                }
+                cloudVizUI = new CloudVizData { Points = pts };
+                statusMessage = "Phase 1 基本参数提交完成，云图已加载";
+            }
+            else
+            {
+                statusMessage = "计算完成，但未返回云图数据";
+            }
+        }
+        else
+        {
+            statusMessage = $"请求失败: {resp.StatusCode}";
+        }
+    }
+}

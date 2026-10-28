@@ -14,8 +14,8 @@
 
     <ScrollViewer Padding="16">
         <StackPanel Spacing="12">
-            <TextBlock Text="🔧 玻璃配置" FontSize="18" FontWeight="Bold" Foreground="#2563EB"/>
-            <Border Height="1" Background="#E2E8F0"/>
+            <TextBlock Text="🔧 玻璃配置" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource HbAccent}"/>
+            <Border Height="1" Background="{DynamicResource HbSurfaceSubtle}"/>
 
             <!-- 基础类型选择 -->
             <Border Classes="Section" CornerRadius="8">
@@ -31,7 +31,7 @@
             <Border Classes="Section" CornerRadius="8"
                     IsVisible="{Binding IsSingleMode}">
                 <StackPanel Spacing="8">
-                    <TextBlock Text="── 单片玻璃 ──" FontWeight="Bold" Foreground="#64748B"/>
+                    <TextBlock Text="── 单片玻璃 ──" FontWeight="Bold" Foreground="{DynamicResource HbTextMuted}"/>
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <StackPanel>
                             <TextBlock Text="厚度 (mm):" Margin="0,0,0,4"/>
@@ -57,7 +57,7 @@
             <Border Classes="Section" CornerRadius="8"
                     IsVisible="{Binding IsLaminatedMode}">
                 <StackPanel Spacing="8">
-                    <TextBlock Text="── 夹胶玻璃 ──" FontWeight="Bold" Foreground="#64748B"/>
+                    <TextBlock Text="── 夹胶玻璃 ──" FontWeight="Bold" Foreground="{DynamicResource HbTextMuted}"/>
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <StackPanel>
                             <TextBlock Text="玻璃片数:" Margin="0,0,0,4"/>
@@ -72,15 +72,15 @@
                     </StackPanel>
 
                     <!-- 各片配置 -->
-                    <TextBlock Text="各片配置:" Foreground="#757575" FontSize="12"/>
+                    <TextBlock Text="各片配置:" Foreground="{DynamicResource HbTextMuted}" FontSize="12"/>
                     <ItemsControl ItemsSource="{Binding LamSheets}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="0,4" Padding="8" Background="White" CornerRadius="4"
-                                        BorderBrush="#E2E8F0" BorderThickness="1">
+                                        BorderBrush="{DynamicResource HbBorderHairline}" BorderThickness="1">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="{Binding PositionLabel}" VerticalAlignment="Center"
-                                                   Width="40" FontWeight="Bold" Foreground="#2563EB"/>
+                                                   Width="40" FontWeight="Bold" Foreground="{DynamicResource HbAccent}"/>
                                         <ComboBox Width="80" SelectedIndex="{Binding ThicknessIndex}">
                                             <ComboBoxItem Content="5"/><ComboBoxItem Content="6"/>
                                             <ComboBoxItem Content="8"/><ComboBoxItem Content="10"/>
@@ -98,14 +98,14 @@
                     </ItemsControl>
 
                     <!-- 胶片层配置 -->
-                    <TextBlock Text="胶片层:" Foreground="#757575" FontSize="12"/>
+                    <TextBlock Text="胶片层:" Foreground="{DynamicResource HbTextMuted}" FontSize="12"/>
                     <ItemsControl ItemsSource="{Binding LamLayers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Margin="0,2" Padding="6" Background="#FEF3C7" CornerRadius="4">
+                                <Border Margin="0,2" Padding="6" Background="{DynamicResource HbWarnBg}" CornerRadius="4">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="{Binding Order, StringFormat=胶片{0}}"
-                                                   VerticalAlignment="Center" Width="50" Foreground="#F59E0B"/>
+                                                   VerticalAlignment="Center" Width="50" Foreground="{DynamicResource HbWarn}"/>
                                         <ComboBox Width="70" SelectedIndex="{Binding FilmTypeIndex}">
                                             <ComboBoxItem Content="PVB"/><ComboBoxItem Content="SGP"/>
                                         </ComboBox>
@@ -126,7 +126,7 @@
                 <StackPanel Spacing="8">
                     <TextBlock Text="生成结果:" FontWeight="Bold"/>
                     <TextBlock Text="{Binding ConfigResult}" FontSize="16" FontWeight="Bold"
-                               Foreground="#10B981" TextWrapping="Wrap"/>
+                               Foreground="{DynamicResource HbSuccess}" TextWrapping="Wrap"/>
                     <Button Content="✅ 确认" Click="OnConfirm"
                             Classes="Success" Padding="16,8"
                             HorizontalAlignment="Right" FontWeight="Bold"/>

@@ -1,0 +1,188 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:GlassManagement.Desktop.Converters"
+             x:Class="GlassManagement.Desktop.Views.Calc.GlassCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-玻璃计算」MVVM 视图（V31 客户区 936×442）。
+    坐标源：local-data/recon/v31runs/dump_玻璃.txt（43 控件）：
+      基本参数 Frame (9,29) 184x131 ─ 选择分格尺寸(15,42) / ComboBox(24,62)139x20
+                                       / 自定义尺寸(15,91) / 宽(87,110) 高(87,134) 65x18
+      夹层配置 Frame (198,29) 242x131 ─ 胶片类型(298,49)133x20 / 胶片厚度(298,74)70x20 / 11.3(384,98)
+      玻璃配置 Frame (9,167) 433x189 ─ 外片(13,183)127x167 中片(164,183)121x167 内片(309,183)127x167
+                                        每片 5 档 y=250/270/290/310/330 + 厚度 (x,203) 57x20
+      输出 (447,30) 365x270
+      按钮 预演(681,305) 上一步(741,305) 退出(681,329) 下一步(741,329) 59x24
+    片位可用性由 VM 的 OuterEnabled/MidEnabled/InnerEnabled/InterlayerEnabled 控制（实机 en 状态）。
+  -->
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-玻璃计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WindNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding WindNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="936" Height="442" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- ══ 基本参数 Frame (9,29) 184x131 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="9" Canvas.Top="29" Width="184" Height="131"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="15" Canvas.Top="22" Text="基本参数"/>
+
+        <RadioButton Classes="hb" Canvas.Left="15" Canvas.Top="42" Width="172" Height="20"
+                     GroupName="GlassSize" Content="选择分格尺寸(宽*高,mm*mm)"
+                     IsChecked="{Binding UsePresetSize, Mode=TwoWay}"/>
+        <ComboBox Canvas.Left="24" Canvas.Top="62" Width="139" Height="20"
+                  IsEnabled="{Binding PresetEnabled}"
+                  ItemsSource="{Binding SizeItems}"
+                  SelectedIndex="{Binding SelectedSizeIndex, Mode=TwoWay}"/>
+
+        <RadioButton Classes="hb" Canvas.Left="15" Canvas.Top="91" Width="121" Height="14"
+                     GroupName="GlassSize" Content="自定义尺寸"
+                     IsChecked="{Binding UseCustomSize, Mode=TwoWay}"/>
+        <TextBox Classes="hb" Canvas.Left="87" Canvas.Top="110" Width="65" Height="18"
+                 IsEnabled="{Binding CustomEnabled}"
+                 Text="{Binding CustomWidthText, Mode=TwoWay}"/>
+        <TextBox Classes="hb" Canvas.Left="87" Canvas.Top="134" Width="65" Height="18"
+                 IsEnabled="{Binding CustomEnabled}"
+                 Text="{Binding CustomHeightText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="24" Canvas.Top="112" Text="宽" FontSize="12" IsEnabled="{Binding CustomEnabled}"/>
+        <TextBlock Canvas.Left="24" Canvas.Top="136" Text="高" FontSize="12" IsEnabled="{Binding CustomEnabled}"/>
+
+        <!-- ══ 夹层配置 Frame (198,29) 242x131 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="198" Canvas.Top="29" Width="242" Height="131"
+                IsEnabled="{Binding InterlayerEnabled}"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="204" Canvas.Top="22" Text="夹层配置"/>
+        <ComboBox Canvas.Left="298" Canvas.Top="49" Width="133" Height="20"
+                  IsEnabled="{Binding InterlayerEnabled}" SelectedIndex="{Binding InterlayerIndex, Mode=TwoWay}">
+          <ComboBoxItem>PVB(聚乙烯醇缩丁醛)</ComboBoxItem>
+          <ComboBoxItem>SGP(离子型间层)</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Canvas.Left="298" Canvas.Top="74" Width="70" Height="20"
+                  IsEnabled="{Binding FilmThicknessEnabled}" SelectedIndex="{Binding FilmIndex, Mode=TwoWay}">
+          <ComboBoxItem>0.38</ComboBoxItem>
+          <ComboBoxItem>0.76</ComboBoxItem>
+          <ComboBoxItem>1.14</ComboBoxItem>
+          <ComboBoxItem>1.52</ComboBoxItem>
+          <ComboBoxItem>2.28</ComboBoxItem>
+        </ComboBox>
+        <TextBlock Canvas.Left="204" Canvas.Top="52" Text="胶片" FontSize="12"/>
+        <TextBlock Canvas.Left="204" Canvas.Top="77" Text="厚度" FontSize="12"/>
+
+        <!-- ══ 玻璃配置 Frame (9,167) 433x189 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="9" Canvas.Top="167" Width="433" Height="189"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="15" Canvas.Top="160" Text="玻璃配置"/>
+
+        <!-- 外片 (13,183) -->
+        <Border Classes="hbFrame" Canvas.Left="13" Canvas.Top="183" Width="127" Height="167"
+                IsEnabled="{Binding OuterEnabled}"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="19" Canvas.Top="176" Text="外片"/>
+        <RadioButton Canvas.Left="29" Canvas.Top="250" GroupName="OuterKind" Content="普通玻璃"
+                     IsChecked="{Binding OuterKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=普通玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="outer|普通玻璃"/>
+        <RadioButton Canvas.Left="29" Canvas.Top="270" GroupName="OuterKind" Content="浮法玻璃"
+                     IsChecked="{Binding OuterKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=浮法玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="outer|浮法玻璃"/>
+        <RadioButton Canvas.Left="29" Canvas.Top="290" GroupName="OuterKind" Content="半钢化玻璃"
+                     IsChecked="{Binding OuterKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=半钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="outer|半钢化玻璃"/>
+        <RadioButton Canvas.Left="29" Canvas.Top="310" GroupName="OuterKind" Content="钢化玻璃"
+                     IsChecked="{Binding OuterKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="outer|钢化玻璃"/>
+        <RadioButton Canvas.Left="29" Canvas.Top="330" GroupName="OuterKind" Content="夹丝玻璃"
+                     IsChecked="{Binding OuterKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=夹丝玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="outer|夹丝玻璃"/>
+        <ComboBox Canvas.Left="61" Canvas.Top="203" Width="57" Height="20"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding OuterThickness, Mode=TwoWay}"/>
+        <!-- 双夹层-中空（4 片）时外夹层的第二片（实机 80,225）-->
+        <ComboBox Canvas.Left="61" Canvas.Top="225" Width="57" Height="20"
+                  IsVisible="{Binding SecondPlyVisible}"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding Outer2Thickness, Mode=TwoWay}"/>
+
+        <!-- 中片 (164,183) -->
+        <Border Classes="hbFrame" Canvas.Left="164" Canvas.Top="183" Width="121" Height="167"
+                IsEnabled="{Binding MidEnabled}"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="170" Canvas.Top="176" Text="中片"/>
+        <RadioButton Canvas.Left="181" Canvas.Top="230" GroupName="MidKind" Content="普通玻璃"
+                     IsChecked="{Binding MidKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=普通玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="mid|普通玻璃"/>
+        <RadioButton Canvas.Left="181" Canvas.Top="250" GroupName="MidKind" Content="浮法玻璃"
+                     IsChecked="{Binding MidKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=浮法玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="mid|浮法玻璃"/>
+        <RadioButton Canvas.Left="181" Canvas.Top="275" GroupName="MidKind" Content="半钢化玻璃"
+                     IsChecked="{Binding MidKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=半钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="mid|半钢化玻璃"/>
+        <RadioButton Canvas.Left="181" Canvas.Top="297" GroupName="MidKind" Content="钢化玻璃"
+                     IsChecked="{Binding MidKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="mid|钢化玻璃"/>
+        <RadioButton Canvas.Left="181" Canvas.Top="320" GroupName="MidKind" Content="夹丝玻璃"
+                     IsChecked="{Binding MidKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=夹丝玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="mid|夹丝玻璃"/>
+        <ComboBox Canvas.Left="212" Canvas.Top="203" Width="57" Height="20"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding MidThickness, Mode=TwoWay}"/>
+
+        <!-- 内片 (309,183) -->
+        <Border Classes="hbFrame" Canvas.Left="309" Canvas.Top="183" Width="127" Height="167"
+                IsEnabled="{Binding InnerEnabled}"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="315" Canvas.Top="176" Text="内片"/>
+        <RadioButton Canvas.Left="326" Canvas.Top="250" GroupName="InnerKind" Content="普通玻璃"
+                     IsChecked="{Binding InnerKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=普通玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="inner|普通玻璃"/>
+        <RadioButton Canvas.Left="326" Canvas.Top="270" GroupName="InnerKind" Content="浮法玻璃"
+                     IsChecked="{Binding InnerKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=浮法玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="inner|浮法玻璃"/>
+        <RadioButton Canvas.Left="326" Canvas.Top="290" GroupName="InnerKind" Content="半钢化玻璃"
+                     IsChecked="{Binding InnerKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=半钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="inner|半钢化玻璃"/>
+        <RadioButton Canvas.Left="326" Canvas.Top="310" GroupName="InnerKind" Content="钢化玻璃"
+                     IsChecked="{Binding InnerKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=钢化玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="inner|钢化玻璃"/>
+        <RadioButton Canvas.Left="326" Canvas.Top="330" GroupName="InnerKind" Content="夹丝玻璃"
+                     IsChecked="{Binding InnerKind, Converter={x:Static conv:StringEqualsConverter.Instance}, ConverterParameter=夹丝玻璃, Mode=OneWay}"
+                     Command="{Binding SetPaneKindCommand}" CommandParameter="inner|夹丝玻璃"/>
+        <ComboBox Canvas.Left="357" Canvas.Top="203" Width="57" Height="20"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding InnerThickness, Mode=TwoWay}"/>
+        <!-- 双夹层-中空（4 片）时内夹层的第二片（实机 375,225）-->
+        <ComboBox Canvas.Left="357" Canvas.Top="225" Width="57" Height="20"
+                  IsVisible="{Binding SecondPlyVisible}"
+                  ItemsSource="{Binding ThicknessOptions}" SelectedItem="{Binding Inner2Thickness, Mode=TwoWay}"/>
+
+        <!-- ══ 输出 (447,30) 365x270 ══ -->
+        <Border Classes="hbResultPanel" Canvas.Left="447" Canvas.Top="30" Width="365" Height="270">
+          <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="3,1">
+              <ItemsControl ItemsSource="{Binding Results}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}"
+                               FontFamily="SimSun" FontSize="12" LineHeight="15"
+                               TextWrapping="Wrap" Margin="0,0,0,1"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Text="{Binding PlaceholderText}" Margin="6,4" FontSize="12" Foreground="{DynamicResource HbTextMuted}"
+                       TextWrapping="Wrap" VerticalAlignment="Top" IsVisible="{Binding !HasResults}"/>
+          </Grid>
+        </Border>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hbBtn" Canvas.Left="681" Canvas.Top="305" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hbBtn" Canvas.Left="741" Canvas.Top="305" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hbBtn" Canvas.Left="681" Canvas.Top="329" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hbBtn" Canvas.Left="741" Canvas.Top="329" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

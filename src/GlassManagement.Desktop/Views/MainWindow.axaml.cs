@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using GlassManagement.Desktop.ViewModels;
+using GlassManagement.Desktop.Views.Calc;
 
 namespace GlassManagement.Desktop.Views;
 
@@ -11,6 +12,13 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    /// <summary>打开 V35 结构计算界面（1:1 复刻浏览）。</summary>
+    private void OnOpenCalc(object? sender, RoutedEventArgs e)
+    {
+        var win = new CalcBrowserWindow();
+        win.Show(this);
     }
 
     // Navigation

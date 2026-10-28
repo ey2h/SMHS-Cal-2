@@ -1,0 +1,268 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW01_V350">
+  <!-- 原程序 V35 MDI 主窗体：菜单树从解密后的 VB6 菜单记录提取（18 顶级 / 147 子项） -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="26" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="SMHS幕墙门窗结构计算软件V35.0  (已注册)" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <Border DockPanel.Dock="Top" Height="24" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <Menu FontSize="12" Background="Transparent">
+        <MenuItem Header="玻璃幕墙">
+          <MenuItem Header="全隐框" Tag="YK"/>
+          <MenuItem Header="显横隐竖" Tag="XH"/>
+          <MenuItem Header="显竖隐横" Tag="XS"/>
+          <Separator/>
+          <MenuItem Header="明框" Tag="MK"/>
+        </MenuItem>
+        <MenuItem Header="金属板幕墙">
+          <MenuItem Header="铝单板" Tag="LDB"/>
+          <MenuItem Header="穿孔铝板" Tag="cklb"/>
+          <Separator/>
+          <MenuItem Header="铝塑复合板" Tag="LSFHB"/>
+          <MenuItem Header="蜂窝铝板" Tag="FWLB"/>
+          <Separator/>
+          <MenuItem Header="单体搪瓷板" Tag="DTTC"/>
+          <MenuItem Header="复合搪瓷板" Tag="FHTC"/>
+          <Separator/>
+          <MenuItem Header="钢板" Tag="gangban"/>
+          <MenuItem Header="不锈钢板" Tag="BXGB"/>
+          <Separator/>
+          <MenuItem Header="铜板" Tag="tbmq"/>
+          <MenuItem Header="钛合金板" Tag="thjbmq"/>
+          <MenuItem Header="铝镁硅合金板" Tag="lmghj"/>
+        </MenuItem>
+        <MenuItem Header="天然石材幕墙">
+          <MenuItem Header="花岗岩：短槽连接" Tag="tb"/>
+          <MenuItem Header="花岗岩：背栓连接" Tag="BS"/>
+          <MenuItem Header="花岗岩：通槽连接" Tag="tc"/>
+          <MenuItem Header="花岗岩：金属框连接" Tag="JSK"/>
+          <MenuItem Header="花岗岩：钢销连接(住建部禁用工艺，软件暂留但不做更新)" Tag="GX"/>
+          <Separator/>
+          <MenuItem Header="天然砂岩：短槽连接" Tag="sy_dc"/>
+          <MenuItem Header="天然砂岩：背栓连接" Tag="sy_bs"/>
+          <MenuItem Header="天然砂岩：通槽连接" Tag="trsytc"/>
+          <Separator/>
+          <MenuItem Header="天然石灰石：短槽连接" Tag="shs_dc"/>
+          <MenuItem Header="天然石灰石：背栓连接" Tag="shs_bs"/>
+          <MenuItem Header="天然石灰石：通槽连接" Tag="trshstc"/>
+        </MenuItem>
+        <MenuItem Header="人造板材幕墙">
+          <MenuItem Header="瓷板：短挂件连接" Tag="TBCB"/>
+          <MenuItem Header="瓷板：背栓连接" Tag="bscb"/>
+          <MenuItem Header="瓷板：通长挂件连接" Tag="tccb"/>
+          <Separator/>
+          <MenuItem Header="陶板：短挂件连接" Tag="ttb_dc"/>
+          <MenuItem Header="陶板：通长挂件连接" Tag="ttbtc"/>
+          <Separator/>
+          <MenuItem Header="微晶玻璃板：短挂件连接" Tag="wjbl_1"/>
+          <MenuItem Header="微晶玻璃板：背栓连接" Tag="wjbl_2"/>
+          <MenuItem Header="微晶玻璃板：通长挂件连接" Tag="wjbltc"/>
+          <Separator/>
+          <MenuItem Header="纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：背栓连接" Tag="grc_bs"/>
+          <MenuItem Header="纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：通长挂件连接" Tag="grc_dc"/>
+          <MenuItem Header="纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)：穿透支承连接" Tag="grc_ct"/>
+          <Separator/>
+          <MenuItem Header="超高性能混凝土板(UHPC板)：背栓连接" Tag="UHPC1"/>
+          <MenuItem Header="超高性能混凝土板(UHPC板)：通长挂件连接" Tag="uhpc2"/>
+          <MenuItem Header="超高性能混凝土板(UHPC板)：穿透支撑连接" Tag="uhpc3"/>
+          <Separator/>
+          <MenuItem Header="石材蜂窝板：背面预置螺母连接" Tag="scfw"/>
+          <Separator/>
+          <MenuItem Header="木纤维板(千思板)：背栓连接" Tag="qiansiban_bs"/>
+          <MenuItem Header="木纤维板(千思板)：穿透支承连接" Tag="qiansiban_ct"/>
+          <MenuItem Header="木纤维板(千思板)：背面支承连接" Tag="qiansiban_bm"/>
+          <Separator/>
+          <MenuItem Header="金属面夹芯板：平面或浅压型" Tag="jsmjxb1"/>
+          <MenuItem Header="金属面夹芯板：深压型或压型钢板" Tag="jsmjxb2"/>
+        </MenuItem>
+        <MenuItem Header="背栓式点挂幕墙">
+          <MenuItem Header="花岗岩" Tag="dg_hgy_bs"/>
+          <Separator/>
+          <MenuItem Header="瓷板" Tag="dg_cb_bs"/>
+          <Separator/>
+          <MenuItem Header="陶板" Tag="dg_tb_dgj"/>
+          <Separator/>
+          <MenuItem Header="轻质陶瓷板" Tag="dg_qztcb_dgj"/>
+          <Separator/>
+          <MenuItem Header="微晶玻璃" Tag="dg_wjbl_bs"/>
+          <Separator/>
+          <MenuItem Header="石材蜂窝板：背面预置螺母" Tag="dg_scfw"/>
+          <Separator/>
+          <MenuItem Header="纤维水泥板(GRC板、埃特板、硅酸钙板、无机预涂板)" Tag="dg_cb_dgj"/>
+          <Separator/>
+          <MenuItem Header="木纤维板(千思板)" Tag="dg_wjbl_dgj"/>
+        </MenuItem>
+        <MenuItem Header="全玻璃(含吊挂)"/>
+        <MenuItem Header="点式玻璃幕墙">
+          <MenuItem Header="点式肋（无肋）驳接" Tag="FGSJG"/>
+          <Separator/>
+          <MenuItem Header="点式拉索结构(建议有限元建模计算)" Tag="LSJG"/>
+          <Separator/>
+          <MenuItem Header="点式钢管结构" Tag="DSGG"/>
+        </MenuItem>
+        <MenuItem Header="U玻/地板玻璃/水下玻璃">
+          <MenuItem Header="U型玻璃" Tag="U_GLASS"/>
+          <Separator/>
+          <MenuItem Header="地板玻璃" Tag="dbbl"/>
+          <Separator/>
+          <MenuItem Header="水下玻璃" Tag="sxbl"/>
+        </MenuItem>
+        <MenuItem Header="采光顶">
+          <MenuItem Header="单坡采光顶" Tag="DPCGD"/>
+          <MenuItem Header="双坡采光顶" Tag="SPCGD"/>
+          <Separator/>
+          <MenuItem Header="四角锥采光顶" Tag="SJZCGD"/>
+          <MenuItem Header="五角锥采光顶" Tag="WJZCGD"/>
+          <MenuItem Header="六角锥采光顶" Tag="LJZCGD"/>
+          <Separator/>
+          <MenuItem Header="半圆采光顶" Tag="BYCGD"/>
+          <MenuItem Header="1/4圆采光顶" Tag="SFZYYCGD"/>
+          <Separator/>
+          <MenuItem Header="抛物线采光顶" Tag="PWXCGD"/>
+        </MenuItem>
+        <MenuItem Header="门窗"/>
+        <MenuItem Header="雨篷">
+          <MenuItem Header="玻璃雨篷" Tag="ypjs"/>
+          <MenuItem Header="金属板雨篷" Tag="ypjs_jsb"/>
+        </MenuItem>
+        <MenuItem Header="栏杆/吊顶/格栅/百叶">
+          <MenuItem Header="栏杆" Tag="lgjs"/>
+          <Separator/>
+          <MenuItem Header="吊顶" Tag="diaoding"/>
+          <Separator/>
+          <MenuItem Header="格栅" Tag="geshan"/>
+          <Separator/>
+          <MenuItem Header="百叶" Tag="byjs"/>
+        </MenuItem>
+        <MenuItem Header="节能(热工)">
+          <MenuItem Header="公共建筑：玻璃幕墙(门窗)" Tag="GLASSREGONG"/>
+          <MenuItem Header="公共建筑：非透明幕墙" Tag="FTMREGONG"/>
+          <Separator/>
+          <MenuItem Header="居住建筑：玻璃幕墙(门窗)" Tag="GLASSREGONG1"/>
+          <MenuItem Header="居住建筑：非透明幕墙" Tag="FTMREGONG1"/>
+          <Separator/>
+          <MenuItem Header="工业建筑：玻璃幕墙(门窗)" Tag="gyjz1"/>
+          <MenuItem Header="工业建筑：非透明幕墙" Tag="gyjz2"/>
+          <Separator/>
+          <MenuItem Header="外遮阳系数计算" Tag="wzyjs"/>
+          <Separator/>
+          <MenuItem Header="民用建筑节能计算加权计算器" Tag="rgjqjsq"/>
+        </MenuItem>
+        <MenuItem Header="空气声隔声"/>
+        <MenuItem Header="物理性能">
+          <MenuItem Header="幕墙：抗风压性能" Tag="KFYXN"/>
+          <MenuItem Header="幕墙：水密性能" Tag="SMXN"/>
+          <MenuItem Header="幕墙：气密性能" Tag="QMX"/>
+          <MenuItem Header="幕墙：热工(保温与遮阳)性能" Tag="rgxn"/>
+          <MenuItem Header="幕墙：空气声隔声性能" Tag="kqsgsmq"/>
+          <MenuItem Header="幕墙：平面内变形及抗震性能" Tag="pmjkz"/>
+          <MenuItem Header="幕墙：承载力性能" Tag="czl"/>
+          <MenuItem Header="幕墙：耐撞击性能" Tag="nzj"/>
+          <MenuItem Header="幕墙：采光性能" Tag="GXXN"/>
+          <Separator/>
+          <MenuItem Header="门窗：抗风压性能" Tag="w_1"/>
+          <MenuItem Header="门窗：水密性能" Tag="w_2"/>
+          <MenuItem Header="门窗：气密性能" Tag="w_4"/>
+          <MenuItem Header="门窗：热工(保温与隔热)性能" Tag="w_3"/>
+          <MenuItem Header="门窗：空气声隔声性能" Tag="kqsgsmc"/>
+          <MenuItem Header="门窗：采光性能" Tag="w_5"/>
+          <Separator/>
+          <MenuItem Header="玻璃采光顶：物理性能" Tag="cgdwlxn"/>
+          <Separator/>
+        </MenuItem>
+        <MenuItem Header="其他计算">
+          <MenuItem Header="截面计算" Tag="jiemianjisuan"/>
+          <Separator/>
+          <MenuItem Header="埋件单独计算" Tag="mjyhj"/>
+          <MenuItem Header="建筑植筋计算" Tag="zjjs"/>
+          <MenuItem Header="埋件厚度计算" Tag="mjhd"/>
+          <Separator/>
+          <MenuItem Header="焊缝强度计算" Tag="hfjs"/>
+          <Separator/>
+          <MenuItem Header="转角立柱计算" Tag="zjlz"/>
+          <MenuItem Header="其它玻璃计算" Tag="qtbl"/>
+          <MenuItem Header="多点锁及开启扇扇框计算" Tag="ddsjs"/>
+          <MenuItem Header="牛腿计算" Tag="ntjs"/>
+          <Separator/>
+          <MenuItem Header="型材螺纹计算（先在母材上制出螺纹）" Tag="xclw"/>
+          <MenuItem Header="自攻钉及自攻自钻螺钉计算" Tag="zgd"/>
+          <MenuItem Header="钢销/螺栓(扭+剪)计算" Tag="ngx"/>
+          <MenuItem Header="螺栓群计算" Tag="lsqjs"/>
+          <Separator/>
+          <MenuItem Header="排烟面积计算" Tag="kqmj"/>
+          <MenuItem Header="开启扇通风面积" Tag="kqmj1"/>
+          <MenuItem Header="百叶窗通风面积" Tag="kqmj2"/>
+          <Separator/>
+          <MenuItem Header="建筑预计雷击次数计算" Tag="leiji"/>
+          <Separator/>
+          <MenuItem Header="型材米重计算" Tag="mzjs"/>
+          <Separator/>
+          <MenuItem Header="型材热应力计算" Tag="xcwdyl"/>
+          <MenuItem Header="型（板）材热应力伸缩量计算" Tag="rylss"/>
+          <Separator/>
+          <MenuItem Header="常用静力计算" Tag="jljs"/>
+          <Separator/>
+          <MenuItem Header="插值计算器" Tag="czjj"/>
+          <MenuItem Header="方程求解" Tag="FCQJ"/>
+        </MenuItem>
+        <MenuItem Header="型材优化"/>
+        <MenuItem Header="工具及设置">
+          <MenuItem Header="自重参数设置" Tag="zzcs"/>
+          <MenuItem Header="文件引用规范设置" Tag="FILSSETUP"/>
+          <MenuItem Header="计算书A4-&gt;A3幅面转换" Tag="a4_a3"/>
+          <MenuItem Header="计算书合并" Tag="jsshb"/>
+          <Separator/>
+          <MenuItem Header="参数库转换器" Tag="change8t9"/>
+          <MenuItem Header="PDF规范阅读器" Tag="PDFYDQ"/>
+          <Separator/>
+          <MenuItem Header="规范版本是否最新查询" Tag="gfcx"/>
+          <MenuItem Header="常用钢材截面参数查询" Tag="cygc"/>
+          <MenuItem Header="常用材料力学及物理性能查询" Tag="clwlxn"/>
+          <MenuItem Header="螺纹应力截面积查询" Tag="lwylcx"/>
+          <MenuItem Header="风压、风速及风级查询" Tag="fyfsfjcx"/>
+          <MenuItem Header="材料安全系数查询" Tag="aqxs"/>
+          <MenuItem Header="建筑防雷要求查询" Tag="flyq"/>
+          <Separator/>
+          <MenuItem Header="软件密码设置" Tag="passset"/>
+          <Separator/>
+          <MenuItem Header="软件背景配置" Tag="FACE"/>
+          <Separator/>
+          <MenuItem Header="屏幕分辨率调整" Tag="FBL"/>
+          <Separator/>
+          <MenuItem Header="计算器" Tag="JSQ"/>
+          <MenuItem Header="万年历" Tag="wangnianli"/>
+        </MenuItem>
+        <MenuItem Header="帮助">
+          <MenuItem Header="检测软件是否有新版本(需联网)" Tag="xinbanben"/>
+          <MenuItem Header="软件BUG检测及处理方法下载(需联网)" Tag="bug"/>
+          <MenuItem Header="下载软件常见问题处理方法(需联网)" Tag="cjwt"/>
+          <MenuItem Header="下载并自动替换引用规范(需联网)" Tag="xzth"/>
+          <Separator/>
+          <MenuItem Header="替其它授权过的电脑获得注册码" Tag="rep"/>
+          <Separator/>
+          <MenuItem Header="给原程序发邮件(需联网)" Tag="mailto"/>
+          <Separator/>
+          <MenuItem Header="关于V35.0版本的特殊说明" Tag="gnqb"/>
+          <Separator/>
+          <MenuItem Header="视频教程" Tag="spjc"/>
+          <Separator/>
+          <MenuItem Header="保留字说明" Tag="glz"/>
+          <Separator/>
+          <MenuItem Header="版权证书" Tag="VOPYRIGHT"/>
+          <Separator/>
+          <Separator/>
+          <MenuItem Header="关于原程序" Tag="guanyu"/>
+          <MenuItem Header="退出" Tag="EXIT"/>
+        </MenuItem>
+      </Menu>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Height="25" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,1,0,0">
+      <TextBlock Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbTextMuted}"/>
+    </Border>
+    <Border Background="{DynamicResource HbFormBg}">
+      <TextBlock Text="SMHS幕墙门窗结构计算软件&#10;V35.0" FontSize="40" FontWeight="Bold" Foreground="{DynamicResource HbOnAccent}"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.35"/>
+    </Border>
+  </DockPanel>
+</UserControl>

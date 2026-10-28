@@ -184,7 +184,7 @@ body {
     padding: 0 10px;
 }
 
-/* === 下拉菜单（汇宝风格：白底黑字）=== */
+/* === 下拉菜单（原程序风格：白底黑字）=== */
 .menu-dropdown {
     position: relative;
     display: flex;
@@ -310,7 +310,7 @@ body {
     color: var(--primary);
 }
 
-/* ===== 汇宝 5列参数区 ===== */
+/* ===== 原程序 5列参数区 ===== */
 .param-row {
     display: flex;
     align-items: center;
@@ -1363,7 +1363,7 @@ select.input-field { cursor: pointer; appearance: auto; }
     .param-cols { grid-template-columns: 1fr; }
 }
 
-/* ===== 汇宝Step1专用样式 ===== */
+/* ===== 原程序Step1专用样式 ===== */
 .hb-title-bar {
     background: var(--primary);
     color: var(--text-on-dark);

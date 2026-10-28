@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW06_V350"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 关于  SMHS幕墙门窗结构计算软件 V35.0 | client 792x437 | 8 nodes (0 labels) |  declutter:drop=0 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="关于  SMHS幕墙门窗结构计算软件 V35.0" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="792" Height="437" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+      <!-- 互斥参数面板（源程序按选项切换显示），共 3 套 -->
+      <TabControl Canvas.Left="-4" Canvas.Top="6" Width="800" Height="414">
+        <TabItem Header="Frame2">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="791" Height="414" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="Frame1">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="800" Height="410" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="给SMHS软件发咨询邮件(发送过程若遇杀毒软件拦截，应选信任放行)">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="777" Height="402" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBox Classes="hb" Canvas.Left="8" Canvas.Top="16" Width="761" Height="305" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <Button Classes="hb" Canvas.Left="688" Canvas.Top="336" Width="73" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="发送邮件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="667" Canvas.Top="362" Width="76" Height="31" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="700" Canvas.Top="363" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="688" Canvas.Top="368" Width="73" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

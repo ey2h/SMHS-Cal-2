@@ -1,0 +1,4739 @@
+{
+  "generatedAt": "2026-10-21T17:07:51.440Z",
+  "htmlDir": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html",
+  "rootDir": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0",
+  "htmFileCount": 51,
+  "totalRefs": 276,
+  "uniqueRefs": 103,
+  "byExt": {
+    "jpg": 52,
+    "gif": 37,
+    "png": 12,
+    "wmz": 1,
+    "wmf": 1
+  },
+  "byExtMissing": {
+    "png": 6
+  },
+  "missingCount": 6,
+  "pages": [
+    {
+      "page": "A01.htm",
+      "encoding": "gb18030",
+      "bytes": 25615,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B00.htm",
+      "encoding": "gb18030",
+      "bytes": 33110,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B01.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 257,
+      "refCount": 8,
+      "refs": [
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image003.gif",
+          "norm": "image003.gif",
+          "ext": "gif",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image004.gif",
+          "norm": "image004.gif",
+          "ext": "gif",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image003.gif",
+          "norm": "image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.files/filelist.xml",
+          "raw": "image004.gif",
+          "norm": "image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        }
+      ]
+    },
+    {
+      "page": "B01.htm",
+      "encoding": "gb18030",
+      "bytes": 2776093,
+      "refCount": 48,
+      "refs": [
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image001.jpg",
+          "norm": "B01.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image001.jpg",
+          "norm": "B01.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image002.jpg",
+          "norm": "B01.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image002.jpg",
+          "norm": "B01.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.gif",
+          "norm": "B01.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.gif",
+          "norm": "B01.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.gif",
+          "norm": "B01.files/image004.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.gif",
+          "norm": "B01.files/image004.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.jpg",
+          "norm": "B01.files/image003.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.jpg",
+          "bytes": 53923
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.jpg",
+          "norm": "B01.files/image004.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.jpg",
+          "bytes": 53960
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image005.jpg",
+          "norm": "B01.files/image005.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image005.jpg",
+          "bytes": 49869
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image006.jpg",
+          "norm": "B01.files/image006.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image006.jpg",
+          "bytes": 48850
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image007.jpg",
+          "norm": "B01.files/image007.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image007.jpg",
+          "bytes": 49523
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image008.jpg",
+          "norm": "B01.files/image008.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image008.jpg",
+          "bytes": 57596
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image009.jpg",
+          "norm": "B01.files/image009.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image009.jpg",
+          "bytes": 51487
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image010.jpg",
+          "norm": "B01.files/image010.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image010.jpg",
+          "bytes": 39458
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image011.jpg",
+          "norm": "B01.files/image011.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image011.jpg",
+          "bytes": 44611
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image012.jpg",
+          "norm": "B01.files/image012.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image012.jpg",
+          "bytes": 57136
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image013.jpg",
+          "norm": "B01.files/image013.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image013.jpg",
+          "bytes": 60221
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image014.jpg",
+          "norm": "B01.files/image014.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image014.jpg",
+          "bytes": 50739
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image015.jpg",
+          "norm": "B01.files/image015.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image015.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image015.jpg",
+          "bytes": 59261
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image016.jpg",
+          "norm": "B01.files/image016.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image016.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image016.jpg",
+          "bytes": 38713
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image017.jpg",
+          "norm": "B01.files/image017.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image017.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image017.jpg",
+          "bytes": 41329
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image018.jpg",
+          "norm": "B01.files/image018.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image018.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image018.jpg",
+          "bytes": 14874
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image001.jpg",
+          "norm": "B01.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image001.jpg",
+          "norm": "B01.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image002.jpg",
+          "norm": "B01.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image002.jpg",
+          "norm": "B01.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image002.jpg",
+          "bytes": 56598
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.gif",
+          "norm": "B01.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.gif",
+          "norm": "B01.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.gif",
+          "bytes": 4430
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.gif",
+          "norm": "B01.files/image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.gif",
+          "norm": "B01.files/image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.gif",
+          "bytes": 3340
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image003.jpg",
+          "norm": "B01.files/image003.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image003.jpg",
+          "bytes": 53923
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image004.jpg",
+          "norm": "B01.files/image004.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image004.jpg",
+          "bytes": 53960
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image005.jpg",
+          "norm": "B01.files/image005.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image005.jpg",
+          "bytes": 49869
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image006.jpg",
+          "norm": "B01.files/image006.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image006.jpg",
+          "bytes": 48850
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image007.jpg",
+          "norm": "B01.files/image007.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image007.jpg",
+          "bytes": 49523
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image008.jpg",
+          "norm": "B01.files/image008.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image008.jpg",
+          "bytes": 57596
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image009.jpg",
+          "norm": "B01.files/image009.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image009.jpg",
+          "bytes": 51487
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image010.jpg",
+          "norm": "B01.files/image010.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image010.jpg",
+          "bytes": 39458
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image011.jpg",
+          "norm": "B01.files/image011.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image011.jpg",
+          "bytes": 44611
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image012.jpg",
+          "norm": "B01.files/image012.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image012.jpg",
+          "bytes": 57136
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image013.jpg",
+          "norm": "B01.files/image013.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image013.jpg",
+          "bytes": 60221
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image014.jpg",
+          "norm": "B01.files/image014.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image014.jpg",
+          "bytes": 50739
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image015.jpg",
+          "norm": "B01.files/image015.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image015.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image015.jpg",
+          "bytes": 59261
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image016.jpg",
+          "norm": "B01.files/image016.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image016.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image016.jpg",
+          "bytes": 38713
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image017.jpg",
+          "norm": "B01.files/image017.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image017.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image017.jpg",
+          "bytes": 41329
+        },
+        {
+          "page": "B01.htm",
+          "raw": "B01.files/image018.jpg",
+          "norm": "B01.files/image018.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image018.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b01.files\\image018.jpg",
+          "bytes": 14874
+        }
+      ]
+    },
+    {
+      "page": "B02.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 159,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B02.files/header.htm",
+      "encoding": "utf-8(detected)",
+      "bytes": 2007,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B02.htm",
+      "encoding": "gb18030",
+      "bytes": 175973,
+      "refCount": 12,
+      "refs": [
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image002.gif",
+          "norm": "B02.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image002.gif",
+          "bytes": 1445
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image001.gif",
+          "norm": "B02.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image001.gif",
+          "bytes": 1941
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image003.gif",
+          "norm": "B02.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image003.gif",
+          "bytes": 1838
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image004.gif",
+          "norm": "B02.files/image004.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image004.gif",
+          "bytes": 2008
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image005.jpg",
+          "norm": "B02.files/image005.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image005.jpg",
+          "bytes": 28872
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image006.jpg",
+          "norm": "B02.files/image006.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image006.jpg",
+          "bytes": 119566
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image002.gif",
+          "norm": "B02.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image002.gif",
+          "bytes": 1445
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image001.gif",
+          "norm": "B02.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image001.gif",
+          "bytes": 1941
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image003.gif",
+          "norm": "B02.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image003.gif",
+          "bytes": 1838
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image004.gif",
+          "norm": "B02.files/image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image004.gif",
+          "bytes": 2008
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image005.jpg",
+          "norm": "B02.files/image005.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image005.jpg",
+          "bytes": 28872
+        },
+        {
+          "page": "B02.htm",
+          "raw": "B02.files/image006.jpg",
+          "norm": "B02.files/image006.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b02.files\\image006.jpg",
+          "bytes": 119566
+        }
+      ]
+    },
+    {
+      "page": "B03.htm",
+      "encoding": "gb18030",
+      "bytes": 35109,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image001.gif",
+          "norm": "B03.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image001.gif",
+          "bytes": 3644
+        },
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image002.gif",
+          "norm": "B03.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image002.gif",
+          "bytes": 2550
+        },
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image003.gif",
+          "norm": "B03.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image003.gif",
+          "bytes": 2325
+        },
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image001.gif",
+          "norm": "B03.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image001.gif",
+          "bytes": 3644
+        },
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image002.gif",
+          "norm": "B03.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image002.gif",
+          "bytes": 2550
+        },
+        {
+          "page": "B03.htm",
+          "raw": "B03.files/image003.gif",
+          "norm": "B03.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b03.files\\image003.gif",
+          "bytes": 2325
+        }
+      ]
+    },
+    {
+      "page": "B04.htm",
+      "encoding": "gb18030",
+      "bytes": 74818,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B05.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 193,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B05.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B05.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.gif",
+          "bytes": 2516
+        },
+        {
+          "page": "B05.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B05.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.gif",
+          "bytes": 2516
+        }
+      ]
+    },
+    {
+      "page": "B05.htm",
+      "encoding": "gb18030",
+      "bytes": 127144,
+      "refCount": 10,
+      "refs": [
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image001.jpg",
+          "norm": "B05.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.jpg",
+          "bytes": 31275
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image002.jpg",
+          "norm": "B05.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.jpg",
+          "bytes": 18964
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image001.png",
+          "norm": "B05.files/image001.png",
+          "ext": "png",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B05.htm",
+          "raw": "file:///C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\ksohtml\\wps4614.tmp.png",
+          "norm": "file:///C:/Users/ADMINI~1/AppData/Local/Temp/ksohtml/wps4614.tmp.png",
+          "ext": "png",
+          "via": "attr:href",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:file:///c:/users/admini~1/appdata/local/temp/ksohtml/wps4614.tmp.png",
+          "bytes": null
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image002.gif",
+          "norm": "B05.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.gif",
+          "bytes": 2516
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image001.jpg",
+          "norm": "B05.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.jpg",
+          "bytes": 31275
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image002.jpg",
+          "norm": "B05.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.jpg",
+          "bytes": 18964
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image001.png",
+          "norm": "B05.files/image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B05.htm",
+          "raw": "1\\AppData\\Local\\Temp\\ksohtml\\wps4614.tmp.png",
+          "norm": "1/AppData/Local/Temp/ksohtml/wps4614.tmp.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:1/appdata/local/temp/ksohtml/wps4614.tmp.png",
+          "bytes": null
+        },
+        {
+          "page": "B05.htm",
+          "raw": "B05.files/image002.gif",
+          "norm": "B05.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b05.files\\image002.gif",
+          "bytes": 2516
+        }
+      ]
+    },
+    {
+      "page": "B06.htm",
+      "encoding": "gb18030",
+      "bytes": 315862,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B06A.htm",
+      "encoding": "gb18030",
+      "bytes": 242808,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B06B.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 322,
+      "refCount": 12,
+      "refs": [
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image001.png",
+          "bytes": 109345
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image002.jpg",
+          "bytes": 7746
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image003.png",
+          "norm": "image003.png",
+          "ext": "png",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image003.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image003.png",
+          "bytes": 465
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image004.jpg",
+          "norm": "image004.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image004.jpg",
+          "bytes": 437
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image005.png",
+          "norm": "image005.png",
+          "ext": "png",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image005.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image005.png",
+          "bytes": 407
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image006.jpg",
+          "norm": "image006.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image006.jpg",
+          "bytes": 437
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image001.png",
+          "bytes": 109345
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image002.jpg",
+          "bytes": 7746
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image003.png",
+          "norm": "image003.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image003.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image003.png",
+          "bytes": 465
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image004.jpg",
+          "norm": "image004.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image004.jpg",
+          "bytes": 437
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image005.png",
+          "norm": "image005.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image005.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image005.png",
+          "bytes": 407
+        },
+        {
+          "page": "B06B.files/filelist.xml",
+          "raw": "image006.jpg",
+          "norm": "image006.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image006.jpg",
+          "bytes": 437
+        }
+      ]
+    },
+    {
+      "page": "B06B.files/header.htm",
+      "encoding": "utf-8(detected)",
+      "bytes": 2181,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B06B.htm",
+      "encoding": "gb18030",
+      "bytes": 63376,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B06B.htm",
+          "raw": "B06B.files/image001.png",
+          "norm": "B06B.files/image001.png",
+          "ext": "png",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image001.png",
+          "bytes": 109345
+        },
+        {
+          "page": "B06B.htm",
+          "raw": "B06B.files/image001.png",
+          "norm": "B06B.files/image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b06b.files\\image001.png",
+          "bytes": 109345
+        }
+      ]
+    },
+    {
+      "page": "B07.htm",
+      "encoding": "gb18030",
+      "bytes": 281625,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B08.htm",
+      "encoding": "gb18030",
+      "bytes": 45983,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/image001.gif",
+          "norm": "B08.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\image001.gif",
+          "bytes": 3359
+        },
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/B08.ht1.gif",
+          "norm": "B08.files/B08.ht1.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\B08.ht1.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\b08.ht1.gif",
+          "bytes": 10592
+        },
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/image001.jpg",
+          "norm": "B08.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\image001.jpg",
+          "bytes": 14142
+        },
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/image001.gif",
+          "norm": "B08.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\image001.gif",
+          "bytes": 3359
+        },
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/B08.ht1.gif",
+          "norm": "B08.files/B08.ht1.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\B08.ht1.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\b08.ht1.gif",
+          "bytes": 10592
+        },
+        {
+          "page": "B08.htm",
+          "raw": "B08.files/image001.jpg",
+          "norm": "B08.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08.files\\image001.jpg",
+          "bytes": 14142
+        }
+      ]
+    },
+    {
+      "page": "B08A/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 162,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B08A/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B08A/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        }
+      ]
+    },
+    {
+      "page": "B08A.htm",
+      "encoding": "gb18030",
+      "bytes": 115051,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B08A.htm",
+          "raw": "B08A/image001.jpg",
+          "norm": "B08A/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:href",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B08A.htm",
+          "raw": "B08A/image001.jpg",
+          "norm": "B08A/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B08A.htm",
+          "raw": "B08A/image001.jpg",
+          "norm": "B08A/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B08A.htm",
+          "raw": "B08A/image001.jpg",
+          "norm": "B08A/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b08a\\image001.jpg",
+          "bytes": 18143
+        }
+      ]
+    },
+    {
+      "page": "B09.htm",
+      "encoding": "gb18030",
+      "bytes": 47844,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image001.jpg",
+          "norm": "B09.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image001.jpg",
+          "bytes": 31790
+        },
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image002.gif",
+          "norm": "B09.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image002.gif",
+          "bytes": 3415
+        },
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image003.gif",
+          "norm": "B09.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image003.gif",
+          "bytes": 1817
+        },
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image001.jpg",
+          "norm": "B09.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image001.jpg",
+          "bytes": 31790
+        },
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image002.gif",
+          "norm": "B09.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image002.gif",
+          "bytes": 3415
+        },
+        {
+          "page": "B09.htm",
+          "raw": "B09.files/image003.gif",
+          "norm": "B09.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image003.gif",
+          "bytes": 1817
+        }
+      ]
+    },
+    {
+      "page": "B10.htm",
+      "encoding": "gb18030",
+      "bytes": 64941,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B10.htm",
+          "raw": "B10.files/image001.jpg",
+          "norm": "B10.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b10.files\\image001.jpg",
+          "bytes": 8067
+        },
+        {
+          "page": "B10.htm",
+          "raw": "B10.files/image002.gif",
+          "norm": "B10.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b10.files\\image002.gif",
+          "bytes": 1227
+        },
+        {
+          "page": "B10.htm",
+          "raw": "B10.files/image001.jpg",
+          "norm": "B10.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b10.files\\image001.jpg",
+          "bytes": 8067
+        },
+        {
+          "page": "B10.htm",
+          "raw": "B10.files/image002.gif",
+          "norm": "B10.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b10.files\\image002.gif",
+          "bytes": 1227
+        }
+      ]
+    },
+    {
+      "page": "B11.htm",
+      "encoding": "gb18030",
+      "bytes": 28486,
+      "refCount": 10,
+      "refs": [
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image001.gif",
+          "norm": "B11.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image001.gif",
+          "bytes": 873
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image002.gif",
+          "norm": "B11.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image002.gif",
+          "bytes": 817
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image003.gif",
+          "norm": "B11.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image003.gif",
+          "bytes": 882
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image004.gif",
+          "norm": "B11.files/image004.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image004.gif",
+          "bytes": 965
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image005.gif",
+          "norm": "B11.files/image005.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image005.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image005.gif",
+          "bytes": 1220
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image001.gif",
+          "norm": "B11.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image001.gif",
+          "bytes": 873
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image002.gif",
+          "norm": "B11.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image002.gif",
+          "bytes": 817
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image003.gif",
+          "norm": "B11.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image003.gif",
+          "bytes": 882
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image004.gif",
+          "norm": "B11.files/image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image004.gif",
+          "bytes": 965
+        },
+        {
+          "page": "B11.htm",
+          "raw": "B11.files/image005.gif",
+          "norm": "B11.files/image005.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image005.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b11.files\\image005.gif",
+          "bytes": 1220
+        }
+      ]
+    },
+    {
+      "page": "B12.htm",
+      "encoding": "gb18030",
+      "bytes": 60911,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B12.htm",
+          "raw": "B12.files/image001.jpg",
+          "norm": "B12.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b12.files\\image001.jpg",
+          "bytes": 8067
+        },
+        {
+          "page": "B12.htm",
+          "raw": "B12.files/image002.png",
+          "norm": "B12.files/image002.png",
+          "ext": "png",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image002.png",
+          "resolvedKind": "direct",
+          "key": "html\\b12.files\\image002.png",
+          "bytes": 373
+        },
+        {
+          "page": "B12.htm",
+          "raw": "B12.files/image001.jpg",
+          "norm": "B12.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b12.files\\image001.jpg",
+          "bytes": 8067
+        },
+        {
+          "page": "B12.htm",
+          "raw": "B12.files/image002.png",
+          "norm": "B12.files/image002.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image002.png",
+          "resolvedKind": "direct",
+          "key": "html\\b12.files\\image002.png",
+          "bytes": 373
+        }
+      ]
+    },
+    {
+      "page": "B13.htm",
+      "encoding": "gb18030",
+      "bytes": 7704,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B14.htm",
+      "encoding": "gb18030",
+      "bytes": 55812,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B14.htm",
+          "raw": "B14.files/image001.gif",
+          "norm": "B14.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B14.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b14.files\\image001.gif",
+          "bytes": 7670
+        },
+        {
+          "page": "B14.htm",
+          "raw": "B14.files/image001.gif",
+          "norm": "B14.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B14.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b14.files\\image001.gif",
+          "bytes": 7670
+        }
+      ]
+    },
+    {
+      "page": "B15.htm",
+      "encoding": "gb18030",
+      "bytes": 55236,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B15.htm",
+          "raw": "B09.files/image001.jpg",
+          "norm": "B09.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image001.jpg",
+          "bytes": 31790
+        },
+        {
+          "page": "B15.htm",
+          "raw": "B09.files/image001.jpg",
+          "norm": "B09.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b09.files\\image001.jpg",
+          "bytes": 31790
+        }
+      ]
+    },
+    {
+      "page": "B16.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 193,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B16.files/filelist.xml",
+          "raw": "image001.wmz",
+          "norm": "image001.wmz",
+          "ext": "wmz",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image001.wmz",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image001.wmz",
+          "bytes": 6851
+        },
+        {
+          "page": "B16.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image002.gif",
+          "bytes": 9251
+        },
+        {
+          "page": "B16.files/filelist.xml",
+          "raw": "image001.wmz",
+          "norm": "image001.wmz",
+          "ext": "wmz",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image001.wmz",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image001.wmz",
+          "bytes": 6851
+        },
+        {
+          "page": "B16.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image002.gif",
+          "bytes": 9251
+        }
+      ]
+    },
+    {
+      "page": "B16.htm",
+      "encoding": "gb18030",
+      "bytes": 95966,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/v13mc.wmf",
+          "norm": "B16.files/v13mc.wmf",
+          "ext": "wmf",
+          "via": "attr:href",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\v13mc.wmf",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\v13mc.wmf",
+          "bytes": 31104
+        },
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/image001.wmz",
+          "norm": "B16.files/image001.wmz",
+          "ext": "wmz",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image001.wmz",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image001.wmz",
+          "bytes": 6851
+        },
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/image002.gif",
+          "norm": "B16.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image002.gif",
+          "bytes": 9251
+        },
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/v13mc.wmf",
+          "norm": "B16.files/v13mc.wmf",
+          "ext": "wmf",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\v13mc.wmf",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\v13mc.wmf",
+          "bytes": 31104
+        },
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/image001.wmz",
+          "norm": "B16.files/image001.wmz",
+          "ext": "wmz",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image001.wmz",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image001.wmz",
+          "bytes": 6851
+        },
+        {
+          "page": "B16.htm",
+          "raw": "B16.files/image002.gif",
+          "norm": "B16.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b16.files\\image002.gif",
+          "bytes": 9251
+        }
+      ]
+    },
+    {
+      "page": "B17.htm",
+      "encoding": "gb18030",
+      "bytes": 75362,
+      "refCount": 8,
+      "refs": [
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.gif",
+          "norm": "B17.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.gif",
+          "bytes": 3902
+        },
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.jpg",
+          "norm": "B17.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.jpg",
+          "bytes": 14142
+        },
+        {
+          "page": "B17.htm",
+          "raw": "file:///C:\\Program%20Files%20(x86)\\汇宝幕墙门窗结构计算软件V28.0\\html\\B08.files\\image001.jpg",
+          "norm": "Files%20(x86)/汇宝幕墙门窗结构计算软件V28.0/html/B08.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:href",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "by-basename",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.jpg",
+          "norm": "B17.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.jpg",
+          "bytes": 14142
+        },
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.gif",
+          "norm": "B17.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.gif",
+          "bytes": 3902
+        },
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.jpg",
+          "norm": "B17.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.jpg",
+          "bytes": 14142
+        },
+        {
+          "page": "B17.htm",
+          "raw": "V28.0\\html\\B08.files\\image001.jpg",
+          "norm": "V28.0/html/B08.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+          "resolvedKind": "by-basename",
+          "key": "html\\b01.files\\image001.jpg",
+          "bytes": 21915
+        },
+        {
+          "page": "B17.htm",
+          "raw": "B17.files/image001.jpg",
+          "norm": "B17.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b17.files\\image001.jpg",
+          "bytes": 14142
+        }
+      ]
+    },
+    {
+      "page": "B18.htm",
+      "encoding": "gb18030",
+      "bytes": 54491,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B19.htm",
+      "encoding": "gb18030",
+      "bytes": 6495861,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B20.htm",
+      "encoding": "gb18030",
+      "bytes": 9961,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B21.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 577,
+      "refCount": 28,
+      "refs": [
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image001.jpg",
+          "bytes": 34219
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image002.jpg",
+          "bytes": 15638
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image003.jpg",
+          "norm": "image003.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.jpg",
+          "bytes": 48222
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image004.jpg",
+          "norm": "image004.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.jpg",
+          "bytes": 16976
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image005.jpg",
+          "norm": "image005.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.jpg",
+          "bytes": 283571
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image006.jpg",
+          "norm": "image006.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.jpg",
+          "bytes": 90750
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image007.jpg",
+          "norm": "image007.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.jpg",
+          "bytes": 224304
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image008.jpg",
+          "norm": "image008.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.jpg",
+          "bytes": 73401
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image009.jpg",
+          "norm": "image009.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.jpg",
+          "bytes": 261250
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image010.jpg",
+          "norm": "image010.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.jpg",
+          "bytes": 83899
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image011.jpg",
+          "norm": "image011.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.jpg",
+          "bytes": 352405
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image012.jpg",
+          "norm": "image012.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image012.jpg",
+          "bytes": 116520
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image013.jpg",
+          "norm": "image013.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image013.jpg",
+          "bytes": 36324
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image014.jpg",
+          "norm": "image014.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image014.jpg",
+          "bytes": 15218
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image001.jpg",
+          "bytes": 34219
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image002.jpg",
+          "norm": "image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image002.jpg",
+          "bytes": 15638
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image003.jpg",
+          "norm": "image003.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.jpg",
+          "bytes": 48222
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image004.jpg",
+          "norm": "image004.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.jpg",
+          "bytes": 16976
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image005.jpg",
+          "norm": "image005.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.jpg",
+          "bytes": 283571
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image006.jpg",
+          "norm": "image006.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.jpg",
+          "bytes": 90750
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image007.jpg",
+          "norm": "image007.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.jpg",
+          "bytes": 224304
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image008.jpg",
+          "norm": "image008.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.jpg",
+          "bytes": 73401
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image009.jpg",
+          "norm": "image009.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.jpg",
+          "bytes": 261250
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image010.jpg",
+          "norm": "image010.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.jpg",
+          "bytes": 83899
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image011.jpg",
+          "norm": "image011.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.jpg",
+          "bytes": 352405
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image012.jpg",
+          "norm": "image012.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image012.jpg",
+          "bytes": 116520
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image013.jpg",
+          "norm": "image013.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image013.jpg",
+          "bytes": 36324
+        },
+        {
+          "page": "B21.files/filelist.xml",
+          "raw": "image014.jpg",
+          "norm": "image014.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image014.jpg",
+          "bytes": 15218
+        }
+      ]
+    },
+    {
+      "page": "B21.htm",
+      "encoding": "gb18030",
+      "bytes": 49654,
+      "refCount": 48,
+      "refs": [
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image001.jpg",
+          "norm": "B21.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image001.jpg",
+          "bytes": 34219
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image002.jpg",
+          "norm": "B21.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image002.jpg",
+          "bytes": 15638
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image003.jpg",
+          "norm": "B21.files/image003.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.jpg",
+          "bytes": 48222
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image004.jpg",
+          "norm": "B21.files/image004.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.jpg",
+          "bytes": 16976
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/B21.ht1.gif",
+          "norm": "B21.files/B21.ht1.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\B21.ht1.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\b21.ht1.gif",
+          "bytes": 6045
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image003.gif",
+          "norm": "B21.files/image003.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.gif",
+          "bytes": 3081
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image004.gif",
+          "norm": "B21.files/image004.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.gif",
+          "bytes": 10731
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image005.gif",
+          "norm": "B21.files/image005.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.gif",
+          "bytes": 10314
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image006.gif",
+          "norm": "B21.files/image006.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.gif",
+          "bytes": 299
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image007.gif",
+          "norm": "B21.files/image007.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.gif",
+          "bytes": 301
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image008.gif",
+          "norm": "B21.files/image008.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.gif",
+          "bytes": 2460
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image009.gif",
+          "norm": "B21.files/image009.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.gif",
+          "bytes": 10539
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image010.gif",
+          "norm": "B21.files/image010.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.gif",
+          "bytes": 2830
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image011.gif",
+          "norm": "B21.files/image011.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.gif",
+          "bytes": 10608
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image005.jpg",
+          "norm": "B21.files/image005.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.jpg",
+          "bytes": 283571
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image006.jpg",
+          "norm": "B21.files/image006.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.jpg",
+          "bytes": 90750
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image007.jpg",
+          "norm": "B21.files/image007.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.jpg",
+          "bytes": 224304
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image008.jpg",
+          "norm": "B21.files/image008.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.jpg",
+          "bytes": 73401
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image009.jpg",
+          "norm": "B21.files/image009.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.jpg",
+          "bytes": 261250
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image010.jpg",
+          "norm": "B21.files/image010.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.jpg",
+          "bytes": 83899
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image011.jpg",
+          "norm": "B21.files/image011.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.jpg",
+          "bytes": 352405
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image012.jpg",
+          "norm": "B21.files/image012.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image012.jpg",
+          "bytes": 116520
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image013.jpg",
+          "norm": "B21.files/image013.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image013.jpg",
+          "bytes": 36324
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image014.jpg",
+          "norm": "B21.files/image014.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image014.jpg",
+          "bytes": 15218
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image001.jpg",
+          "norm": "B21.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image001.jpg",
+          "bytes": 34219
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image002.jpg",
+          "norm": "B21.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image002.jpg",
+          "bytes": 15638
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image003.jpg",
+          "norm": "B21.files/image003.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.jpg",
+          "bytes": 48222
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image004.jpg",
+          "norm": "B21.files/image004.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.jpg",
+          "bytes": 16976
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/B21.ht1.gif",
+          "norm": "B21.files/B21.ht1.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\B21.ht1.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\b21.ht1.gif",
+          "bytes": 6045
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image003.gif",
+          "norm": "B21.files/image003.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image003.gif",
+          "bytes": 3081
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image004.gif",
+          "norm": "B21.files/image004.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image004.gif",
+          "bytes": 10731
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image005.gif",
+          "norm": "B21.files/image005.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.gif",
+          "bytes": 10314
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image006.gif",
+          "norm": "B21.files/image006.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.gif",
+          "bytes": 299
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image007.gif",
+          "norm": "B21.files/image007.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.gif",
+          "bytes": 301
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image008.gif",
+          "norm": "B21.files/image008.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.gif",
+          "bytes": 2460
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image009.gif",
+          "norm": "B21.files/image009.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.gif",
+          "bytes": 10539
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image010.gif",
+          "norm": "B21.files/image010.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.gif",
+          "bytes": 2830
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image011.gif",
+          "norm": "B21.files/image011.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.gif",
+          "bytes": 10608
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image005.jpg",
+          "norm": "B21.files/image005.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image005.jpg",
+          "bytes": 283571
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image006.jpg",
+          "norm": "B21.files/image006.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image006.jpg",
+          "bytes": 90750
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image007.jpg",
+          "norm": "B21.files/image007.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image007.jpg",
+          "bytes": 224304
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image008.jpg",
+          "norm": "B21.files/image008.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image008.jpg",
+          "bytes": 73401
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image009.jpg",
+          "norm": "B21.files/image009.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image009.jpg",
+          "bytes": 261250
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image010.jpg",
+          "norm": "B21.files/image010.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image010.jpg",
+          "bytes": 83899
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image011.jpg",
+          "norm": "B21.files/image011.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image011.jpg",
+          "bytes": 352405
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image012.jpg",
+          "norm": "B21.files/image012.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image012.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image012.jpg",
+          "bytes": 116520
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image013.jpg",
+          "norm": "B21.files/image013.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image013.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image013.jpg",
+          "bytes": 36324
+        },
+        {
+          "page": "B21.htm",
+          "raw": "B21.files/image014.jpg",
+          "norm": "B21.files/image014.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image014.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b21.files\\image014.jpg",
+          "bytes": 15218
+        }
+      ]
+    },
+    {
+      "page": "B22.htm",
+      "encoding": "gb18030",
+      "bytes": 41943,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B22.htm",
+          "raw": "B22.files/image001.gif",
+          "norm": "B22.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b22.files\\image001.gif",
+          "bytes": 3902
+        },
+        {
+          "page": "B22.htm",
+          "raw": "B22.files/image001.jpg",
+          "norm": "B22.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22.files\\image001.jpg",
+          "bytes": 14142
+        },
+        {
+          "page": "B22.htm",
+          "raw": "B22.files/image001.gif",
+          "norm": "B22.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b22.files\\image001.gif",
+          "bytes": 3902
+        },
+        {
+          "page": "B22.htm",
+          "raw": "B22.files/image001.jpg",
+          "norm": "B22.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22.files\\image001.jpg",
+          "bytes": 14142
+        }
+      ]
+    },
+    {
+      "page": "B22A.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 162,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B22A.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.files/filelist.xml",
+          "raw": "image001.jpg",
+          "norm": "image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        }
+      ]
+    },
+    {
+      "page": "B22A.htm",
+      "encoding": "gb18030",
+      "bytes": 116541,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:href",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        },
+        {
+          "page": "B22A.htm",
+          "raw": "B22A.files/image001.jpg",
+          "norm": "B22A.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b22a.files\\image001.jpg",
+          "bytes": 18143
+        }
+      ]
+    },
+    {
+      "page": "B23.htm",
+      "encoding": "gb18030",
+      "bytes": 7445,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B24.htm",
+      "encoding": "gb18030",
+      "bytes": 8649,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B25.htm",
+      "encoding": "gb18030",
+      "bytes": 7782,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B26.htm",
+      "encoding": "gb18030",
+      "bytes": 8276,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B27.htm",
+      "encoding": "gb18030",
+      "bytes": 691765,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B28.htm",
+      "encoding": "gb18030",
+      "bytes": 1325259,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B29.htm",
+      "encoding": "gb18030",
+      "bytes": 58536,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B30.files/filelist.xml",
+      "encoding": "utf-8(detected)",
+      "bytes": 193,
+      "refCount": 4,
+      "refs": [
+        {
+          "page": "B30.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "attr:HRef",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.gif",
+          "bytes": 2516
+        },
+        {
+          "page": "B30.files/filelist.xml",
+          "raw": "image001.png",
+          "norm": "image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.files/filelist.xml",
+          "raw": "image002.gif",
+          "norm": "image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.gif",
+          "bytes": 2516
+        }
+      ]
+    },
+    {
+      "page": "B30.htm",
+      "encoding": "gb18030",
+      "bytes": 165824,
+      "refCount": 16,
+      "refs": [
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.gif",
+          "norm": "B30.files/image001.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.gif",
+          "bytes": 2394
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image002.jpg",
+          "norm": "B30.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.jpg",
+          "bytes": 35388
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image003.jpg",
+          "norm": "B30.files/image003.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image003.jpg",
+          "bytes": 37746
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image004.jpg",
+          "norm": "B30.files/image004.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image004.jpg",
+          "bytes": 20210
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.png",
+          "norm": "B30.files/image001.png",
+          "ext": "png",
+          "via": "attr:href",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.png",
+          "norm": "B30.files/image001.png",
+          "ext": "png",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.htm",
+          "raw": "file:///C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\ksohtml\\wpsA16E.tmp.png",
+          "norm": "file:///C:/Users/ADMINI~1/AppData/Local/Temp/ksohtml/wpsA16E.tmp.png",
+          "ext": "png",
+          "via": "attr:href",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:file:///c:/users/admini~1/appdata/local/temp/ksohtml/wpsa16e.tmp.png",
+          "bytes": null
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image002.gif",
+          "norm": "B30.files/image002.gif",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.gif",
+          "bytes": 2516
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.gif",
+          "norm": "B30.files/image001.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.gif",
+          "bytes": 2394
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image002.jpg",
+          "norm": "B30.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.jpg",
+          "bytes": 35388
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image003.jpg",
+          "norm": "B30.files/image003.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image003.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image003.jpg",
+          "bytes": 37746
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image004.jpg",
+          "norm": "B30.files/image004.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image004.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image004.jpg",
+          "bytes": 20210
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.png",
+          "norm": "B30.files/image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image001.png",
+          "norm": "B30.files/image001.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image001.png",
+          "bytes": 415289
+        },
+        {
+          "page": "B30.htm",
+          "raw": "1\\AppData\\Local\\Temp\\ksohtml\\wpsA16E.tmp.png",
+          "norm": "1/AppData/Local/Temp/ksohtml/wpsA16E.tmp.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:1/appdata/local/temp/ksohtml/wpsa16e.tmp.png",
+          "bytes": null
+        },
+        {
+          "page": "B30.htm",
+          "raw": "B30.files/image002.gif",
+          "norm": "B30.files/image002.gif",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.gif",
+          "resolvedKind": "direct",
+          "key": "html\\b30.files\\image002.gif",
+          "bytes": 2516
+        }
+      ]
+    },
+    {
+      "page": "B31.htm",
+      "encoding": "gb18030",
+      "bytes": 6696,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B32.htm",
+      "encoding": "gb18030",
+      "bytes": 32033,
+      "refCount": 0,
+      "refs": []
+    },
+    {
+      "page": "B33.htm",
+      "encoding": "utf-8(detected)",
+      "bytes": 15201,
+      "refCount": 2,
+      "refs": [
+        {
+          "page": "B33.htm",
+          "raw": "B33.files/1.GIF",
+          "norm": "B33.files/1.GIF",
+          "ext": "gif",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B33.files\\1.GIF",
+          "resolvedKind": "direct",
+          "key": "html\\b33.files\\1.gif",
+          "bytes": 3318
+        },
+        {
+          "page": "B33.htm",
+          "raw": "B33.files/1.GIF",
+          "norm": "B33.files/1.GIF",
+          "ext": "gif",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B33.files\\1.GIF",
+          "resolvedKind": "direct",
+          "key": "html\\b33.files\\1.gif",
+          "bytes": 3318
+        }
+      ]
+    },
+    {
+      "page": "B34.htm",
+      "encoding": "gb18030",
+      "bytes": 45083,
+      "refCount": 6,
+      "refs": [
+        {
+          "page": "B34.htm",
+          "raw": "B34.files/image001.jpg",
+          "norm": "B34.files/image001.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b34.files\\image001.jpg",
+          "bytes": 4356
+        },
+        {
+          "page": "B34.htm",
+          "raw": "B34.files/image002.jpg",
+          "norm": "B34.files/image002.jpg",
+          "ext": "jpg",
+          "via": "attr:src",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b34.files\\image002.jpg",
+          "bytes": 2342
+        },
+        {
+          "page": "B34.htm",
+          "raw": "image1.png",
+          "norm": "image1.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:image1.png",
+          "bytes": null
+        },
+        {
+          "page": "B34.htm",
+          "raw": "B34.files/image001.jpg",
+          "norm": "B34.files/image001.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image001.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b34.files\\image001.jpg",
+          "bytes": 4356
+        },
+        {
+          "page": "B34.htm",
+          "raw": "image2.png",
+          "norm": "image2.png",
+          "ext": "png",
+          "via": "bare-token",
+          "resolved": null,
+          "resolvedKind": null,
+          "key": "MISSING:image2.png",
+          "bytes": null
+        },
+        {
+          "page": "B34.htm",
+          "raw": "B34.files/image002.jpg",
+          "norm": "B34.files/image002.jpg",
+          "ext": "jpg",
+          "via": "bare-token",
+          "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image002.jpg",
+          "resolvedKind": "direct",
+          "key": "html\\b34.files\\image002.jpg",
+          "bytes": 2342
+        }
+      ]
+    }
+  ],
+  "unique": [
+    {
+      "key": "html\\b01.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image001.jpg",
+      "bytes": 21915,
+      "normForms": [
+        "image001.jpg",
+        "B01.files/image001.jpg",
+        "Files%20(x86)/汇宝幕墙门窗结构计算软件V28.0/html/B08.files/image001.jpg",
+        "V28.0/html/B08.files/image001.jpg"
+      ],
+      "pages": [
+        "B01.files/filelist.xml",
+        "B01.htm",
+        "B17.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image002.jpg",
+      "bytes": 56598,
+      "normForms": [
+        "image002.jpg",
+        "B01.files/image002.jpg"
+      ],
+      "pages": [
+        "B01.files/filelist.xml",
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.gif",
+      "bytes": 4430,
+      "normForms": [
+        "image003.gif",
+        "B01.files/image003.gif"
+      ],
+      "pages": [
+        "B01.files/filelist.xml",
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image003.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image003.jpg",
+      "bytes": 53923,
+      "normForms": [
+        "B01.files/image003.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image004.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.gif",
+      "bytes": 3340,
+      "normForms": [
+        "image004.gif",
+        "B01.files/image004.gif"
+      ],
+      "pages": [
+        "B01.files/filelist.xml",
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image004.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image004.jpg",
+      "bytes": 53960,
+      "normForms": [
+        "B01.files/image004.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image005.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image005.jpg",
+      "bytes": 49869,
+      "normForms": [
+        "B01.files/image005.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image006.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image006.jpg",
+      "bytes": 48850,
+      "normForms": [
+        "B01.files/image006.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image007.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image007.jpg",
+      "bytes": 49523,
+      "normForms": [
+        "B01.files/image007.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image008.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image008.jpg",
+      "bytes": 57596,
+      "normForms": [
+        "B01.files/image008.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image009.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image009.jpg",
+      "bytes": 51487,
+      "normForms": [
+        "B01.files/image009.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image010.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image010.jpg",
+      "bytes": 39458,
+      "normForms": [
+        "B01.files/image010.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image011.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image011.jpg",
+      "bytes": 44611,
+      "normForms": [
+        "B01.files/image011.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image012.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image012.jpg",
+      "bytes": 57136,
+      "normForms": [
+        "B01.files/image012.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image013.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image013.jpg",
+      "bytes": 60221,
+      "normForms": [
+        "B01.files/image013.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image014.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image014.jpg",
+      "bytes": 50739,
+      "normForms": [
+        "B01.files/image014.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image015.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image015.jpg",
+      "bytes": 59261,
+      "normForms": [
+        "B01.files/image015.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image016.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image016.jpg",
+      "bytes": 38713,
+      "normForms": [
+        "B01.files/image016.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image017.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image017.jpg",
+      "bytes": 41329,
+      "normForms": [
+        "B01.files/image017.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b01.files\\image018.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B01.files\\image018.jpg",
+      "bytes": 14874,
+      "normForms": [
+        "B01.files/image018.jpg"
+      ],
+      "pages": [
+        "B01.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image001.gif",
+      "bytes": 1941,
+      "normForms": [
+        "B02.files/image001.gif"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image002.gif",
+      "bytes": 1445,
+      "normForms": [
+        "B02.files/image002.gif"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image003.gif",
+      "bytes": 1838,
+      "normForms": [
+        "B02.files/image003.gif"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image004.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image004.gif",
+      "bytes": 2008,
+      "normForms": [
+        "B02.files/image004.gif"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image005.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image005.jpg",
+      "bytes": 28872,
+      "normForms": [
+        "B02.files/image005.jpg"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b02.files\\image006.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B02.files\\image006.jpg",
+      "bytes": 119566,
+      "normForms": [
+        "B02.files/image006.jpg"
+      ],
+      "pages": [
+        "B02.htm"
+      ]
+    },
+    {
+      "key": "html\\b03.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image001.gif",
+      "bytes": 3644,
+      "normForms": [
+        "B03.files/image001.gif"
+      ],
+      "pages": [
+        "B03.htm"
+      ]
+    },
+    {
+      "key": "html\\b03.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image002.gif",
+      "bytes": 2550,
+      "normForms": [
+        "B03.files/image002.gif"
+      ],
+      "pages": [
+        "B03.htm"
+      ]
+    },
+    {
+      "key": "html\\b03.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B03.files\\image003.gif",
+      "bytes": 2325,
+      "normForms": [
+        "B03.files/image003.gif"
+      ],
+      "pages": [
+        "B03.htm"
+      ]
+    },
+    {
+      "key": "html\\b05.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.jpg",
+      "bytes": 31275,
+      "normForms": [
+        "B05.files/image001.jpg"
+      ],
+      "pages": [
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "html\\b05.files\\image001.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image001.png",
+      "bytes": 415289,
+      "normForms": [
+        "image001.png",
+        "B05.files/image001.png"
+      ],
+      "pages": [
+        "B05.files/filelist.xml",
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "html\\b05.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.gif",
+      "bytes": 2516,
+      "normForms": [
+        "image002.gif",
+        "B05.files/image002.gif"
+      ],
+      "pages": [
+        "B05.files/filelist.xml",
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "html\\b05.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B05.files\\image002.jpg",
+      "bytes": 18964,
+      "normForms": [
+        "B05.files/image002.jpg"
+      ],
+      "pages": [
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image001.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image001.png",
+      "bytes": 109345,
+      "normForms": [
+        "image001.png",
+        "B06B.files/image001.png"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml",
+        "B06B.htm"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image002.jpg",
+      "bytes": 7746,
+      "normForms": [
+        "image002.jpg"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image003.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image003.png",
+      "bytes": 465,
+      "normForms": [
+        "image003.png"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image004.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image004.jpg",
+      "bytes": 437,
+      "normForms": [
+        "image004.jpg"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image005.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image005.png",
+      "bytes": 407,
+      "normForms": [
+        "image005.png"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b06b.files\\image006.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B06B.files\\image006.jpg",
+      "bytes": 437,
+      "normForms": [
+        "image006.jpg"
+      ],
+      "pages": [
+        "B06B.files/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b08.files\\b08.ht1.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\B08.ht1.gif",
+      "bytes": 10592,
+      "normForms": [
+        "B08.files/B08.ht1.gif"
+      ],
+      "pages": [
+        "B08.htm"
+      ]
+    },
+    {
+      "key": "html\\b08.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.gif",
+      "bytes": 3359,
+      "normForms": [
+        "B08.files/image001.gif"
+      ],
+      "pages": [
+        "B08.htm"
+      ]
+    },
+    {
+      "key": "html\\b08.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08.files\\image001.jpg",
+      "bytes": 14142,
+      "normForms": [
+        "B08.files/image001.jpg"
+      ],
+      "pages": [
+        "B08.htm"
+      ]
+    },
+    {
+      "key": "html\\b08a\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B08A\\image001.jpg",
+      "bytes": 18143,
+      "normForms": [
+        "image001.jpg",
+        "B08A/image001.jpg"
+      ],
+      "pages": [
+        "B08A.htm",
+        "B08A/filelist.xml"
+      ]
+    },
+    {
+      "key": "html\\b09.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image001.jpg",
+      "bytes": 31790,
+      "normForms": [
+        "B09.files/image001.jpg"
+      ],
+      "pages": [
+        "B09.htm",
+        "B15.htm"
+      ]
+    },
+    {
+      "key": "html\\b09.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image002.gif",
+      "bytes": 3415,
+      "normForms": [
+        "B09.files/image002.gif"
+      ],
+      "pages": [
+        "B09.htm"
+      ]
+    },
+    {
+      "key": "html\\b09.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B09.files\\image003.gif",
+      "bytes": 1817,
+      "normForms": [
+        "B09.files/image003.gif"
+      ],
+      "pages": [
+        "B09.htm"
+      ]
+    },
+    {
+      "key": "html\\b10.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image001.jpg",
+      "bytes": 8067,
+      "normForms": [
+        "B10.files/image001.jpg"
+      ],
+      "pages": [
+        "B10.htm"
+      ]
+    },
+    {
+      "key": "html\\b10.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B10.files\\image002.gif",
+      "bytes": 1227,
+      "normForms": [
+        "B10.files/image002.gif"
+      ],
+      "pages": [
+        "B10.htm"
+      ]
+    },
+    {
+      "key": "html\\b11.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image001.gif",
+      "bytes": 873,
+      "normForms": [
+        "B11.files/image001.gif"
+      ],
+      "pages": [
+        "B11.htm"
+      ]
+    },
+    {
+      "key": "html\\b11.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image002.gif",
+      "bytes": 817,
+      "normForms": [
+        "B11.files/image002.gif"
+      ],
+      "pages": [
+        "B11.htm"
+      ]
+    },
+    {
+      "key": "html\\b11.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image003.gif",
+      "bytes": 882,
+      "normForms": [
+        "B11.files/image003.gif"
+      ],
+      "pages": [
+        "B11.htm"
+      ]
+    },
+    {
+      "key": "html\\b11.files\\image004.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image004.gif",
+      "bytes": 965,
+      "normForms": [
+        "B11.files/image004.gif"
+      ],
+      "pages": [
+        "B11.htm"
+      ]
+    },
+    {
+      "key": "html\\b11.files\\image005.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B11.files\\image005.gif",
+      "bytes": 1220,
+      "normForms": [
+        "B11.files/image005.gif"
+      ],
+      "pages": [
+        "B11.htm"
+      ]
+    },
+    {
+      "key": "html\\b12.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image001.jpg",
+      "bytes": 8067,
+      "normForms": [
+        "B12.files/image001.jpg"
+      ],
+      "pages": [
+        "B12.htm"
+      ]
+    },
+    {
+      "key": "html\\b12.files\\image002.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B12.files\\image002.png",
+      "bytes": 373,
+      "normForms": [
+        "B12.files/image002.png"
+      ],
+      "pages": [
+        "B12.htm"
+      ]
+    },
+    {
+      "key": "html\\b14.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B14.files\\image001.gif",
+      "bytes": 7670,
+      "normForms": [
+        "B14.files/image001.gif"
+      ],
+      "pages": [
+        "B14.htm"
+      ]
+    },
+    {
+      "key": "html\\b16.files\\image001.wmz",
+      "ext": "wmz",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image001.wmz",
+      "bytes": 6851,
+      "normForms": [
+        "image001.wmz",
+        "B16.files/image001.wmz"
+      ],
+      "pages": [
+        "B16.files/filelist.xml",
+        "B16.htm"
+      ]
+    },
+    {
+      "key": "html\\b16.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\image002.gif",
+      "bytes": 9251,
+      "normForms": [
+        "image002.gif",
+        "B16.files/image002.gif"
+      ],
+      "pages": [
+        "B16.files/filelist.xml",
+        "B16.htm"
+      ]
+    },
+    {
+      "key": "html\\b16.files\\v13mc.wmf",
+      "ext": "wmf",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B16.files\\v13mc.wmf",
+      "bytes": 31104,
+      "normForms": [
+        "B16.files/v13mc.wmf"
+      ],
+      "pages": [
+        "B16.htm"
+      ]
+    },
+    {
+      "key": "html\\b17.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.gif",
+      "bytes": 3902,
+      "normForms": [
+        "B17.files/image001.gif"
+      ],
+      "pages": [
+        "B17.htm"
+      ]
+    },
+    {
+      "key": "html\\b17.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B17.files\\image001.jpg",
+      "bytes": 14142,
+      "normForms": [
+        "B17.files/image001.jpg"
+      ],
+      "pages": [
+        "B17.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\b21.ht1.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\B21.ht1.gif",
+      "bytes": 6045,
+      "normForms": [
+        "B21.files/B21.ht1.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image001.jpg",
+      "bytes": 34219,
+      "normForms": [
+        "image001.jpg",
+        "B21.files/image001.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image002.jpg",
+      "bytes": 15638,
+      "normForms": [
+        "image002.jpg",
+        "B21.files/image002.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image003.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.gif",
+      "bytes": 3081,
+      "normForms": [
+        "B21.files/image003.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image003.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image003.jpg",
+      "bytes": 48222,
+      "normForms": [
+        "image003.jpg",
+        "B21.files/image003.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image004.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.gif",
+      "bytes": 10731,
+      "normForms": [
+        "B21.files/image004.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image004.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image004.jpg",
+      "bytes": 16976,
+      "normForms": [
+        "image004.jpg",
+        "B21.files/image004.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image005.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.gif",
+      "bytes": 10314,
+      "normForms": [
+        "B21.files/image005.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image005.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image005.jpg",
+      "bytes": 283571,
+      "normForms": [
+        "image005.jpg",
+        "B21.files/image005.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image006.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.gif",
+      "bytes": 299,
+      "normForms": [
+        "B21.files/image006.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image006.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image006.jpg",
+      "bytes": 90750,
+      "normForms": [
+        "image006.jpg",
+        "B21.files/image006.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image007.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.gif",
+      "bytes": 301,
+      "normForms": [
+        "B21.files/image007.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image007.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image007.jpg",
+      "bytes": 224304,
+      "normForms": [
+        "image007.jpg",
+        "B21.files/image007.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image008.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.gif",
+      "bytes": 2460,
+      "normForms": [
+        "B21.files/image008.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image008.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image008.jpg",
+      "bytes": 73401,
+      "normForms": [
+        "image008.jpg",
+        "B21.files/image008.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image009.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.gif",
+      "bytes": 10539,
+      "normForms": [
+        "B21.files/image009.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image009.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image009.jpg",
+      "bytes": 261250,
+      "normForms": [
+        "image009.jpg",
+        "B21.files/image009.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image010.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.gif",
+      "bytes": 2830,
+      "normForms": [
+        "B21.files/image010.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image010.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image010.jpg",
+      "bytes": 83899,
+      "normForms": [
+        "image010.jpg",
+        "B21.files/image010.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image011.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.gif",
+      "bytes": 10608,
+      "normForms": [
+        "B21.files/image011.gif"
+      ],
+      "pages": [
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image011.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image011.jpg",
+      "bytes": 352405,
+      "normForms": [
+        "image011.jpg",
+        "B21.files/image011.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image012.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image012.jpg",
+      "bytes": 116520,
+      "normForms": [
+        "image012.jpg",
+        "B21.files/image012.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image013.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image013.jpg",
+      "bytes": 36324,
+      "normForms": [
+        "image013.jpg",
+        "B21.files/image013.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b21.files\\image014.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B21.files\\image014.jpg",
+      "bytes": 15218,
+      "normForms": [
+        "image014.jpg",
+        "B21.files/image014.jpg"
+      ],
+      "pages": [
+        "B21.files/filelist.xml",
+        "B21.htm"
+      ]
+    },
+    {
+      "key": "html\\b22.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.gif",
+      "bytes": 3902,
+      "normForms": [
+        "B22.files/image001.gif"
+      ],
+      "pages": [
+        "B22.htm"
+      ]
+    },
+    {
+      "key": "html\\b22.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22.files\\image001.jpg",
+      "bytes": 14142,
+      "normForms": [
+        "B22.files/image001.jpg"
+      ],
+      "pages": [
+        "B22.htm"
+      ]
+    },
+    {
+      "key": "html\\b22a.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B22A.files\\image001.jpg",
+      "bytes": 18143,
+      "normForms": [
+        "image001.jpg",
+        "B22A.files/image001.jpg"
+      ],
+      "pages": [
+        "B22A.files/filelist.xml",
+        "B22A.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image001.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.gif",
+      "bytes": 2394,
+      "normForms": [
+        "B30.files/image001.gif"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image001.png",
+      "ext": "png",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image001.png",
+      "bytes": 415289,
+      "normForms": [
+        "image001.png",
+        "B30.files/image001.png"
+      ],
+      "pages": [
+        "B30.files/filelist.xml",
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image002.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.gif",
+      "bytes": 2516,
+      "normForms": [
+        "image002.gif",
+        "B30.files/image002.gif"
+      ],
+      "pages": [
+        "B30.files/filelist.xml",
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image002.jpg",
+      "bytes": 35388,
+      "normForms": [
+        "B30.files/image002.jpg"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image003.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image003.jpg",
+      "bytes": 37746,
+      "normForms": [
+        "B30.files/image003.jpg"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b30.files\\image004.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B30.files\\image004.jpg",
+      "bytes": 20210,
+      "normForms": [
+        "B30.files/image004.jpg"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "html\\b33.files\\1.gif",
+      "ext": "gif",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B33.files\\1.GIF",
+      "bytes": 3318,
+      "normForms": [
+        "B33.files/1.GIF"
+      ],
+      "pages": [
+        "B33.htm"
+      ]
+    },
+    {
+      "key": "html\\b34.files\\image001.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image001.jpg",
+      "bytes": 4356,
+      "normForms": [
+        "B34.files/image001.jpg"
+      ],
+      "pages": [
+        "B34.htm"
+      ]
+    },
+    {
+      "key": "html\\b34.files\\image002.jpg",
+      "ext": "jpg",
+      "resolved": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\html\\B34.files\\image002.jpg",
+      "bytes": 2342,
+      "normForms": [
+        "B34.files/image002.jpg"
+      ],
+      "pages": [
+        "B34.htm"
+      ]
+    },
+    {
+      "key": "MISSING:1/appdata/local/temp/ksohtml/wps4614.tmp.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "1/AppData/Local/Temp/ksohtml/wps4614.tmp.png"
+      ],
+      "pages": [
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "MISSING:1/appdata/local/temp/ksohtml/wpsa16e.tmp.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "1/AppData/Local/Temp/ksohtml/wpsA16E.tmp.png"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "MISSING:file:///c:/users/admini~1/appdata/local/temp/ksohtml/wps4614.tmp.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "file:///C:/Users/ADMINI~1/AppData/Local/Temp/ksohtml/wps4614.tmp.png"
+      ],
+      "pages": [
+        "B05.htm"
+      ]
+    },
+    {
+      "key": "MISSING:file:///c:/users/admini~1/appdata/local/temp/ksohtml/wpsa16e.tmp.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "file:///C:/Users/ADMINI~1/AppData/Local/Temp/ksohtml/wpsA16E.tmp.png"
+      ],
+      "pages": [
+        "B30.htm"
+      ]
+    },
+    {
+      "key": "MISSING:image1.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "image1.png"
+      ],
+      "pages": [
+        "B34.htm"
+      ]
+    },
+    {
+      "key": "MISSING:image2.png",
+      "ext": "png",
+      "resolved": null,
+      "bytes": null,
+      "normForms": [
+        "image2.png"
+      ],
+      "pages": [
+        "B34.htm"
+      ]
+    }
+  ]
+}

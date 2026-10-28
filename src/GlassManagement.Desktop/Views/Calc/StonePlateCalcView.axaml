@@ -1,0 +1,260 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.StonePlateCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    石材线「板块计算」MVVM 视图（V31 客户区 936×448）。
+    坐标源：local-data/recon/v31runs/chain_stone_slot.txt 第 4 屏
+            + shot_stone_slot_4.png（936×448 客户端截图，标签文案逐字核对）
+      短槽托板连接 Frame (5,26) 313x413
+        ├ 石板参数 Frame (12,42) 300x99
+        │    石板厚度(83,59)=25 长边(83,86)=900 短边(83,113)=800
+        │    石板抗弯强度(240,59)=3.72 石板抗剪强度(240,86)=1.86
+        ├ 连接方式 Frame (28,159) 113x57  ─ 两侧连接(52,175) / 四边连接(52,193)
+        ├ 两侧连接时托板位置 Frame (165,159) 129x57 ─ 长边(197,177) / 短边(197,195)
+        └ 托板参数 Frame (12,143) 300x287
+             短槽中心到板块边距(181,219)=150  短槽中心到板块短边距(181,242)=150(灰)
+             一个连接边上的托板数(181,265)=2(灰)  短槽槽口宽度(181,288)=6
+             单个槽底总长度(181,310)=80  托板厚度(181,333)=3(灰)
+             短槽托板截面积(181,356)=240(灰)  托板材料的抗剪强度(181,379)=100(灰)
+             每板块短托板个数(181,402)=4
+      挂件参数 Frame (323,28) 280x413
+        挂件材质(398,264)=316不锈钢  挂件宽度B(396,288)=80  挂件厚度t(396,311)=3
+        参数s(515,288)=30  参数L(515,311)=60
+        每板块水平荷载挂件数(473,334)=2  每板块承重挂件数(437,357)=2
+        螺栓材质(389,390)=碳钢：4.6-C级  螺栓直径(389,414)=8  每挂件螺栓数(539,414)=1
+      花岗岩类石材 Frame (603,34) 340x433（说明文字，静态）
+      输出 RichText (612,97) 319x288
+      按钮 预演(809,395) 上一步(869,395) 退出(809,419) 下一步(869,419) 注意事项(737,407)
+  -->
+  <UserControl.Styles>
+    <Style Selector="ComboBox">
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="石材幕墙计算-板块计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WindNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding WindNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="936" Height="448" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- ══ 短槽托板连接 (5,26) 313x413 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="26" Width="313" Height="413"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="19" Text="短槽托板连接"/>
+
+        <!-- 石板参数 (12,42) 300x99 -->
+        <Border Classes="hbFrame" Canvas.Left="12" Canvas.Top="42" Width="300" Height="99"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="18" Canvas.Top="35" Text="石板参数"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="64" Text="石板厚度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="83" Canvas.Top="59" Width="37" Height="18"
+                 Text="{Binding ThicknessText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="124" Canvas.Top="64" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="91" Text="长边" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="83" Canvas.Top="86" Width="37" Height="18"
+                 Text="{Binding LongSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="124" Canvas.Top="91" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="118" Text="短边" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="83" Canvas.Top="113" Width="37" Height="18"
+                 Text="{Binding ShortSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="124" Canvas.Top="118" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="166" Canvas.Top="64" Text="石板抗弯强度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="240" Canvas.Top="59" Width="37" Height="18"
+                 Text="{Binding BendingAllowableText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="281" Canvas.Top="64" Text="MPa" FontSize="9"/>
+
+        <TextBlock Canvas.Left="166" Canvas.Top="91" Text="石板抗剪强度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="240" Canvas.Top="86" Width="37" Height="18"
+                 Text="{Binding ShearAllowableText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="281" Canvas.Top="91" Text="MPa" FontSize="9"/>
+
+        <!-- 连接方式 (28,159) 113x57 -->
+        <Border Classes="hbFrame" Canvas.Left="28" Canvas.Top="159" Width="113" Height="57"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="34" Canvas.Top="152" Text="连接方式"/>
+        <RadioButton Classes="hb" Canvas.Left="52" Canvas.Top="175" Width="73" Height="17"
+                     GroupName="StoneConn" Content="两侧连接" IsChecked="{Binding TwoSide, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="52" Canvas.Top="193" Width="73" Height="17"
+                     GroupName="StoneConn" Content="四边连接" IsChecked="{Binding FourSide, Mode=TwoWay}"/>
+
+        <!-- 两侧连接时托板位置 (165,159) 129x57 -->
+        <Border Classes="hbFrame" Canvas.Left="165" Canvas.Top="159" Width="129" Height="57"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="171" Canvas.Top="152" Text="两侧连接时托板位置"/>
+        <RadioButton Classes="hb" Canvas.Left="197" Canvas.Top="177" Width="73" Height="15"
+                     GroupName="StoneLugPos" FontSize="11" Content="长边"/>
+        <RadioButton Classes="hb" Canvas.Left="197" Canvas.Top="195" Width="49" Height="15"
+                     GroupName="StoneLugPos" FontSize="11" Content="短边"/>
+
+        <!-- 托板参数 (12,143) 300x287 -->
+        <Border Classes="hbFrame" Canvas.Left="12" Canvas.Top="143" Width="300" Height="287"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="18" Canvas.Top="136" Text="托板参数"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="224" Text="短槽中心到板块边距" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="219" Width="41" Height="20"
+                 Text="{Binding EdgeDistanceText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="224" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="247" Text="短槽中心到板块短边距" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="242" Width="41" Height="20"
+                 IsEnabled="False" Text="150"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="247" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="270" Text="一个连接边上的托板数" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="265" Width="41" Height="20"
+                 IsEnabled="False" Text="2"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="293" Text="短槽槽口宽度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="288" Width="41" Height="20"
+                 Text="{Binding SlotMouthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="293" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="315" Text="单个槽底总长度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="310" Width="41" Height="20"
+                 Text="{Binding SlotBottomText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="315" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="338" Text="托板厚度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="333" Width="41" Height="20"
+                 IsEnabled="False" Text="3"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="338" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="361" Text="短槽托板截面积" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="356" Width="41" Height="20"
+                 IsEnabled="False" Text="240"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="361" Text="mm²" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="384" Text="托板材料的抗剪强度" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="181" Canvas.Top="379" Width="41" Height="20"
+                 Text="{Binding LugAllowableText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="226" Canvas.Top="384" Text="MPa" FontSize="9"/>
+
+        <TextBlock Canvas.Left="22" Canvas.Top="407" Text="每板块短托板个数" FontSize="10"/>
+        <ComboBox Canvas.Left="181" Canvas.Top="402" Width="47" Height="20"
+                  ItemsSource="{Binding LugCountItems}"
+                  SelectedIndex="{Binding LugCountIndex, Mode=TwoWay}"/>
+
+        <!-- ══ 挂件参数 (323,28) 280x413 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="323" Canvas.Top="28" Width="280" Height="413"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="329" Canvas.Top="21" Text="挂件参数"/>
+
+        <!-- 中部示意图（静态） -->
+        <Border Canvas.Left="336" Canvas.Top="44" Width="254" Height="150"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" ClipToBounds="True">
+          <Canvas Width="252" Height="148">
+            <TextBlock Canvas.Left="86" Canvas.Top="8" Text="短槽/蝶型挂件" FontSize="10"/>
+            <TextBlock Canvas.Left="20" Canvas.Top="110" Text="横龙骨" FontSize="10"/>
+            <TextBlock Canvas.Left="190" Canvas.Top="110" Text="竖龙骨" FontSize="10"/>
+            <TextBlock Canvas.Left="110" Canvas.Top="128" Text="短挂件中心" FontSize="10"/>
+            <TextBlock Canvas.Left="60" Canvas.Top="60" Text="e" FontSize="11"/>
+            <TextBlock Canvas.Left="150" Canvas.Top="60" Text="L" FontSize="11"/>
+          </Canvas>
+        </Border>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="202" Text="挂件材质" FontSize="10"/>
+        <ComboBox Canvas.Left="398" Canvas.Top="264" Width="154" Height="20"
+                  ItemsSource="{Binding HangerMaterials}"
+                  SelectedIndex="{Binding HangerMaterialIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="265" Text="挂件宽度B" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="396" Canvas.Top="288" Width="37" Height="18"
+                 Text="{Binding HangerWidthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="437" Canvas.Top="265" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="293" Text="挂件厚度t" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="396" Canvas.Top="311" Width="37" Height="18"
+                 Text="{Binding HangerThicknessText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="437" Canvas.Top="293" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="460" Canvas.Top="265" Text="参数s" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="515" Canvas.Top="288" Width="37" Height="18"
+                 Text="{Binding EccentricityText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="556" Canvas.Top="265" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="460" Canvas.Top="293" Text="参数L" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="515" Canvas.Top="311" Width="37" Height="18"
+                 Text="{Binding HangerLengthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="556" Canvas.Top="293" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="339" Text="每板块水平荷载挂件数" FontSize="10"/>
+        <ComboBox Canvas.Left="473" Canvas.Top="334" Width="60" Height="20"
+                  ItemsSource="{Binding HorizontalHangerItems}"
+                  SelectedIndex="{Binding HorizontalHangerIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="362" Text="每板块承重挂件数" FontSize="10"/>
+        <ComboBox Canvas.Left="437" Canvas.Top="357" Width="60" Height="20"
+                  ItemsSource="{Binding LoadHangerItems}"
+                  SelectedIndex="{Binding LoadHangerIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="395" Text="螺栓材质" FontSize="10"/>
+        <ComboBox Canvas.Left="389" Canvas.Top="390" Width="196" Height="20"
+                  ItemsSource="{Binding BoltMaterials}"
+                  SelectedIndex="{Binding BoltMaterialIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="336" Canvas.Top="419" Text="螺栓直径" FontSize="10"/>
+        <ComboBox Canvas.Left="389" Canvas.Top="414" Width="60" Height="20"
+                  ItemsSource="{Binding BoltDiameterItems}"
+                  SelectedIndex="{Binding BoltDiameterIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="460" Canvas.Top="419" Text="每挂件螺栓数" FontSize="10"/>
+        <ComboBox Canvas.Left="539" Canvas.Top="414" Width="60" Height="20"
+                  ItemsSource="{Binding BoltPerHangerItems}"
+                  SelectedIndex="{Binding BoltPerHangerIndex, Mode=TwoWay}"/>
+
+        <!-- ══ 花岗岩类石材 (603,34) 340x433 说明框（白底说明文字区，非结果面板） ══ -->
+        <Border Canvas.Left="603" Canvas.Top="34" Width="340" Height="433"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="609" Canvas.Top="27" Text="花岗岩类石材"/>
+        <TextBlock Canvas.Left="612" Canvas.Top="50" FontSize="11" TextWrapping="Wrap" Width="322"
+                   Text="抗弯强度设计值取值：弯曲强度试验平均值fm/2.15"/>
+        <TextBlock Canvas.Left="612" Canvas.Top="72" FontSize="11" TextWrapping="Wrap" Width="322"
+                   Text="抗剪强度设计值取值：弯曲强度试验平均值fm/4.30"/>
+        <TextBlock Canvas.Left="612" Canvas.Top="94" FontSize="11" TextWrapping="Wrap" Width="322"
+                   Text="弯曲强度试验平均值fm由厂家提供，不应低于 8.0 MPa。"/>
+
+        <!-- ══ 输出 (612,97) 319x288 —— V31 实测 RichText 底 #C0FFFF + #808080 边框 ══ -->
+        <Border Classes="hbResultPanel" Canvas.Left="612" Canvas.Top="97" Width="319" Height="288">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="11"
+                             TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <TextBlock Canvas.Left="616" Canvas.Top="103" Text="{Binding PlaceholderText}"
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="11" IsHitTestVisible="False"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="809" Canvas.Top="395" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="869" Canvas.Top="395" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="809" Canvas.Top="419" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hb" Canvas.Left="869" Canvas.Top="419" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+        <Button Classes="hb" Canvas.Left="737" Canvas.Top="407" Width="59" Height="24"
+                Content="注意事项" Command="{Binding ExitCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

@@ -1,0 +1,60 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GlassManagement.Desktop.Views.Calc.CalcMainWindow"
+        Title="SMHS幕墙门窗结构计算软件V35.0  (已注册)"
+        Width="1280" Height="820"
+        MinWidth="760" MinHeight="560"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource HbAppBg}"
+        FontFamily="SimSun" FontSize="12">
+  <Window.Styles>
+    <!-- 菜单条按钮：扁平、无边框，贴近原程序的白底黑字菜单 -->
+    <Style Selector="Button.menubtn /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="CornerRadius" Value="0"/>
+    </Style>
+    <Style Selector="Button.menubtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource HbMenuHover}"/>
+    </Style>
+    <Style Selector="Button.menubtn">
+      <Setter Property="Padding" Value="6,0"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{DynamicResource HbTextMenu}"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Cursor" Value="Arrow"/>
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+    <!-- 顶部菜单条：WrapPanel 横排，窗口变窄时自动折行（与原程序一致），高度随行数自适应 -->
+    <Border DockPanel.Dock="Top" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbFrameLine}" BorderThickness="0,0,0,1"
+            Padding="2,1">
+      <WrapPanel x:Name="MenuBar" Orientation="Horizontal" ItemHeight="20"/>
+    </Border>
+
+    <!-- 底部状态栏 -->
+    <Border DockPanel.Dock="Bottom" Height="24" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbFrameLine}" BorderThickness="0,1,0,0">
+      <TextBlock x:Name="StatusText" Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbTextBody}"/>
+    </Border>
+
+    <!-- 客户区（MDI 风格：显示选中的计算窗体） -->
+    <Border Background="{DynamicResource HbAppBg}" Padding="0">
+      <Panel>
+        <TextBlock x:Name="Watermark" FontSize="40" FontWeight="Bold" Foreground="{DynamicResource HbBrandGreen}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   TextAlignment="Center"
+                   Text="SMHS幕墙门窗结构计算软件&#10;V35.0"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Center" VerticalContentAlignment="Top">
+          <!-- 表单宿主保持透明：表单自身铺灰底（HbFormBg），四周露出绿底，
+               否则灰底会一直铺到窗口边缘，看起来"内框顶满"（V31 是绿画布+灰子窗体） -->
+          <ContentControl x:Name="FormHost" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"
+                          Background="Transparent" Margin="6"/>
+        </ScrollViewer>
+      </Panel>
+    </Border>
+  </DockPanel>
+</Window>

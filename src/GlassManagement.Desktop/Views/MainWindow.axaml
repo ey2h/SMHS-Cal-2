@@ -27,6 +27,9 @@
 
                 <!-- 右: 设置/用户 -->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <!-- 结构计算界面 -->
+                    <Button AutomationProperties.AutomationId="OpenCalcButton" Content="结构计算界面" Click="OnOpenCalc"
+                            Padding="12,6" FontSize="12"/>
                     <!-- 主题切换 -->
                     <ComboBox AutomationProperties.AutomationId="ThemeSelector" SelectedIndex="{Binding ThemeIndex}" Width="100" FontSize="12">
                         <ComboBoxItem Content="经典"/>
@@ -137,7 +140,7 @@
                     <!-- 上部参数区：5列 -->
                     <Grid ColumnDefinitions="*,*,*,*,*">
                         <!-- 第1列：重现期 -->
-                        <Border Grid.Column="0" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                        <Border Grid.Column="0" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2" VerticalAlignment="Stretch">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="重现期 (?)" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="50年" IsChecked="{Binding ReturnPeriod50}" GroupName="Period" FontSize="11"/>
@@ -152,7 +155,7 @@
                         </Border>
 
                         <!-- 第2列：地面类型 -->
-                        <Border Grid.Column="1" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="地面类型 (?)" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="A类地形" IsChecked="{Binding TerrainA}" GroupName="Terrain" FontSize="11"/>
@@ -163,7 +166,7 @@
                         </Border>
 
                         <!-- 第3列：外部局部体型系数 -->
-                        <Border Grid.Column="2" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                        <Border Grid.Column="2" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="外部局部体型系数 (?)" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="墙面区" IsChecked="{Binding ExtWallCenter}" GroupName="ExtShape" FontSize="11"/>
@@ -175,7 +178,7 @@
                         </Border>
 
                         <!-- 第4列：内部局部体型系数 -->
-                        <Border Grid.Column="3" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
+                        <Border Grid.Column="3" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2" VerticalAlignment="Stretch">
                             <StackPanel Spacing="2">
                                 <TextBlock Text="内部局部体型系数 (?)" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="封闭式建筑物" IsChecked="{Binding IntSealed}" GroupName="IntShape" FontSize="10"/>
@@ -194,7 +197,7 @@
                         </Border>
 
                         <!-- 第5列：风荷载标准值取值 -->
-                        <Border Grid.Column="4" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2" VerticalAlignment="Stretch">
+                        <Border Grid.Column="4" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2" VerticalAlignment="Stretch">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="风荷载标准值取值 (?)" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="按规范不小于1kPa" IsChecked="{Binding WindModeCodeMin}" GroupName="WindMode" FontSize="10"/>
@@ -210,21 +213,21 @@
 
                     <!-- 下部参数区：3列 (幕墙结构/横框结构/玻璃配置) -->
                     <Grid ColumnDefinitions="*,*,*">
-                        <Border Grid.Column="0" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2">
+                        <Border Grid.Column="0" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="0,0,2,0" CornerRadius="2">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="幕墙结构" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="构件式（框架式）幕墙" IsChecked="{Binding CwStructComponent}" GroupName="CwStruct" FontSize="10"/>
                                 <RadioButton Content="单元式幕墙" IsChecked="{Binding CwStructUnit}" GroupName="CwStruct" FontSize="10"/>
                             </StackPanel>
                         </Border>
-                        <Border Grid.Column="1" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2">
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0" CornerRadius="2">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="幕墙横框结构" FontWeight="Bold" FontSize="11"/>
                                 <RadioButton Content="无中横结构" IsChecked="{Binding TransomNone}" GroupName="Transom" FontSize="10"/>
                                 <RadioButton Content="有中横结构" IsChecked="{Binding TransomHas}" GroupName="Transom" FontSize="10"/>
                             </StackPanel>
                         </Border>
-                        <Border Grid.Column="2" BorderBrush="#ccc" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2">
+                        <Border Grid.Column="2" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Padding="8" Margin="2,0,0,0" CornerRadius="2">
                             <StackPanel Spacing="3">
                                 <TextBlock Text="玻璃配置" FontWeight="Bold" FontSize="11"/>
                                 <ComboBox ItemsSource="{Binding GlassConfigOptions}" SelectedIndex="{Binding GlassConfigIndex}" FontSize="10" Width="150"/>

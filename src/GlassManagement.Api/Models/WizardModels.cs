@@ -41,7 +41,7 @@ public class WizardStepResult
 
 // ===== Step 1: 基本参数（22个字段 + 自动计算）=====
 
-/// <summary>步骤1：基本参数 — 参照汇宝需求清单</summary>
+/// <summary>步骤1：基本参数 — 参照原程序需求清单</summary>
 public class Step1BasicInput
 {
     // --- 项目与编制信息 ---

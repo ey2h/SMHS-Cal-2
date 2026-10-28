@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.AwningCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="雨蓬计算"/>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WindNote}"
+                   Margin="16,0,0,0" MaxWidth="460" ToolTip.Tip="{Binding WindNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="893" Height="513" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- 荷载参数 (7,32) 280x150 -->
+        <Border Classes="hbFrame" Canvas.Left="7" Canvas.Top="32" Width="280" Height="150"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="13" Canvas.Top="25" Text="荷载参数"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="50" Text="基本风压" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="47" Width="50" Height="18"
+                 Text="{Binding BasicWindText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="50" Text="KPa" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="74" Text="雪荷载" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="71" Width="50" Height="18"
+                 Text="{Binding SnowText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="74" Text="KPa" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="98" Text="活荷载" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="95" Width="50" Height="18"
+                 Text="{Binding LiveText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="98" Text="KPa" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="122" Text="恒荷载" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="119" Width="50" Height="18"
+                 Text="{Binding DeadText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="122" Text="KPa" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="148" Text="体型：正压0.5/负压2.0(雨篷)" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+
+        <!-- 几何参数 (7,190) 280x130 -->
+        <Border Classes="hbFrame" Canvas.Left="7" Canvas.Top="190" Width="280" Height="130"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="13" Canvas.Top="183" Text="几何参数"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="208" Text="偏心" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="205" Width="50" Height="18"
+                 Text="{Binding EccText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="208" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="232" Text="板宽" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="229" Width="50" Height="18"
+                 Text="{Binding PanelWidthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="232" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="256" Text="板长" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="253" Width="50" Height="18"
+                 Text="{Binding PanelLengthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="142" Canvas.Top="256" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="15" Canvas.Top="282" Text="悬挑总长=偏心+板宽+板长" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+
+        <!-- 悬臂主梁 (296,32) 200x130 -->
+        <Border Classes="hbFrame" Canvas.Left="296" Canvas.Top="32" Width="200" Height="130"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="302" Canvas.Top="25" Text="悬臂主梁(槽钢[12.6)"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="50" Text="抵抗矩 W" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="47" Width="60" Height="18"
+                 Text="{Binding BeamWText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="442" Canvas.Top="50" Text="mm³" FontSize="9"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="74" Text="惯性矩 I" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="71" Width="60" Height="18"
+                 Text="{Binding BeamIText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="442" Canvas.Top="74" Text="mm⁴" FontSize="9"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="98" Text="弹性模量 E" FontSize="9"/>
+        <TextBlock Canvas.Left="380" Canvas.Top="100" Text="206000 MPa(Q235)" FontSize="9"/>
+
+        <!-- 焊缝 (296,170) 200x80 -->
+        <Border Classes="hbFrame" Canvas.Left="296" Canvas.Top="170" Width="200" Height="80"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="302" Canvas.Top="163" Text="焊缝"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="188" Text="焊脚 hf" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="185" Width="60" Height="18"
+                 Text="{Binding WeldLegText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="442" Canvas.Top="188" Text="mm" FontSize="9"/>
+
+        <!-- 玻璃(点式支承) (296,258) 200x110 -->
+        <Border Classes="hbFrame" Canvas.Left="296" Canvas.Top="258" Width="200" Height="110"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="302" Canvas.Top="251" Text="玻璃(点式支承)"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="276" Text="短边 a" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="273" Width="60" Height="18"
+                 Text="{Binding GlassShortText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="442" Canvas.Top="276" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="300" Text="厚度 t" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="297" Width="60" Height="18"
+                 Text="{Binding GlassThickText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="442" Canvas.Top="300" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="302" Canvas.Top="326" Text="m=0.154 μ=0.02603(点式)" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+
+        <!-- 埋件 (504,32) 200x110 -->
+        <Border Classes="hbFrame" Canvas.Left="504" Canvas.Top="32" Width="200" Height="110"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="510" Canvas.Top="25" Text="埋件锚固"/>
+        <TextBlock Canvas.Left="510" Canvas.Top="50" Text="锚筋直径 d" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="588" Canvas.Top="47" Width="60" Height="18"
+                 Text="{Binding AnchorDiaText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="650" Canvas.Top="50" Text="mm" FontSize="9"/>
+        <TextBlock Canvas.Left="510" Canvas.Top="74" Text="锚筋根数 n" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="588" Canvas.Top="71" Width="60" Height="18"
+                 Text="{Binding AnchorCountText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="510" Canvas.Top="98" Text="锚筋强度 fy" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="588" Canvas.Top="95" Width="60" Height="18"
+                 Text="{Binding AnchorFyText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="650" Canvas.Top="98" Text="MPa" FontSize="9"/>
+
+        <!-- 输出 RichText (7,330) 697x120 -->
+        <Border Classes="hbResultPanel" Canvas.Left="7" Canvas.Top="330" Width="697" Height="120"/>
+        <TextBlock Canvas.Left="11" Canvas.Top="334" Text="计算结果" FontSize="10" Foreground="{DynamicResource HbTextMuted}"/>
+        <ScrollViewer Canvas.Left="9" Canvas.Top="352" Width="693" Height="95">
+          <ItemsControl ItemsSource="{Binding Results}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Text}" FontFamily="Consolas" FontSize="11"
+                           Foreground="{Binding Color}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+        <TextBlock Canvas.Left="11" Canvas.Top="352" Text="{Binding PlaceholderText}"
+                   FontSize="11" Foreground="{DynamicResource HbTextSubtle}" TextWrapping="Wrap" MaxWidth="680"
+                   IsVisible="{Binding HasResults, Converter={x:Static BoolConverters.Not}}"/>
+
+        <!-- 按钮 -->
+        <Button Classes="hb" Canvas.Left="621" Canvas.Top="470" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="684" Canvas.Top="470" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="747" Canvas.Top="470" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

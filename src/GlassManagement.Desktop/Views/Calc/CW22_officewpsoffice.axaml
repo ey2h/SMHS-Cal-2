@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW22_officewpsoffice"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 生成计算书（支持微软office及金山wps office） | client 603x330 | 25 nodes (14 labels) | pairs=21 spread=0px dropped=0 declutter:drop=1 move=0 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="生成计算书（支持微软office及金山wps office）" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="603" Height="330" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+      <TextBox x:Name="PreviewBox" Classes="hb" Canvas.Left="6" Canvas.Top="10" Width="587" Height="229" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+      <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="15" Width="576" Height="142"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="6" Text="计算书参数设置"/>
+      <TextBlock Classes="hb" Canvas.Left="19" Canvas.Top="55" Width="56" Height="13" Text="工程名称" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="19" Canvas.Top="95" Width="56" Height="13" Text="幕墙类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <Border Classes="hbFrame" Canvas.Left="315" Canvas.Top="23" Width="263" Height="127"/>
+      <TextBlock Classes="hbFrameTitle" Canvas.Left="321" Canvas.Top="14" Text="计算书正文字体设置"/>
+      <RadioButton x:Name="RbSmallFour" Classes="hb" Canvas.Left="331" Canvas.Top="39" Width="77" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="小四号" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <RadioButton x:Name="RbFive" Classes="hb" Canvas.Left="411" Canvas.Top="39" Width="53" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="五号" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <RadioButton x:Name="RbSmallFive" Classes="hb" Canvas.Left="475" Canvas.Top="39" Width="61" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="小五号" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+      <TextBox x:Name="ProjectNameBox" Classes="hb" Canvas.Left="75" Canvas.Top="49" Width="233" Height="25" FontSize="12"/>
+      <CheckBox x:Name="CkA3" Classes="hb" Canvas.Left="451" Canvas.Top="55" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="A3幅面输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox x:Name="CkLineSpacing" Classes="hb" Canvas.Left="331" Canvas.Top="63" Width="97" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="给定行间距" FontSize="10" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <CheckBox x:Name="CkTraditional" Classes="hb" Canvas.Left="451" Canvas.Top="74" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="繁体文字输出" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <TextBox x:Name="LineSpacingBox" Classes="hb" Canvas.Left="363" Canvas.Top="80" Width="49" Height="18" FontSize="12" Text="15.6"/>
+      <TextBox x:Name="KindBox" Classes="hb" Canvas.Left="75" Canvas.Top="89" Width="233" Height="25" FontSize="12"/>
+      <CheckBox x:Name="CkNoAppendix" Classes="hb" Canvas.Left="451" Canvas.Top="94" Width="97" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="不输出附录" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+      <TextBox x:Name="MarginLeftBox" Classes="hb" Canvas.Left="395" Canvas.Top="104" Width="41" Height="18" FontSize="12" Text="2.5"/>
+      <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="106" Width="60" Height="13" Text="页面左边距" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <CheckBox x:Name="CkOutline" Classes="hb" Canvas.Left="451" Canvas.Top="113" Width="113" MinHeight="33" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="计算书合并后整理文档结构图" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>
+      <ComboBox x:Name="OfficePriorityCombo" Classes="hb" Canvas.Left="131" Canvas.Top="127" Width="161" Height="20"/>
+      <TextBox x:Name="MarginRightBox" Classes="hb" Canvas.Left="395" Canvas.Top="127" Width="41" Height="18" FontSize="12" Text="1.5"/>
+      <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="130" Width="60" Height="13" Text="页面右边距" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBlock Classes="hb" Canvas.Left="19" Canvas.Top="131" Width="96" Height="13" Text="Office优先级设置" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+      <TextBox x:Name="StatusBox" Classes="hb" Canvas.Left="11" Canvas.Top="159" Width="290" Height="20" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+      <Button x:Name="BtnGenerate" Classes="hb" Canvas.Left="143" Canvas.Top="195" Width="297" Height="41" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="生成计算书" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button x:Name="BtnPrev" Classes="hb" Canvas.Left="531" Canvas.Top="247" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button x:Name="BtnExit" Classes="hb" Canvas.Left="531" Canvas.Top="279" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

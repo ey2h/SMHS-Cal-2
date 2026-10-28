@@ -1,29 +1,461 @@
-<Application xmlns="https://github.com/avaloniaui"
+﻿<Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GlassManagement.Desktop.App"
              RequestedThemeVariant="Light">
+    <!-- L0 设计令牌：全项目唯一允许出现十六进制色值的地方（见 docs/UI_STYLE_SYSTEM_PLAN.md） -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://GlassManagement.Desktop/Themes/Tokens.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Fluent 强调色画刷覆盖：不写这几项，ToggleSwitch/ProgressBar/滚动条等
+                 会回落到 Fluent 默认紫色，与 V31 绿灰皮肤冲突（用户明确要求：只做绿色复刻） -->
+            <SolidColorBrush x:Key="SystemAccentColorBrush" Color="{StaticResource SystemAccentColor}"/>
+            <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="{StaticResource SystemAccentColorLight1}"/>
+            <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="{StaticResource SystemAccentColorLight2}"/>
+            <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="{StaticResource SystemAccentColorLight3}"/>
+            <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="{StaticResource SystemAccentColorDark1}"/>
+            <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="{StaticResource SystemAccentColorDark2}"/>
+            <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="{StaticResource SystemAccentColorDark3}"/>
+            <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="{StaticResource SystemAccentColor}"/>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
-        <!-- ============ 全局基础样式 ============ -->
+        <!-- ============================================================
+             设计令牌
+             两套调色板并存：
+               Hb*  = 复刻界面（VB6/宋体9pt 观感：直角、紧凑、灰底白输入）
+               其它 = 现代主页（圆角卡片、大留白）
+             全局「无 class」控件样式一律取复刻基准，避免现代主页那套
+             圆角 8 / 14px / Padding 10,8 把 VB6 的 20px 单行控件撑变形。
+             现代主页需要的观感，请用 .Primary/.Secondary/.Card 等显式 class。
+             ============================================================ -->
+        <Style Selector=":is(Window)">
+            <Style.Resources>
+                <!-- 现代主页调色板（沿用） -->
+                <SolidColorBrush x:Key="PageBgBrush" Color="{StaticResource ModernPageBg}"/>
+                <SolidColorBrush x:Key="CardBgBrush" Color="{StaticResource ModernCardBg}"/>
+                <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource ModernAccent}"/>
+                <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource ModernAccentLight}"/>
+                <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource ModernTextPrimary}"/>
+                <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource ModernTextSecondary}"/>
+                <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource ModernBorder}"/>
+                <SolidColorBrush x:Key="TopBarBgBrush" Color="{StaticResource ModernCardBg}"/>
+                <SolidColorBrush x:Key="TopBarTextBrush" Color="{StaticResource ModernTextPrimary}"/>
+                <SolidColorBrush x:Key="StepDoneBrush" Color="{StaticResource ModernSuccess}"/>
+                <SolidColorBrush x:Key="StepFutureBrush" Color="{StaticResource ModernStepFuture}"/>
+                <SolidColorBrush x:Key="StepFutureTextBrush" Color="{StaticResource ModernStepFutureText}"/>
+                <SolidColorBrush x:Key="ResultBgBrush" Color="{StaticResource ModernResultBg}"/>
+                <SolidColorBrush x:Key="StatusBarBgBrush" Color="{StaticResource ModernStatusBarBg}"/>
+                <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource ModernSuccess}"/>
+                <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource ModernDanger}"/>
+                <CornerRadius x:Key="CardRadius">8</CornerRadius>
+            </Style.Resources>
+        </Style>
+
+        <!-- ============================================================
+             一、全局控件基准 = VB6 尺寸契约
+             VB6 实测运行期几何（hb_window_tree2.tsv，V35）：
+               TextBox   H=18   ComboBox H=20   Option/Check H=15~17
+               CommandButton H=24~28   TabItem 行 22   行距步进 ~20px
+             Avalonia Fluent 主题的 MinHeight / 大 glyph / Padding 会把这些
+             撑爆（MinHeight 32 的 ComboBox、16px glyph + Padding 6 的
+             RadioButton），从而互相压叠。以下样式把控件"压回" VB6 尺寸：
+               MinHeight=0（尊重 XAML 里的显式 Height）
+               选择类控件用自定义 VB6 紧凑模板（11px 圆圈/方框 glyph）
+             ============================================================ -->
         <Style Selector="TextBlock">
-            <Setter Property="FontFamily" Value="Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="LineHeight" Value="15"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+
         <Style Selector="TextBox">
-            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="LineHeight" Value="15"/>
         </Style>
+        <Style Selector="TextBox:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbAccent}"/>
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbAccent}"/>
+        </Style>
+
         <Style Selector="ComboBox">
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
         </Style>
+        <Style Selector="ComboBox:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbAccent}"/>
+        </Style>
+
+        <!-- 选择类：VB6 OptionButton / CheckBox 紧凑模板
+             glyph 11px（VB6 实测圆圈 ≈10px），文字紧跟 3px，行高 15 -->
+        <Style Selector="RadioButton">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Panel Width="12" Height="12" VerticalAlignment="Center">
+                                <Ellipse x:Name="ring" Width="11" Height="11"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Stroke="{DynamicResource HbBorderDeep}" StrokeThickness="1" Fill="{DynamicResource HbControlBg}"/>
+                                <Ellipse x:Name="dot" Width="5" Height="5"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Fill="{DynamicResource HbText}"/>
+                            </Panel>
+                            <ContentPresenter Grid.Column="1" Margin="3,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton /template/ Ellipse#dot">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <Style Selector="RadioButton:checked /template/ Ellipse#dot">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="RadioButton:pointerover /template/ Ellipse#ring">
+            <Setter Property="Stroke" Value="{DynamicResource HbAccent}"/>
+        </Style>
+        <Style Selector="RadioButton:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+        </Style>
+        <Style Selector="RadioButton:disabled /template/ Ellipse#ring">
+            <Setter Property="Stroke" Value="{DynamicResource HbBorderMid}"/>
+            <Setter Property="Fill" Value="{DynamicResource HbFormBg}"/>
+        </Style>
+
+        <Style Selector="CheckBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Panel Width="12" Height="12" VerticalAlignment="Center">
+                                <Border x:Name="box" Width="11" Height="11"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1" Background="{DynamicResource HbControlBg}"/>
+                                <Path x:Name="tick" Data="M 2,6 L 5,9 L 10,3"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Stroke="{DynamicResource HbText}" StrokeThickness="1.6"/>
+                            </Panel>
+                            <ContentPresenter Grid.Column="1" Margin="3,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="CheckBox /template/ Path#tick">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <Style Selector="CheckBox:checked /template/ Path#tick">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+        <Style Selector="CheckBox:pointerover /template/ Border#box">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbAccent}"/>
+        </Style>
+        <Style Selector="CheckBox:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+        </Style>
+        <Style Selector="CheckBox:disabled /template/ Border#box">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderMid}"/>
+            <Setter Property="Background" Value="{DynamicResource HbFormBg}"/>
+        </Style>
+
         <Style Selector="Button">
-            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Background" Value="{DynamicResource HbButtonBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="3,0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HbHover}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbAccent}"/>
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="{DynamicResource HbPressed}"/>
+        </Style>
+        <!-- 禁用态：必须让内嵌 TextBlock 也变灰（复刻按钮内容多用 TextBlock.hb，其 Foreground 会吞掉继承色） -->
+        <Style Selector="Button:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+            <Setter Property="Background" Value="{DynamicResource HbSurfaceAlt}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderMid}"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+        <Style Selector="Button:disabled TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+        </Style>
+
+        <Style Selector="ListBox">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <!-- DataGrid 无 CornerRadius，单独定义以免运行时报错 -->
+        <Style Selector="DataGrid">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,3"/>
+        </Style>
+        <Style Selector="DataGridCell">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="4,2"/>
+        </Style>
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="{DynamicResource HbTitleBarBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTitleText}"/>
+            <Setter Property="Padding" Value="6,4"/>
+        </Style>
+
+        <!-- 滚动区：细边框、直角，与 VB6 面板一致 -->
+        <Style Selector="ScrollViewer">
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="ScrollBar">
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+
+        <!-- Tab：页签 11px、紧凑，内容区贴边，选中页有蓝色下边线提示 -->
+        <Style Selector="TabControl">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="{DynamicResource HbPanelBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbFrameBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="TabControl > TabItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTitleText}"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Margin" Value="0,0,1,0"/>
+        </Style>
+        <Style Selector="TabControl > TabItem:selected">
+            <Setter Property="Background" Value="{DynamicResource HbTitleBarBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTitleTextDeep}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <!-- TabItem 里的文字也要继承字号（TabItem 不是 ContentControl 内容宿主，单独定） -->
+        <Style Selector="TabItem TextBlock">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- 下拉菜单（ContextMenu/MenuItem）：宋体 12、紧凑、悬停高亮 -->
+        <Style Selector="ContextMenu">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="1"/>
+        </Style>
+        <Style Selector="MenuItem">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="22"/>
+        </Style>
+        <Style Selector="MenuItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HbHover}"/>
+        </Style>
+        <Style Selector="MenuItem:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+        </Style>
+        <Style Selector="Separator">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="4,2"/>
+        </Style>
+
+        <!-- ============================================================
+             二、复刻界面专用类（.hb）
+             值取字面色而非 DynamicResource，保证 UserControl 独立加载时也生效。
+             ============================================================ -->
+        <Style Selector="TextBlock.hb">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="LineHeight" Value="15"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <!-- Frame 标题：V31 实测为窗体灰底(#F0F0F0) + 黑字 9pt(=12px) 骑在边框线上，无浅蓝底条 -->
+        <Style Selector="TextBlock.hbFrameTitle">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextStrong}"/>
+            <Setter Property="Background" Value="{DynamicResource HbFormBg}"/>
+            <Setter Property="Padding" Value="4,0"/>
+        </Style>
+        <Style Selector="Border.hbFrame">
+            <Setter Property="Background" Value="{DynamicResource HbFormBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <!-- 结果面板：V31 立柱屏 (633,32)292x352 与多跨屏结果区实测均为 #C0FFFF + #808080 边框 -->
+        <Style Selector="Border.hbResultPanel">
+            <Setter Property="Background" Value="{DynamicResource HbResultBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderStrong}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <!-- ── 统一外壳（四屏共用，2026-10-25 归一）──
+             标题条 / 状态栏的坐标与配色取自 V31 实测：高 19、底 #E8EEF7、下边线 #A0A0A0、
+             标题 11px #1F2937；状态栏 #F0F0F0、上边线 #A0A0A0、内边距 8,2。 -->
+        <!-- 兼容历史空类：V31 导出的控件普遍带 Classes="hb"，此前无对应样式（靠全局兜底）。
+             这里显式定义，保证「带 hb 类」与「不带」在四屏内视觉完全一致。 -->
+        <Style Selector="Button.hb">
+            <Setter Property="Width" Value="59"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBox.hb">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="2,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Border.hbTitleBar">
+            <Setter Property="Height" Value="19"/>
+            <Setter Property="Background" Value="{DynamicResource HbTitleBarBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorder}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="TextBlock.hbTitleText">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="Margin" Value="8,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style Selector="Border.hbStatusBar">
+            <Setter Property="Background" Value="{DynamicResource HbFormBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorder}"/>
+            <Setter Property="BorderThickness" Value="0,1,0,0"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+        <Style Selector="TextBlock.hbStatus">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.hbStatusHint">
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextHint}"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <!-- 底部按钮：V31 统一 59×24、方角（横梁页原先 62 宽，已归一） -->
+        <Style Selector="Button.hbBtn">
+            <Setter Property="Width" Value="59"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontFamily" Value="SimSun"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Border.hbPanel">
+            <Setter Property="Background" Value="{DynamicResource HbFormBg}"/>
+        </Style>
+        <!-- V31 多跨表：数据行浅青底 #C0FFFF（实测） -->
+        <Style Selector="DataGrid.hb DataGridRow">
+            <Setter Property="Background" Value="{DynamicResource HbResultBg}"/>
+        </Style>
+        <Style Selector="DataGrid.hb DataGridRow:nth-child(even)">
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+        </Style>
+        <Style Selector="DataGrid.hb DataGridRowHeader">
+            <Setter Property="Background" Value="{DynamicResource HbControlBg}"/>
+        </Style>
+
+        <!-- ============================================================
+             三、现代主页专用类（沿用原设计，不影响复刻界面）
+             ============================================================ -->
         <Style Selector="Button.Primary">
             <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -31,41 +463,18 @@
             <Setter Property="Padding" Value="20,10"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinHeight" Value="0"/>
         </Style>
         <Style Selector="Button.Secondary">
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="20,10"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinHeight" Value="0"/>
         </Style>
-
-        <!-- ============ DEFAULT THEME: Classic ============ -->
-        <Style Selector=":is(Window)">
-            <Style.Resources>
-                <SolidColorBrush x:Key="PageBgBrush" Color="#fbfbfe"/>
-                <SolidColorBrush x:Key="CardBgBrush" Color="#ffffff"/>
-                <SolidColorBrush x:Key="AccentBrush" Color="#2f27ce"/>
-                <SolidColorBrush x:Key="AccentLightBrush" Color="#e8e7fa"/>
-                <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1a1a2e"/>
-                <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6b7280"/>
-                <SolidColorBrush x:Key="BorderBrush" Color="#e5e7eb"/>
-                <SolidColorBrush x:Key="TopBarBgBrush" Color="#ffffff"/>
-                <SolidColorBrush x:Key="TopBarTextBrush" Color="#1a1a2e"/>
-                <SolidColorBrush x:Key="StepDoneBrush" Color="#10b981"/>
-                <SolidColorBrush x:Key="StepFutureBrush" Color="#d1d5db"/>
-                <SolidColorBrush x:Key="StepFutureTextBrush" Color="#9ca3af"/>
-                <SolidColorBrush x:Key="ResultBgBrush" Color="#f0fdf4"/>
-                <SolidColorBrush x:Key="StatusBarBgBrush" Color="#f8fafc"/>
-                <SolidColorBrush x:Key="SuccessBrush" Color="#10B981"/>
-                <SolidColorBrush x:Key="DangerBrush" Color="#EF4444"/>
-                <CornerRadius x:Key="CardRadius">8</CornerRadius>
-            </Style.Resources>
-        </Style>
-
-        <!-- Card style -->
         <Style Selector="Border.Card">
             <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
             <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
-            <Setter Property="BoxShadow" Value="0 2 8 0 #0A000000"/>
+            <Setter Property="BoxShadow" Value="{StaticResource HbShadowCard}"/>
             <Setter Property="Padding" Value="24"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -74,7 +483,7 @@
             <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
             <Setter Property="CornerRadius" Value="{DynamicResource CardRadius}"/>
             <Setter Property="Padding" Value="24"/>
-            <Setter Property="BoxShadow" Value="0 1 4 0 #08000000"/>
+            <Setter Property="BoxShadow" Value="{StaticResource HbShadowSoft}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
@@ -100,6 +509,170 @@
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+        <!-- ============================================================
+             四、L1 组件契约（2026-10-28 统一视觉系统）
+             规则：视图只允许"组合类 + 令牌"，不再手写色值/字号族。
+             每类都必须在默认 / 悬停 / 按下 / 选中 / 禁用 / 焦点 / 非法 / 只读
+             八态中有明确取值（无该态的控件在注释里说明为什么不需要）。
+             ============================================================ -->
+
+        <!-- ① 结果输出文本：等宽字体，替代各屏手写 FontFamily="Consolas" -->
+        <Style Selector="TextBlock.hbOutput">
+            <Setter Property="FontFamily" Value="Consolas,Microsoft YaHei,monospace"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="LineHeight" Value="15"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- ② 结果面板（统一青底深边，替代新屏的深色 #1E293B 面板） -->
+        <Style Selector="Border.hbResultPanel Border.hbResultInner">
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        <Style Selector="Border.hbResultPanel TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+        </Style>
+
+        <!-- ③ 字段契约：标签在上、控件在下、单位后缀 -->
+        <Style Selector="StackPanel.hbField">
+            <Setter Property="Spacing" Value="2"/>
+        </Style>
+        <Style Selector="TextBlock.hbFieldLabel">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextMuted}"/>
+            <Setter Property="LineHeight" Value="14"/>
+        </Style>
+        <Style Selector="TextBlock.hbUnit">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextSubtle}"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- ④ 按钮变体：主操作（绿）/ 危险操作，尺寸沿用 VB6 紧凑 59×24 基准 -->
+        <Style Selector="Button.hbBtnPrimary">
+            <Setter Property="Background" Value="{DynamicResource HbBrandGreen}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbOnAccent}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderDeep}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style Selector="Button.hbBtnPrimary:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight1Brush}"/>
+        </Style>
+        <Style Selector="Button.hbBtnPrimary:pressed">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1Brush}"/>
+        </Style>
+        <Style Selector="Button.hbBtnPrimary:disabled">
+            <Setter Property="Background" Value="{DynamicResource HbSurfaceAlt}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+        </Style>
+        <Style Selector="Button.hbBtnDanger">
+            <Setter Property="Foreground" Value="{DynamicResource HbDanger}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbDanger}"/>
+        </Style>
+        <Style Selector="Button.hbBtnDanger:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HbWarnBg}"/>
+        </Style>
+
+        <!-- ⑤ 表头：深灰底白字（复刻表格观感），与正文区分 -->
+        <Style Selector="DataGrid.hbTableHeader DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource HbHeaderCellBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbOnAccent}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <!-- ⑥ 提示条：黄底 + 深色文字（替代各屏手写 #FEF3C7） -->
+        <Style Selector="Border.hbWarn">
+            <Setter Property="Background" Value="{DynamicResource HbWarnBg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderMid}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+        <Style Selector="Border.hbWarn TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- ⑦ 空状态：居中弱化说明 -->
+        <Style Selector="TextBlock.hbEmptyState">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextSubtle}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <!-- ⑧ 分隔线 -->
+        <Style Selector="Border.hbDivider">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Background" Value="{DynamicResource HbBorderSoft}"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+
+        <!-- ============================================================
+             五、交互状态一致性（八态契约）
+             焦点：键盘用户必须看得见焦点环；鼠标点击不显示（:focus-visible）
+             非法：.invalid 类 → 红边（校验失败）
+             只读：灰底、正常文字色（不是禁用色，因为仍可选中复制）
+             ============================================================ -->
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbFocusRing}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style Selector="CheckBox:focus-visible">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextStrong}"/>
+        </Style>
+        <Style Selector="RadioButton:focus-visible">
+            <Setter Property="Foreground" Value="{DynamicResource HbTextStrong}"/>
+        </Style>
+        <Style Selector="ComboBox:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbFocusRing}"/>
+        </Style>
+        <Style Selector="TabItem:focus-visible">
+            <Setter Property="Foreground" Value="{DynamicResource HbTitleTextDeep}"/>
+        </Style>
+
+        <Style Selector="TextBox.invalid">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbInvalid}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style Selector="ComboBox.invalid">
+            <Setter Property="BorderBrush" Value="{DynamicResource HbInvalid}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <Style Selector="TextBox[IsReadOnly=true]">
+            <Setter Property="Background" Value="{DynamicResource HbSurfaceSubtle}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+        </Style>
+        <Style Selector="TextBox:disabled">
+            <Setter Property="Background" Value="{DynamicResource HbSurfaceAlt}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderMid}"/>
+        </Style>
+        <Style Selector="ComboBox:disabled">
+            <Setter Property="Background" Value="{DynamicResource HbSurfaceAlt}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbTextDisabled}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource HbBorderMid}"/>
+        </Style>
+
+        <Style Selector="ListBoxItem:selected">
+            <Setter Property="Background" Value="{DynamicResource HbHover}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HbText}"/>
+        </Style>
+        <Style Selector="ListBoxItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HbHover}"/>
+        </Style>
+
+        <!-- DataGrid 行：悬停与选中必须有反馈（否则大表格里定位困难） -->
+        <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource HbHover}"/>
+        </Style>
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="{DynamicResource HbPressed}"/>
         </Style>
     </Application.Styles>
 </Application>

@@ -570,7 +570,7 @@
         }
 
         // ===== 结构胶验算 (JGJ102-2003 5.6.3) =====
-        // 铝框对接时中空层胶宽取铝框胶宽（汇宝联动规则5）
+        // 铝框对接时中空层胶宽取铝框胶宽（原程序联动规则5）
         int effectiveHollowWidth = Input.JointMethod == "铝框对接" ? Input.FrameSealantWidth : Input.HollowSealantWidth;
 
         // 风荷载分量: σ₁ = wk(kPa) × a/2(mm) / (2 × Cs(mm))

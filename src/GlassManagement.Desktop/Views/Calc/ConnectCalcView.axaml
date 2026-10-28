@@ -1,0 +1,224 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.ConnectCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <UserControl.Styles>
+    <!-- V31 的 DataGrid 是 VB6 原生表格：行高 22、表头 22、字号 11 -->
+    <Style Selector="DataGrid">
+      <Setter Property="RowHeight" Value="16"/>
+      <Setter Property="ColumnHeaderHeight" Value="20"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+    <Style Selector="DataGridCell">
+      <Setter Property="Padding" Value="2,0"/>
+      <Setter Property="FontSize" Value="11"/>
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Padding" Value="1,0"/>
+      <Setter Property="FontSize" Value="10"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+  <!--
+    「幕墙计算-连接计算」MVVM 视图（V31 客户区 796×510）。
+    坐标源：local-data/recon/v31runs/dump_connect_after.txt（31 个 HWND）
+      + shot_connect_after.png（VB6 Label 无窗口，标签坐标从截图读）
+    控件清单（相对客户区）：
+      连接形式 Frame (10,31) 415x36 ─ 左 ComboBox(97,42)104x20 右(302,42)104x20
+      横框与立柱 Frame (11,69) 415x282
+        立柱材质 只读框(55,102)89x20  横梁材质 只读框(55,145)89x20
+        栓接参数 子Frame (209,81) 211x92
+          角片材质(230,111)73x20 角片厚度(230,150)47x18 mm
+          竖框螺栓数(346,111)57x20 横框螺栓数(346,150)57x20
+        立柱与角片连接螺栓 DataGrid(15,173)405x85
+        横框与角片连接螺栓 DataGrid(15,261)405x85
+      立柱与主体(钢转接件) Frame (11,354) 415x147
+        角片材质(25,386)73x20 角片壁厚(104,387)33x18 竖框螺栓数(160,386)57x20
+        立柱与每个螺栓接触面数(286,378)55x20 单侧角码 CheckBox(347,379)70x19
+        立柱与主体连接螺栓 DataGrid(15,409)404x85
+      输出 RichText (435,33) 346x407 ；按钮 预演(657,452) 上一步(717,452) 退出(657,476) 下一步(717,476)
+  -->
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-连接计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WkNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding WkNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="796" Height="510" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- ══ 连接形式 Frame (10,31) 415x36 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="31" Width="415" Height="36"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="24" Text="连接形式"/>
+        <TextBlock Canvas.Left="24" Canvas.Top="44" Text="立柱与主体"/>
+        <ComboBox Canvas.Left="97" Canvas.Top="42" Width="104" Height="20"
+                  ItemsSource="{Binding ConnectionTypes}"
+                  SelectedIndex="{Binding MainConnectionTypeIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="228" Canvas.Top="44" Text="横框与立柱"/>
+        <ComboBox Canvas.Left="302" Canvas.Top="42" Width="104" Height="20"
+                  ItemsSource="{Binding ConnectionTypes}"
+                  SelectedIndex="{Binding FrameConnectionTypeIndex, Mode=TwoWay}"/>
+
+        <!-- ══ 横框与立柱 Frame (11,69) 415x282 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="69" Width="415" Height="282"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="62" Text="横框与立柱"/>
+
+        <TextBlock Canvas.Left="24" Canvas.Top="85" Text="立柱材质"/>
+        <TextBox Classes="hb" Canvas.Left="55" Canvas.Top="102" Width="89" Height="20"
+                 IsReadOnly="True" IsEnabled="False" Text="{Binding ColumnMaterial}"/>
+        <TextBlock Canvas.Left="24" Canvas.Top="128" Text="横梁材质"/>
+        <TextBox Classes="hb" Canvas.Left="55" Canvas.Top="145" Width="89" Height="20"
+                 IsReadOnly="True" IsEnabled="False" Text="{Binding BeamMaterial}"/>
+
+        <!-- 栓接参数 子Frame (209,81) 211x92（实机是叠在横框与立柱里的子 Frame） -->
+        <Border Classes="hbFrame" Canvas.Left="209" Canvas.Top="81" Width="211" Height="92"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="215" Canvas.Top="74" Text="栓接参数"/>
+        <TextBlock Canvas.Left="222" Canvas.Top="94" Text="角片材质"/>
+        <ComboBox Canvas.Left="230" Canvas.Top="111" Width="73" Height="20"
+                  ItemsSource="{Binding MaterialOptions}"
+                  SelectedItem="{Binding BracketMaterial, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="222" Canvas.Top="133" Text="角片厚度"/>
+        <TextBox Classes="hb" Canvas.Left="230" Canvas.Top="150" Width="47" Height="18"
+                 Text="{Binding BracketThicknessText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="282" Canvas.Top="152" Text="mm"/>
+        <TextBlock Canvas.Left="338" Canvas.Top="94" Text="竖框螺栓数"/>
+        <ComboBox Canvas.Left="346" Canvas.Top="111" Width="57" Height="20"
+                  ItemsSource="{Binding CountOptions}"
+                  SelectedIndex="{Binding VerticalBoltCountIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="338" Canvas.Top="133" Text="横框螺栓数"/>
+        <ComboBox Canvas.Left="346" Canvas.Top="150" Width="57" Height="20"
+                  ItemsSource="{Binding CountOptions}"
+                  SelectedIndex="{Binding HorizontalBoltCountIndex, Mode=TwoWay}"/>
+
+        <!-- ══ 立柱与角片连接螺栓表 (15,173) 405x85 ══ -->
+        <StackPanel Canvas.Left="15" Canvas.Top="173" Width="405">
+          <TextBlock Text="立柱与角片连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
+          <DataGrid Width="405" Height="67"
+                  ItemsSource="{Binding ColumnBoltRows}"
+                  SelectedItem="{Binding SelectedColumnBolt, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  HeadersVisibility="Column" GridLinesVisibility="All"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="型号" Binding="{Binding Model}" Width="42"/>
+            <DataGridTextColumn Header="公称直径" Binding="{Binding NominalText}" Width="62"/>
+            <DataGridTextColumn Header="有效直径" Binding="{Binding EffectiveText}" Width="70"/>
+            <DataGridTextColumn Header="材质" Binding="{Binding Material}" Width="104"/>
+            <DataGridTextColumn Header="剪应力" Binding="{Binding ShearText}" Width="50"/>
+            <DataGridTextColumn Header="拉应力" Binding="{Binding TensionText}" Width="50"/>
+            <DataGridTextColumn Header="备注" Binding="{Binding Usage}" Width="*"/>
+          </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+
+        <!-- ══ 横框与角片连接螺栓表 (15,261) 405x85 ══ -->
+        <StackPanel Canvas.Left="15" Canvas.Top="261" Width="405">
+          <TextBlock Text="横框与角片连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
+          <DataGrid Width="405" Height="67"
+                  ItemsSource="{Binding FrameBoltRows}"
+                  SelectedItem="{Binding SelectedFrameBolt, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  HeadersVisibility="Column" GridLinesVisibility="All"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="型号" Binding="{Binding Model}" Width="42"/>
+            <DataGridTextColumn Header="公称直径" Binding="{Binding NominalText}" Width="62"/>
+            <DataGridTextColumn Header="有效直径" Binding="{Binding EffectiveText}" Width="70"/>
+            <DataGridTextColumn Header="材质" Binding="{Binding Material}" Width="104"/>
+            <DataGridTextColumn Header="剪应力" Binding="{Binding ShearText}" Width="50"/>
+            <DataGridTextColumn Header="拉应力" Binding="{Binding TensionText}" Width="50"/>
+            <DataGridTextColumn Header="备注" Binding="{Binding Usage}" Width="*"/>
+          </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+
+        <!-- ══ 立柱与主体(钢转接件) Frame (11,354) 415x147 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="354" Width="415" Height="147"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="347" Text="立柱与主体(钢转接件)"/>
+
+        <TextBlock Canvas.Left="20" Canvas.Top="368" Text="角片材质"/>
+        <ComboBox Canvas.Left="25" Canvas.Top="386" Width="73" Height="20"
+                  ItemsSource="{Binding MaterialOptions}"
+                  SelectedItem="{Binding MainBracketMaterial, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="102" Canvas.Top="368" Text="角片壁厚"/>
+        <TextBox Classes="hb" Canvas.Left="104" Canvas.Top="387" Width="33" Height="18"
+                 Text="{Binding MainBracketThicknessText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="140" Canvas.Top="389" Text="mm"/>
+        <TextBlock Canvas.Left="157" Canvas.Top="368" Text="竖框螺栓数"/>
+        <ComboBox Canvas.Left="160" Canvas.Top="386" Width="57" Height="20"
+                  ItemsSource="{Binding CountOptions}"
+                  SelectedIndex="{Binding MainBoltCountIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="248" Canvas.Top="360" Text="立柱与每个" FontSize="11"/>
+        <TextBlock Canvas.Left="248" Canvas.Top="372" Text="螺栓接触面数" FontSize="11"/>
+        <ComboBox Canvas.Left="286" Canvas.Top="378" Width="55" Height="20"
+                  ItemsSource="{Binding CountOptions}"
+                  SelectedIndex="{Binding ContactFacesIndex, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="347" Canvas.Top="379" Width="70" Height="19"
+                  Content="单侧角码" IsChecked="{Binding SingleSideBracket, Mode=TwoWay}"/>
+
+        <!-- ══ 立柱与主体连接螺栓表 (15,409) 404x85 ══ -->
+        <StackPanel Canvas.Left="15" Canvas.Top="409" Width="404">
+          <TextBlock Text="立柱与主体连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
+          <DataGrid Width="404" Height="67"
+                  ItemsSource="{Binding MainBoltRows}"
+                  SelectedItem="{Binding SelectedMainBolt, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  HeadersVisibility="Column" GridLinesVisibility="All"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="型号" Binding="{Binding Model}" Width="42"/>
+            <DataGridTextColumn Header="公称直径" Binding="{Binding NominalText}" Width="62"/>
+            <DataGridTextColumn Header="有效直径" Binding="{Binding EffectiveText}" Width="70"/>
+            <DataGridTextColumn Header="材质" Binding="{Binding Material}" Width="104"/>
+            <DataGridTextColumn Header="剪应力" Binding="{Binding ShearText}" Width="50"/>
+            <DataGridTextColumn Header="拉应力" Binding="{Binding TensionText}" Width="50"/>
+            <DataGridTextColumn Header="备注" Binding="{Binding Usage}" Width="*"/>
+          </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+
+        <!-- ══ 输出区 (435,33) 346x407 ══ -->
+        <Border Canvas.Left="435" Canvas.Top="33" Width="346" Height="407"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="12"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <TextBlock Canvas.Left="439" Canvas.Top="40" Text="{Binding PlaceholderText}"
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="12" IsHitTestVisible="False"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="657" Canvas.Top="452" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="717" Canvas.Top="452" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="657" Canvas.Top="476" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hb" Canvas.Left="717" Canvas.Top="476" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

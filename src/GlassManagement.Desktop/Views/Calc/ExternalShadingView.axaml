@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.ExternalShadingView"
+             x:DataType="vm:ExternalShadingViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="节能(热工)-外遮阳系数计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <TextBlock Text="遮阳板形式" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding TypeOptions}" SelectedIndex="{Binding TypeIndex}" MinWidth="120"/>
+          <TextBlock Text="外挑长度 A(mm)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding OverhangText}" Width="90"/>
+          <TextBlock Text="根部到窗对边距离 B(mm)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding DistanceText}" Width="90"/>
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+        </StackPanel>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap" FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="6">
+        <TextBlock Text="计算公式（GB50189-2005 附录 A）" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap"
+                   Text="水平遮阳板 SDh = ah·PF² + bh·PF + 1（ah=0.35, bh=-0.76）&#10;垂直遮阳板 SDv = av·PF² + bv·PF + 1（av=0.32, bv=-0.63）&#10;遮阳板外挑系数 PF = A/B，PF&gt;1 时取 1。"/>
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="说明：水平与垂直组合的综合遮阳系数取两者乘积；多块遮阳板取各块乘积；实际幕墙(门窗)遮阳系数 = 玻璃遮阳系数 × 外遮阳系数。"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

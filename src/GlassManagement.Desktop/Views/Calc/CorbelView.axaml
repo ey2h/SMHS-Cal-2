@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.CorbelView"
+             x:DataType="vm:CorbelViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="牛腿结构计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Button Content="预演" Command="{Binding CalcCommand}"/>
+          <Button Content="清空" Command="{Binding ClearCommand}"/>
+        </StackPanel>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap"
+                     FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="10">
+        <TextBlock Text="尺寸参数" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" MaxWidth="380">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="L (mm)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding LText}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="H (mm)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="斜梁角度 (°)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AngleText}" Margin="4"/>
+        </Grid>
+
+        <TextBlock Text="荷载参数（需自行求得）" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" MaxWidth="380">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="轴向力 N (N)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AxialText}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="竖向力 P (N)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="Q（本样式未用）" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding QText}" Margin="4"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="M0" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding M0Text}" Margin="4"/>
+        </Grid>
+
+        <TextBlock Text="截面参数（主梁/斜梁同值）" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" MaxWidth="380">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="型号" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SectionCode}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="Ix (cm⁴)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding IxText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="Wx (cm³)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WxText}" Margin="4"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="面积 A (mm²)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding AreaText}" Margin="4"/>
+        </Grid>
+
+        <TextBlock Text="材料" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" MaxWidth="380">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="E (MPa)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EText}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="塑性发展系数 γ" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding GammaText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="强度设计值 (MPa)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AllowBendingText}" Margin="4"/>
+        </Grid>
+
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="按 V31 逐指令还原：R=M0·A·L³·cosθ·(2−3b/L+(b/L)³)/(2A·H³·cosθ+6·Ix·H)；σA=(N0+N_diag·cosθ)/A+MA/(γWx)；σC=N0/A+P·b/(γWx)；σ_diag=N_diag/(φA)；df=M0L³/(3EI)−R·H²L/(6EI)·(3−H/L)；限值=2L/250。注意程序用 π=3.14。"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

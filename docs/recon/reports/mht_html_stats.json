@@ -1,0 +1,1932 @@
+{
+  "generatedAt": "2026-10-21T21:38:21.203Z",
+  "files": [
+    {
+      "group": "节能",
+      "sourceFile": "节能1.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能1.mht",
+      "bytes": 42130,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\节能1__t01.csv",
+          "index": 1,
+          "htmlRows": 24,
+          "gridRows": 24,
+          "gridCols": 26,
+          "nonEmptyGridRows": 22,
+          "mergeMarkers": 622,
+          "firstNonEmptyRowCells": [
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍"
+          ]
+        }
+      ],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\节能1.mht.md",
+      "textLines": 5,
+      "textChars": 43
+    },
+    {
+      "group": "节能",
+      "sourceFile": "节能2.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能2.mht",
+      "bytes": 15818,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [],
+      "title": "1:民用建筑节能计算区分公共和居住建筑两部分，执行不同的规范，有不同的要求；",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\节能2.mht.md",
+      "textLines": 60,
+      "textChars": 1022
+    },
+    {
+      "group": "节能",
+      "sourceFile": "节能3.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\节能3.mht",
+      "bytes": 34067,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\节能3__t01.csv",
+          "index": 1,
+          "htmlRows": 14,
+          "gridRows": 14,
+          "gridCols": 26,
+          "nonEmptyGridRows": 12,
+          "mergeMarkers": 362,
+          "firstNonEmptyRowCells": [
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍",
+            "民用建筑节能计算原则与介绍"
+          ]
+        }
+      ],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\节能3.mht.md",
+      "textLines": 5,
+      "textChars": 43
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "AQXS.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\AQXS.mht",
+      "bytes": 12615,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [],
+      "title": "铝合金型材的总安全系数是K=1",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\AQXS.mht.md",
+      "textLines": 86,
+      "textChars": 323
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "FLGN.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FLGN.mht",
+      "bytes": 278513,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\FLGN__t01.csv",
+          "index": 1,
+          "htmlRows": 23,
+          "gridRows": 23,
+          "gridCols": 4,
+          "nonEmptyGridRows": 23,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "材料",
+            "结构",
+            "最小截面（mm2）",
+            "备注⑩"
+          ]
+        }
+      ],
+      "title": "1",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\FLGN.mht.md",
+      "textLines": 798,
+      "textChars": 9131
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "FYFS.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\FYFS.mht",
+      "bytes": 210320,
+      "multipart": true,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\FYFS__t01.csv",
+          "index": 1,
+          "htmlRows": 25,
+          "gridRows": 25,
+          "gridCols": 7,
+          "nonEmptyGridRows": 21,
+          "mergeMarkers": 21,
+          "firstNonEmptyRowCells": [
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）",
+            "风级风速风压对照表（仅供参考）"
+          ]
+        }
+      ],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\FYFS.mht.md",
+      "textLines": 6,
+      "textChars": 44
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M01.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M01.mht",
+      "bytes": 59303,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M01__t01.csv",
+          "index": 1,
+          "htmlRows": 11,
+          "gridRows": 11,
+          "gridCols": 4,
+          "nonEmptyGridRows": 11,
+          "mergeMarkers": 2,
+          "firstNonEmptyRowCells": [
+            "支承结构类型",
+            "支承结构类型",
+            "相对挠度（L跨度）",
+            "绝对挠度（mm）"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M01__t02.csv",
+          "index": 2,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 10,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 10,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ]
+        }
+      ],
+      "title": "关于幕墙抗风压",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M01.mht.md",
+      "textLines": 108,
+      "textChars": 810
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M02.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M02.mht",
+      "bytes": 39526,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M02__t01.csv",
+          "index": 1,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 7,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 2,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        }
+      ],
+      "title": "关于幕墙水密性",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M02.mht.md",
+      "textLines": 115,
+      "textChars": 922
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M03.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M03.mht",
+      "bytes": 43772,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M03__t01.csv",
+          "index": 1,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 5,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 2,
+          "firstNonEmptyRowCells": [
+            "地区分类",
+            "建筑层数、高度",
+            "气密性能分级",
+            "气密性能指标小于",
+            "气密性能指标小于"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M03__t02.csv",
+          "index": 2,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 6,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 2,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "title": "关于幕墙气密性",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M03.mht.md",
+      "textLines": 72,
+      "textChars": 645
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M04.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M04.mht",
+      "bytes": 58147,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M04__t01.csv",
+          "index": 1,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 9,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 9,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M04__t02.csv",
+          "index": 2,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 9,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "title": "关于幕墙热工性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M04.mht.md",
+      "textLines": 137,
+      "textChars": 1312
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M05.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M05.mht",
+      "bytes": 25049,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M05__t01.csv",
+          "index": 1,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 6,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        }
+      ],
+      "title": "关于幕墙空气声隔声性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M05.mht.md",
+      "textLines": 80,
+      "textChars": 776
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M06.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M06.mht",
+      "bytes": 95478,
+      "multipart": true,
+      "htmlParts": 2,
+      "nonHtmlParts": [
+        {
+          "contentType": "text/xml",
+          "bytes": 167
+        }
+      ],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        },
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M06__t01.csv",
+          "index": 1,
+          "htmlRows": 10,
+          "gridRows": 10,
+          "gridCols": 5,
+          "nonEmptyGridRows": 10,
+          "mergeMarkers": 15,
+          "firstNonEmptyRowCells": [
+            "结构类型",
+            "结构类型",
+            "建筑高度H(m)",
+            "建筑高度H(m)",
+            "建筑高度H(m)"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M06__t02.csv",
+          "index": 2,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 6,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M06__t03.csv",
+          "index": 3,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 6,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 11,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+          ]
+        }
+      ],
+      "title": "关于幕墙平面内变形和抗震",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M06.mht.md",
+      "textLines": 256,
+      "textChars": 1578
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M07.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M07.mht",
+      "bytes": 14766,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [],
+      "title": "关于幕墙承载力性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M07.mht.md",
+      "textLines": 68,
+      "textChars": 478
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M08.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M08.mht",
+      "bytes": 140245,
+      "multipart": true,
+      "htmlParts": 1,
+      "nonHtmlParts": [
+        {
+          "contentType": "application/octet-stream",
+          "bytes": 304
+        }
+      ],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M08__t01.csv",
+          "index": 1,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 6,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "分级指标",
+            "分级指标",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M08__t02.csv",
+          "index": 2,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 6,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M08__t03.csv",
+          "index": 3,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 3,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 3,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "2"
+          ]
+        }
+      ],
+      "title": "关于幕墙耐撞击性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M08.mht.md",
+      "textLines": 38,
+      "textChars": 1005
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M09.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M09.mht",
+      "bytes": 32337,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M09__t01.csv",
+          "index": 1,
+          "htmlRows": 12,
+          "gridRows": 12,
+          "gridCols": 6,
+          "nonEmptyGridRows": 11,
+          "mergeMarkers": 54,
+          "firstNonEmptyRowCells": [
+            "建筑幕墙采光性能",
+            "建筑幕墙采光性能",
+            "建筑幕墙采光性能",
+            "建筑幕墙采光性能",
+            "建筑幕墙采光性能",
+            "建筑幕墙采光性能"
+          ]
+        }
+      ],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M09.mht.md",
+      "textLines": 5,
+      "textChars": 42
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "M10.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\M10.mht",
+      "bytes": 296310,
+      "multipart": true,
+      "htmlParts": 2,
+      "nonHtmlParts": [
+        {
+          "contentType": "image/x-wmf",
+          "bytes": 44128
+        },
+        {
+          "contentType": "text/xml",
+          "bytes": 200
+        }
+      ],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        },
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t01.csv",
+          "index": 1,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 10,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 10,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t02.csv",
+          "index": 2,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 6,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t03.csv",
+          "index": 3,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 6,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t04.csv",
+          "index": 4,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 9,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t05.csv",
+          "index": 5,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 9,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t06.csv",
+          "index": 6,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 8,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t07.csv",
+          "index": 7,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 9,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t08.csv",
+          "index": 8,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 5,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 5,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "2",
+            "3",
+            "4",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t09.csv",
+          "index": 9,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 6,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 6,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t10.csv",
+          "index": 10,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 7,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "1",
+            "2",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t11.csv",
+          "index": 11,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 6,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "分级指标",
+            "分级指标",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\M10__t12.csv",
+          "index": 12,
+          "htmlRows": 5,
+          "gridRows": 5,
+          "gridCols": 7,
+          "nonEmptyGridRows": 5,
+          "mergeMarkers": 6,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        }
+      ],
+      "title": "8",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\M10.mht.md",
+      "textLines": 448,
+      "textChars": 3073
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC01.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC01.mht",
+      "bytes": 35672,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC01__t01.csv",
+          "index": 1,
+          "htmlRows": 3,
+          "gridRows": 3,
+          "gridCols": 10,
+          "nonEmptyGridRows": 3,
+          "mergeMarkers": 10,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ]
+        }
+      ],
+      "title": "关于门窗抗风压性能：",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC01.mht.md",
+      "textLines": 87,
+      "textChars": 726
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC02.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC02.mht",
+      "bytes": 29886,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC02__t01.csv",
+          "index": 1,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 7,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ]
+        }
+      ],
+      "title": "关于门窗水密性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC02.mht.md",
+      "textLines": 92,
+      "textChars": 718
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC03.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC03.mht",
+      "bytes": 54635,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC03__t01.csv",
+          "index": 1,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 9,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 9,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "title": "关于门窗气密性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC03.mht.md",
+      "textLines": 99,
+      "textChars": 1224
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC04.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC04.mht",
+      "bytes": 66935,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC04__t01.csv",
+          "index": 1,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 7,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC04__t02.csv",
+          "index": 2,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 6,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC04__t03.csv",
+          "index": 3,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 8,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ]
+        }
+      ],
+      "title": "关于门窗传热系数、抗结露因子分级",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC04.mht.md",
+      "textLines": 130,
+      "textChars": 1158
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC05.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC05.mht",
+      "bytes": 30562,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC05__t01.csv",
+          "index": 1,
+          "htmlRows": 7,
+          "gridRows": 7,
+          "gridCols": 3,
+          "nonEmptyGridRows": 7,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级",
+            "外门窗的分级指标",
+            "内门窗的分级指标"
+          ]
+        }
+      ],
+      "title": "关于门窗空气声隔声性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC05.mht.md",
+      "textLines": 60,
+      "textChars": 439
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "MC06.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\MC06.mht",
+      "bytes": 21190,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\MC06__t01.csv",
+          "index": 1,
+          "htmlRows": 2,
+          "gridRows": 2,
+          "gridCols": 6,
+          "nonEmptyGridRows": 2,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "分级代号",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
+        }
+      ],
+      "title": "关于门窗采光性能",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\MC06.mht.md",
+      "textLines": 61,
+      "textChars": 470
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "WLXN.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\WLXN.mht",
+      "bytes": 860094,
+      "multipart": true,
+      "htmlParts": 2,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        },
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t01.csv",
+          "index": 1,
+          "htmlRows": 12,
+          "gridRows": 12,
+          "gridCols": 6,
+          "nonEmptyGridRows": 12,
+          "mergeMarkers": 27,
+          "firstNonEmptyRowCells": [
+            "一、 短期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "一、 短期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "一、 短期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t02.csv",
+          "index": 2,
+          "htmlRows": 12,
+          "gridRows": 12,
+          "gridCols": 6,
+          "nonEmptyGridRows": 12,
+          "mergeMarkers": 29,
+          "firstNonEmptyRowCells": [
+            "二、 长期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "二、 长期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "二、 长期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "二、 长期荷载作用下玻璃的强度设计值 fg(MPa)",
+            "二、 长期荷载作用下玻璃的强度设计值 fg(MPa)",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t03.csv",
+          "index": 3,
+          "htmlRows": 10,
+          "gridRows": 10,
+          "gridCols": 6,
+          "nonEmptyGridRows": 10,
+          "mergeMarkers": 28,
+          "firstNonEmptyRowCells": [
+            "三、 铝合金型材的强度设计值 (MPa )",
+            "三、 铝合金型材的强度设计值 (MPa )",
+            "三、 铝合金型材的强度设计值 (MPa )",
+            "三、 铝合金型材的强度设计值 (MPa )",
+            "三、 铝合金型材的强度设计值 (MPa )",
+            "三、 铝合金型材的强度设计值 (MPa )"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t04.csv",
+          "index": 4,
+          "htmlRows": 5,
+          "gridRows": 5,
+          "gridCols": 5,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 5,
+          "firstNonEmptyRowCells": [
+            "四、 钢材的强度设计值(1-热轧钢材) fs(MPa)",
+            "四、 钢材的强度设计值(1-热轧钢材) fs(MPa)",
+            "四、 钢材的强度设计值(1-热轧钢材) fs(MPa)",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t05.csv",
+          "index": 5,
+          "htmlRows": 5,
+          "gridRows": 5,
+          "gridCols": 4,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 5,
+          "firstNonEmptyRowCells": [
+            "五、 钢材的强度设计值(2-冷弯薄壁型钢) fs(MPa)",
+            "五、 钢材的强度设计值(2-冷弯薄壁型钢) fs(MPa)",
+            "五、 钢材的强度设计值(2-冷弯薄壁型钢) fs(MPa)",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t06.csv",
+          "index": 6,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 7,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 11,
+          "firstNonEmptyRowCells": [
+            "六、 不锈钢板材的强度设计值f(MPa)",
+            "六、 不锈钢板材的强度设计值f(MPa)",
+            "六、 不锈钢板材的强度设计值f(MPa)",
+            "六、 不锈钢板材的强度设计值f(MPa)",
+            "六、 不锈钢板材的强度设计值f(MPa)",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t07.csv",
+          "index": 7,
+          "htmlRows": 14,
+          "gridRows": 14,
+          "gridCols": 4,
+          "nonEmptyGridRows": 14,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "七、 材料的弹性模量E(MPa)",
+            "七、 材料的弹性模量E(MPa)",
+            "七、 材料的弹性模量E(MPa)",
+            "七、 材料的弹性模量E(MPa)"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t08.csv",
+          "index": 8,
+          "htmlRows": 10,
+          "gridRows": 10,
+          "gridCols": 4,
+          "nonEmptyGridRows": 10,
+          "mergeMarkers": 6,
+          "firstNonEmptyRowCells": [
+            "八、 材料的泊松比υ",
+            "八、 材料的泊松比υ",
+            "八、 材料的泊松比υ",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t09.csv",
+          "index": 9,
+          "htmlRows": 8,
+          "gridRows": 8,
+          "gridCols": 4,
+          "nonEmptyGridRows": 8,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "九、 材料的膨胀系数α(1/℃)",
+            "九、 材料的膨胀系数α(1/℃)",
+            "九、 材料的膨胀系数α(1/℃)",
+            "九、 材料的膨胀系数α(1/℃)"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t10.csv",
+          "index": 10,
+          "htmlRows": 7,
+          "gridRows": 7,
+          "gridCols": 4,
+          "nonEmptyGridRows": 7,
+          "mergeMarkers": 8,
+          "firstNonEmptyRowCells": [
+            "十、 材料的重力密度γg (KN/m3)",
+            "十、 材料的重力密度γg (KN/m3)",
+            "十、 材料的重力密度γg (KN/m3)",
+            "十、 材料的重力密度γg (KN/m3)"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t11.csv",
+          "index": 11,
+          "htmlRows": 9,
+          "gridRows": 9,
+          "gridCols": 8,
+          "nonEmptyGridRows": 9,
+          "mergeMarkers": 48,
+          "firstNonEmptyRowCells": [
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）",
+            "十一、 人造板材的强度设计值（MPa）"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t12.csv",
+          "index": 12,
+          "htmlRows": 11,
+          "gridRows": 11,
+          "gridCols": 6,
+          "nonEmptyGridRows": 11,
+          "mergeMarkers": 9,
+          "firstNonEmptyRowCells": [
+            "十二、 板材单位面积重力标准值（MPa）",
+            "十二、 板材单位面积重力标准值（MPa）",
+            "十二、 板材单位面积重力标准值（MPa）",
+            "十二、 板材单位面积重力标准值（MPa）",
+            "十二、 板材单位面积重力标准值（MPa）",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t13.csv",
+          "index": 13,
+          "htmlRows": 16,
+          "gridRows": 16,
+          "gridCols": 12,
+          "nonEmptyGridRows": 16,
+          "mergeMarkers": 31,
+          "firstNonEmptyRowCells": [
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "十三、 螺栓连接的强度设计值一(MPa)",
+            "",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t14.csv",
+          "index": 14,
+          "htmlRows": 14,
+          "gridRows": 14,
+          "gridCols": 6,
+          "nonEmptyGridRows": 14,
+          "mergeMarkers": 7,
+          "firstNonEmptyRowCells": [
+            "十四、 不锈钢螺栓连接的强度设计值(MPa)",
+            "十四、 不锈钢螺栓连接的强度设计值(MPa)",
+            "十四、 不锈钢螺栓连接的强度设计值(MPa)",
+            "十四、 不锈钢螺栓连接的强度设计值(MPa)",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t15.csv",
+          "index": 15,
+          "htmlRows": 17,
+          "gridRows": 17,
+          "gridCols": 12,
+          "nonEmptyGridRows": 17,
+          "mergeMarkers": 50,
+          "firstNonEmptyRowCells": [
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "十五、 螺栓连接的强度设计值二(MPa)",
+            "",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t16.csv",
+          "index": 16,
+          "htmlRows": 12,
+          "gridRows": 12,
+          "gridCols": 8,
+          "nonEmptyGridRows": 11,
+          "mergeMarkers": 19,
+          "firstNonEmptyRowCells": [
+            "十六、 焊缝的强度设计值(MPa)",
+            "十六、 焊缝的强度设计值(MPa)",
+            "十六、 焊缝的强度设计值(MPa)",
+            "十六、 焊缝的强度设计值(MPa)",
+            "十六、 焊缝的强度设计值(MPa)",
+            "十六、 焊缝的强度设计值(MPa)",
+            "",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t17.csv",
+          "index": 17,
+          "htmlRows": 11,
+          "gridRows": 11,
+          "gridCols": 4,
+          "nonEmptyGridRows": 11,
+          "mergeMarkers": 12,
+          "firstNonEmptyRowCells": [
+            "十七、 楼层弹性层间位移角限值",
+            "十七、 楼层弹性层间位移角限值",
+            "十七、 楼层弹性层间位移角限值",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t18.csv",
+          "index": 18,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 3,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "十八、 铝塑复合板强度设计值（MPa）",
+            "十八、 铝塑复合板强度设计值（MPa）",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t19.csv",
+          "index": 19,
+          "htmlRows": 4,
+          "gridRows": 4,
+          "gridCols": 3,
+          "nonEmptyGridRows": 4,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "十九、 蜂窝铝板强度设计值（MPa）",
+            "十九、 蜂窝铝板强度设计值（MPa）",
+            ""
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\WLXN__t20.csv",
+          "index": 20,
+          "htmlRows": 12,
+          "gridRows": 12,
+          "gridCols": 6,
+          "nonEmptyGridRows": 12,
+          "mergeMarkers": 28,
+          "firstNonEmptyRowCells": [
+            "二十、 部分单层铝合板强度设计值（MPa）",
+            "二十、 部分单层铝合板强度设计值（MPa）",
+            "二十、 部分单层铝合板强度设计值（MPa）",
+            "二十、 部分单层铝合板强度设计值（MPa）",
+            "二十、 部分单层铝合板强度设计值（MPa）",
+            ""
+          ]
+        }
+      ],
+      "title": "汇宝幕墙计算软件",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\WLXN.mht.md",
+      "textLines": 35,
+      "textChars": 844
+    },
+    {
+      "group": "物理性能",
+      "sourceFile": "YLMJ.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\物理性能\\YLMJ.mht",
+      "bytes": 186219,
+      "multipart": true,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\YLMJ__t01.csv",
+          "index": 1,
+          "htmlRows": 15,
+          "gridRows": 15,
+          "gridCols": 6,
+          "nonEmptyGridRows": 15,
+          "mergeMarkers": 6,
+          "firstNonEmptyRowCells": [
+            "粗牙螺纹",
+            "粗牙螺纹",
+            "粗牙螺纹",
+            "细牙螺纹",
+            "细牙螺纹",
+            "细牙螺纹"
+          ]
+        }
+      ],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\YLMJ.mht.md",
+      "textLines": 10,
+      "textChars": 98
+    },
+    {
+      "group": "热工规范表",
+      "sourceFile": "表5.3.1-6.3.1.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表5.3.1-6.3.1.mht",
+      "bytes": 74166,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表5.3.1-6.3.1__t01.csv",
+          "index": 1,
+          "htmlRows": 6,
+          "gridRows": 6,
+          "gridCols": 6,
+          "nonEmptyGridRows": 6,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "气候区",
+            "K(W/m2.K)",
+            "抗结露验算要求",
+            "气候区",
+            "K(W/m2.K)",
+            "抗结露验算要求"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表5.3.1-6.3.1__t02.csv",
+          "index": 2,
+          "htmlRows": 7,
+          "gridRows": 7,
+          "gridCols": 5,
+          "nonEmptyGridRows": 7,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "气候区",
+            "朝向",
+            "朝向",
+            "朝向",
+            "朝向"
+          ]
+        }
+      ],
+      "title": "表5",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\表5.3.1-6.3.1.mht.md",
+      "textLines": 94,
+      "textChars": 1003
+    },
+    {
+      "group": "热工规范表",
+      "sourceFile": "表B.2.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.2.mht",
+      "bytes": 84438,
+      "multipart": true,
+      "htmlParts": 1,
+      "nonHtmlParts": [
+        {
+          "contentType": "application/vnd.ms-officetheme",
+          "bytes": 4226
+        },
+        {
+          "contentType": "text/xml",
+          "bytes": 355
+        },
+        {
+          "contentType": "text/xml",
+          "bytes": 220
+        }
+      ],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表B.2__t01.csv",
+          "index": 1,
+          "htmlRows": 14,
+          "gridRows": 14,
+          "gridCols": 6,
+          "nonEmptyGridRows": 14,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "材料",
+            "使用部位",
+            "修正系数",
+            "修正系数",
+            "修正系数",
+            "修正系数"
+          ]
+        }
+      ],
+      "title": "表C",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\表B.2.mht.md",
+      "textLines": 44,
+      "textChars": 111
+    },
+    {
+      "group": "热工规范表",
+      "sourceFile": "表B.5.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表B.5.mht",
+      "bytes": 125033,
+      "multipart": true,
+      "htmlParts": 1,
+      "nonHtmlParts": [
+        {
+          "contentType": "application/vnd.ms-officetheme",
+          "bytes": 4226
+        },
+        {
+          "contentType": "text/xml",
+          "bytes": 355
+        },
+        {
+          "contentType": "text/xml",
+          "bytes": 220
+        }
+      ],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表B.5__t01.csv",
+          "index": 1,
+          "htmlRows": 28,
+          "gridRows": 28,
+          "gridCols": 4,
+          "nonEmptyGridRows": 28,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "面层类型",
+            "表面性质",
+            "表面颜色",
+            "太阳辐射吸收系数 r 值"
+          ]
+        }
+      ],
+      "title": "表C",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\表B.5.mht.md",
+      "textLines": 39,
+      "textChars": 104
+    },
+    {
+      "group": "热工规范表",
+      "sourceFile": "表C.5.3-1-2.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-1-2.mht",
+      "bytes": 142112,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表C.5.3-1-2__t01.csv",
+          "index": 1,
+          "htmlRows": 26,
+          "gridRows": 26,
+          "gridCols": 6,
+          "nonEmptyGridRows": 26,
+          "mergeMarkers": 5,
+          "firstNonEmptyRowCells": [
+            "玻璃品种",
+            "玻璃品种",
+            "玻璃中部传↵热系数Kg↵[W/(m2·K)]",
+            "传热系数K[W/(m2·K)]",
+            "传热系数K[W/(m2·K)]",
+            "传热系数K[W/(m2·K)]"
+          ]
+        },
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表C.5.3-1-2__t02.csv",
+          "index": 2,
+          "htmlRows": 13,
+          "gridRows": 13,
+          "gridCols": 5,
+          "nonEmptyGridRows": 13,
+          "mergeMarkers": 4,
+          "firstNonEmptyRowCells": [
+            "玻璃品种",
+            "玻璃品种",
+            "玻璃中部传热系数Kg[W/(m2·K)]",
+            "传热系数K[W/(m2·K)]",
+            "传热系数K[W/(m2·K)]"
+          ]
+        }
+      ],
+      "title": "表C",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\表C.5.3-1-2.mht.md",
+      "textLines": 55,
+      "textChars": 198
+    },
+    {
+      "group": "热工规范表",
+      "sourceFile": "表C.5.3-3.mht",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\pic\\热工\\规范\\表C.5.3-3.mht",
+      "bytes": 188130,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "quoted-printable",
+          "usedEncoding": "utf-8",
+          "declaredCharset": "us-ascii"
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\表C.5.3-3__t01.csv",
+          "index": 1,
+          "htmlRows": 33,
+          "gridRows": 33,
+          "gridCols": 6,
+          "nonEmptyGridRows": 33,
+          "mergeMarkers": 2,
+          "firstNonEmptyRowCells": [
+            "玻璃↵品种",
+            "玻璃↵品种",
+            "可见光↵透射比τv",
+            "太阳光总透射比gg",
+            "传热系数↵Kg[W/(m2·K)]",
+            "镀膜玻璃↵半球辐射率ζ"
+          ]
+        }
+      ],
+      "title": "表C",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\表C.5.3-3.mht.md",
+      "textLines": 41,
+      "textChars": 109
+    },
+    {
+      "group": "荷载规范HTM",
+      "sourceFile": "001.htm",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\001.htm",
+      "bytes": 135733,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "7bit",
+          "usedEncoding": "gb18030",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [
+        {
+          "csv": "C:\\code\\Glass\\docs\\recon\\specs\\tables\\001__t01.csv",
+          "index": 1,
+          "htmlRows": 13,
+          "gridRows": 13,
+          "gridCols": 6,
+          "nonEmptyGridRows": 13,
+          "mergeMarkers": 0,
+          "firstNonEmptyRowCells": [
+            "项次",
+            "类别",
+            "标准值(kN/m2)",
+            "组合值系数",
+            "频遇值系数",
+            "准永久值系数"
+          ]
+        }
+      ],
+      "title": "新建网页 1",
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\001.htm.md",
+      "textLines": 33,
+      "textChars": 174
+    },
+    {
+      "group": "荷载规范HTM",
+      "sourceFile": "002.htm",
+      "sourcePath": "C:\\Program Files (x86)\\汇宝幕墙门窗结构计算软件V35.0\\规范\\荷载规范\\002.htm",
+      "bytes": 4430,
+      "multipart": false,
+      "htmlParts": 1,
+      "nonHtmlParts": [],
+      "decode": [
+        {
+          "transfer": "7bit",
+          "usedEncoding": "utf-8",
+          "declaredCharset": ""
+        }
+      ],
+      "tables": [],
+      "title": null,
+      "textOut": "C:\\code\\Glass\\docs\\recon\\specs\\002.htm.md",
+      "textLines": 24,
+      "textChars": 23
+    }
+  ]
+}

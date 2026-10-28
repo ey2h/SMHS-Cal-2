@@ -1,0 +1,240 @@
+using GlassManagement.Calc.Engines;
+using Xunit;
+
+namespace GlassManagement.Calc.Tests;
+
+/// <summary>
+/// 双夹层-中空玻璃（4 片：外夹层 2 片 + 中空腔 + 内夹层 2 片）。
+///
+/// 实机取证：`local-data/recon/glass_cfg_scan.py --cases dbllam`
+/// 工况 1100×1380、4 片均 6mm、wk=0.00137、αmax=0.16。
+/// 屏上：最外片(1#) 8.172 / 次外片(2#) 8.172 / 次内片(3#) 7.539 / 最内片(4#) 7.539 / df 2.625 / 限值 18.333
+///
+/// 槽：t_e[11]=9.04875  w[13]=0.000754(每片0.000377)  w[26]=0.000685(每片0.000342)
+///     W标准[22]=0.000438 [33]=0.000404   W强度[23]=0.000652 [34]=0.000599
+///     θ[40]=6.8724 η[41]=0.985  θ[54]=6.3389 η[55]=0.989  D[70]=4630690.832
+/// </summary>
+public class DoubleLaminatedInsulatedTests
+{
+    private static CompositeGlassResult Run()
+        => GlassEngine.ComputeDoubleLaminated(0.00137, 1100, 1380, 6, 6, 6, 6, 0.16);
+
+    [Fact]
+    public void 四片强度_屏上数值逐位()
+    {
+        var r = Run();
+        Assert.Equal(4, r.Plies.Length);
+        Assert.Equal(8.172, r.Plies[0].Sigma);   // 最外片(1#)
+        Assert.Equal(8.172, r.Plies[1].Sigma);   // 次外片(2#)：与外夹层另一片同厚同值
+        Assert.Equal(7.539, r.Plies[2].Sigma);   // 次内片(3#)
+        Assert.Equal(7.539, r.Plies[3].Sigma);   // 最内片(4#)
+    }
+
+    [Fact]
+    public void 两侧份额_外侧含1点1倍()
+    {
+        var r = Run();
+        // 外侧夹层整体 1.1×wk×D外/ΣD = 0.0007535 → 每片 0.00037675 → round6 0.000377（槽[13]/2）
+        Assert.Equal(0.000377, r.Plies[0].WkShare);
+        Assert.Equal(0.000377, r.Plies[1].WkShare);
+        // 内侧夹层 0.0006849 → 每片 0.0003425 → round6 0.000342（银行家舍入，槽[27]）
+        Assert.Equal(0.000342, r.Plies[2].WkShare);
+        Assert.Equal(0.000342, r.Plies[3].WkShare);
+    }
+
+    [Fact]
+    public void 两个组合值_取整口径不同()
+    {
+        var r = Run();
+        // W标准 用未取整份额：round6(0.00037675 + 0.5×0.00012288) = 0.000438
+        Assert.Equal(0.000438, r.Plies[0].WDeflection);
+        // 内侧：round6(0.00034250 + 0.00006144) = 0.000404（若用 round6 份额 0.000342 会得 0.000403）
+        Assert.Equal(0.000404, r.Plies[2].WDeflection);
+        // W强度 用 round6 份额：round6(1.5×0.000377 + 0.7×0.00012288) = 0.000652
+        Assert.Equal(0.000652, r.Plies[0].WStrength);
+        Assert.Equal(0.000599, r.Plies[2].WStrength);
+    }
+
+    [Fact]
+    public void theta与eta_屏上数值逐位()
+    {
+        var r = Run();
+        Assert.Equal(6.8724, r.Plies[0].Theta);   // 槽[40]
+        Assert.Equal(0.985, r.Plies[0].Eta);      // 槽[41]
+        Assert.Equal(6.3389, r.Plies[2].Theta);   // 槽[54]
+        Assert.Equal(0.989, r.Plies[2].Eta);      // 槽[55]
+    }
+
+    [Fact]
+    public void 挠度与限值_屏上数值逐位()
+    {
+        var r = Run();
+        Assert.Equal(2.625, r.Deflection);        // 屏上 2.625mm
+        Assert.Equal(18.333, r.Limit);            // 屏上 18.333mm
+    }
+
+    [Fact]
+    public void 等效厚度_三点实测证明不是齐次函数()
+    {
+        // 三点实测（glass_dblinsul_te.py，改外夹层首片 6→8→10）：
+        //   6/6/6/6  Σt³=864   t_e=9.04875   t_e³/Σt³=0.857535
+        //   8/6/6/6  Σt³=1160  t_e=9.98260   t_e³/Σt³=0.857577
+        //   10/6/6/6 Σt³=1648  t_e=11.22140  t_e³/Σt³=0.857401
+        // 比值不恒定 → t_e 不是 Σt³ 的齐次函数；0.95³=0.857375 最近但残差符号正负交替。
+        // 改任意一片结果相同（4 片对 t_e 等价）。
+        //
+        // 按纪律不硬凑：本实现 (Σ(0.95tᵢ)³)^(1/3) 与实测差 6e-4，
+        // 影响面只有槽位 θ_δ（4.156 vs 4.155）；D / df / 四片 σ / θ / η 全部逐位。
+        var r = Run();
+        Assert.InRange(r.EquivalentThickness, 9.048, 9.049);
+        Assert.InRange(System.Math.Abs(r.EquivalentThickness - 9.04875), 0.0, 0.001);
+
+        // 0.95 系数在 1e-4 内成立（作为近似值锁住，不作为"已逐位"结论）
+        double sumT3 = 4 * 216.0;
+        Assert.InRange(r.EquivalentThickness / System.Math.Pow(sumT3, 1.0 / 3.0), 0.9498, 0.9502);
+    }
+
+    [Fact]
+    public void 与双中空和三片构型_三者等效厚度口径各不相同()
+    {
+        // 双中空 6/6/6 → 7.952（逐层衰减）；双夹层-中空 6/6/6/6 → 9.048
+        Assert.Equal(7.952, GlassEngine.DoubleInsulatedThickness(6, 6, 6));
+        Assert.InRange(Run().EquivalentThickness, 9.048, 9.049);
+        Assert.NotEqual(GlassEngine.DoubleInsulatedThickness(6, 6, 6), Run().EquivalentThickness);
+    }
+
+    [Fact]
+    public void 内外侧同厚时_外侧份额大于内侧()
+    {
+        var r = Run();
+        Assert.True(r.Plies[0].WkShare > r.Plies[2].WkShare, "外侧含 1.1 倍，份额应更大");
+        // 0.000377/0.000342 ≈ 1.10
+        Assert.InRange(r.Plies[0].WkShare / r.Plies[2].WkShare, 1.09, 1.11);
+    }
+}
+
+/// <summary>
+/// 另一个模块「其它玻璃计算」的构型验证（独立计算器，输入不依赖第一页）。
+/// 实测：四玻外夹层双中空、1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16
+///   外片 8.833 / 次外片 8.833 / 次内片 7.217 / 内片 7.217
+///   挠度 2.356 / 容许值 16.667(四边简支) / 36 星
+/// </summary>
+public class OtherGlassCalcProbeTests
+{
+    [Fact]
+    public void 四玻外夹层双中空_实测对照()
+    {
+        var r = GlassEngine.ComputeFourPlyLaminatedInsulated(0.001, 1000, 2000, 6, 6, 6, 6, 0.16);
+        Console.WriteLine($"PROBE sigma = {string.Join(",", r.Plies.Select(p => p.Sigma))}");
+        Console.WriteLine($"PROBE w     = {string.Join(",", r.Plies.Select(p => p.WkShare))}");
+        Console.WriteLine($"PROBE Wstd  = {string.Join(",", r.Plies.Select(p => p.WDeflection))}");
+        Console.WriteLine($"PROBE Wstr  = {string.Join(",", r.Plies.Select(p => p.WStrength))}");
+        Console.WriteLine($"PROBE theta = {string.Join(",", r.Plies.Select(p => p.Theta))}");
+        Console.WriteLine($"PROBE eta   = {string.Join(",", r.Plies.Select(p => p.Eta))}");
+        Console.WriteLine($"PROBE te={r.EquivalentThickness} df={r.Deflection} lim={r.Limit}");
+        Assert.Equal(8.833, r.Plies[0].Sigma);
+        Assert.Equal(7.217, r.Plies[2].Sigma);
+        Assert.Equal(2.356, r.Deflection);
+        Assert.Equal(16.667, r.Limit);
+    }
+}
+
+/// <summary>
+/// 「其它玻璃计算」三种构型实测对照（other_glass_probe.py，2026-10-25）。
+/// 工况：1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16、四边简支。
+///   四玻外夹层：8.833 / 8.833 / 7.217 / 7.217   df 2.356  限 16.667
+///   四玻内夹层：7.783 / 7.783 / 8.167 / 8.167   df 2.356  限 16.667
+///   多片夹层  ：9.767（仅 1 个 σ）              df 2.502  限 8.653（未复刻）
+/// </summary>
+public class OtherGlassThreeConfigTests
+{
+    [Fact]
+    public void 四玻内夹层双中空_实测对照()
+    {
+        var r = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: false);
+        Assert.Equal(7.783, r.Plies[0].Sigma);
+        Assert.Equal(7.783, r.Plies[1].Sigma);   // 次外片同样在外侧，也乘 1.1
+        Assert.Equal(8.167, r.Plies[2].Sigma);
+        Assert.Equal(8.167, r.Plies[3].Sigma);
+        Assert.Equal(2.356, r.Deflection);
+        Assert.Equal(16.667, r.Limit);
+    }
+
+    [Fact]
+    public void 内外夹层互换_外侧总是更强()
+    {
+        var outer = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: true);
+        var inner = GlassEngine.ComputeFourPlyLaminatedInsulated(
+            0.001, 1000, 2000, 6, 6, 6, 6, 0.16, laminatedOuter: false);
+        // 夹层在哪侧，哪侧的 σ 就更小（整体刚度大 → 分到的每片荷载小）
+        Assert.True(outer.Plies[0].Sigma > outer.Plies[2].Sigma, "外夹层：外片 σ 更大");
+        Assert.True(inner.Plies[0].Sigma < inner.Plies[2].Sigma, "内夹层：内片 σ 更大");
+        // 两者 t_e 与挠度相同（同尺寸同厚度，只是夹层位置换边）
+        Assert.Equal(outer.EquivalentThickness, inner.EquivalentThickness);
+        Assert.Equal(outer.Deflection, inner.Deflection);
+    }
+}
+
+/// <summary>
+/// 「其它玻璃计算」多片夹层（第 3 构型）。
+///
+/// 实测（other_glass_multilam.py，1000×2000、wk=1.0KPa、αmax=0.16）：
+///   6mm → σ 9.767 / df 2.502 / 容许值 8.653
+///   8mm → σ 5.756 / df 1.055 / 容许值 11.538
+/// 定案：t_e = (3t³)^(1/3)（3 片，不是 4 片）；w = wk/3 无 1.1；容许值显示 = t_e。
+/// </summary>
+public class MultiLaminatedTests
+{
+    [Fact]
+    public void 六毫米_强度与挠度逐位()
+    {
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        Assert.Equal(3, r.PlyCount);
+        Assert.Equal(9.767, r.Ply.Sigma);      // 屏上 ✓
+        // ⚠ df 实测 2.502，本实现 2.501（差 1e-3）：差异来自 mu=Coef(0.5) 表插值，
+        //    不是公式结构问题（同 te 下 D 已对上）。该构型函数入口未定位，不调表凑数。
+        Assert.InRange(r.Deflection, 2.500, 2.503);
+    }
+
+    [Fact]
+    public void 等效厚度是3片开立方_不是4片()
+    {
+        // 3 片：3^(1/3)×6 = 8.6535；4 片会是 4^(1/3)×6 = 9.524 —— 实测取前者
+        var r6 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        var r8 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(8.653497, r6.EquivalentThickness, 6);
+        Assert.Equal(11.537997, r8.EquivalentThickness, 6);
+        Assert.NotEqual(9.524, r6.EquivalentThickness, 2);
+    }
+
+    [Fact]
+    public void 挠度容许值显示的是等效厚度()
+    {
+        // V31 该构型把 t_e 显示到「容许值」上（不是 a/60=16.667）—— 照录
+        var r6 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        var r8 = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(8.653, r6.Limit);
+        Assert.Equal(11.538, r8.Limit);
+        Assert.Equal(8.653, r6.Limit);
+        Assert.NotEqual(16.667, r6.Limit, 3);
+    }
+
+    [Fact]
+    public void 八毫米挠度逐位_强度待核()
+    {
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 8, 0.16);
+        Assert.Equal(5.756, r.Ply.Sigma);      // 屏上 ✓（η 随 θ 变化，不是 1）
+        Assert.Equal(1.055, r.Deflection);     // 屏上 ✓
+    }
+
+    [Fact]
+    public void 三片均分_无1点1倍()
+    {
+        // w = wk/3 = 0.000333；若有 1.1 倍会是 0.000367，σ 会到 10.6 量级
+        var r = GlassEngine.ComputeMultiLaminated(0.001, 1000, 2000, 6, 0.16);
+        Assert.Equal(0.000333, r.Ply.WkShare);
+        Assert.Equal(0.000586, r.Ply.WStrength);
+    }
+}

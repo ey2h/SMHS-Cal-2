@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GlassManagement.Calc.Demo</RootNamespace>
+    <AssemblyName>GlassManagement.Calc.Demo</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 项目文件名是 GlassManagement.CalcCalc.csproj（AssemblyName 仍是 GlassManagement.Calc），
+         原先写的是 ..\GlassManagement.Calc\GlassManagement.Calc.csproj —— 该文件不存在，
+         导致 Demo 实际没有引用到引擎（编译期 CS0234）。此处按真实文件名修正。 -->
+    <ProjectReference Include="..\GlassManagement.Calc\GlassManagement.CalcCalc.csproj" />
+  </ItemGroup>
+</Project>

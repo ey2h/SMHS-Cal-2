@@ -480,6 +480,52 @@ public class GlassCalcBookInput
     public string? Supervisor { get; set; }
     public string? ReportDate { get; set; }
 
+    // ========== 胶类/硅酮胶参数（新增）==========
+    /// <summary>胶缝宽度 (mm)</summary>
+    public double SealantWidth { get; set; } = 12;
+    /// <summary>胶缝深度 (mm)</summary>
+    public double SealantDepth { get; set; } = 6;
+    /// <summary>硅酮胶强度设计值 (MPa)</summary>
+    public double SealantStrength { get; set; } = 0.2;
+    /// <summary>硅酮胶弹性模量 (MPa)</summary>
+    public double SealantModulus { get; set; } = 1.0;
+    /// <summary>伸缩缝宽度 (mm)</summary>
+    public double JointWidth { get; set; } = 15;
+
+    // ========== 压板参数（新增）==========
+    /// <summary>压板数量n</summary>
+    public int PressurePlateCount { get; set; } = 2;
+    /// <summary>压板厚度t (mm)</summary>
+    public double PressurePlateThickness { get; set; } = 4;
+    /// <summary>压板宽度b (mm)</summary>
+    public double PressurePlateWidth { get; set; } = 40;
+    /// <summary>压板材料</summary>
+    public string? PressurePlateMaterial { get; set; } = "Q235";
+    /// <summary>压板材料强度 (MPa)</summary>
+    public double PressurePlateStrength { get; set; } = 215;
+
+    // ========== 副框参数（新增）==========
+    /// <summary>副框类型</summary>
+    public string? SubFrameType { get; set; }
+    /// <summary>副框宽度 (mm)</summary>
+    public double SubFrameWidth { get; set; }
+    /// <summary>副框高度 (mm)</summary>
+    public double SubFrameHeight { get; set; }
+    /// <summary>副框壁厚 (mm)</summary>
+    public double SubFrameThickness { get; set; }
+    /// <summary>副框材料</summary>
+    public string? SubFrameMaterial { get; set; }
+
+    // ========== 承托件参数（新增）==========
+    /// <summary>承托件类型</summary>
+    public string? BracketType { get; set; }
+    /// <summary>承托高度 (mm)</summary>
+    public double BracketHeight { get; set; }
+    /// <summary>承托件厚度 (mm)</summary>
+    public double BracketThickness { get; set; } = 4;
+    /// <summary>承托件宽度 (mm)</summary>
+    public double BracketWidth { get; set; } = 50;
+
     // 基本参数
     public string? City { get; set; }
     public double BuildingHeight { get; set; }
@@ -610,6 +656,43 @@ public class GlassCalcResult
     public double ElasticModulus { get; set; } // MPa
     public double MaxDeflection { get; set; } // mm
     public double DeflectionLimit { get; set; } // mm
+}
+
+/// <summary>胶类计算结果</summary>
+public class SealantCalcResult
+{
+    public double MaxShearStress { get; set; }   // 最大剪应力 MPa
+    public double AllowableStress { get; set; }   // 允许应力 MPa
+    public double StressRatio { get; set; }       // 应力比
+    public bool Passed { get; set; }
+    public double MaxDeflection { get; set; }      // 最大位移 mm
+}
+
+/// <summary>压板计算结果</summary>
+public class PressurePlateResult
+{
+    public double BendingStress { get; set; }     // 弯曲应力 MPa
+    public double ShearStress { get; set; }       // 剪应力 MPa
+    public double AllowableStress { get; set; }   // 允许应力 MPa
+    public bool Passed { get; set; }
+}
+
+/// <summary>副框计算结果</summary>
+public class SubFrameResult
+{
+    public double MaxStress { get; set; }         // 最大应力 MPa
+    public double AllowableStress { get; set; }    // 允许应力 MPa
+    public double MaxDeflection { get; set; }     // 最大挠度 mm
+    public double DeflectionLimit { get; set; }   // 挠度限值 mm
+    public bool Passed { get; set; }
+}
+
+/// <summary>承托件计算结果</summary>
+public class BracketResult
+{
+    public double MaxStress { get; set; }          // 最大应力 MPa
+    public double AllowableStress { get; set; }    // 允许应力 MPa
+    public bool Passed { get; set; }
 }
 
 public class MemberCalcResult

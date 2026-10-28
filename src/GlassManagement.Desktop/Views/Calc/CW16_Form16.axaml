@@ -1,0 +1,253 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.CW16_Form16"
+             FontFamily="SimSun" FontSize="12">
+  <!-- VB6 form: 幕墙计算-埋件与焊缝计算 | client 788x490 | 178 nodes (78 labels) | pairs=19 spread=15px dropped=0 declutter:drop=4 move=1 -->
+  <DockPanel>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙计算-埋件与焊缝计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <Canvas Width="788" Height="490" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+      <!-- 互斥参数面板（源程序按选项切换显示），共 8 套 -->
+      <TabControl Canvas.Left="7" Canvas.Top="5" Width="773" Height="460">
+        <TabItem Header="焊缝计算">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="466" Height="449" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Border Classes="hbFrame" Canvas.Left="4" Canvas.Top="70" Width="161" Height="160"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="10" Canvas.Top="61" Text="后锚固参数"/>
+          <Button Classes="hb" Canvas.Left="397" Canvas.Top="72" Width="40" Height="20" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="104" Canvas.Top="78" Width="60" Height="19" FontSize="12" Text="28"/>
+          <Button Classes="hb" Canvas.Left="10" Canvas.Top="96" Width="147" MinHeight="31" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="&gt;&gt;完善后锚固参数&lt;&lt;" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <TextBox Classes="hb" Canvas.Left="128" Canvas.Top="99" Width="60" Height="19" FontSize="12" Text="90"/>
+          <TextBox Classes="hb" Canvas.Left="102" Canvas.Top="120" Width="60" Height="19" FontSize="12" Text="120"/>
+          <ComboBox Classes="hb" Canvas.Left="101" Canvas.Top="147" Width="61" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="264" Canvas.Top="152" Width="48" Height="13" Text="构件材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="121" Canvas.Top="169" Width="94" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="21" Canvas.Top="171" Width="84" Height="13" Text="混凝土基材类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="121" Canvas.Top="191" Width="60" Height="19" FontSize="12" Text="250"/>
+          <Border Classes="hbFrame" Canvas.Left="4" Canvas.Top="231" Width="465" Height="224"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="10" Canvas.Top="222" Text="受力方式"/>
+          <Border Classes="hbPanel" Canvas.Left="60" Canvas.Top="280" Width="185" Height="145"/>
+          <DataGrid Classes="hb" Canvas.Left="7" Canvas.Top="305" Width="496" Height="145"/>
+          <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="306" Width="90" Height="13" Text="b=           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Border Classes="hbFrame" Canvas.Left="268" Canvas.Top="320" Width="145" Height="89"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="274" Canvas.Top="311" Text="左图参数(mm)"/>
+          <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="330" Width="90" Height="13" Text="c=           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="316" Canvas.Top="352" Width="65" Height="25" FontSize="12" Text="80"/>
+          <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="354" Width="90" Height="13" Text="c1=          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="27" Canvas.Top="379" Width="156" Height="13" Text="埋板钢板厚度t           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="331" Canvas.Top="379" Width="90" Height="13" Text="c2=          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="3" Canvas.Top="392" Width="433" Height="49" Text="对L型焊缝或三边围焊，软件会自动套用公式求得有效抵抗矩，其它焊缝样式，需要用户自己求得焊缝有效截面积以及有效抵抗矩，具体求法和计算截面一样，用SMHS其它计算菜单下截面计算功能，参看L型或三边围焊的示意图做成面域后操作即可。" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="槽型埋件">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="769" Height="457" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="17" Width="48" Height="13" Text="槽体材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="269" Canvas.Top="17" Width="48" Height="13" Text="锚筋材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="38" Width="156" Height="13" Text="槽体长度Ich             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="59" Width="156" Height="13" Text="槽体宽度bch             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="81" Width="156" Height="13" Text="槽体高度hch             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="269" Canvas.Top="81" Width="144" Height="13" Text="锚筋间距s             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="102" Width="156" Height="13" Text="埋置深度hef             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="194" Width="174" Height="13" Text="混凝土基材厚度             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="269" Canvas.Top="194" Width="126" Height="13" Text="边距c2             mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="埋件种类">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="161" Height="57" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <ComboBox Classes="hb" Canvas.Left="87" Canvas.Top="3" Width="94" Height="20"/>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="14" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="土建预埋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="14" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="后补锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="100" Canvas.Top="25" Width="60" Height="19" FontSize="12" Text="300"/>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="27" Width="71" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="77" Canvas.Top="27" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="6" Canvas.Top="33" Width="71" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="槽型埋件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="33" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="对穿螺栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="100" Canvas.Top="46" Width="60" Height="19" FontSize="12" Text="40.5"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="后锚固参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="769" Height="450" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Border Classes="hbFrame" Canvas.Left="473" Canvas.Top="0" Width="285" Height="174"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="479" Canvas.Top="0" Text="焊缝和转接件参数"/>
+          <ComboBox Classes="hb" Canvas.Left="673" Canvas.Top="14" Width="62" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="480" Canvas.Top="32" Width="115" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="673" Canvas.Top="37" Width="62" Height="20"/>
+          <Button Classes="hb" Canvas.Left="497" Canvas.Top="56" Width="86" MinHeight="41" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="焊缝和转接件示意图" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
+          <ComboBox Classes="hb" Canvas.Left="673" Canvas.Top="60" Width="62" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="659" Canvas.Top="83" Width="87" Height="20"/>
+          <Border Classes="hbFrame" Canvas.Left="264" Canvas.Top="106" Width="241" Height="83"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="270" Canvas.Top="97" Text="锚栓类型"/>
+          <Border Classes="hbFrame" Canvas.Left="481" Canvas.Top="107" Width="97" Height="60"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="487" Canvas.Top="98" Text="焊接形式"/>
+          <Border Classes="hbFrame" Canvas.Left="509" Canvas.Top="108" Width="244" Height="78"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="515" Canvas.Top="99" Text="图一参数"/>
+          <Border Classes="hbFrame" Canvas.Left="520" Canvas.Top="108" Width="244" Height="78"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="526" Canvas.Top="99" Text="图一参数"/>
+          <ComboBox Classes="hb" Canvas.Left="669" Canvas.Top="108" Width="65" Height="20"/>
+          <RadioButton Classes="hb" Canvas.Left="272" Canvas.Top="122" Width="80" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扩底型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="370" Canvas.Top="122" Width="132" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扭矩控制膨胀型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="497" Canvas.Top="126" Width="57" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="L型焊" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <ComboBox Classes="hb" Canvas.Left="596" Canvas.Top="126" Width="40" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="719" Canvas.Top="126" Width="40" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="516" Canvas.Top="130" Width="54" Height="13" Text="锚栓排数n" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="639" Canvas.Top="130" Width="54" Height="13" Text="锚栓列数m" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="669" Canvas.Top="130" Width="49" Height="18" FontSize="12" Text="50"/>
+          <RadioButton Classes="hb" Canvas.Left="272" Canvas.Top="138" Width="104" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通化学锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="497" Canvas.Top="143" Width="73" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="三边围焊" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="669" Canvas.Top="151" Width="49" Height="18" FontSize="12" Text="100"/>
+          <RadioButton Classes="hb" Canvas.Left="272" Canvas.Top="154" Width="226" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(JGJ145算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBlock Classes="hb" Canvas.Left="721" Canvas.Top="154" Width="12" Height="13" Text="mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="635" Canvas.Top="157" Width="53" Height="18" FontSize="12" Text="150"/>
+          <TextBlock Classes="hb" Canvas.Left="516" Canvas.Top="160" Width="102" Height="13" Text="锚栓最外排间距y1'" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="272" Canvas.Top="170" Width="226" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(GB50367算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="472" Canvas.Top="176" Width="293" Height="217" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
+          <Border Classes="hbFrame" Canvas.Left="414" Canvas.Top="194" Width="177" Height="122"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="420" Canvas.Top="185" Text="图二参数（长度单位为毫米）"/>
+          <Border Classes="hbFrame" Canvas.Left="595" Canvas.Top="194" Width="160" Height="53"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="601" Canvas.Top="185" Text="锚固区配筋情况"/>
+          <Border Classes="hbFrame" Canvas.Left="440" Canvas.Top="196" Width="160" Height="122"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="446" Canvas.Top="187" Text="图二参数（长度单位为毫米）"/>
+          <Border Classes="hbFrame" Canvas.Left="605" Canvas.Top="196" Width="150" Height="53"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="611" Canvas.Top="187" Text="锚固区配筋情况"/>
+          <Button Classes="hb" Canvas.Left="336" Canvas.Top="207" Width="65" Height="20" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="参数说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <TextBox Classes="hb" Canvas.Left="549" Canvas.Top="212" Width="41" Height="18" FontSize="12" Text="200"/>
+          <TextBlock Classes="hb" Canvas.Left="422" Canvas.Top="213" Width="18" Height="13" Text="c1=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="496" Canvas.Top="213" Width="36" Height="13" Text="c1(A)=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <CheckBox Classes="hb" Canvas.Left="600" Canvas.Top="214" Width="147" MinHeight="25" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢筋间距s≥150mm或d≤10mm且s≥100mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="610" Canvas.Top="216" Width="136" MinHeight="25" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="钢筋间距s≥150mm或d≤10mm且s≥100mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>
+          <TextBlock Classes="hb" Canvas.Left="422" Canvas.Top="234" Width="18" Height="13" Text="s2=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="514" Canvas.Top="234" Width="18" Height="13" Text="s1=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="549" Canvas.Top="236" Width="41" Height="18" FontSize="12" Text="150"/>
+          <TextBlock Classes="hb" Canvas.Left="428" Canvas.Top="254" Width="12" Height="13" Text="h=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="514" Canvas.Top="254" Width="18" Height="13" Text="c2=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Border Classes="hbFrame" Canvas.Left="595" Canvas.Top="257" Width="158" Height="59"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="601" Canvas.Top="248" Text="混凝土等级"/>
+          <Border Classes="hbFrame" Canvas.Left="605" Canvas.Top="258" Width="150" Height="60"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="611" Canvas.Top="249" Text="混凝土等级"/>
+          <TextBox Classes="hb" Canvas.Left="549" Canvas.Top="266" Width="41" Height="18" FontSize="12" Text="200"/>
+          <TextBlock Classes="hb" Canvas.Left="428" Canvas.Top="275" Width="12" Height="13" Text="d=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="646" Canvas.Top="280" Width="51" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="549" Canvas.Top="291" Width="41" Height="18" FontSize="12" Text="2"/>
+          <TextBox Classes="hb" Canvas.Left="472" Canvas.Top="292" Width="41" Height="18" FontSize="12" Text="2"/>
+          <TextBlock Classes="hb" Canvas.Left="428" Canvas.Top="296" Width="12" Height="13" Text="M=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="511" Canvas.Top="296" Width="12" Height="13" Text="N=" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <Border Classes="hbFrame" Canvas.Left="413" Canvas.Top="322" Width="338" Height="82"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="419" Canvas.Top="313" Text="锚固区配筋"/>
+          <Border Classes="hbFrame" Canvas.Left="440" Canvas.Top="328" Width="315" Height="82"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="446" Canvas.Top="319" Text="锚固区配筋"/>
+          <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="336" Width="160" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘为无筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="448" Canvas.Top="342" Width="160" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘为无筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="353" Width="201" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="448" Canvas.Top="359" Width="201" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="371" Width="322" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm直筋及α≤100mm箍筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="448" Canvas.Top="377" Width="291" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm直筋及α≤100mm箍筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <Button Classes="hb" Canvas.Left="714" Canvas.Top="398" Width="49" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="634" Canvas.Top="400" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="694" Canvas.Top="400" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="684" Canvas.Top="408" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="695" Canvas.Top="411" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="634" Canvas.Top="425" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="694" Canvas.Top="425" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="土建预埋参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="297" Height="220" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <ComboBox Classes="hb" Canvas.Left="164" Canvas.Top="3" Width="94" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="0" Canvas.Top="7" Width="409" Height="39" Text="画出焊缝断面实际形状，参看左图示意的方法绘制有效截面（剖面线部分），之后做出面域，用SMHS截面计算功能求得参数后，输入到右侧的参数框中。（hf为焊脚高度，he=0.7hf为焊缝有效厚度），输入的焊缝有效抵抗矩取wx1与wx2两者中的较小值，注意单位。" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <DataGrid Classes="hb" Canvas.Left="0" Canvas.Top="13" Width="762" Height="92"/>
+          <ComboBox Classes="hb" Canvas.Left="62" Canvas.Top="24" Width="53" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="183" Canvas.Top="25" Width="60" Height="19" FontSize="12" Text="200"/>
+          <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="25" Width="57" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="72" Canvas.Top="26" Width="57" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="34" Width="180" Height="13" Text="总弯矩M                   N.mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="62" Canvas.Top="45" Width="53" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="183" Canvas.Top="46" Width="60" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="92" Canvas.Top="47" Width="72" Height="13" Text="每埋件锚筋数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="58" Width="114" Height="13" Text="总剪力V           N" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <ComboBox Classes="hb" Canvas.Left="71" Canvas.Top="60" Width="57" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="60" Width="57" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="166" Canvas.Top="68" Width="60" Height="19" FontSize="12" Text="250"/>
+          <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="83" Width="114" Height="13" Text="总轴力N           N" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="166" Canvas.Top="89" Width="35" Height="19" FontSize="12" Text="6"/>
+          <TextBox Classes="hb" Canvas.Left="47" Canvas.Top="90" Width="49" Height="18" FontSize="12" Text="110"/>
+          <ComboBox Classes="hb" Canvas.Left="72" Canvas.Top="93" Width="73" Height="20"/>
+          <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="94" Width="57" Height="20"/>
+          <Border Classes="hbFrame" Canvas.Left="112" Canvas.Top="108" Width="235" Height="78"/>
+          <TextBlock Classes="hbFrameTitle" Canvas.Left="118" Canvas.Top="99" Text="锚栓类型"/>
+          <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="118" Width="48" Height="13" Text="焊缝形式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="122" Width="80" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扩底型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="208" Canvas.Top="122" Width="135" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="扭矩控制膨胀型锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBox Classes="hb" Canvas.Left="72" Canvas.Top="127" Width="57" Height="20" FontSize="12" Text="200"/>
+          <TextBox Classes="hb" Canvas.Left="240" Canvas.Top="128" Width="33" Height="18" FontSize="12" Text="110"/>
+          <TextBox Classes="hb" Canvas.Left="47" Canvas.Top="137" Width="49" Height="18" FontSize="12" Text="200"/>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="137" Width="96" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="普通化学锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <ComboBox Classes="hb" Canvas.Left="196" Canvas.Top="137" Width="60" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="92" Canvas.Top="139" Width="90" Height="13" Text="每埋件T型螺栓数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="152" Width="216" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(JGJ145算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <ComboBox Classes="hb" Canvas.Left="61" Canvas.Top="160" Width="129" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="145" Canvas.Top="160" Width="60" Height="19" FontSize="12" Text="130"/>
+          <ComboBox Classes="hb" Canvas.Left="224" Canvas.Top="162" Width="57" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="72" Canvas.Top="163" Width="57" Height="20" FontSize="12" Text="60000"/>
+          <RadioButton Classes="hb" Canvas.Left="120" Canvas.Top="167" Width="216" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="特殊倒锥形化学锚栓(GB50367算法)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <ComboBox Classes="hb" Canvas.Left="97" Canvas.Top="180" Width="53" Height="20"/>
+          <TextBox Classes="hb" Canvas.Left="145" Canvas.Top="181" Width="60" Height="19" FontSize="12" Text="80"/>
+          <TextBlock Classes="hb" Canvas.Left="87" Canvas.Top="182" Width="180" Height="13" Text="焊缝有效截面积            mm^2" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <CheckBox Classes="hb" Canvas.Left="8" Canvas.Top="187" Width="276" Height="23" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="锚筋末端有符合规范要求的弯钩或机械锚固措施" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          <CheckBox Classes="hb" Canvas.Left="4" Canvas.Top="202" Width="276" Height="26" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="锚筋末端有符合规范要求的弯钩或机械锚固措施" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="对穿螺栓参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="297" Height="223" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="混凝土裂缝及配筋情况">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="491" Height="88" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Border Classes="hbPanel" Canvas.Left="0" Canvas.Top="0" Width="769" Height="453"/>
+          <Button Classes="hb" Canvas.Left="338" Canvas.Top="0" Width="81" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="参数说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <ComboBox Classes="hb" Canvas.Left="283" Canvas.Top="0" Width="72" Height="20"/>
+          <TextBlock Classes="hb" Canvas.Left="249" Canvas.Top="5" Width="180" Height="13" Text="焊缝有效抵抗矩            mm^3" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="466" Canvas.Top="10" Width="41" Height="18" FontSize="12" Text="100"/>
+          <CheckBox Classes="hb" Canvas.Left="285" Canvas.Top="13" Width="194" MinHeight="53" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当混凝土内箍筋的直径φ≥12mm且间距不大于150mm或箍筋的直径φ≤10mm且间距不大于100mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="15" Width="243" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当混凝土边缘无钢筋或箍筋时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <CheckBox Classes="hb" Canvas.Left="285" Canvas.Top="20" Width="194" MinHeight="53" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当混凝土内箍筋的直径φ≥12mm且间距不大于150mm或箍筋的直径φ≤10mm且间距不大于100mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></CheckBox>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="22" Width="243" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当混凝土边缘无钢筋或箍筋时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="32" Width="243" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="混凝土边缘有钢筋且直径φ≥12mm时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBlock Classes="hb" Canvas.Left="249" Canvas.Top="36" Width="132" Height="13" Text="焊缝尺寸B           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="466" Canvas.Top="37" Width="41" Height="18" FontSize="12" Text="200"/>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="39" Width="243" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="混凝土边缘有钢筋且直径φ≥12mm时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="50" Width="277" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="混凝土边缘有钢筋和箍筋,且间距小于100mm时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="57" Width="277" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="混凝土边缘有钢筋和箍筋,且间距小于100mm时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBlock Classes="hb" Canvas.Left="249" Canvas.Top="60" Width="132" Height="13" Text="焊缝尺寸H           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <TextBox Classes="hb" Canvas.Left="465" Canvas.Top="64" Width="41" Height="18" FontSize="12" Text="400"/>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="67" Width="109" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="非开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          <TextBlock Classes="hb" Canvas.Left="321" Canvas.Top="69" Width="90" Height="13" Text="a=           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          <RadioButton Classes="hb" Canvas.Left="11" Canvas.Top="74" Width="109" Height="16" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="非开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="混凝土裂缝及配筋情况">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <Canvas Width="491" Height="88" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <TextBlock Classes="hb" Canvas.Left="249" Canvas.Top="77" Width="132" Height="13" Text="焊角高度            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
+          </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <ItemGroup>
-    <ProjectReference Include="..\GlassManagement.Core\GlassManagement.Core.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GlassManagement.Core\GlassManagement.Core.csproj" />
+    <ProjectReference Include="..\..\GlassManagement.Ui.Shared\GlassManagement.Ui.Shared.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.PhysicalPerformanceView"
+             x:DataType="vm:PhysicalPerformanceViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="{Binding Title}"/>
+    </Border>
+
+    <!-- 计算页输入区（仅计算页显示） -->
+    <Border DockPanel.Dock="Bottom" IsVisible="{Binding IsCalcPage}" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="6">
+        <!-- 风荷载类计算页（抗风压/水密） -->
+        <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding IsWindLoad}">
+          <TextBlock Text="地面类型" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding TerrainOptions}" SelectedIndex="{Binding TerrainIndex}" MinWidth="80"/>
+          <TextBlock Text="计算高度(m)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding HeightText}" Width="80"/>
+          <TextBlock Text="风压" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding PressureText}" Width="80"/>
+          <CheckBox Content="热带风暴/台风袭击区" IsChecked="{Binding Typhoon}" VerticalAlignment="Center"/>
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+        </StackPanel>
+        <!-- 空气声隔声页（玻璃结构） -->
+        <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding IsInsulation}">
+          <TextBlock Text="玻璃结构" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding StructureOptions}" SelectedIndex="{Binding StructureIndex}" MinWidth="150"/>
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+        </StackPanel>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- 规范条文说明正文（均显示） -->
+    <ScrollViewer>
+      <TextBlock Text="{Binding SpecText}" TextWrapping="Wrap" Margin="12" FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

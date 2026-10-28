@@ -1,0 +1,286 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.EmbedCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    「幕墙计算-埋件与焊缝计算」MVVM 视图（V31 客户区 788×490）。
+    坐标源：v31runs/dump_embed_after.txt + shot_embed_after.png
+      埋件种类 Frame(11,34)161x57 ─ 土建预埋(17,48✓)/后补锚栓(89,48)/槽型埋件(17,67)/对穿螺栓(89,67)
+      后锚固参数 Frame(11,94)161x160 en=0 ─ 按钮 >>完善后锚固参数<<(17,120)147x31
+      土建预埋参数 Frame(179,34)297x220 ─ 2层(250,60)/12(250,94)/HPB300(251,127)/C25(403,59)
+                                          2(403,94)/8(403,128)/200(251,161)/110(419,162)
+                                          /60000(251,197)/光圆(403,196)/弯钩(187,221)
+      焊缝和转接件参数 Frame(484,34)285x174 ─ 10#槽钢(491,66)/39.7(684,48)/198(684,71)
+                                             /1274.8(684,94)/Q235(670,117)/6(680,142)
+                                             /50(680,164)/100(680,185)/示意图按钮(508,90)
+      焊接形式 Frame(492,141)97x60 ─ L型焊(508,160✓)/三边围焊(508,177)
+      受力方式 Frame(11,255)465x224 ─ 实机为 SSTab+4 张 PictureBoxDC 示意图，
+                                      复刻版改用几何输入框 + 文字说明（算式不变）
+      输出 RichText(483,210)293x217 ；按钮 预演(645,434)/上一步(705,434)/退出(645,459)/下一步(705,459)
+  -->
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="幕墙计算-埋件与焊缝计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding Note}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding Note}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="788" Height="490" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- ══ 埋件种类 (11,34) 161x57 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="34" Width="161" Height="57"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="27" Text="埋件种类"/>
+        <RadioButton Classes="hb" Canvas.Left="17" Canvas.Top="48" Width="73" Height="17"
+                     GroupName="EmbedKind" Content="土建预埋"
+                     IsChecked="{Binding IsKind0, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="89" Canvas.Top="48" Width="73" Height="17"
+                     GroupName="EmbedKind" Content="后补锚栓"
+                     IsChecked="{Binding IsKind1, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="17" Canvas.Top="67" Width="71" Height="17"
+                     GroupName="EmbedKind" Content="槽型埋件"
+                     IsChecked="{Binding IsKind2, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="89" Canvas.Top="67" Width="73" Height="17"
+                     GroupName="EmbedKind" Content="对穿螺栓"
+                     IsChecked="{Binding IsKind3, Mode=TwoWay}"/>
+
+        <!-- ══ 后锚固参数 (11,94) 161x160（实机 en=0） ══ -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="94" Width="161" Height="160"
+                IsEnabled="False"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="87" Text="后锚固参数"
+                   IsEnabled="False"/>
+        <Button Classes="hb" Canvas.Left="17" Canvas.Top="120" Width="147" Height="31"
+                Content="&gt;&gt;完善后锚固参数&lt;&lt;" IsEnabled="False"/>
+
+        <!-- ══ 土建预埋参数 (179,34) 297x220 ══
+             控件坐标/类型全部对齐 dump_embed_after.txt：
+               钢筋层数   (251, 60) ComboBox 3项 sel=0
+               混凝土等级 (403, 59) ComboBox 13项 sel=1
+               锚筋直径   (250, 94) ComboBox 14项 sel=2
+               每层筋数   (403, 94) ComboBox 3项 sel=0
+               锚筋材质   (251,127) ComboBox 2项 sel=0
+               锚板厚度   (403,128) ComboBox 10项 sel=1
+               锚筋长度   (251,161) TextBox 200  mm
+               外层锚筋中心距 (419,162) TextBox 110  mm
+               锚板面积   (251,197) TextBox 60000  mm2
+               锚筋外型   (403,196) ComboBox en=0（由材质驱动）
+               弯钩       (187,221) CheckBox chk=1
+        -->
+        <Border Classes="hbFrame" Canvas.Left="179" Canvas.Top="34" Width="297" Height="220"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="185" Canvas.Top="27" Text="土建预埋参数"/>
+
+        <TextBlock Canvas.Left="186" Canvas.Top="63" Text="钢筋层数"/>
+        <ComboBox Canvas.Left="251" Canvas.Top="60" Width="57" Height="20"
+                  ItemsSource="{Binding RebarLayers}"
+                  SelectedIndex="{Binding RebarLayerIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="186" Canvas.Top="97" Text="锚筋直径"/>
+        <ComboBox Canvas.Left="250" Canvas.Top="94" Width="57" Height="20"
+                  ItemsSource="{Binding RebarDiameters}"
+                  SelectedIndex="{Binding RebarDiameterIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="186" Canvas.Top="130" Text="锚筋材质"/>
+        <ComboBox Canvas.Left="251" Canvas.Top="127" Width="73" Height="20"
+                  ItemsSource="{Binding RebarMaterials}"
+                  SelectedIndex="{Binding RebarMaterialIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="186" Canvas.Top="164" Text="锚筋长度"/>
+        <TextBox Classes="hb" Canvas.Left="251" Canvas.Top="161" Width="57" Height="20"
+                 Text="{Binding RebarLengthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="313" Canvas.Top="164" Text="mm"/>
+
+        <TextBlock Canvas.Left="186" Canvas.Top="200" Text="锚板面积"/>
+        <TextBox Classes="hb" Canvas.Left="251" Canvas.Top="197" Width="57" Height="20"
+                 Text="{Binding PlateAreaText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="313" Canvas.Top="200" Text="mm²"/>
+
+        <CheckBox Classes="hb" Canvas.Left="187" Canvas.Top="221" Width="276" Height="23"
+                  Content="锚筋末端有符合规范要求的弯钩或机械锚固措施"
+                  IsChecked="{Binding HasHook, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="320" Canvas.Top="62" Text="混凝土等级"/>
+        <ComboBox Canvas.Left="403" Canvas.Top="59" Width="57" Height="20"
+                  ItemsSource="{Binding ConcreteGrades}"
+                  SelectedIndex="{Binding ConcreteGradeIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="320" Canvas.Top="97" Text="每层筋数"/>
+        <ComboBox Canvas.Left="403" Canvas.Top="94" Width="57" Height="20"
+                  ItemsSource="{Binding RebarPerLayerItems}"
+                  SelectedIndex="{Binding RebarPerLayerIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="320" Canvas.Top="131" Text="锚板厚度"/>
+        <ComboBox Canvas.Left="403" Canvas.Top="128" Width="57" Height="20"
+                  ItemsSource="{Binding PlateThicknessItems}"
+                  SelectedIndex="{Binding PlateThicknessIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="316" Canvas.Top="164" Text="外层锚筋中心距"/>
+        <TextBox Classes="hb" Canvas.Left="419" Canvas.Top="162" Width="33" Height="18"
+                 Text="{Binding AnchorZText, Mode=TwoWay}"
+                 ToolTip.Tip="外层锚筋中心到锚板底的距离 z（mm），进锚筋面积算式"/>
+        <TextBlock Canvas.Left="455" Canvas.Top="163" Text="mm"/>
+
+        <TextBlock Canvas.Left="320" Canvas.Top="200" Text="锚筋外型"/>
+        <ComboBox Canvas.Left="403" Canvas.Top="196" Width="57" Height="20" IsEnabled="False"
+                  ItemsSource="{Binding RebarShapes}"
+                  SelectedIndex="{Binding RebarShapeIndex, Mode=OneWay}"
+                  ToolTip.Tip="实机 en=0：由「锚筋材质」驱动（HPB300→光圆 0.16 / HRB400→带肋 0.14）"/>
+
+        <!-- ══ 焊缝和转接件参数 (484,34) 285x174 ══
+             实机四个下拉共用一个行号（embed_section_probe.txt 实证），
+             且 y=48/71/94 分别是 抵抗矩/惯性矩/截面积（不是面积/模量/惯性矩）。
+        -->
+        <Border Classes="hbFrame" Canvas.Left="484" Canvas.Top="34" Width="285" Height="174"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="490" Canvas.Top="27" Text="焊缝和转接件参数"/>
+
+        <TextBlock Canvas.Left="490" Canvas.Top="50" Text="转接件型号规格"/>
+        <ComboBox Canvas.Left="491" Canvas.Top="66" Width="115" Height="20"
+                  ItemsSource="{Binding SteelSections}"
+                  SelectedIndex="{Binding SteelSectionIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="588" Canvas.Top="50" Width="92" Text="转接件抵抗矩"
+                   TextAlignment="Right"/>
+        <ComboBox Canvas.Left="684" Canvas.Top="48" Width="62" Height="20"
+                  ItemsSource="{Binding TransferModulusItems}"
+                  SelectedIndex="{Binding SteelSectionIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="749" Canvas.Top="50" Text="cm³"/>
+
+        <TextBlock Canvas.Left="588" Canvas.Top="73" Width="92" Text="转接件惯性矩"
+                   TextAlignment="Right"/>
+        <ComboBox Canvas.Left="684" Canvas.Top="71" Width="62" Height="20"
+                  ItemsSource="{Binding TransferInertiaItems}"
+                  SelectedIndex="{Binding SteelSectionIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="749" Canvas.Top="73" Text="cm⁴"/>
+
+        <TextBlock Canvas.Left="588" Canvas.Top="96" Width="92" Text="转接件截面积"
+                   TextAlignment="Right"/>
+        <ComboBox Canvas.Left="684" Canvas.Top="94" Width="62" Height="20"
+                  ItemsSource="{Binding TransferAreaItems}"
+                  SelectedIndex="{Binding SteelSectionIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="749" Canvas.Top="96" Text="mm²"/>
+
+        <Button Classes="hb" Canvas.Left="508" Canvas.Top="90" Width="86" Height="41"
+                Content="焊缝和转接件示意图"/>
+
+        <TextBlock Canvas.Left="560" Canvas.Top="119" Width="106" Text="钢材材质"
+                   TextAlignment="Right"/>
+        <ComboBox Canvas.Left="670" Canvas.Top="117" Width="87" Height="20" IsEnabled="False"
+                  ItemsSource="{Binding SteelMaterials}"
+                  SelectedIndex="{Binding SteelMaterialIndex, Mode=OneWay}"/>
+
+        <TextBlock Canvas.Left="596" Canvas.Top="145" Width="80" Text="焊缝高度"
+                   TextAlignment="Right"/>
+        <ComboBox Canvas.Left="680" Canvas.Top="142" Width="65" Height="20"
+                  ItemsSource="{Binding WeldLegs}"
+                  SelectedIndex="{Binding WeldLegIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="592" Canvas.Top="167" Width="84" Text="水平段焊缝长"
+                   TextAlignment="Right"/>
+        <TextBox Classes="hb" Canvas.Left="680" Canvas.Top="164" Width="49" Height="18"
+                 Text="{Binding WeldHorizontalText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="735" Canvas.Top="166" Text="mm"/>
+
+        <TextBlock Canvas.Left="592" Canvas.Top="188" Width="84" Text="垂直段焊缝长"
+                   TextAlignment="Right"/>
+        <TextBox Classes="hb" Canvas.Left="680" Canvas.Top="185" Width="49" Height="18"
+                 Text="{Binding WeldVerticalText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="735" Canvas.Top="187" Text="mm"/>
+
+        <!-- ══ 焊接形式 (492,141) 97x60 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="492" Canvas.Top="141" Width="97" Height="60"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="498" Canvas.Top="134" Text="焊接形式"/>
+        <RadioButton Classes="hb" Canvas.Left="508" Canvas.Top="160" Width="57" Height="15"
+                     GroupName="WeldType" Content="L型焊"
+                     IsChecked="{Binding IsLWeld, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="508" Canvas.Top="177" Width="73" Height="15"
+                     GroupName="WeldType" Content="三边围焊"
+                     IsChecked="{Binding IsSurroundWeld, Mode=OneWay}"/>
+
+        <!-- ══ 受力方式 (11,255) 465x224 ══
+             实机是 SSTabCtlWndClass (51,272) 404x199，四个页签
+             梁底吊挂 / 侧埋（默认选中）/ 梁顶埋 / 梁底埋。
+             当前页（侧埋）只有「左图参数(mm)」框里的一个 e0 = 80（TextBox (323,376)）。
+             ★ e0 同时驱动弯矩力臂与转接件挠度的悬臂长（embed_params_probe.txt 实证）。
+             图形本身（PictureBoxDC 位图）不参与计算，这里用占位区 + 文字代替。
+        -->
+        <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="255" Width="465" Height="224"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="17" Canvas.Top="248" Text="受力方式"/>
+
+        <Border Canvas.Left="51" Canvas.Top="272" Width="404" Height="199"
+                Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1"/>
+
+        <!-- 页签条 -->
+        <Border Canvas.Left="66" Canvas.Top="272" Width="74" Height="18"
+                Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <TextBlock Text="梁底吊挂" FontSize="11" HorizontalAlignment="Center"
+                     VerticalAlignment="Center"/>
+        </Border>
+        <Border Canvas.Left="140" Canvas.Top="272" Width="60" Height="18"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <TextBlock Text="侧埋" FontSize="11" FontWeight="Bold"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <Border Canvas.Left="200" Canvas.Top="272" Width="60" Height="18"
+                Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <TextBlock Text="梁顶埋" FontSize="11" HorizontalAlignment="Center"
+                     VerticalAlignment="Center"/>
+        </Border>
+        <Border Canvas.Left="260" Canvas.Top="272" Width="60" Height="18"
+                Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <TextBlock Text="梁底埋" FontSize="11" HorizontalAlignment="Center"
+                     VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- 左图（示意图占位，实机为 PictureBoxDC (67,304) 185x145） -->
+        <Border Canvas.Left="67" Canvas.Top="304" Width="185" Height="145"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <TextBlock Text="侧埋示意图" FontSize="11" Foreground="{DynamicResource HbTextMuted}"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- 左图参数(mm) (275,344) 145x89 -->
+        <Border Classes="hbFrame" Canvas.Left="275" Canvas.Top="344" Width="145" Height="89"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="281" Canvas.Top="337" Text="左图参数(mm)"/>
+        <TextBlock Canvas.Left="300" Canvas.Top="382" Text="e0"/>
+        <TextBox Classes="hb" Canvas.Left="323" Canvas.Top="376" Width="65" Height="25"
+                 Text="{Binding EccentricityText, Mode=TwoWay}"
+                 ToolTip.Tip="剪力作用点到锚板面的偏心距 e0（mm）：既作弯矩力臂，又作转接件悬臂长"/>
+        <TextBlock Canvas.Left="300" Canvas.Top="408" Text="点击左图可放缩" FontSize="10"/>
+
+        <!-- ══ 输出 (483,210) 293x217 ══ -->
+        <Border Canvas.Left="483" Canvas.Top="210" Width="293" Height="217"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="11"
+                             TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <TextBlock Canvas.Left="487" Canvas.Top="216" Text="{Binding PlaceholderText}"
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="11" IsHitTestVisible="False"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="645" Canvas.Top="434" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="705" Canvas.Top="434" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="645" Canvas.Top="459" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hb" Canvas.Left="705" Canvas.Top="459" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

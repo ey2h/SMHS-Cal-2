@@ -1,0 +1,867 @@
+using System;
+
+namespace GlassManagement.Calc.Engines;
+
+/// <summary>四边简支玻璃面板计算结果（单元/构件通用，玻璃屏输出 4 个数字）。</summary>
+public readonly record struct GlassResult(
+    double Wk,            // 玻璃部分风荷载标准值 N/mm²
+    double SelfWeight,    // 自重面荷载 t·γ (N/mm²)，round6
+    double Quake,         // 地震作用 5αmax·qg (N/mm²)，round6
+    double WStrength,     // 强度组合 1.5wk + 0.7Q (N/mm²)，round6
+    double WDeflection,   // 标准组合 wk + 0.5Q (N/mm²)，round6（只用于 θ_σ）
+    double ThetaSigma,    // θ_σ = W标准·a⁴/(E·t⁴)，round3
+    double EtaSigma,      // 折减系数（强度），3 位
+    double ThetaDefl,     // θ_δ = wk·a⁴/(E·t⁴)，round3
+    double EtaDefl,       // 折减系数（挠度），3 位
+    double BendingCoef,   // 弯矩系数 m（按短/长边比插值）
+    double DeflCoef,      // 挠度系数 μ（按短/长边比插值）
+    double Sigma,         // 玻璃强度计算值 MPa，round3
+    double Stiffness,     // 截面刚度 D = E·t³/[12(1−ν²)] N·mm
+    double Deflection,    // 玻璃挠度计算值 mm，round3
+    double Limit);        // 挠度容许值 a/60 mm，round3
+
+/// <summary>中空玻璃两片各自的结果。</summary>
+public readonly record struct GlassPlyResult(
+    double Thickness,      // 厚度 mm
+    double WkShare,        // 该片分到的风荷载标准值（外片含 1.1），round6
+    double WStrength,      // 该片强度组合 1.5·w + 0.7Q，round6
+    double WDeflection,    // 该片标准组合 w + 0.5Q，round6（只用于 θ）
+    double Theta,          // θ = W标准·a⁴/(E·t⁴)，round3
+    double Eta,            // 折减系数，3 位
+    double Sigma);         // 该片强度计算值 MPa，round3
+
+/// <summary>中空玻璃整片结果（2 片 σ + 整体挠度）。</summary>
+public readonly record struct InsulatedGlassResult(
+    GlassPlyResult Outer,
+    GlassPlyResult Inner,
+    double EquivalentThickness,   // t_e = 0.95·(t₁³+t₂³)^(1/3)，不取整
+    double ThetaDefl,             // θ_δ = wk·a⁴/(E·t_e⁴)，round3
+    double EtaDefl,               // 3 位
+    double Stiffness,             // D = E·t_e³/11.52，round3
+    double Deflection,            // df = η·μ·wk·a⁴/D，round3
+    double Limit);                // a/60，round3
+
+/// <summary>夹层玻璃整片结果（只出一组 σ + 整体挠度）。</summary>
+public readonly record struct LaminatedGlassResult(
+    GlassPlyResult Ply,           // 按单片厚度算出的那一片（两片均分，无 1.1）
+    double EquivalentThickness,   // t_e = (t₁³+t₂³)^(1/3)，round3（**无 0.95**）
+    double ThetaDefl,
+    double EtaDefl,
+    double Stiffness,
+    double Deflection,
+    double Limit);
+
+/// <summary>胶片类型（V31 玻璃屏「夹层配置」下拉，ctrl id=5，项序 0=PVB / 1=SGP）。</summary>
+public enum InterlayerKind
+{
+    /// <summary>PVB（聚乙烯醇缩丁醛）：**不参与受力**，胶片厚度下拉 en=0（不可输入）。</summary>
+    Pvb = 0,
+
+    /// <summary>SGP（离子型间层）：**参与受力**，胶片厚度下拉 en=1（必须输入）。</summary>
+    Sgp = 1,
+}
+
+/// <summary>「其它玻璃计算」多片夹层的结果（只出一组 σ）。</summary>
+public readonly record struct MultiLaminatedResult(
+    GlassPlyResult Ply,           // 单片结果（各片同厚同值）
+    int PlyCount,                 // 参与等效的片数（实测 3）
+    double EquivalentThickness,   // t_e = (n·t³)^(1/3)，round3
+    double ThetaDefl,
+    double EtaDefl,
+    double Stiffness,             // D
+    double Deflection,
+    double Limit);                // ⚠ 实测 = t_e（V31 把等效厚度显示成了容许值）
+
+/// <summary>复合玻璃（中空 + 单侧夹胶）整片结果。</summary>
+public readonly record struct CompositeGlassResult(
+    GlassPlyResult[] Plies,       // 按「室外 → 室内」顺序，逐片 σ
+    double TotalStiffness,        // 全部玻璃片 Σt³（分配分母）
+    double StrengthThickness,     // 强度用等效厚度 t_s（SGP 专用；PVB 逐片算故为 0）
+    double EquivalentThickness,   // t_e，round3
+    double ThetaDefl,
+    double EtaDefl,
+    double Stiffness,             // D
+    double Deflection,
+    double Limit);
+
+/// <summary>
+/// 玻璃面板（四边简支）计算 —— V31「幕墙计算-玻璃计算」屏。
+///
+/// <para><b>函数区</b>：<c>0xA1EBF5–0xA21F80</c>（9 个 rtcRound 定稿点），
+/// 槽数组 <c>ds:[0x1C911BC]</c>（与横梁 0x1C911A0、立柱 0x1C91168 各自独立）。
+/// 系数表方法：η <c>0xA78E85</c>、m <c>0xA795D7</c>、μ <c>0xA79B07</c>。</para>
+///
+/// <para><b>取证方式</b>：Frida 挂 __vbaVarMul/Div/Pow/Add（<c>v31_frida_ops.py</c>）抓出完整运算 DAG，
+/// 每个中间量的数值都能对上；系数表用 capstone 静态读出断点与端点，再用运行期值双点校验。</para>
+/// </summary>
+public static class GlassEngine
+{
+    /// <summary>玻璃密度：25.6 kN/m³ → 2.56e-5 N/mm³（常量池 <c>0x402818</c>）。</summary>
+    /// <para>玻璃密度 N/mm³ —— 从参数库「玻璃密度」读（不写死）。</para>
+    public static double DensityNmm3 => GlassManagement.Calc.Data.ParamLibrary.GlassDensity;
+
+    /// <summary>玻璃弹性模量 N/mm²（代码里以 VT_I4 立即数 0x11940 = 72000 传入，0xA21266）。</summary>
+    /// <para>玻璃弹性模量 N/mm² —— 从参数库「弹性模量」读（不写死）。</para>
+    public static double E => GlassManagement.Calc.Data.ParamLibrary.GlassElasticModulus;
+
+    /// <summary>12(1−ν²)，ν=0.2 → 11.52（常量 0xA21D5E 的除数）。</summary>
+    public const double PlateFactor = 11.52;
+
+    /// <summary>地震作用系数 5αmax 的 5（<c>0xA20D0A</c> 实测 ×5）。</summary>
+    public const double SeismicFactor = 5.0;
+
+    /// <summary>挠度容许值 = 短边/60（<c>0xA21C1F</c> 1100/60=18.333）。</summary>
+    public const double DeflectionDivisor = 60.0;
+
+    /// <summary>
+    /// 中空玻璃等效厚度系数 0.95（<c>0xA28B80</c>：0.95 × (t₁³+t₂³)^(1/3) = 7.1815）。
+    /// </summary>
+    public const double InsulatedThicknessFactor = 0.95;
+
+    /// <summary>
+    /// 中空玻璃**外片**荷载分配放大系数 1.1（<c>0xA26972</c>：1.1 × wk = 0.001507）。
+    /// 内片不乘（<c>0xA26A0B</c> 直接用 wk 分配 → 0.000685 = wk/2）。
+    /// </summary>
+    public const double InsulatedOuterFactor = 1.1;
+
+    /// <summary>
+    /// 折减系数 η 表（θ 断点 → η）。静态读出 <c>0xA78E85–0xA795D7</c>，
+    /// 端点常量分别在 0x402928(0.96) / 0x402920(0.92) / 0x402918(0.84) / 0x402908(0.78)
+    /// / 0x4028f8(0.73) / 0x4028f0(0.68) / 0x4028e0(0.65) / 0x4028d8(0.61) / 0x4028c8(0.57)
+    /// / 0x4028c0(0.54) / 0x4028b8(0.52) / 0x4028a8(0.51) / 0x401928(0.50)。
+    /// </summary>
+    public static readonly (double Theta, double Eta)[] EtaTable =
+    {
+        (5.0, 1.00), (10.0, 0.96), (20.0, 0.92), (40.0, 0.84), (60.0, 0.78),
+        (80.0, 0.73), (100.0, 0.68), (120.0, 0.65), (150.0, 0.61), (200.0, 0.57),
+        (250.0, 0.54), (300.0, 0.52), (350.0, 0.51), (400.0, 0.50),
+    };
+
+    /// <summary>
+    /// 弯矩系数 m 表（短/长边比 a/b → m），静态读出 0xA795D7–0xA79B07。
+    /// <para>★ 端点归属：磁盘上每段打印的是「上端值、下端值、下端断点、上端断点」，
+    /// 首段从 a/b→0 起（0.125 = 单向板弯矩系数）。早前按段内首个断点当端点会整体错一行。</para>
+    /// </summary>
+    public static readonly (double Ratio, double M)[] BendingTable =
+    {
+        (0.00, 0.1250), (0.25, 0.1230), (0.33, 0.1180), (0.40, 0.1115), (0.50, 0.1000),
+        (0.55, 0.0934), (0.60, 0.0868), (0.65, 0.0804), (0.70, 0.0742), (0.75, 0.0683),
+        (0.80, 0.0628), (0.85, 0.0576), (0.90, 0.0528), (0.95, 0.0483), (1.00, 0.0442),
+    };
+
+    /// <summary>挠度系数 μ 表（短/长边比 → μ），静态读出 0xA79B07–0xA7A037。</summary>
+    public static readonly (double Ratio, double Mu)[] DeflectionTable =
+    {
+        (0.00, 0.01302), (0.20, 0.01297), (0.25, 0.01282), (0.33, 0.01223), (0.50, 0.01013),
+        (0.55, 0.00940), (0.60, 0.00867), (0.65, 0.00796), (0.70, 0.00727), (0.75, 0.00663),
+        (0.80, 0.00603), (0.85, 0.00547), (0.90, 0.00496), (0.95, 0.00449), (1.00, 0.00406),
+    };
+
+    /// <summary>m 取 4 位小数（运行期乘数恰为 0.0631，而非插值原值 0.06311884）。</summary>
+    public const int BendingCoefDigits = 4;
+
+    /// <summary>μ 取 5 位小数（运行期乘数恰为 0.00606，而非插值原值 0.00606478）。</summary>
+    public const int DeflectionCoefDigits = 5;
+
+    private static double R(double v, int d) => WindLoadEngine.VbaRound(v, d);
+
+    private static double R3(double v) => R(v, 3);
+
+    /// <summary>
+    /// round6，但**先转 decimal 消掉 double 的 ulp 噪声**再向偶舍入。
+    ///
+    /// <para>用于份额这类会精确落在平局点上的量：两侧玻璃同厚时
+    /// <c>w = wk·D侧/ΣD/2</c> 的比例精确为 0.5，结果正好是 <c>x.xxxxxx5</c>。
+    /// double 的末位噪声会把平局推向某一侧，decimal（15 位有效数字）不会。</para>
+    /// <para>V31 用 Variant Decimal 计算，语义与此一致。</para>
+    /// </summary>
+    private static double R6Exact(double v)
+    {
+        if (double.IsNaN(v) || double.IsInfinity(v)) return v;
+        try
+        {
+            return (double)Math.Round((decimal)v, 6, MidpointRounding.ToEven);
+        }
+        catch (OverflowException)
+        {
+            return R(v, 6);
+        }
+    }
+
+    /// <summary>分段线性插值（与 0xA79518 段一致的写法：η = 上端 − (上端−下端)·(θ−θ下)/(θ上−θ下)）。</summary>
+    private static double Interp(double x, (double X, double Y)[] table)
+    {
+        if (x <= table[0].X) return table[0].Y;
+        for (int i = 1; i < table.Length; i++)
+        {
+            if (x <= table[i].X)
+            {
+                double x0 = table[i - 1].X, y0 = table[i - 1].Y;
+                double x1 = table[i].X, y1 = table[i].Y;
+                return y1 - (y1 - y0) * (x1 - x) / (x1 - x0);
+            }
+        }
+        return table[^1].Y;
+    }
+
+    /// <summary>折减系数 η(θ)，结果取 3 位小数（0.910188→0.91、0.914017→0.914 双点判别）。</summary>
+    public static double Eta(double theta)
+    {
+        var t = new (double, double)[EtaTable.Length];
+        for (int i = 0; i < t.Length; i++) t[i] = (EtaTable[i].Theta, EtaTable[i].Eta);
+        return R(Interp(theta, t), 3);
+    }
+
+    private static double Coef(double ratio, (double, double)[] src)
+    {
+        var t = new (double, double)[src.Length];
+        for (int i = 0; i < t.Length; i++) t[i] = (src[i].Item1, src[i].Item2);
+        return Interp(ratio, t);
+    }
+
+    /// <summary>
+    /// 计算一片四边简支玻璃。
+    /// </summary>
+    /// <param name="wkNmm2">玻璃部分风荷载标准值 N/mm²（上游传入；0.00137 = 1.37 kPa 屏上显示）。</param>
+    /// <param name="aMm">短边 mm（本例 1100）。</param>
+    /// <param name="bMm">长边 mm（本例 1380）。</param>
+    /// <param name="tMm">玻璃厚度 mm（本例 6）。</param>
+    /// <param name="alphaMax">地震影响系数最大值 αmax（参数库「地区参数」，北京 0.16）。</param>
+    public static GlassResult Compute(double wkNmm2, double aMm, double bMm, double tMm, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        // —— 荷载组合（0xA20BC2 → 0xA210C3 全链）——
+        double qg = R(tMm * DensityNmm3, 6);                       // 0xA20BDB: 6×2.56e-5 = 0.0001536 → 0.000154
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);          // 0xA20D42: ×0.8 = 0.0001232 → 0.000123
+        double wS = R(1.5 * wkNmm2 + 0.7 * qe, 6);                  // 0xA20FC7: 0.002055+8.61e-5 = 0.002141
+        double wD = R(wkNmm2 + 0.5 * qe, 6);                        // 0xA210CD: 0.00137+6.15e-5 = 0.001431
+
+        // —— θ（强度用标准组合、挠度用 wk 纯风，两条链不同源，实测如此）——
+        double t4 = Math.Pow(tMm, 4.0);
+        double thetaS = R3(wD * Math.Pow(a, 4.0) / (E * t4));       // 0xA21359: 22.4529 → 22.453
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * t4));   // 0xA21A95: 21.4958
+
+        double etaS = Eta(thetaS);                                  // 0xA2143F: 0.910188 → 0.91
+        double etaD = Eta(thetaD);                                  // 0xA21AE4: 0.914017 → 0.914
+
+        // —— 系数（短/长边比）——
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);        // 0xA214CF: 0.0631
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);  // 0xA21B7A: 0.00606
+
+        // —— 强度 σ = 6·m·W强度·a²·η / t²（0xA216F8: 24.7926 → 24.793）——
+        double sigma = R3(6.0 * m * wS * a * a * etaS / (tMm * tMm));
+
+        // —— 刚度 D = E·t³/11.52（0xA21D80: 1350000）——
+        double d = R(E * Math.Pow(tMm, 3.0) / PlateFactor, 3);
+
+        // —— 挠度 df = η·μ·wk·a⁴/D（0xA21F6C: 8.2296 → 8.23）——
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d);
+
+        double limit = R3(a / DeflectionDivisor);                    // 0xA21C38: 18.333
+
+        return new GlassResult(wkNmm2, qg, qe, wS, wD, thetaS, etaS, thetaD, etaD,
+                               m, mu, sigma, d, df, limit);
+    }
+
+    /// <summary>
+    /// 中空玻璃（两片）计算 —— 走**另一段函数区** <c>0xA26000–0xA29200</c>（17 个定稿点）。
+    ///
+    /// <para><b>与单片的差别（实测）</b>：</para>
+    /// <list type="number">
+    /// <item>荷载按 t³ 分到两片，**外片再乘 1.1**、内片不乘（0xA26972 / 0xA26A0B）。</item>
+    /// <item>两片各自算 标准组合 / 强度组合 / θ / η / σ（θ 用各自 t⁴）。</item>
+    /// <item>挠度不分片，用等效厚度 <c>t_e = 0.95·(t₁³+t₂³)^(1/3)</c>（0xA28B80）。</item>
+    /// </list>
+    ///
+    /// <para><b>实测工况</b>（1100×1380、两片均 6mm 钢化、wk=0.00137、αmax=0.16）：
+    /// 外片 σ=14.697 / η=0.949 / θ=12.803 / W₁=0.001217；内片 σ=13.51 / η=0.953 / θ=11.705 / W₁=0.001114；
+    /// t_e=7.1815 / θ_δ=10.471 / η=0.958 / D=2315347.704 / df=5.029 / lim=18.333。
+    /// 中间量 0.000754(外片 wk 份额)、0.000816(外片标准组合)、0.000685(内片 wk 份额)。</para>
+    /// </summary>
+    public static InsulatedGlassResult ComputeInsulated(
+        double wkNmm2, double aMm, double bMm, double tOuter, double tInner, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R(tOuter * DensityNmm3, 6);                 // 0xA26538（实测两片同厚，取外片）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);       // 0xA266B1
+
+        double t3o = Math.Pow(tOuter, 3.0);
+        double t3i = Math.Pow(tInner, 3.0);
+        double sum3 = t3o + t3i;                                 // 0xA269FE
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        GlassPlyResult Ply(double t, double t3, double wkFactor)
+        {
+            double wShare = R(R(wkFactor * wkNmm2, 6) * t3 / sum3, 6);   // 0xA26A0B / 0xA26A2D
+            double wStr = R(1.5 * wShare + 0.7 * qe, 6);                  // 0xA26C8C
+            double wDef = R(wShare + 0.5 * qe, 6);                        // 0xA26B43
+            double theta = R3(wDef * Math.Pow(a, 4.0) / (E * Math.Pow(t, 4.0)));
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (t * t));
+            return new GlassPlyResult(t, wShare, wStr, wDef, theta, eta, sigma);
+        }
+
+        var outer = Ply(tOuter, t3o, InsulatedOuterFactor);   // 外片 ×1.1
+        var inner = Ply(tInner, t3i, 1.0);                     // 内片不乘
+
+        // ★ t_e 先取 3 位再参与运算：0xA28BA2 定稿点 in=7.1815499844 → out=7.182，
+        //   后续 Pow(t_e,3)/(t_e,4) 用的都是 7.182（日志 pre=[7.182, 3/4, ...]）。
+        double te = R3(InsulatedThicknessFactor * Math.Pow(sum3, 1.0 / 3.0));
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));   // 0xA28EB6
+        double etaD = Eta(thetaD);
+        double d = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);              // 0xA28D00
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d);          // 0xA2917B
+        double limit = R3(a / DeflectionDivisor);
+
+        return new InsulatedGlassResult(outer, inner, te, thetaD, etaD, d, df, limit);
+    }
+
+    /// <summary>
+    /// 夹层玻璃（两片 + 胶片）计算 —— 走**第三段函数区** <c>0xA2DB00–0xA2FA00</c>（17 个定稿点）。
+    ///
+    /// <para><b>与中空玻璃的三处关键差异（实测）</b>：</para>
+    /// <list type="number">
+    /// <item><b>外片不乘 1.1</b>：两片均分（0xA2DEEE 段 w=0.000685 = wk/2）。</item>
+    /// <item><b>等效厚度无 0.95</b>：<c>t_e = (t₁³+t₂³)^(1/3)</c> = 7.5595 → round3 = 7.56（0xA2F3FC）。</item>
+    /// <item><b>自重取两片之和</b>：qg = round6((t₁+t₂)·γ) = 0.0003072（0xA2DBB2），中空只用一片的 0.000154。</item>
+    /// </list>
+    ///
+    /// <para>强度只出**一组**（不像中空出两片各一组）：σ = 6·m·W₁·a²·η/t²，t 用**单片厚度**（不是 t_e）。
+    /// 实测：θ=11.705 → η=0.953 → σ=13.51（与中空内片数值相同，因为都均分且 t=6）。</para>
+    ///
+    /// <para>挠度：θ_δ=8.528 → η=0.972 → D=2700507.6 → df=4.375。</para>
+    /// </summary>
+    public static LaminatedGlassResult ComputeLaminated(
+        double wkNmm2, double aMm, double bMm, double t1, double t2, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R((t1 + t2) * DensityNmm3, 6);               // 0xA2DB90（两片之和 = 2×6×γ）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);        // 0xA2DD0E
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        // ★ 夹层**不做 t³ 分配**：V31 直接把「每片一半」写进系数（0xA2DEAE / 0xA2E1EA）：
+        //   标准组合 = 0.5wk + 0.25Q、强度组合 = 0.75wk + 0.35Q（0.25 = 0.5×0.5、0.35 = 0.7×0.5）。
+        double wShare = R(0.5 * wkNmm2, 6);                       // 0.000685
+        double wDef = R(0.5 * wkNmm2 + 0.25 * qe, 6);             // 0xA2DEE1 = 0.0007465
+        double wStr = R(0.75 * wkNmm2 + 0.35 * qe, 6);            // 0xA2E21D = 0.0011136
+        double theta = R3(wDef * Math.Pow(a, 4.0) / (E * Math.Pow(t1, 4.0)));   // 0xA2E683
+        double eta = Eta(theta);                                   // 0.953
+        double sigma = R3(6.0 * m * wStr * a * a * eta / (t1 * t1));            // 0xA2EA28
+        var ply = new GlassPlyResult(t1, wShare, wStr, wDef, theta, eta, sigma);
+
+        // 挠度：等效厚度（无 0.95），先 round3
+        double sum3 = Math.Pow(t1, 3.0) + Math.Pow(t2, 3.0);
+        double te = R3(Math.Pow(sum3, 1.0 / 3.0));                 // 0xA2F3FC = 7.56
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));  // 0xA2F709
+        double etaD = Eta(thetaD);                                 // 0.972
+        double d = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);      // 0xA2F553
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d); // 0xA2F9CE
+        double limit = R3(a / DeflectionDivisor);
+
+        return new LaminatedGlassResult(ply, te, thetaD, etaD, d, df, limit);
+    }
+
+    /// <summary>
+    /// SGP 复合玻璃（中空 + 单侧夹胶）—— V31 玻璃屏第五段函数区 <c>0xA4AA25–0xA54FFD</c>。
+    ///
+    /// <para><b>与 PVB 的三处结构差异（全部运行期校验过）</b></para>
+    /// <list type="number">
+    /// <item><b>强度用等效厚度</b>（不是逐片）：
+    /// <c>Γ = 1/(1 + 9.6·E·kΓ₁·t_f / (kΓ₂·(t+t_f)²·a²))</c>（0xA5104D–0xA51118，取 4 位），
+    /// <c>t_s = round3(sqrt(d³/(t + 2Γy)))</c>，<c>d=t₁+t₂</c>、<c>y=(t+t_f)/2</c>（0xA5162D–0xA516B2）。</item>
+    /// <item><b>折减系数恒 1</b>（0xA534A9 乘 1，不查 η 表）。</item>
+    /// <item><b>强度荷载用整片</b>：<c>W=round6(1.5·wk·d³/Σ + 0.7Q)</c>，<c>Σ=d³+t₃³</c>（0xA522A7）。</item>
+    /// </list>
+    ///
+    /// <para><b>挠度</b>：<c>t_e = round3(0.95·Σ^(1/3))</c> = 11.856（Σ=1944），θ_δ=1.410 → η=1 → D=10415846.9 → df=1.167。</para>
+    ///
+    /// <para><b>实测工况</b>（三片均 6mm、胶片 0.76、wk=0.00137、αmax=0.16、1100×1380）：
+    /// Γ=0.8967、t_s=11.969、W标准=0.001341、W强度=0.001999、σ=6.392。</para>
+    /// </summary>
+    /// <param name="kGamma1">Γ 公式里的 k₁₉ = 137.093（V31 slot[19]，物理含义待考）。</param>
+    /// <param name="kGamma2">Γ 公式里的 k₁₄ = 11.3（V31 slot[14]，即夹层配置框的 11.3）。</param>
+    public static CompositeGlassResult ComputeCompositeSgp(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double filmThickness, double alphaMax,
+        double kGamma1 = 137.093, double kGamma2 = 11.3)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R((t1 + t2) * DensityNmm3, 6);              // 0.000307（两片和）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);       // 0.000246
+
+        double d = t1 + t2;                                      // 12
+        double y = (t1 + filmThickness) / 2.0;                   // 3.38
+        double eSum = Math.Pow(d, 3.0) + Math.Pow(t3, 3.0);       // 1944
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        // Γ 剪切传递系数（0xA51118），取 4 位
+        double gamma = R(1.0 / (1.0 + 9.6 * E * kGamma1 * filmThickness
+                                     / (kGamma2 * Math.Pow(t1 + filmThickness, 2.0) * a * a)), 4);
+
+        // 强度等效厚度 t_s = sqrt(d³/(t+2Γy))（0xA516B2）
+        double ts = R3(Math.Sqrt(Math.Pow(d, 3.0) / (t1 + 2.0 * gamma * y)));
+
+        // 整片强度组合（0xA522A7）
+        double wStr = R(1.5 * (wkNmm2 * Math.Pow(d, 3.0) / eSum) + 0.7 * qe, 6);
+        double wStd = R(wkNmm2 * Math.Pow(d, 3.0) / eSum + 0.5 * qe, 6);
+
+        double sigma = R3(6.0 * m * wStr * a * a * 1.0 / (ts * ts));   // η 恒 1（0xA534A9）
+
+        double te = R3(InsulatedThicknessFactor * Math.Pow(eSum, 1.0 / 3.0));   // 11.856
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0))); // 1.410
+        double etaD = 1.0;                                        // SGP 亦为 1（槽[64]=1）
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);  // 10415846.938
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);   // 1.167
+        double limit = R3(a / DeflectionDivisor);
+
+        var plies = new[]
+        {
+            new GlassPlyResult(t1, R(wkNmm2 * Math.Pow(d, 3.0) / eSum, 6), wStr, wStd, 0, 1.0, sigma),
+            new GlassPlyResult(t2, 0, 0, 0, 0, 1.0, sigma),
+            new GlassPlyResult(t3, 0, 0, 0, 0, 1.0, 0),
+        };
+        return new CompositeGlassResult(plies, eSum, ts, te, thetaD, etaD, stiff, df, limit);
+    }
+
+    /// <summary>
+    /// **双中空玻璃**（3 片 2 腔）—— V31 函数区 <c>0xA5Cxxx–0xA5F2xx</c>。
+    ///
+    /// <para><b>分配权重 = 衰减厚度的立方</b>（实测三点定案）：
+    /// <c>D₁=(0.95t₁)³</c>、<c>D₂=D₃=(0.95²t₂)³</c>，
+    /// <c>wᵢ = 1.1?(wk)·Dᵢ/ΣD</c>（只有外片乘 1.1）。</para>
+    ///
+    /// <para>实测 6/6/6（wk=0.00137、Q=0.0001232）：
+    /// D=(185.19, 158.78, 158.78)、Σ=502.75；
+    /// w=(0.000555, 0.000433, 0.000433) → 槽 [13]/[20]；
+    /// W标准=(0.000617, 0.000495, 0.000495) → 槽 [14]/[21]；
+    /// W强度=(0.000919, 0.000736, 0.000736) → 槽 [15]/[22]；
+    /// σ=(11.262, 9.16, 9.16)、df=3.806。</para>
+    ///
+    /// <para><b>注意</b>：w 先不取整（直接进组合），只有 W标准/W强度 取 6 位 ——
+    /// 若先把 w round6 再组合，中片 W标准 会变 0.000494（实测 0.000495）。</para>
+    /// </summary>
+    public static (GlassPlyResult[] Plies, double EquivalentThickness, double Deflection, double Limit)
+        ComputeDoubleInsulated(double wkNmm2, double aMm, double bMm, double t1, double t2, double t3, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R(t1 * DensityNmm3, 6);                     // 用首片厚度（槽[7]=0.000154）
+        // ★ 地震项必须基于 **round6 后的 qg** 再算再 round6 —— 槽[7]=0.000154 就是 round6 结果。
+        //   实测校验：0.000154×5×0.16 = 0.0001232（若用未取整的 0.0001536 得 0.00012288，
+        //   会让中片 W标准 掉到 0.000494，与实测 0.000495 不符）。
+        double qe = R(qg * SeismicFactor * alphaMax, 6);         // 0.0001232 → 槽上显示 0.000123
+
+        double d1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+        double d2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
+        double d3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
+        double sum = d1 + d2 + d3;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var ts = new[] { t1, t2, t3 };
+        var ds = new[] { d1, d2, d3 };
+        var plies = new GlassPlyResult[3];
+        for (int i = 0; i < 3; i++)
+        {
+            double f = i == 0 ? InsulatedOuterFactor : 1.0;
+            // ★ 份额先 round6 再进组合：槽[13]=0.000555 / 槽[20]=0.000433 都是 round6 值，
+            //   而 1.5×w 与 0.5×qe 都建立在这个 round6 值上（否则中片两项都差 1e-6）。
+            double w = R(f * wkNmm2 * ds[i] / sum, 6);
+            double wStr = R(1.5 * w + 0.7 * qe, 6);
+            double wStd = R(w + 0.5 * qe, 6);
+            double theta = R3(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)));
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
+        }
+
+        double te = R3(Math.Pow(sum, 1.0 / 3.0));
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+        return (plies, te, df, limit);
+    }
+
+    /// <summary>
+    /// **双中空玻璃**的挠度等效厚度 —— 逐层衰减，不是简单乘一个 0.95。
+    ///
+    /// <para>V31 函数区 <c>0xA5Cxxx–0xA5F2xx</c>。四点实测定案（1100×1380、wk=0.00137）：</para>
+    /// <list type="table">
+    /// <item><term>6/6/6</term><description>t_e = 7.952</description></item>
+    /// <item><term>8/6/6</term><description>t_e = 9.112</description></item>
+    /// <item><term>6/8/6</term><description>t_e = 8.964</description></item>
+    /// <item><term>6/6/8</term><description>t_e = 8.964</description></item>
+    /// </list>
+    ///
+    /// <para>拟合结果：<c>t_e = [ (0.95·t₁)³ + (0.95²·t₂)³ + (0.95²·t₃)³ ]^(1/3)</c> ——
+    /// 每穿过一层中空腔厚度打 0.95 折：外片 1 层（0.95），中/内片 2 层（0.95²）。四点全部落在 round3 内。</para>
+    ///
+    /// <para>⚠ 与「中空+夹层」不同：后者是 <c>0.95·(Σt³)^(1/3)</c>（全体折一次，实测 8.221）。
+    /// V31 两种配置的等效厚度口径不一致，按实测各记各的。</para>
+    /// </summary>
+    public static double DoubleInsulatedThickness(double t1, double t2, double t3)
+    {
+        double e1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+        double e2 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t2, 3.0);
+        double e3 = Math.Pow(InsulatedThicknessFactor * InsulatedThicknessFactor * t3, 3.0);
+        return R3(Math.Pow(e1 + e2 + e3, 1.0 / 3.0));
+    }
+
+    /// <summary>
+    /// **多片夹层**（「其它玻璃计算」第 3 构型）。
+    ///
+    /// <para><b>实测</b>（1000×2000、wk=1.0KPa、αmax=0.16，改单厚度取多点）：</para>
+    /// <list type="table">
+    /// <item><term>6mm</term><description>σ 9.767，df 2.502，容许值 8.653</description></item>
+    /// <item><term>8mm</term><description>σ 5.756，df 1.055，容许值 11.538</description></item>
+    /// </list>
+    ///
+    /// <para><b>三条已定案的结论</b>（都与实测精确吻合）：</para>
+    /// <list type="number">
+    /// <item><b>是 3 片等效，不是 4 片</b>：<c>t_e = (3·t³)^(1/3) = 3^(1/3)·t</c>
+    /// → 6mm 得 8.6535（实测 8.653）、8mm 得 11.5380（实测 11.538）。若按 4 片得 9.524 / 12.699，差很远。</item>
+    /// <item><b>每片均分且没有 1.1 倍</b>：<c>w = wk/3</c>；
+    /// <c>wStr = 1.5×(0.001/3)+0.7×0.00012288 = 0.000586016</c>，反推实测 σ 得 0.000586020，完全一致。</item>
+    /// <item><b>「挠度容许值」显示的是 t_e</b>：<c>lim = round3(t_e)</c>。
+    /// 6mm 的 lim 8.653 就是 t_e，8mm 的 11.538 也是 —— 这是 V31 该构型的行为
+    /// （疑似把等效厚度误显示到容许值），复刻照录。</item>
+    /// </list>
+    ///
+    /// <para><b>⚠ 未闭合</b>：8mm 的 σ 实测 5.756，本实现按 <c>σ∝1/t²</c> 得 5.494（差 4.8%）。
+    /// 6mm 基准逐位，8mm 待反编译确认（该构型函数入口尚未定位）。</para>
+    /// </summary>
+    public static MultiLaminatedResult ComputeMultiLaminated(
+        double wkNmm2, double aMm, double bMm, double tMm, double alphaMax, int plyCount = 3)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = tMm * DensityNmm3;
+        double qe = qg * SeismicFactor * alphaMax;
+
+        double sum = plyCount * Math.Pow(tMm, 3.0);
+        double te = R(Math.Pow(sum, 1.0 / 3.0), 6);
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        // 每片均分，**无 1.1 倍**（实测：改任意一片结果相同，且 3 片均分即命中）
+        double wRaw = wkNmm2 / plyCount;
+        double w = R6Exact(wRaw);
+        double wStd = R6Exact(wRaw + 0.5 * qe);
+        double wStr = R6Exact(1.5 * w + 0.7 * qe);
+        double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(tMm, 4.0)), 4);
+        double eta = Eta(theta);
+        double sigma = R3(6.0 * m * wStr * a * a * eta / (tMm * tMm));
+        var ply = new GlassPlyResult(tMm, w, wStr, wStd, theta, eta, sigma);
+
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        // ★ 实测该构型的「挠度容许值」= t_e（不是 a/60）
+        double limit = R3(te);
+
+        return new MultiLaminatedResult(ply, plyCount, te, thetaD, Eta(thetaD), stiff, df, limit);
+    }
+
+    /// <summary>
+    /// **四玻夹层双中空**（「其它玻璃计算」模块专用，输入不依赖第一页）。
+    ///
+    /// <para><b>这是与常规幕墙「双夹层-中空」不同的另一种构型</b></para>
+    /// <list type="table">
+    /// <item><term>常规幕墙 双夹层-中空</term><description>夹层(2) + 腔 + 夹层(2)，**只有 1 个中空腔**</description></item>
+    /// <item><term>本构型 四玻夹层双中空</term><description>夹层(2) + 腔 + 片 + 腔 + 片，**2 个中空腔**</description></item>
+    /// </list>
+    ///
+    /// <para><b>实测</b>（「其它计算 → 其它玻璃计算」菜单 id=168；四玻外夹层双中空、
+    /// 1000×2000、4 片 6mm、wk=1.0KPa、αmax=0.16、四边简支）：</para>
+    /// <code>
+    /// 外片 8.833 / 次外片 8.833 / 次内片 7.217 / 内片 7.217
+    /// 挠度 2.356   容许值 16.667mm(四边简支)   分隔符 36 星
+    /// </code>
+    ///
+    /// <para><b>分配规则（外夹层）</b>：夹层侧两片先夹胶成一个整体（不折减），
+    /// 另两片各穿中空腔故折 0.95；外侧整体再乘 1.1。</para>
+    /// <code>
+    /// D外   = t₁³ + t₂³              （夹层整体，无折减）
+    /// D次内 = (0.95·t₃)³
+    /// D内   = (0.95·t₄)³
+    /// ΣD    = D外 + D次内 + D内
+    /// w₁=w₂ = 1.1·wk·D外/ΣD/2       （夹层内部均分）
+    /// w₃    = wk·D次内/ΣD
+    /// w₄    = wk·D内/ΣD
+    /// t_e   = 0.95·ΣD^(1/3)
+    /// </code>
+    /// <para>实测校验：ΣD=802.38 → w₁=0.0002961 → wStr=0.000530 → σ=8.833 ✓；
+    /// w₃=0.0002308 → wStr=0.000433 → σ=7.217 ✓；t_e=8.8255 → df=2.356 ✓。</para>
+    ///
+    /// <para><b>「四玻内夹层双中空」已实机验证</b>（other_glass_probe.py，同工况）：
+    /// 7.783 / 7.783 / 8.167 / 8.167，df 2.356，限值 16.667 —— 与镜像规则完全一致。
+    /// 注意次外片（片2）也在外侧，**同样要乘 1.1**（否则前两片会不同值，与实测矛盾）。</para>
+    /// </summary>
+    /// <param name="laminatedOuter"><c>true</c>=四玻外夹层双中空；<c>false</c>=四玻内夹层双中空（未验证）</param>
+    public static CompositeGlassResult ComputeFourPlyLaminatedInsulated(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double t4, double alphaMax,
+        bool laminatedOuter = true)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = t1 * DensityNmm3;                            // 不取整
+        double qe = qg * SeismicFactor * alphaMax;               // 0.00012288
+
+        double d1, d2, d3, d4;
+        if (laminatedOuter)
+        {
+            // 外夹层：1、2 是一个整体（不折减），3、4 各穿一个中空腔
+            d1 = Math.Pow(t1, 3.0) + Math.Pow(t2, 3.0);          // 作为「侧」的合计
+            d2 = 0.0;                                            // 已并入 d1
+            d3 = Math.Pow(InsulatedThicknessFactor * t3, 3.0);
+            d4 = Math.Pow(InsulatedThicknessFactor * t4, 3.0);
+        }
+        else
+        {
+            d1 = Math.Pow(InsulatedThicknessFactor * t1, 3.0);
+            d2 = Math.Pow(InsulatedThicknessFactor * t2, 3.0);
+            d3 = Math.Pow(t3, 3.0) + Math.Pow(t4, 3.0);          // 内夹层整体
+            d4 = 0.0;
+        }
+        double sum = d1 + d2 + d3 + d4;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var ts = new[] { t1, t2, t3, t4 };
+        var shares = new double[4];
+        if (laminatedOuter)
+        {
+            double wOuterEach = InsulatedOuterFactor * wkNmm2 * d1 / sum / 2.0;
+            shares[0] = shares[1] = wOuterEach;
+            shares[2] = wkNmm2 * d3 / sum;
+            shares[3] = wkNmm2 * d4 / sum;
+        }
+        else
+        {
+            // 内夹层：3、4 是一个整体（不折减），1、2 各穿一个中空腔
+            // 实测 7.783 / 7.783 / 8.167 / 8.167 —— 前两片同值（都在外侧，均乘 1.1），后两片同值
+            double wInnerEach = wkNmm2 * d3 / sum / 2.0;
+            shares[0] = InsulatedOuterFactor * wkNmm2 * d1 / sum;
+            shares[1] = InsulatedOuterFactor * wkNmm2 * d2 / sum;   // ★ 次外片同样在外侧，也要乘 1.1
+            shares[2] = shares[3] = wInnerEach;
+        }
+
+        var plies = new GlassPlyResult[4];
+        for (int i = 0; i < 4; i++)
+        {
+            double wRaw = shares[i];
+            double w = R6Exact(wRaw);
+            double wStd = R6Exact(wRaw + 0.5 * qe);
+            double wStr = R6Exact(1.5 * w + 0.7 * qe);
+            double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)), 4);
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
+        }
+
+        // t_e 用分配分母 ΣD 再折一次 0.95（实测：ΣD=802.38 → t_e=8.8255）
+        double te = R(InsulatedThicknessFactor * Math.Pow(sum, 1.0 / 3.0), 6);
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum, 0.0, te, thetaD, Eta(thetaD), stiff, df, limit);
+    }
+
+    /// <summary>
+    /// **双夹层-中空玻璃**（4 片：外夹层 2 片 + 中空腔 + 内夹层 2 片）。
+    ///
+    /// <para><b>实机取证</b>（2026-10-25，`glass_cfg_scan.py --cases dbllam`，
+    /// 1100×1380、4 片均 6mm、wk=0.00137、αmax=0.16）</para>
+    /// <code>
+    /// 屏上文案（41 星分隔）：
+    ///   最外片(1#) 8.172   次外片(2#) 8.172   次内片(3#) 7.539   最内片(4#) 7.539
+    ///   df 2.625   限值 18.333（**无「(××玻璃)」后缀**，与其他构型不同）
+    ///
+    /// 槽：厚度[5..8]=6/6/6/6   t_e[11]=9.04875   wk[12]=0.00137
+    ///     w外侧合计[13]=0.000754（每片[14][15]=0.000377）
+    ///     w内侧合计[26]=0.000685（每片[27][28]=0.000342）
+    ///     W标准[22]=0.000438 [33]=0.000404   W强度[23]=0.000652 [34]=0.000599
+    ///     θ[40]=6.8724 η[41]=0.985  θ[54]=6.3389 η[55]=0.989
+    ///     D[70]=4630690.832  μ[67]=0.00606  df[73]=2.625
+    /// </code>
+    ///
+    /// <para><b>与「双中空」的两处口径差异（各自实测，不可统一）</b></para>
+    /// <list type="number">
+    /// <item><b>地震项用未取整的自重</b>：qe = t₁·2.56e-5·5·αmax = 0.00012288。
+    /// 双中空那边必须用 round6 后的 qg（0.000154→qe=0.0001232），否则对不上；
+    /// 这里反过来——用 0.0001232 会让 W标准 变成 0.000439（实测 0.000438）。</item>
+    /// <item><b>W标准 用未取整份额、W强度 用 round6 份额</b>：
+    /// w_raw=0.00037675 / 0.0003425，round6 后为 0.000377 / 0.000342。
+    /// 实测 0.000438=round6(0.00037675+0.00006144)、0.000652=round6(1.5×0.000377+0.000086016)，
+    /// 四个值同时成立，交叉验证过。</item>
+    /// </list>
+    ///
+    /// <para><b>⚠ 已知未逐位</b>：t_e。实测 9.04875，本实现按 (Σ(0.95tᵢ)³)^(1/3) 得 9.04814，
+    /// 相对差 7e-5（t_e³: 740.91 vs 740.77）。屏上 df 仍为 2.625（round3 吸收），
+    /// 但槽位 θ_δ 会得 4.156 而非 4.155。未定位，不硬凑；很可能 V31 此构型对腔体的折减
+    /// 不是整齐的 0.95（需改厚度取两点才能定系数）。</para>
+    /// </summary>
+    public static CompositeGlassResult ComputeDoubleLaminated(
+        double wkNmm2, double aMm, double bMm,
+        double t1, double t2, double t3, double t4, double alphaMax)
+    {
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = t1 * DensityNmm3;                            // 不取整
+        double qe = qg * SeismicFactor * alphaMax;               // 0.00012288（刻意不 round）
+
+        // 每一侧是「夹层整体」：2 片同厚，各按 0.95 折一次
+        double dOuter = Math.Pow(InsulatedThicknessFactor * t1, 3.0)
+                      + Math.Pow(InsulatedThicknessFactor * t2, 3.0);
+        double dInner = Math.Pow(InsulatedThicknessFactor * t3, 3.0)
+                      + Math.Pow(InsulatedThicknessFactor * t4, 3.0);
+        double sum = dOuter + dInner;
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        double wOuter = InsulatedOuterFactor * wkNmm2 * dOuter / sum;   // 0.0007535
+        double wInner = wkNmm2 * dInner / sum;                          // 0.0006849
+
+        var ts = new[] { t1, t2, t3, t4 };
+        var side = new[] { wOuter, wOuter, wInner, wInner };
+        var plies = new GlassPlyResult[4];
+        for (int i = 0; i < 4; i++)
+        {
+            double wRaw = side[i] / 2.0;                        // 每侧 2 片均分
+            // ★ 份额的 round6 必须走 decimal：两侧同厚时 wRaw 恰好 = 0.0003425，
+            //   正落在 6 位小数**平局点**上；double 会把 0.0003425 算成 0.0003425000000000004，
+            //   于是向偶舍入得到 0.000343（实测槽[27]=0.000342）。
+            //   V31 走 Variant Decimal（无 ulp 噪声），这里用 decimal 复现其平局语义。
+            double w = R6Exact(wRaw);                           // 槽上显示值
+            double wStd = R6Exact(wRaw + 0.5 * qe);             // ★ 用未取整份额
+            double wStr = R6Exact(1.5 * w + 0.7 * qe);          // ★ 用 round6 份额
+            // ★ 本构型 θ 取 **4 位**（槽[40]=6.8724、槽[54]=6.3389），
+            //   而双中空/中空是 3 位（9.681 / 7.767）——V31 各构型自己一套，不统一。
+            double theta = R(wStd * Math.Pow(a, 4.0) / (E * Math.Pow(ts[i], 4.0)), 4);
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (ts[i] * ts[i]));
+            plies[i] = new GlassPlyResult(ts[i], w, wStr, wStd, theta, eta, sigma);
+        }
+
+        // ★ 本构型 t_e **不 round3**：槽[11]=9.04875 是 6 位（双中空/中空都是 3 位）。
+        //   若 round3 成 9.048，D 会掉到 4628688，df 变成 2.626（实测 2.625）。
+        double te = R(Math.Pow(sum, 1.0 / 3.0), 6);
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double stiff = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(Eta(thetaD) * mu * wkNmm2 * Math.Pow(a, 4.0) / stiff);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum, 0.0, te, thetaD, Eta(thetaD), stiff, df, limit);
+    }
+
+    /// <summary>
+    /// 复合玻璃（中空 + 单侧夹胶，共 3 片）—— 走**第四段函数区** <c>0xA46000–0xA49B00</c>（17 个定稿点）。
+    ///
+    /// <para><b>三级受力流程（V31 的合并实现，与「先分侧、再分片」数学等价）</b></para>
+    ///
+    /// <list type="number">
+    /// <item><b>第一级：总刚度</b> S = Σ tᵢ³（把全部玻璃片一起算，实测分母 648 = 3×216）。
+    /// V31 直接算每片 wᵢ = 1.1?·wk·tᵢ³/S；而「先按侧刚度 S_side/S 分到侧、再按 tᵢ³/S_side 分到片」
+    /// 乘起来恰等于 tᵢ³/S ——所以两种写法结果相同，V31 省了一层。</item>
+    /// <item><b>第二级：外片放大</b> 只有**最外侧那片**乘 1.1（0xA46001：1.1×wk×216）。</item>
+    /// <item><b>第三级：逐片组合与强度</b> W标准ᵢ=round6(wᵢ+0.5Q)、W强度ᵢ=round6(1.5wᵢ+0.7Q)、
+    /// θᵢ=round3(W标准ᵢ·a⁴/(E·tᵢ⁴))、σᵢ=round3(6·m·W强度ᵢ·a²·ηᵢ/tᵢ²)。</item>
+    /// </list>
+    ///
+    /// <para><b>挠度</b>不分片：<c>t_e = round3(0.95·(Σtᵢ³)^(1/3))</c>（实测 0.95×8.6532 = 8.2208 → 8.221），
+    /// 再 θ_δ=6.099 → η=0.991 → D=3472593.612 → df=3.469。</para>
+    ///
+    /// <para><b>实测工况</b>（中空+夹层、三片均 6mm、wk=0.00137、αmax=0.16、1100×1380、PVB）：
+    /// 外侧夹胶片 w=0.000502 → W标准 0.000564 / W强度 0.000839 / θ 8.849 / σ=10.345（两片同值）；
+    /// 室内单片 w=0.000457 → 0.000518 / 0.000772 / θ 8.128 / σ=9.578。</para>
+    ///
+    /// <para>⚠ <b>SGP 未实现</b>：实测 SGP 走另一段（0xA52xxx–0xA54Axx），
+    /// <c>t_e = 0.95×(12³+6³)^(1/3)</c>（把夹层侧两片合成 12mm）→ 11.856，
+    /// 但 σ 内部用的 t = <b>11.969</b> 来源尚未定位，不得臆造，故此处显式抛异常。</para>
+    /// </summary>
+    /// <param name="plyThicknesses">按「室外 → 室内」顺序的玻璃厚度 mm（3 片）。</param>
+    public static CompositeGlassResult ComputeComposite(
+        double wkNmm2, double aMm, double bMm, double[] plyThicknesses,
+        InterlayerKind interlayer, double alphaMax)
+    {
+        if (interlayer == InterlayerKind.Sgp)
+        {
+            throw new NotSupportedException(
+                "SGP 分支未闭合：V31 函数区 0xA52xxx–0xA54Axx，t_e=0.95×(Σt³)^(1/3) 已实测，" +
+                "但 σ 公式里的 t=11.969 来源未定位（见 docs/V31_GLASS_PAGE.md 9.6）。");
+        }
+        if (plyThicknesses.Length < 2)
+        {
+            throw new ArgumentException("复合玻璃至少需要 2 片", nameof(plyThicknesses));
+        }
+
+        double a = Math.Min(aMm, bMm);
+        double b = Math.Max(aMm, bMm);
+
+        double qg = R(plyThicknesses[0] * DensityNmm3, 6);        // 0xA46476（单份）
+        double qe = R(qg * (SeismicFactor * alphaMax), 6);         // 0xA46599
+
+        double sum3 = 0;
+        foreach (var t in plyThicknesses) sum3 += Math.Pow(t, 3.0);   // 0xA4608D 648
+
+        double ratio = a / b;
+        double m = R(Coef(ratio, BendingTable), BendingCoefDigits);
+        double mu = R(Coef(ratio, DeflectionTable), DeflectionCoefDigits);
+
+        var plies = new GlassPlyResult[plyThicknesses.Length];
+        for (int i = 0; i < plyThicknesses.Length; i++)
+        {
+            double t = plyThicknesses[i];
+            double wkFactor = i == 0 ? InsulatedOuterFactor : 1.0;    // 只有最外片 ×1.1
+            double wShare = R(R(wkFactor * wkNmm2, 6) * Math.Pow(t, 3.0) / sum3, 6);
+            double wStr = R(1.5 * wShare + 0.7 * qe, 6);
+            double wDef = R(wShare + 0.5 * qe, 6);
+            double theta = R3(wDef * Math.Pow(a, 4.0) / (E * Math.Pow(t, 4.0)));
+            double eta = Eta(theta);
+            double sigma = R3(6.0 * m * wStr * a * a * eta / (t * t));
+            plies[i] = new GlassPlyResult(t, wShare, wStr, wDef, theta, eta, sigma);
+        }
+
+        double te = R3(InsulatedThicknessFactor * Math.Pow(sum3, 1.0 / 3.0));   // 8.221
+        double thetaD = R3(wkNmm2 * Math.Pow(a, 4.0) / (E * Math.Pow(te, 4.0)));
+        double etaD = Eta(thetaD);
+        double d = R(E * Math.Pow(te, 3.0) / PlateFactor, 3);
+        double df = R3(etaD * mu * wkNmm2 * Math.Pow(a, 4.0) / d);
+        double limit = R3(a / DeflectionDivisor);
+
+        return new CompositeGlassResult(plies, sum3, 0, te, thetaD, etaD, d, df, limit);
+    }
+}

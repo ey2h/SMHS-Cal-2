@@ -1,7 +1,7 @@
 namespace GlassManagement.Api.Services.StaticCalcEngine;
 
 /// <summary>
-/// 双跨连续梁计算 — 按《建筑结构静力计算手册》表3-9 及汇宝V33.0
+/// 双跨连续梁计算 — 按《建筑结构静力计算手册》表3-9 及原程序V33.0
 /// 支承条件：三支座连续梁（A-B-C），跨度L1和L2
 /// </summary>
 public static class DoubleSpanBeamCalc
@@ -21,7 +21,7 @@ public static class DoubleSpanBeamCalc
     /// <summary>
     /// 双跨连续梁-均布荷载 — 《静力计算手册》表3-9
     /// 中支座弯矩: M1 = -q(L1³+L2³) / (8(L1+L2))
-    /// 汇宝V33.0公式一致
+    /// 原程序V33.0公式一致
     /// </summary>
     public static BeamCalcResult UniformLoad(BeamCalcRequest req)
     {
@@ -40,7 +40,7 @@ public static class DoubleSpanBeamCalc
 
         var result = new BeamCalcResult
         {
-            Reference = "《建筑结构静力计算手册》表3-9，汇宝V33.0",
+            Reference = "《建筑结构静力计算手册》表3-9",
             Description = $"双跨连续梁-均布荷载(L1={L1},L2={L2})",
             Reactions = new()
             {
@@ -76,7 +76,7 @@ public static class DoubleSpanBeamCalc
             result.DeflectionDiagram.Add(new() { X = x, Value = 0 });
         }
 
-        // === 挠度计算 — 汇宝V33.0 x0/λ公式 ===
+        // === 挠度计算 — 原程序V33.0 x0/λ公式 ===
         // 对第一跨和第二跨分别计算最大挠度
         // 以第二跨为例（较长跨）
         double qk = q; // 标准值荷载（挠度计算用标准值）
@@ -92,7 +92,7 @@ public static class DoubleSpanBeamCalc
 
     /// <summary>
     /// 双跨挠度计算 — 《静力计算手册》表3-9 x0/λ公式
-    /// 汇宝V33.0完全一致:
+    /// 原程序V33.0完全一致:
     /// k1 = 4*M1/(q*Lk²)
     /// A = 2 + k1
     /// R = ((A/4)² - k1/2)^(3/2)

@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.CuttingStockView"
+             x:DataType="vm:CuttingStockViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="型材优化（线材套裁下料）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="10" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="原材料长度(mm)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding StockLengthText}" Width="90"/>
+          <TextBlock Text="锯缝(mm)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding KerfText}" Width="60"/>
+          <TextBlock Text="端头余量(mm)" VerticalAlignment="Center"/>
+          <TextBox Text="{Binding EndTrimText}" Width="70"/>
+          <Button Content="优化（FFD）" Command="{Binding OptimizeCommand}"/>
+          <Button Content="清空" Command="{Binding ClearCommand}"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="300,*">
+      <DockPanel Grid.Column="0" Margin="10">
+        <TextBlock DockPanel.Dock="Top" Text="下料清单（长度 / 数量）" FontWeight="Bold" Margin="0,0,0,6"/>
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding Parts}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="*,90" Margin="0,2">
+                  <TextBox Grid.Column="0" Text="{Binding Length}" Watermark="下料长度(mm)" Margin="0,0,4,0"/>
+                  <TextBox Grid.Column="1" Text="{Binding Qty}" Watermark="数量"/>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+
+      <Border Grid.Column="1" Margin="10" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+        <ScrollViewer>
+          <TextBlock Text="{Binding ResultText}" TextWrapping="NoWrap"
+                     FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </DockPanel>
+</UserControl>

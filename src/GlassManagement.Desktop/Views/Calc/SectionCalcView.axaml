@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.SectionCalcView"
+             x:DataType="vm:SectionCalcViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="截面特性计算（Green 定理，支持 CAD 点集导入）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <Button Content="计算" Command="{Binding CalcCommand}" HorizontalAlignment="Left"/>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap" FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="*,*">
+      <StackPanel Grid.Column="0" Margin="12" Spacing="6">
+        <TextBlock Text="外轮廓点集（每行 x,y，闭合多边形）" FontWeight="Bold"/>
+        <TextBox Text="{Binding PointsText}" AcceptsReturn="True" MinHeight="320"
+                 FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12" TextWrapping="NoWrap"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Margin="12" Spacing="6">
+        <TextBlock Text="说明" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap" Opacity="0.8"
+                   Text="输入截面外轮廓的顶点坐标（mm），顺时针或逆时针均可，首尾自动闭合。&#10;&#10;基于 Green 定理计算面积、形心、惯性矩、抵抗矩、静矩等截面特性。&#10;&#10;结果：A(面积)、Cx/Cy(形心)、Ix/Iy(惯性矩)、Wx/Wy(抵抗矩)、Sx/Sy(静矩)。"/>
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</UserControl>

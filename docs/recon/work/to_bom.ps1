@@ -1,0 +1,5 @@
+param([string]$Path)
+$text = [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
+$enc = New-Object System.Text.UTF8Encoding($true)
+[System.IO.File]::WriteAllText($Path, $text, $enc)
+Write-Output ("BOM_ADDED " + $Path)

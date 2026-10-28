@@ -1,0 +1,52 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "GlassManagement.Calc.MultispanCheck/1.0.0": {
+        "dependencies": {
+          "GlassManagement.Calc": "1.0.0",
+          "GlassManagement.Calc.Reference": "1.0.0.0"
+        },
+        "runtime": {
+          "GlassManagement.Calc.MultispanCheck.dll": {}
+        }
+      },
+      "GlassManagement.Calc/1.0.0": {
+        "runtime": {
+          "GlassManagement.Calc.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "GlassManagement.Calc.Reference/1.0.0.0": {
+        "runtime": {
+          "GlassManagement.Calc.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GlassManagement.Calc.MultispanCheck/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GlassManagement.Calc/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GlassManagement.Calc.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

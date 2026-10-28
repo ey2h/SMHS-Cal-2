@@ -1,0 +1,1237 @@
+@page "/glass-curtain-wall"
+@rendermode InteractiveServer
+@inject GlassApiClient Api
+@inject IJSRuntime JSRuntime
+
+<div class="page-enter">
+    <h1 class="page-title">全隐框玻璃幕墙计算书向导</h1>
+    <p class="page-subtitle">8步完成隐框幕墙结构计算与报告生成</p>
+
+    <!-- 步骤指示器 -->
+    <div class="wizard-steps">
+        @for (int i = 1; i <= 8; i++)
+        {
+            var stepNum = i;
+            <div class="wizard-step @(CurrentStep == stepNum ? "active" : "") @(CompletedSteps.Contains(stepNum) ? "done" : "")" @onclick="() => JumpToStep(stepNum)">
+                <div class="step-circle">
+                    @if (CompletedSteps.Contains(stepNum))
+                    {
+                        <span class="material-symbols-outlined">check</span>
+                    }
+                    else
+                    {
+                        <span>@stepNum</span>
+                    }
+                </div>
+                <span class="step-label">@StepNames[i - 1]</span>
+            </div>
+            @if (i < 8)
+            {
+                <div class="step-connector @(CompletedSteps.Contains(i) ? "done" : "")"></div>
+            }
+        }
+    </div>
+
+    <div class="card">
+        @if (_saving) { <div class="loading-overlay"><div class="spinner"></div></div> }
+
+        @switch (CurrentStep)
+        {
+            case 1: @Step1Content(); break;
+            case 2: @Step2Content(); break;
+            case 3: @Step3Content(); break;
+            case 4: @Step4Content(); break;
+            case 5: @Step5Content(); break;
+            case 6: @Step6Content(); break;
+            case 7: @Step7Content(); break;
+            case 8: @Step8Content(); break;
+        }
+
+        <div class="wizard-nav">
+            <button class="btn-secondary" @onclick="PrevStep" disabled="@(CurrentStep == 1)">
+                <span class="material-symbols-outlined">chevron_left</span> 上一步
+            </button>
+            @if (CurrentStep < 7)
+            {
+                <button class="btn-primary" @onclick="NextStep" disabled="@_saving">
+                    下一步 <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            }
+            else if (CurrentStep == 7)
+            {
+                <button class="btn-primary" @onclick="ConfirmSummary" disabled="@_saving">
+                    确认汇总 <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            }
+            else
+            {
+                <button class="btn-primary" @onclick="GenerateReport" disabled="@_generating">
+                    @if (_generating) { <span class="spinner"></span> }
+                    <span class="material-symbols-outlined">download</span> 生成计算书
+                </button>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(_errorMsg))
+    {
+        <div class="error-msg">@_errorMsg</div>
+    }
+    @if (!string.IsNullOrEmpty(_successMsg))
+    {
+        <div class="success-msg">@_successMsg</div>
+    }
+</div>
+
+@code {
+    private int CurrentStep = 1;
+    private string SessionId = "";
+    private int? ProjectId;
+    private HashSet<int> CompletedSteps = new();
+    private bool _saving;
+    private bool _generating;
+    private string? _errorMsg;
+    private string? _successMsg;
+    private string[] StepNames = { "基本参数", "玻璃配置", "立柱计算", "横梁计算", "连接件", "预埋件", "其它构件", "生成计算书" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(SessionId))
+        {
+            try
+            {
+                var session = await Api.CreateWizardSessionAsync("新项目");
+                SessionId = session.SessionId;
+                ProjectId = session.ProjectId;
+            }
+            catch (Exception ex)
+            {
+                _errorMsg = "创建向导会话失败：" + ex.Message;
+            }
+        }
+    }
+
+    private void JumpToStep(int step)
+    {
+        if (step <= CurrentStep || CompletedSteps.Contains(step - 1))
+            CurrentStep = step;
+    }
+
+    private void PrevStep() { if (CurrentStep > 1) CurrentStep--; }
+
+    private async Task NextStep()
+    {
+        _saving = true; _errorMsg = null;
+        try
+        {
+            switch (CurrentStep)
+            {
+                case 1: await SaveStep1(); break;
+                case 2: await SaveStep2(); break;
+                case 3: await SaveStep3(); break;
+                case 4: await SaveStep4(); break;
+                case 5: await SaveStep5(); break;
+                case 6: await SaveStep6(); break;
+            }
+            CompletedSteps.Add(CurrentStep);
+            CurrentStep++;
+        }
+        catch (Exception ex) { _errorMsg = "保存失败：" + ex.Message; }
+        _saving = false;
+    }
+
+    private async Task ConfirmSummary()
+    {
+        _saving = true; _errorMsg = null;
+        try { await Api.SaveWizardStep7Async(SessionId); CompletedSteps.Add(7); CurrentStep = 8; }
+        catch (Exception ex) { _errorMsg = "确认汇总失败：" + ex.Message; }
+        _saving = false;
+    }
+
+    private async Task GenerateReport()
+    {
+        _generating = true; _errorMsg = null; _successMsg = null;
+        try
+        {
+            var reportInput = new
+            {
+                engineeringName = S8EngineeringName,
+                designCompany = S8DesignCompany,
+                author = S8Author,
+                reviewer = S8Reviewer,
+                approver = S8Approver,
+                supervisor = S8Supervisor,
+                reportDate = S8ReportDate,
+                formats = new List<string> { S8Format },
+                outputScope = "all"
+            };
+            await Api.SaveWizardStep8Async(SessionId, reportInput);
+
+            var bytes = await Api.DownloadWizardReportAsync(SessionId, S8Format);
+            var mime = S8Format == "pdf" ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            var ext = S8Format == "pdf" ? "pdf" : "docx";
+            var fileName = $"计算书_{S8EngineeringName ?? "幕墙"}.{ext}";
+            var base64 = Convert.ToBase64String(bytes);
+            await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", mime, base64, fileName);
+            _successMsg = "计算书已生成并开始下载！";
+        }
+        catch (Exception ex) { _errorMsg = "生成失败：" + ex.Message; }
+        _generating = false;
+    }
+
+    // ===== Step 1 Fields =====
+    private string S1ProjectName = "全隐框玻璃幕墙工程";
+    private string S1City = "";
+    private double S1BuildingHeight = 60;
+    private double S1BasicWindPressure = 500;
+    private string S1TerrainCategory = "B";
+    private int S1SeismicIntensity = 7;
+    private double S1LeftPanelWidth = 1200;
+    private double S1RightPanelWidth = 1200;
+    private double S1UpperPanelHeight = 1500;
+    private double S1LowerPanelHeight = 1500;
+    private string S1ExternalShapeMode = "wall_center";
+    private string S1InternalShapeMode = "sealed";
+    private string S1CurtainWallStructure = "构件式";
+    private string S1TransomStructure = "无中横";
+    private int S1ReturnPeriod = 50;
+    private string S1StandardCode = "GB50009-2012";
+    private List<RegionDto> _regionResults = new();
+    private string? _regionSearchKw;
+
+    private async Task SearchRegions()
+    {
+        _regionResults = await Api.SearchRegionsAsync(_regionSearchKw ?? "");
+    }
+
+    private void SelectRegion(RegionDto r)
+    {
+        S1City = r.Name;
+        S1BasicWindPressure = r.W0;
+        _regionResults.Clear();
+    }
+
+    private async Task SaveStep1()
+    {
+        var input = new
+        {
+            projectName = S1ProjectName,
+            city = S1City,
+            buildingHeight = S1BuildingHeight,
+            basicWindPressure = S1BasicWindPressure,
+            terrainCategory = S1TerrainCategory,
+            seismicIntensity = S1SeismicIntensity,
+            leftPanelWidth = S1LeftPanelWidth,
+            rightPanelWidth = S1RightPanelWidth,
+            upperPanelHeight = S1UpperPanelHeight,
+            lowerPanelHeight = S1LowerPanelHeight,
+            externalShapeMode = S1ExternalShapeMode,
+            internalShapeMode = S1InternalShapeMode,
+            curtainWallStructure = S1CurtainWallStructure,
+            transomStructure = S1TransomStructure,
+            returnPeriod = S1ReturnPeriod,
+            standardCode = S1StandardCode,
+            calcElevation = S1BuildingHeight,
+            installHeight = S1BuildingHeight,
+            peakAcceleration = 0.05,
+            alphaMax = 0.08,
+            temperatureDiff = 80,
+            snowPressure = 0,
+            externalShapeValue = -1.0,
+            internalShapeValue = 0.2,
+            windLoadMode = "calc",
+            windLoadCustom = 0,
+            seismicCategory = "标准"
+        };
+        await Api.SaveWizardStep1Async(SessionId, input);
+    }
+
+    // ===== Step 2 Fields =====
+    private string S2GlassComposition = "中空";
+    private double S2OuterThickness = 6;
+    private string S2OuterType = "钢化";
+    private double S2InnerThickness = 6;
+    private string S2InnerType = "钢化";
+    private double S2AirGapThickness = 12;
+    private double S2InterlayerThickness = 1.52;
+    private string S2InterlayerType = "PVB";
+    private double S2ShortSide = 1200;
+    private double S2LongSide = 1500;
+    private string S2SupportType = "四边简支";
+
+    private async Task SaveStep2()
+    {
+        var input = new
+        {
+            glassComposition = S2GlassComposition,
+            outerThickness = S2OuterThickness,
+            outerType = S2OuterType,
+            innerThickness = S2InnerThickness,
+            innerType = S2InnerType,
+            airGapThickness = S2AirGapThickness,
+            interlayerThickness = S2InterlayerThickness,
+            interlayerType = S2InterlayerType,
+            shortSide = S2ShortSide,
+            longSide = S2LongSide,
+            supportType = S2SupportType
+        };
+        await Api.SaveWizardStep2Async(SessionId, input);
+    }
+
+    // ===== Step 3 Fields =====
+    private string S3Material = "铝合金";
+    private string S3AluminumGrade = "6063-T5";
+    private string S3SteelGrade = "Q235B";
+    private int S3MechanicalModel = 1;
+    private double S3Span = 3600;
+    private string S3ProfileCode = "";
+    private double S3Ix;
+    private double S3Iy;
+    private double S3Wx1;
+    private double S3Wx2;
+    private double S3WallThickness = 3;
+    private double S3SectionArea;
+    private double S3Sx;
+    private double S3WebWidth;
+    private double S3LoadWidth = 1200;
+    private bool S3ThermalBreak;
+
+    private async Task SaveStep3()
+    {
+        var input = new
+        {
+            mechanicalModel = S3MechanicalModel,
+            span = S3Span,
+            material = S3Material,
+            aluminumGrade = S3AluminumGrade,
+            steelGrade = S3SteelGrade,
+            thermalBreak = S3ThermalBreak,
+            profileCode = S3ProfileCode,
+            ix = S3Ix,
+            iy = S3Iy,
+            wx1 = S3Wx1,
+            wx2 = S3Wx2,
+            wallThickness = S3WallThickness,
+            sectionArea = S3SectionArea,
+            sx = S3Sx,
+            webWidth = S3WebWidth,
+            loadWidth = S3LoadWidth,
+            shortSpan = 0
+        };
+        await Api.SaveWizardStep3Async(SessionId, input);
+    }
+
+    // ===== Step 4 Fields =====
+    private string S4Material = "铝合金";
+    private string S4Grade = "6063-T5";
+    private double S4Span;
+    private string S4LoadModel = "三角形分布";
+    private string S4ProfileCode = "";
+    private double S4Ixx;
+    private double S4Iyy;
+    private double S4Wxx;
+    private double S4Wyy;
+    private double S4GlassWeight;
+
+    private async Task SaveStep4()
+    {
+        var input = new
+        {
+            span = S4Span > 0 ? S4Span : S1LeftPanelWidth + S1RightPanelWidth,
+            material = S4Material,
+            grade = S4Grade,
+            loadModel = S4LoadModel,
+            profileCode = S4ProfileCode,
+            ixx = S4Ixx,
+            iyy = S4Iyy,
+            wxx = S4Wxx,
+            wyy = S4Wyy,
+            glassWeight = S4GlassWeight
+        };
+        await Api.SaveWizardStep4Async(SessionId, input);
+    }
+
+    // ===== Step 5 Fields =====
+    private string S5BoltSpec1 = "M6";
+    private string S5BoltMaterial1 = "不锈钢A2-70";
+    private int S5BoltCount1 = 4;
+    private double S5MinWallThickness1 = 3;
+    private string S5BoltSpec2 = "M6";
+    private string S5BoltMaterial2 = "不锈钢A2-70";
+    private int S5BoltCount2 = 4;
+    private double S5MinWallThickness2 = 3;
+    private string S5MainConnectionMethod = "螺栓";
+    private double S5WeldHeight;
+    private double S5WeldEffectiveLength;
+
+    private async Task SaveStep5()
+    {
+        var input = new
+        {
+            transomToBracket = new { boltSpec = S5BoltSpec1, boltMaterial = S5BoltMaterial1, boltCount = S5BoltCount1, minWallThickness = S5MinWallThickness1 },
+            bracketToMullion = new { boltSpec = S5BoltSpec2, boltMaterial = S5BoltMaterial2, boltCount = S5BoltCount2, minWallThickness = S5MinWallThickness2 },
+            mullionToStructure = new { connectionMethod = S5MainConnectionMethod, boltParams = S5MainConnectionMethod == "螺栓" ? new { boltSpec = S5BoltSpec1, boltMaterial = S5BoltMaterial1, boltCount = S5BoltCount1, minWallThickness = S5MinWallThickness1 } : null, weldHeight = S5WeldHeight, weldEffectiveLength = S5WeldEffectiveLength }
+        };
+        await Api.SaveWizardStep5Async(SessionId, input);
+    }
+
+    // ===== Step 6 Fields =====
+    private double S6AnchorDiameter = 12;
+    private int S6AnchorCount = 4;
+    private double S6AnchorPlateWidth = 150;
+    private double S6AnchorPlateHeight = 200;
+    private double S6AnchorPlateThickness = 10;
+    private string S6ChannelSpec = "10#";
+    private string S6ChannelLayout = "双片";
+    private double S6SealantWidth = 12;
+    private double S6SealantDepth = 6;
+    private double S6SealantStrength = 0.14;
+    private double S6PressPlateWidth = 25;
+    private double S6PressPlateThickness = 2;
+
+    private async Task SaveStep6()
+    {
+        var input = new
+        {
+            anchorDiameter = S6AnchorDiameter,
+            anchorCount = S6AnchorCount,
+            anchorPlateWidth = S6AnchorPlateWidth,
+            anchorPlateHeight = S6AnchorPlateHeight,
+            anchorPlateThickness = S6AnchorPlateThickness,
+            channelSpec = S6ChannelSpec,
+            channelLayout = S6ChannelLayout,
+            sealantWidth = S6SealantWidth,
+            sealantDepth = S6SealantDepth,
+            sealantStrength = S6SealantStrength,
+            pressPlateWidth = S6PressPlateWidth,
+            pressPlateThickness = S6PressPlateThickness
+        };
+        await Api.SaveWizardStep6Async(SessionId, input);
+    }
+
+    // ===== Step 7: Summary display =====
+
+    private async Task SaveStep7() { await Api.SaveWizardStep7Async(SessionId); }
+
+    // ===== Step 8 Fields =====
+    private string S8EngineeringName = "";
+    private string S8DesignCompany = "";
+    private string S8Author = "";
+    private string S8Reviewer = "";
+    private string S8Approver = "";
+    private string S8Supervisor = "";
+    private string S8ReportDate = DateTime.Now.ToString("yyyy-MM-dd");
+    private string S8Format = "word";
+
+    // ===== Step Renderers =====
+
+    private RenderFragment Step1Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">location_city</span> 基本参数</div>
+        <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+                <label class="label">工程名称</label>
+                <input class="input-field" type="text" @bind="S1ProjectName" />
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+                <label class="label">地区检索</label>
+                <div style="display:flex;gap:8px">
+                    <input class="input-field" type="text" placeholder="输入城市名称搜索..." @bind="_regionSearchKw" @onkeyup="async (e) => { if (e.Key == \"Enter\") await SearchRegions(); }" />
+                    <button class="btn-secondary" @onclick="SearchRegions">搜索</button>
+                </div>
+                @if (_regionResults.Any())
+                {
+                    <div class="dropdown-list">
+                        @foreach (var r in _regionResults)
+                        {
+                            <div class="dropdown-item" @onclick="() => SelectRegion(r)">@r.Name @(r.W0 > 0 ? $"w₀={r.W0}Pa" : "")</div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <label class="label">所在城市</label>
+                <input class="input-field" type="text" @bind="S1City" />
+            </div>
+            <div class="form-group">
+                <label class="label">建筑高度 (m)</label>
+                <input class="input-field" type="number" @bind="S1BuildingHeight" />
+            </div>
+            <div class="form-group">
+                <label class="label">基本风压 w₀ (Pa)</label>
+                <input class="input-field" type="number" @bind="S1BasicWindPressure" />
+            </div>
+            <div class="form-group">
+                <label class="label">地面粗糙度</label>
+                <select class="input-field" @bind="S1TerrainCategory">
+                    <option value="A">A类 (海面/沙漠)</option>
+                    <option value="B">B类 (田野/丘陵)</option>
+                    <option value="C">C类 (城市密集区)</option>
+                    <option value="D">D类 (大城市中心)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">抗震设防烈度</label>
+                <select class="input-field" @bind="S1SeismicIntensity">
+                    <option value="6">6度</option>
+                    <option value="7">7度</option>
+                    <option value="8">8度</option>
+                    <option value="9">9度</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">重现期 (年)</label>
+                <select class="input-field" @bind="S1ReturnPeriod">
+                    <option value="50">50年</option>
+                    <option value="100">100年</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">规范依据</label>
+                <select class="input-field" @bind="S1StandardCode">
+                    <option value="GB50009-2012">GB50009-2012</option>
+                    <option value="DBJ/T15-101-2022">DBJ/T15-101-2022</option>
+                    <option value="DGJ08-56-2012">DGJ08-56-2012</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">grid_on</span> 分格尺寸</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">立柱左分格宽 (mm)</label>
+                <input class="input-field" type="number" @bind="S1LeftPanelWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">立柱右分格宽 (mm)</label>
+                <input class="input-field" type="number" @bind="S1RightPanelWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">横梁上分格高 (mm)</label>
+                <input class="input-field" type="number" @bind="S1UpperPanelHeight" />
+            </div>
+            <div class="form-group">
+                <label class="label">横梁下分格高 (mm)</label>
+                <input class="input-field" type="number" @bind="S1LowerPanelHeight" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">tune</span> 体系参数</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">幕墙结构类型</label>
+                <select class="input-field" @bind="S1CurtainWallStructure">
+                    <option value="构件式">构件式</option>
+                    <option value="单元式">单元式</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">横框结构</label>
+                <select class="input-field" @bind="S1TransomStructure">
+                    <option value="无中横">无中横</option>
+                    <option value="有中横">有中横</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">外部体型系数</label>
+                <select class="input-field" @bind="S1ExternalShapeMode">
+                    <option value="wall_center">墙面中部 -1.0</option>
+                    <option value="wall_corner">墙面角部 -1.8</option>
+                    <option value="custom">自定义</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">内部体型系数</label>
+                <select class="input-field" @bind="S1InternalShapeMode">
+                    <option value="sealed">封闭式 ±0.2</option>
+                    <option value="dominant_opening">主导开洞</option>
+                    <option value="custom">自定义</option>
+                </select>
+            </div>
+        </div>
+    </div>;
+
+    private RenderFragment Step2Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">layers</span> 玻璃配置</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">玻璃构成</label>
+                <select class="input-field" @bind="S2GlassComposition">
+                    <option value="单片">单片</option>
+                    <option value="中空">中空</option>
+                    <option value="夹层">夹层</option>
+                    <option value="中空夹层">中空夹层</option>
+                    <option value="双中空">双中空</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">外片厚度 (mm)</label>
+                <input class="input-field" type="number" @bind="S2OuterThickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">外片类型</label>
+                <select class="input-field" @bind="S2OuterType">
+                    <option value="普通">普通</option>
+                    <option value="钢化">钢化</option>
+                    <option value="半钢化">半钢化</option>
+                    <option value="夹层">夹层</option>
+                </select>
+            </div>
+            @if (S2GlassComposition.Contains("中空") || S2GlassComposition == "夹层" || S2GlassComposition == "中空夹层")
+            {
+                <div class="form-group">
+                    <label class="label">中空层厚度 (mm)</label>
+                    <input class="input-field" type="number" @bind="S2AirGapThickness" />
+                </div>
+                <div class="form-group">
+                    <label class="label">内片厚度 (mm)</label>
+                    <input class="input-field" type="number" @bind="S2InnerThickness" />
+                </div>
+                <div class="form-group">
+                    <label class="label">内片类型</label>
+                    <select class="input-field" @bind="S2InnerType">
+                        <option value="普通">普通</option>
+                        <option value="钢化">钢化</option>
+                        <option value="半钢化">半钢化</option>
+                    </select>
+                </div>
+            }
+            @if (S2GlassComposition == "夹层" || S2GlassComposition == "中空夹层")
+            {
+                <div class="form-group">
+                    <label class="label">胶片类型</label>
+                    <select class="input-field" @bind="S2InterlayerType">
+                        <option value="PVB">PVB</option>
+                        <option value="SGP">SGP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label">胶片厚度 (mm)</label>
+                    <input class="input-field" type="number" step="0.01" @bind="S2InterlayerThickness" />
+                </div>
+            }
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">straighten</span> 板块尺寸</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">玻璃短边 a (mm)</label>
+                <input class="input-field" type="number" @bind="S2ShortSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">玻璃长边 b (mm)</label>
+                <input class="input-field" type="number" @bind="S2LongSide" />
+            </div>
+            <div class="form-group">
+                <label class="label">支承方式</label>
+                <select class="input-field" @bind="S2SupportType">
+                    <option value="四边简支">四边简支</option>
+                    <option value="两对边简支">两对边简支</option>
+                </select>
+            </div>
+        </div>
+    </div>;
+
+    private RenderFragment Step3Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">view_column</span> 铝合金立柱计算</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">材质</label>
+                <select class="input-field" @bind="S3Material">
+                    <option value="铝合金">铝合金</option>
+                    <option value="钢材">钢材</option>
+                </select>
+            </div>
+            @if (S3Material == "铝合金")
+            {
+                <div class="form-group">
+                    <label class="label">铝合金牌号</label>
+                    <select class="input-field" @bind="S3AluminumGrade">
+                        <option value="6063-T5">6063-T5</option>
+                        <option value="6063-T6">6063-T6</option>
+                        <option value="6061-T4">6061-T4</option>
+                        <option value="6061-T6">6061-T6</option>
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="label">钢材牌号</label>
+                    <select class="input-field" @bind="S3SteelGrade">
+                        <option value="Q235B">Q235B</option>
+                        <option value="Q345B">Q345B</option>
+                    </select>
+                </div>
+            }
+            <div class="form-group">
+                <label class="label">力学模型</label>
+                <select class="input-field" @bind="S3MechanicalModel">
+                    <option value="1">单跨简支受拉</option>
+                    <option value="2">单跨简支受压</option>
+                    <option value="3">双跨连续</option>
+                    <option value="4">三跨连续</option>
+                    <option value="5">多跨铰接静定</option>
+                    <option value="6">多跨铰接超静定</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">立柱跨度 L (mm)</label>
+                <input class="input-field" type="number" @bind="S3Span" />
+            </div>
+            <div class="form-group">
+                <label class="label">荷载宽度 (mm)</label>
+                <input class="input-field" type="number" @bind="S3LoadWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">是否断热</label>
+                <select class="input-field" @bind="S3ThermalBreak">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">schema</span> 型材截面参数</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">型材代号</label>
+                <input class="input-field" type="text" placeholder="手动输入或从数据库选择" @bind="S3ProfileCode" />
+            </div>
+            <div class="form-group">
+                <label class="label">Ix (cm⁴)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S3Ix" />
+            </div>
+            <div class="form-group">
+                <label class="label">Iy (cm⁴)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S3Iy" />
+            </div>
+            <div class="form-group">
+                <label class="label">Wx1 (cm³)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S3Wx1" />
+            </div>
+            <div class="form-group">
+                <label class="label">Wx2 (cm³)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S3Wx2" />
+            </div>
+            <div class="form-group">
+                <label class="label">壁厚 (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="S3WallThickness" />
+            </div>
+            <div class="form-group">
+                <label class="label">截面积 (mm²)</label>
+                <input class="input-field" type="number" step="0.1" @bind="S3SectionArea" />
+            </div>
+            <div class="form-group">
+                <label class="label">面积矩 Sx (cm³)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S3Sx" />
+            </div>
+            <div class="form-group">
+                <label class="label">腹板总宽 tw (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="S3WebWidth" />
+            </div>
+        </div>
+    </div>;
+
+    private RenderFragment Step4Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">horizontal_rule</span> 铝合金横梁计算</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">材质</label>
+                <select class="input-field" @bind="S4Material">
+                    <option value="铝合金">铝合金</option>
+                    <option value="钢材">钢材</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">牌号</label>
+                <input class="input-field" type="text" @bind="S4Grade" />
+            </div>
+            <div class="form-group">
+                <label class="label">横梁跨度 L (mm)</label>
+                <input class="input-field" type="number" @bind="S4Span" />
+            </div>
+            <div class="form-group">
+                <label class="label">荷载模型</label>
+                <select class="input-field" @bind="S4LoadModel">
+                    <option value="三角形分布">三角形分布</option>
+                    <option value="均布">均布</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">玻璃自重 (kN/m)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S4GlassWeight" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">schema</span> 型材截面参数</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">型材代号</label>
+                <input class="input-field" type="text" placeholder="手动输入或从数据库选择" @bind="S4ProfileCode" />
+            </div>
+            <div class="form-group">
+                <label class="label">Ixx (cm⁴)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S4Ixx" />
+            </div>
+            <div class="form-group">
+                <label class="label">Iyy (cm⁴)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S4Iyy" />
+            </div>
+            <div class="form-group">
+                <label class="label">Wxx (cm³)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S4Wxx" />
+            </div>
+            <div class="form-group">
+                <label class="label">Wyy (cm³)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S4Wyy" />
+            </div>
+        </div>
+    </div>;
+
+    private RenderFragment Step5Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">settings_input_component</span> 连接件计算</div>
+        <div class="section-subtitle">横梁-角码连接</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">螺栓型号</label>
+                <select class="input-field" @bind="S5BoltSpec1">
+                    <option value="M5">M5</option>
+                    <option value="M6">M6</option>
+                    <option value="M8">M8</option>
+                    <option value="M10">M10</option>
+                    <option value="M12">M12</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">螺栓材质</label>
+                <select class="input-field" @bind="S5BoltMaterial1">
+                    <option value="碳钢4.8">碳钢4.8级</option>
+                    <option value="碳钢8.8">碳钢8.8级</option>
+                    <option value="不锈钢A2-70">不锈钢A2-70</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">螺栓数量</label>
+                <input class="input-field" type="number" @bind="S5BoltCount1" />
+            </div>
+            <div class="form-group">
+                <label class="label">最薄壁厚 (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="S5MinWallThickness1" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-subtitle">角码-立柱连接</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">螺栓型号</label>
+                <select class="input-field" @bind="S5BoltSpec2">
+                    <option value="M5">M5</option>
+                    <option value="M6">M6</option>
+                    <option value="M8">M8</option>
+                    <option value="M10">M10</option>
+                    <option value="M12">M12</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">螺栓材质</label>
+                <select class="input-field" @bind="S5BoltMaterial2">
+                    <option value="碳钢4.8">碳钢4.8级</option>
+                    <option value="碳钢8.8">碳钢8.8级</option>
+                    <option value="不锈钢A2-70">不锈钢A2-70</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">螺栓数量</label>
+                <input class="input-field" type="number" @bind="S5BoltCount2" />
+            </div>
+            <div class="form-group">
+                <label class="label">最薄壁厚 (mm)</label>
+                <input class="input-field" type="number" step="0.1" @bind="S5MinWallThickness2" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-subtitle">立柱-主体连接</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">连接方式</label>
+                <select class="input-field" @bind="S5MainConnectionMethod">
+                    <option value="螺栓">螺栓连接</option>
+                    <option value="焊接">焊接连接</option>
+                </select>
+            </div>
+            @if (S5MainConnectionMethod == "焊接")
+            {
+                <div class="form-group">
+                    <label class="label">焊缝高度 hf (mm)</label>
+                    <input class="input-field" type="number" step="0.5" @bind="S5WeldHeight" />
+                </div>
+                <div class="form-group">
+                    <label class="label">焊缝有效长度 (mm)</label>
+                    <input class="input-field" type="number" @bind="S5WeldEffectiveLength" />
+                </div>
+            }
+        </div>
+    </div>;
+
+    private RenderFragment Step6Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">anchor</span> 预埋件计算</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">锚筋直径 (mm)</label>
+                <select class="input-field" @bind="S6AnchorDiameter">
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">锚筋根数</label>
+                <input class="input-field" type="number" @bind="S6AnchorCount" />
+            </div>
+            <div class="form-group">
+                <label class="label">锚板宽度 (mm)</label>
+                <input class="input-field" type="number" @bind="S6AnchorPlateWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">锚板高度 (mm)</label>
+                <input class="input-field" type="number" @bind="S6AnchorPlateHeight" />
+            </div>
+            <div class="form-group">
+                <label class="label">锚板厚度 (mm)</label>
+                <input class="input-field" type="number" step="0.5" @bind="S6AnchorPlateThickness" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">straighten</span> 结构胶验算</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">胶缝宽度 (mm)</label>
+                <input class="input-field" type="number" @bind="S6SealantWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">胶缝厚度 (mm)</label>
+                <input class="input-field" type="number" @bind="S6SealantDepth" />
+            </div>
+            <div class="form-group">
+                <label class="label">胶设计强度 (MPa)</label>
+                <input class="input-field" type="number" step="0.01" @bind="S6SealantStrength" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">crop_square</span> 转接件与压板</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="label">槽钢型号</label>
+                <select class="input-field" @bind="S6ChannelSpec">
+                    <option value="8#">8#</option>
+                    <option value="10#">10#</option>
+                    <option value="12#">12#</option>
+                    <option value="14#">14#</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">布置方式</label>
+                <select class="input-field" @bind="S6ChannelLayout">
+                    <option value="单片">单片</option>
+                    <option value="双片">双片</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="label">压板宽度 (mm)</label>
+                <input class="input-field" type="number" @bind="S6PressPlateWidth" />
+            </div>
+            <div class="form-group">
+                <label class="label">压板厚度 (mm)</label>
+                <input class="input-field" type="number" step="0.5" @bind="S6PressPlateThickness" />
+            </div>
+        </div>
+    </div>;
+
+    private RenderFragment Step7Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">fact_check</span> 计算结果汇总</div>
+        <p class="page-subtitle">请确认以下各项验算结果，然后点击"确认汇总"进入计算书生成</p>
+
+        <div class="summary-table">
+            <div class="summary-row header">
+                <span>构件</span>
+                <span>验算项目</span>
+                <span>计算值</span>
+                <span>限值</span>
+                <span>利用率</span>
+                <span>结果</span>
+            </div>
+            <div class="summary-row">
+                <span>玻璃面板</span>
+                <span>强度验算</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>玻璃面板</span>
+                <span>挠度验算</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>铝合金立柱</span>
+                <span>抗弯验算</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>铝合金立柱</span>
+                <span>挠度验算</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>铝合金横梁</span>
+                <span>双向弯曲</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>连接件</span>
+                <span>螺栓抗剪</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>预埋件</span>
+                <span>锚筋锚固</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+            <div class="summary-row">
+                <span>结构胶</span>
+                <span>胶缝承载</span>
+                <span>-</span>
+                <span>-</span>
+                <span>-</span>
+                <span class="check-pending">待计算</span>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top:16px">
+            <span class="material-symbols-outlined">info</span>
+            <span>验算结果将在计算书生成时由后端自动汇总计算。确认汇总后将锁定数据并进入计算书输出步骤。</span>
+        </div>
+    </div>;
+
+    private RenderFragment Step8Content() => @<div>
+        <div class="section-title"><span class="material-symbols-outlined">description</span> 计算书输出设置</div>
+
+        <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+                <label class="label">工程名称</label>
+                <input class="input-field" type="text" @bind="S8EngineeringName" placeholder="将显示在计算书封面" />
+            </div>
+            <div class="form-group">
+                <label class="label">设计单位</label>
+                <input class="input-field" type="text" @bind="S8DesignCompany" />
+            </div>
+            <div class="form-group">
+                <label class="label">编制人</label>
+                <input class="input-field" type="text" @bind="S8Author" />
+            </div>
+            <div class="form-group">
+                <label class="label">审核人</label>
+                <input class="input-field" type="text" @bind="S8Reviewer" />
+            </div>
+            <div class="form-group">
+                <label class="label">批准人</label>
+                <input class="input-field" type="text" @bind="S8Approver" />
+            </div>
+            <div class="form-group">
+                <label class="label">审定</label>
+                <input class="input-field" type="text" @bind="S8Supervisor" />
+            </div>
+            <div class="form-group">
+                <label class="label">报告日期</label>
+                <input class="input-field" type="date" @bind="S8ReportDate" />
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title"><span class="material-symbols-outlined">folder_open</span> 输出格式</div>
+        <div class="chip-group">
+            <button class="chip @(S8Format == "word" ? "active" : "")" @onclick='() => S8Format = "word"'>
+                <span class="material-symbols-outlined">article</span> Word (.docx)
+            </button>
+            <button class="chip @(S8Format == "pdf" ? "active" : "")" @onclick='() => S8Format = "pdf"'>
+                <span class="material-symbols-outlined">picture_as_pdf</span> PDF (.pdf)
+            </button>
+        </div>
+    </div>;
+}
+
+<style>
+    .wizard-steps {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 0;
+        gap: 0;
+        margin-bottom: 16px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    .wizard-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        min-width: 60px;
+    }
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--bg-2);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-3);
+        transition: all 0.2s;
+    }
+    .wizard-step.active .step-circle {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+    .wizard-step.done .step-circle {
+        background: var(--green);
+        border-color: var(--green);
+        color: white;
+    }
+    .step-label {
+        font-size: 11px;
+        color: var(--text-3);
+        white-space: nowrap;
+    }
+    .wizard-step.active .step-label {
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .wizard-step.done .step-label {
+        color: var(--green);
+    }
+    .step-connector {
+        width: 24px;
+        height: 2px;
+        background: var(--border);
+        margin: 0 4px;
+        margin-bottom: 18px;
+    }
+    .step-connector.done {
+        background: var(--green);
+    }
+    .wizard-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+    }
+    .summary-table {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+    .summary-row {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr 1fr 0.8fr 0.8fr 0.8fr;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row.header {
+        background: var(--bg-2);
+        font-weight: 600;
+        font-size: 12px;
+        color: var(--text-3);
+    }
+    .check-pending { color: var(--orange); }
+    .check-pass { color: var(--green); }
+    .check-fail { color: var(--red); }
+    .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 13px;
+        color: var(--text-2);
+    }
+    .info-box .material-symbols-outlined {
+        font-size: 18px;
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+    .loading-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        border-radius: 12px;
+    }
+    .section-subtitle {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-2);
+        margin: 12px 0 8px;
+        padding-left: 4px;
+    }
+    .dropdown-list {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg-1);
+        margin-top: 4px;
+        max-height: 160px;
+        overflow-y: auto;
+    }
+    .dropdown-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border);
+    }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background: var(--bg-2); }
+</style>

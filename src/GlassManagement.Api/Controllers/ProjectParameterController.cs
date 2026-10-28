@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using GlassManagement.Api.Data;
 using GlassManagement.Core.Models;
+using GlassManagement.Calc;
+using GlassManagement.Calc.Engines;
 
 namespace GlassManagement.Api.Controllers;
 
@@ -84,6 +86,9 @@ public class LoadCombinationRequest
     public double QEAk { get; set; }
     /// <summary>重力荷载标准值 SGk (取决于具体构件)</summary>
     public double SGk { get; set; }
+
+    /// <summary>项目规范名称（可空）。用于按 guifan.dat 取规范相关的 γE，如 "玻璃幕墙规范JGJ102-2003"、"广东地方标准"。为空时回退 JGJ102 默认。</summary>
+    public string? StandardName { get; set; }
 }
 
 /// <summary>作用效应组合结果</summary>
@@ -115,6 +120,8 @@ public class LoadCombinationResponse
 public class ProjectParameterController : ControllerBase
 {
     private readonly RegionDataService _regionService;
+    // 原程序 guifan.dat 驱动的荷载组合引擎（内嵌系数表，无需依赖原程序安装目录）
+    private readonly CalcService _calc = CalcService.CreateDefault();
 
     public ProjectParameterController(RegionDataService regionService)
     {
@@ -379,38 +386,48 @@ public class ProjectParameterController : ControllerBase
         var steps = new List<CalculationStep>();
         int sn = 1;
 
-        // 分项系数 5.4.2~5.4.4[JGJ102-2003], 4.3.2-2[GB55002-2021], 8.2.9[GB50068-2018]
-        double gammaG = 1.3, gammaW = 1.5, gammaE = 1.4;
-        double psiW = 1.0, psiE = 0.5;
+        // 分项系数（按原程序 guifan.dat 驱动，规范相关 γE；其余按 JGJ102-2003 第 5.4 节固定）
+        // 公式: S = γG×SGk + ψw×γw×Swk + ψE×γE×SEk  ……5.4.1[JGJ102-2003]
+        var guifanEntry = _calc.Guifan.GetOrDefault(req.StandardName);
+        double gammaE = guifanEntry.GammaE;
 
-        steps.Add(new() { StepNo = sn++, Name = "分项系数 (强度计算)",
+        // 三个组合场景（风为主 / 地震为主 / 永久为主）的系数表（与原程序计算书 表3-2 一致）
+        steps.Add(new() { StepNo = sn++, Name = "荷载效应组合系数表",
             Formula = "S = γG×SGk + ψw×γw×Swk + ψE×γE×SEk  ……5.4.1[JGJ102-2003]",
-            Result = $"γG={gammaG}, γw={gammaW}, γE={gammaE}, ψw={psiW}, ψE={psiE}" });
+            Result = $"规范={guifanEntry.StandardName}  γE={gammaE}（广东地标=1.5，其余=1.4）\n" +
+                     $"风为主  : γG=1.30 γw=1.50 γE={gammaE} ψw=1.0 ψE=0.5\n" +
+                     $"地震为主: γG=1.30 γw=1.50 γE={gammaE} ψw=0.2 ψE=1.0\n" +
+                     $"永久为主: γG=1.35 γw=1.50 γE={gammaE} ψw=0.6 ψE=0.5" });
 
-        // 强度组合 - 支承结构
-        double S_str_struct = gammaG * req.SGk + psiW * gammaW * req.WkStructure + psiE * gammaE * req.QEAk;
-        // 强度组合 - 面板
-        double S_str_panel = gammaG * req.SGk + psiW * gammaW * req.WkPanel + psiE * gammaE * req.QEAk;
+        // 主要组合（风为主）—— 与历史接口保持 StrengthStructure/Panel 语义一致
+        var wind = _calc.LoadCombination.Combine(
+            CombinationScenario.WindDominant, req.StandardName,
+            req.SGk, req.WkStructure, req.WkPanel, req.QEAk);
+        double S_str_struct = wind.StrengthStructure;
+        double S_str_panel = wind.StrengthPanel;
 
-        steps.Add(new() { StepNo = sn++, Name = "强度计算组合 - 支承结构",
-            Formula = "S = 1.3×SGk + 1.0×1.5×Swk + 0.5×1.4×SEk (即 Sw+0.5SE)",
-            Process = $"S = 1.3×{req.SGk} + 1.5×{req.WkStructure} + 0.7×{req.QEAk}",
+        steps.Add(new() { StepNo = sn++, Name = "强度计算组合（风为主） - 支承结构",
+            Formula = $"S = {wind.GammaG}×SGk + {wind.PsiW}×{wind.GammaW}×Swk + {wind.PsiE}×{wind.GammaE}×SEk",
+            Process = $"S = {wind.GammaG}×{req.SGk} + {wind.PsiW * wind.GammaW}×{req.WkStructure} + {wind.PsiE * wind.GammaE}×{req.QEAk}",
             Result = $"S = {S_str_struct:F6} MPa" });
 
-        steps.Add(new() { StepNo = sn++, Name = "强度计算组合 - 面板",
-            Process = $"S = 1.3×{req.SGk} + 1.5×{req.WkPanel} + 0.7×{req.QEAk}",
+        steps.Add(new() { StepNo = sn++, Name = "强度计算组合（风为主） - 面板",
+            Process = $"S = {wind.GammaG}×{req.SGk} + {wind.PsiW * wind.GammaW}×{req.WkPanel} + {wind.PsiE * wind.GammaE}×{req.QEAk}",
             Result = $"S = {S_str_panel:F6} MPa" });
 
         // 挠度组合 (γG=1.0, γw=1.0, 不考虑地震)
-        double S_defl_struct = 1.0 * req.SGk + 1.0 * req.WkStructure;
-        double S_defl_panel = 1.0 * req.SGk + 1.0 * req.WkPanel;
+        var defl = _calc.LoadCombination.DeflectionCombination(req.SGk, req.WkStructure, req.WkPanel);
+        double S_defl_struct = defl.Structure;
+        double S_defl_panel = defl.Panel;
 
         steps.Add(new() { StepNo = sn++, Name = "挠度计算组合",
             Formula = "S = 1.0×SGk + 1.0×Swk (不考虑地震)  ……5.4.1[JGJ102-2003]",
             Result = $"支承结构: S = {S_defl_struct:F6} MPa\n面板: S = {S_defl_panel:F6} MPa" });
 
         steps.Add(new() { StepNo = sn++, Name = "说明",
-            Result = "按JGJ102-2003 5.4节:\n• 强度/连接/预埋件: γG=1.3, γw=1.5, γE=1.4\n• 挠度: γG=1.0, γw=1.0, 不考虑地震\n• ψw=1.0, ψE=0.5" });
+            Result = "按JGJ102-2003 5.4节（γE 由规范经 guifan.dat 决定）:\n" +
+                     "• 强度/连接/预埋件: 风为主 γG=1.3, γw=1.5; 地震为主 ψE=1.0; 永久为主 γG=1.35\n" +
+                     "• 挠度: γG=1.0, γw=1.0, 不考虑地震" });
 
         return Ok(new LoadCombinationResponse
         {

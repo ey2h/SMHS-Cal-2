@@ -5,8 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591;NU1902;NU1903</NoWarn>
+    <NoWarn>$(NoWarn);1591;NU1902;NU1903;CA1416</NoWarn>
     <RootNamespace>GlassManagement.Api</RootNamespace>
+    <SupportedOSPlatforms>windows</SupportedOSPlatforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,12 +23,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.88.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.25.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GlassManagement.Core\GlassManagement.Core.csproj" />
-    <!-- Note: path works for both src/ and flat layout since relative path is same -->
+    <!-- 计算引擎项目在磁盘上的文件名是 GlassManagement.CalcCalc.csproj（AssemblyName 仍是
+         GlassManagement.Calc）。此前写成 GlassManagement.Calc.csproj 该文件并不存在，
+         导致本项目 MSB9008 警告 + CS0234/CS0246 three errors，整个 sln 也构建不了。 -->
+    <ProjectReference Include="..\GlassManagement.Calc\GlassManagement.CalcCalc.csproj" />
   </ItemGroup>
 
 </Project>

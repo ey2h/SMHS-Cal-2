@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace GlassManagement.Api.Services;
 
-/// <summary>向导API客户端 — 对齐汇宝8步</summary>
+/// <summary>向导API客户端 — 对齐原程序8步</summary>
 public class WizardApiClient
 {
     private readonly HttpClient _http;

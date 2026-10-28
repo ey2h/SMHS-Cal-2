@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace GlassManagement.Api.Controllers;
 
-/// <summary>向导式操作流程API — 对齐汇宝8步向导</summary>
+/// <summary>向导式操作流程API — 对齐原程序8步向导</summary>
 [ApiController]
 [Route("api/[controller]")]
 [Tags("向导流程")]

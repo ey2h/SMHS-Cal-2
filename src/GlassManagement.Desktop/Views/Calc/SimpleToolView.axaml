@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.SimpleToolView"
+             x:DataType="vm:SimpleToolViewModel">
+  <!--
+    独立工具线（B8）通用视图。
+    ★ 一律使用 App.axaml 里的统一外壳样式（hbTitleBar / hbFrame / hbFrameTitle / hbResultPanel /
+      hb / hbBtn），不写自定义配色——这些样式是照 V31 实测归一过的（标题条高 19、#E8EEF7，
+      Frame 灰底 #F0F0F0 / #A0A0A0 边框，结果框 #C0FFFF / #808080 边框）。
+  -->
+  <DockPanel Background="{DynamicResource HbFormBg}">
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="{Binding Title}"/>
+    </Border>
+
+    <!-- 底部：计算按钮 + 结果框（结果框沿用 V31 的浅青底 #C0FFFF） -->
+    <Border DockPanel.Dock="Bottom" Classes="hbPanel" Padding="8"
+            BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,1,0,0">
+      <StackPanel Spacing="6">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Button Classes="hbBtn" Content="计算" Command="{Binding CalcCommand}"/>
+          <TextBlock Classes="hb" Text="每次计算覆盖输出框（与 V31 一致）" Opacity="0.65"/>
+        </StackPanel>
+        <Border Classes="hbResultPanel" Height="180" Padding="6"
+                IsVisible="{Binding Output, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <ScrollViewer>
+            <TextBlock Text="{Binding Output}" TextWrapping="Wrap"
+                       FontFamily="SimSun" FontSize="12" Foreground="{DynamicResource HbText}"/>
+          </ScrollViewer>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <StackPanel Margin="8" Spacing="8">
+        <Border Classes="hbFrame" Padding="8">
+          <StackPanel Spacing="4">
+            <TextBlock Classes="hbFrameTitle" Text="输入参数"/>
+            <ItemsControl ItemsSource="{Binding Fields}" Margin="0,4,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ToolField">
+                  <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,1">
+                    <TextBlock Classes="hb" Text="{Binding Label}" Width="300"/>
+                    <TextBox Classes="hb" Text="{Binding Text}" Width="110"
+                             IsVisible="{Binding !HasOptions}"/>
+                    <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding Text}"
+                              MinWidth="150" Height="20" FontFamily="SimSun" FontSize="12"
+                              IsVisible="{Binding HasOptions}"/>
+                    <TextBlock Classes="hb" Text="{Binding Unit}" Opacity="0.7"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+
+        <Border Classes="hbFrame" Padding="8">
+          <StackPanel Spacing="4">
+            <TextBlock Classes="hbFrameTitle" Text="说明"/>
+            <TextBlock Classes="hb" Text="{Binding Hint}" TextWrapping="Wrap"
+                       Margin="0,4,0,0" LineHeight="18"/>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

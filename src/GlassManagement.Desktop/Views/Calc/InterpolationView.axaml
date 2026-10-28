@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.InterpolationView"
+             x:DataType="vm:InterpolationViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="插值计算器（两点线性插值）"/>
+    </Border>
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="8">
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" MaxWidth="360">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="x1" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding X1Text}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="y1" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Y1Text}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="x2" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding X2Text}" Margin="4"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="y2" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Y2Text}" Margin="4"/>
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="待插值 x" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding XText}" Margin="4"/>
+        </Grid>
+        <Button Content="计算" Command="{Binding CalcCommand}" HorizontalAlignment="Left"/>
+        <TextBlock Text="{Binding ResultText}" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="y = y1 + (x-x1)/(x2-x1)·(y2-y1)，结果保留 5 位小数。"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

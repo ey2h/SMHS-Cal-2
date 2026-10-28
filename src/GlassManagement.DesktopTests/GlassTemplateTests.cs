@@ -28,10 +28,8 @@ public class GlassTemplateTests
     /// <summary>建 VM 并立刻渲染取快照（CalcSession.Default 是单例，不能先建两个再渲染）。</summary>
     private static string[] Render(Action<CalcSession>? setup = null)
     {
-        var wiz = new CalcWizardViewModel();
-        var s = wiz.Session;
-        s.WindStandardKpa = 1.285;         // 支承结构口径（立柱/横梁/连接/埋件）
-        s.PanelWindKpa = 1.37;             // 面板口径（玻璃/胶类）：μsl=1.0 不折减 ψ
+        // ★ 铁律一之三：wk / 门禁位必须由第一页真算出来，不许手工赋值伪造。
+        var (s, wiz) = FirstPage.Run();
         s.BeamLeftBayMm = 1100;
         s.BeamRightBayMm = 1100;
         s.BeamUpperGridHeightMm = 1380;

@@ -1,0 +1,255 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.MetalPlateCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <!--
+    板材线「板块计算」MVVM 视图（V31 客户区 795×530）。
+    坐标源：local-data/recon/v31runs/chain_metal6.txt 第 4 屏（43 个带句柄控件）
+            + shot_metal6_4.png（795×530 客户端截图，标签文案逐字核对）
+      铝单板参数 Frame (8,30) 486x334
+        ├ PictureBox (19,44) 238x162 / (263,44) 225x162      ← 示意草图，静态绘制
+        ├ 板挠度限值 Frame (16,209) 86x62 ─ 短边/60(24,225 chk=1) / 短边/90(24,246)
+        ├ 无标题 Frame (105,209) 381x62
+        │    长边尺寸(175,224) 短边尺寸(174,246) 长边等分数 ComboBox(273,246) sel=0
+        │    Lx(B板)(409,224 en=0) / Lx(C板)(408,246 en=0)
+        ├ DataGrid (11,275) 474x83（型号/厚度/抗弯强度/抗剪强度/备注）
+      加强肋计算 Frame (8,370) 488x152
+        ├ 选项 (13,394) 73x97      ─ 计算肋(19,423 chk=1) / 不算肋(19,450)
+        ├ 算法选择 (93,379) 73x48  ─ 算法一(99,392 chk=1) / 算法二(99,407)
+        ├ 挠度限值 (93,434) 73x72  ─ Ly/250(100,445) / Ly/180(100,462 chk=1) / Ly/120(100,479)
+        ├ 肋材质 (168,402) 169x97  ─ 8 个单选 + 冷弯薄壁型钢 CheckBox(176,482)
+        └ 肋参数 (341,378) 145x137 ─ 抗弯矩2028(351,411 mm³) / 惯性矩25340(351,451 mm⁴)
+                                    / 接触面宽度50(351,490 mm（肋剖面宽度）)
+      输出 RichText (498,28) 289x431
+      按钮 预演(655,469) 上一步(715,469) 退出(655,493) 下一步(715,493) 全部 59x24
+  -->
+  <UserControl.Styles>
+    <Style Selector="DataGrid">
+      <Setter Property="RowHeight" Value="16"/>
+      <Setter Property="ColumnHeaderHeight" Value="20"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="铝单板幕墙计算-板块计算"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WindNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding WindNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="795" Height="530" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- ══ 铝单板参数 (8,30) 486x334 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="8" Canvas.Top="30" Width="486" Height="334"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="14" Canvas.Top="23" Text="铝单板参数"/>
+
+        <!-- 左：加强肋示意 (19,44) 238x162 —— 静态草图，非交互 -->
+        <Border Canvas.Left="19" Canvas.Top="44" Width="238" Height="162"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" ClipToBounds="True">
+          <Canvas Width="236" Height="160">
+            <Rectangle Canvas.Left="10" Canvas.Top="12" Width="180" Height="86"
+                       Stroke="{DynamicResource HbSuccessDeep}" StrokeThickness="2" Fill="Transparent"/>
+            <Line StartPoint="70,12" EndPoint="70,98" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <Line StartPoint="130,12" EndPoint="130,98" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <TextBlock Canvas.Left="80" Canvas.Top="44" Text="加强肋示意" FontSize="11"/>
+            <TextBlock Canvas.Left="6" Canvas.Top="118" Text="长边尺寸" FontSize="11"/>
+          </Canvas>
+        </Border>
+
+        <!-- 右：板尺寸示意 (263,44) 225x162 -->
+        <Border Canvas.Left="263" Canvas.Top="44" Width="225" Height="162"
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" ClipToBounds="True">
+          <Canvas Width="223" Height="160">
+            <Rectangle Canvas.Left="14" Canvas.Top="10" Width="196" Height="60"
+                       Stroke="{DynamicResource HbSuccessDeep}" StrokeThickness="2" Fill="Transparent"/>
+            <Line StartPoint="72,10" EndPoint="72,70" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <Line StartPoint="134,10" EndPoint="134,70" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <TextBlock Canvas.Left="34" Canvas.Top="28" Text="A" FontSize="14"/>
+            <TextBlock Canvas.Left="96" Canvas.Top="28" Text="B" FontSize="14"/>
+            <TextBlock Canvas.Left="158" Canvas.Top="28" Text="B" FontSize="14"/>
+            <Rectangle Canvas.Left="14" Canvas.Top="86" Width="196" Height="60"
+                       Stroke="{DynamicResource HbSuccessDeep}" StrokeThickness="2" Fill="Transparent"/>
+            <Line StartPoint="72,86" EndPoint="72,146" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <Line StartPoint="134,86" EndPoint="134,146" Stroke="{DynamicResource HbDanger}" StrokeThickness="1"/>
+            <TextBlock Canvas.Left="34" Canvas.Top="104" Text="B" FontSize="14"/>
+            <TextBlock Canvas.Left="96" Canvas.Top="104" Text="C" FontSize="14"/>
+            <TextBlock Canvas.Left="158" Canvas.Top="104" Text="B" FontSize="14"/>
+          </Canvas>
+        </Border>
+
+        <!-- 板挠度限值 (16,209) 86x62 -->
+        <Border Classes="hbFrame" Canvas.Left="16" Canvas.Top="209" Width="86" Height="62"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="22" Canvas.Top="202" Text="板挠度限值"/>
+        <RadioButton Classes="hb" Canvas.Left="24" Canvas.Top="225" Width="73" Height="17"
+                     GroupName="PlateDefl" Content="短边/60"
+                     IsChecked="{Binding DeflDiv60, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="24" Canvas.Top="246" Width="69" Height="17"
+                     GroupName="PlateDefl" Content="短边/90"
+                     IsChecked="{Binding DeflDiv90, Mode=TwoWay}"/>
+
+        <!-- 尺寸区 无标题 Frame (105,209) 381x62 -->
+        <Border Classes="hbFrame" Canvas.Left="105" Canvas.Top="209" Width="381" Height="62"/>
+        <TextBlock Canvas.Left="115" Canvas.Top="228" Text="长边尺寸" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="175" Canvas.Top="224" Width="49" Height="20"
+                 Text="{Binding LongSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="228" Canvas.Top="228" Text="mm" FontSize="9"/>
+
+        <TextBlock Canvas.Left="115" Canvas.Top="250" Text="短边尺寸" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="174" Canvas.Top="246" Width="49" Height="20"
+                 Text="{Binding ShortSideText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="228" Canvas.Top="250" Text="mm" FontSize="9"/>
+
+        <!-- ★ 标签在第 1 行、下拉框在第 2 行（V31 原图像素实测：文字 y≈228..243，
+             下拉框 y=246..266，x 均为 273）—— 放在同一行必然重叠 -->
+        <TextBlock Canvas.Left="273" Canvas.Top="228" Width="60" Text="长边等分数"
+                   FontSize="10" TextWrapping="NoWrap"/>
+        <ComboBox Canvas.Left="273" Canvas.Top="246" Width="60" Height="20"
+                  ItemsSource="{Binding DivisionItems}"
+                  SelectedIndex="{Binding DivisionIndex, Mode=TwoWay}"/>
+
+        <TextBlock Canvas.Left="355" Canvas.Top="228" Text="Lx(B板)" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="409" Canvas.Top="224" Width="49" Height="20"
+                 IsEnabled="False" IsReadOnly="True" Text="{Binding LxText}"/>
+        <TextBlock Canvas.Left="462" Canvas.Top="228" Text="mm"/>
+
+        <TextBlock Canvas.Left="355" Canvas.Top="250" Text="Lx(C板)" FontSize="10"/>
+        <TextBox Classes="hb" Canvas.Left="408" Canvas.Top="246" Width="49" Height="20"
+                 IsEnabled="False" IsReadOnly="True" Text="{Binding LxText}"/>
+        <TextBlock Canvas.Left="462" Canvas.Top="250" Text="mm"/>
+
+        <!-- 铝单板参数表（实机 DataGrid 474x83，参数库「铝单板」26 行） -->
+        <DataGrid Canvas.Left="11" Canvas.Top="275" Width="474" Height="83"
+                  ItemsSource="{Binding Profiles}"
+                  SelectedItem="{Binding SelectedProfile, Mode=TwoWay}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="All" HeadersVisibility="Column"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="型号" Binding="{Binding Model}" Width="130"/>
+            <DataGridTextColumn Header="厚度" Binding="{Binding ThicknessText}" Width="55"/>
+            <DataGridTextColumn Header="抗弯强度" Binding="{Binding BendingMpa}" Width="80"/>
+            <DataGridTextColumn Header="抗剪强度" Binding="{Binding ShearMpa}" Width="80"/>
+            <DataGridTextColumn Header="备注" Binding="{Binding Note}" Width="*"/>
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ══ 加强肋计算 (8,370) 488x152 ══ -->
+        <Border Classes="hbFrame" Canvas.Left="8" Canvas.Top="370" Width="488" Height="152"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="14" Canvas.Top="363" Text="加强肋计算"/>
+
+        <!-- 选项 (13,394) 73x97 -->
+        <Border Classes="hbFrame" Canvas.Left="13" Canvas.Top="394" Width="73" Height="97"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="19" Canvas.Top="387" Text="选项"/>
+        <RadioButton Classes="hb" Canvas.Left="19" Canvas.Top="423" Width="57" Height="17"
+                     GroupName="RibOpt" Content="计算肋" IsChecked="{Binding UseRib, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="19" Canvas.Top="450" Width="57" Height="17"
+                     GroupName="RibOpt" Content="不算肋" IsChecked="{Binding NoRib, Mode=TwoWay}"/>
+
+        <!-- 算法选择 (93,379) 73x48 -->
+        <Border Classes="hbFrame" Canvas.Left="93" Canvas.Top="379" Width="73" Height="48"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="99" Canvas.Top="372" Text="算法选择"/>
+        <RadioButton Classes="hb" Canvas.Left="99" Canvas.Top="392" Width="58" Height="17"
+                     GroupName="RibAlgo" Content="算法一" IsChecked="{Binding AlgoOne, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="99" Canvas.Top="407" Width="57" Height="17"
+                     GroupName="RibAlgo" Content="算法二" IsChecked="{Binding AlgoTwo, Mode=TwoWay}"/>
+
+        <!-- 挠度限值 (93,434) 73x72 -->
+        <Border Classes="hbFrame" Canvas.Left="93" Canvas.Top="434" Width="73" Height="72"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="99" Canvas.Top="427" Text="挠度限值"/>
+        <RadioButton Classes="hb" Canvas.Left="100" Canvas.Top="445" Width="57" Height="16"
+                     GroupName="RibDefl" Content="Ly/250" IsChecked="{Binding RibDiv250, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="100" Canvas.Top="462" Width="57" Height="16"
+                     GroupName="RibDefl" Content="Ly/180" IsChecked="{Binding RibDiv180, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="100" Canvas.Top="479" Width="57" Height="16"
+                     GroupName="RibDefl" Content="Ly/120" IsChecked="{Binding RibDiv120, Mode=TwoWay}"/>
+
+        <!-- 肋材质 (168,402) 169x97 —— 8 单选 + 冷弯薄壁型钢 -->
+        <Border Classes="hbFrame" Canvas.Left="168" Canvas.Top="402" Width="169" Height="97"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="174" Canvas.Top="395" Text="肋材质"/>
+        <RadioButton Classes="hb" Canvas.Left="176" Canvas.Top="417" Width="65" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6063-T5"
+                     IsChecked="{Binding RibMat6063T5, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="176" Canvas.Top="433" Width="65" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6063-T6"
+                     IsChecked="{Binding RibMat6063T6, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="176" Canvas.Top="449" Width="49" Height="15"
+                     GroupName="RibMat" Content="Q235"
+                     IsChecked="{Binding RibMatQ235, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="176" Canvas.Top="465" Width="65" Height="15"
+                     GroupName="RibMat" Content="Q355"
+                     IsChecked="{Binding RibMatQ355, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="256" Canvas.Top="417" Width="65" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6061-T4"
+                     IsChecked="{Binding RibMat6061T4, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="256" Canvas.Top="433" Width="65" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6061-T6"
+                     IsChecked="{Binding RibMat6061T6, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="256" Canvas.Top="449" Width="73" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6063A-T5"
+                     IsChecked="{Binding RibMat6063AT5, Mode=TwoWay}"/>
+        <RadioButton Classes="hb" Canvas.Left="256" Canvas.Top="465" Width="73" Height="15"
+                     GroupName="RibMat" FontSize="11" Content="6063A-T6"
+                     IsChecked="{Binding RibMat6063AT6, Mode=TwoWay}"/>
+        <CheckBox Classes="hb" Canvas.Left="176" Canvas.Top="482" Width="115" Height="14"
+                  FontSize="11" Content="冷弯薄壁型钢"
+                  IsChecked="{Binding RibColdFormed, Mode=TwoWay}"/>
+
+        <!-- 肋参数 (341,378) 145x137 -->
+        <Border Classes="hbFrame" Canvas.Left="341" Canvas.Top="378" Width="145" Height="137"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="347" Canvas.Top="371" Text="肋参数"/>
+
+        <TextBlock Canvas.Left="351" Canvas.Top="394" Text="作用方向的抗弯矩" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="351" Canvas.Top="411" Width="57" Height="19"
+                 Text="{Binding RibWText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="414" Canvas.Top="410" Text="mm³" FontSize="11"/>
+
+        <TextBlock Canvas.Left="351" Canvas.Top="434" Text="作用方向的惯性矩" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="351" Canvas.Top="451" Width="57" Height="19"
+                 Text="{Binding RibIText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="414" Canvas.Top="450" Text="mm⁴" FontSize="11"/>
+
+        <TextBlock Canvas.Left="351" Canvas.Top="474" Text="肋与面板接触面宽度" FontSize="11"/>
+        <TextBox Classes="hb" Canvas.Left="351" Canvas.Top="490" Width="41" Height="19"
+                 Text="{Binding RibContactWidthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="397" Canvas.Top="490" Text="mm（肋剖面宽度）" FontSize="11"/>
+
+        <!-- ══ 输出 (498,28) 289x431 —— V31 实测 RichText 底 #C0FFFF + #808080 边框 ══ -->
+        <Border Classes="hbResultPanel" Canvas.Left="498" Canvas.Top="28" Width="289" Height="431">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                        Padding="4,2">
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="11"
+                             TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Border>
+        <TextBlock Canvas.Left="502" Canvas.Top="34" Text="{Binding PlaceholderText}"
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="11" IsHitTestVisible="False"/>
+
+        <!-- ══ 按钮 ══ -->
+        <Button Classes="hb" Canvas.Left="655" Canvas.Top="469" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="715" Canvas.Top="469" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="655" Canvas.Top="493" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+        <Button Classes="hb" Canvas.Left="715" Canvas.Top="493" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

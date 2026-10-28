@@ -92,17 +92,89 @@ public sealed class MultiSpanStaticEngine
     /// <summary>简支梁挠度系数α = 5/384。</summary>
     public const double SimplySupportedAlpha = 5.0 / 384.0;
 
+    // ============================================================
+    // 多跨静定梁**解析公式**（V31 逐指令还原；recon/verify_multispan.py 44 项 0 差异）
+    // 取代此前的 3 个「实测拟合系数」（1.0743 / 1.1463 / 1.0364）与 5 个「双样本比例」。
+    // 几何：A = 跨长L_i（支座段），L = 跨长i（计算跨）。
+    // ============================================================
+
+    /// <summary>有效跨 x = (L²−A²)/L（V31 0xD5E 段逐指令还原）。</summary>
+    public static double EffectiveSpan(double aMm, double lMm)
+        => Math.Abs(lMm) > 1e-9 ? (lMm * lMm - aMm * aMm) / lMm : 0.0;
+
     /// <summary>
-    /// ⚠ 实测拟合系数（**不是** V35 程序里的公式），仅用于让复刻输出与 V31 实机数值对齐。
-    /// 标定点：地区上海 / 标高100 / B类地形 / 风荷载人工给定1.796KPa / 跨长A=1000 / 跨长L=4000 /
-    /// 6063A-T5 / 型材 60/80系列。其它几何属外推，不可当权威。
-    /// 待办：用 V35 脱壳代码的动态取值把真实公式取出来，然后删除这三个常数（见 docs/V35_CALC_CODE_MAP.md）。
+    /// 线荷载：标准值 qk = round3(round3(wk,3)/1000·B)；设计值 qd = round3(qk×1.5)。
+    /// （V31 先 round3 风荷载，再 round3 线荷载，再 ×1.5 再 round3。）
     /// </summary>
-    public const double MeasuredFitMoment = 1.0743;      // 242.875 / 226.104
-    /// <summary>同上：抗剪实测拟合系数 14.225 / 12.410。</summary>
-    public const double MeasuredFitShear = 1.1463;
-    /// <summary>同上：挠度实测拟合系数 135.0835 / 130.335（其中 5/384 来自程序 0x1B65B75，是确证值）。</summary>
-    public const double MeasuredFitDeflection = 1.0364;
+    public static (double Qk, double Qd) LineLoads(double windKpa, double bayWidthMm)
+    {
+        double wk = WindLoadEngine.VbaRound(windKpa, 3);
+        double qk = WindLoadEngine.VbaRound(wk / 1000.0 * bayWidthMm, 3);
+        double qd = WindLoadEngine.VbaRound(qk * 1.5, 3);
+        return (qk, qd);
+    }
+
+    /// <summary>多跨静定梁内力解（q 为设计线荷载 qd）。S3=V1−D1 为第3跨剪力源，D1=qd·A·t。</summary>
+    public readonly record struct Forces(
+        double Span1Moment, double Span1Shear,
+        double SupportMoment, double SupportShear,
+        double Span3Moment, double Span3Shear,
+        double S3, double D1);
+
+    /// <summary>
+    /// 多跨静定梁内力（V31 逐指令还原）：
+    /// x=(L²−A²)/L；M1=qd·x²/8；V1=qd·x/2；M2=qd·A(A+x)/2；
+    /// t=(1−(A/L)²)/2；D=qd·A·t；S3=V1−D；M3=M1−S3·A·t；V3=round0(S3·A/L)；V2=V1+qd(A/2)(2+A/L)。
+    /// </summary>
+    public static Forces InternalForces(double qd, double aMm, double lMm)
+    {
+        double x = EffectiveSpan(aMm, lMm);
+        double v1 = qd * x / 2.0;
+        double m1 = qd * x * x / 8.0;
+        double m2 = qd * aMm * (aMm + x) / 2.0;
+        double r = Math.Abs(lMm) > 1e-9 ? aMm / lMm : 0.0;
+        double t3 = (1.0 - r * r) / 2.0;
+        double d1 = qd * aMm * t3;
+        double s3 = v1 - d1;
+        double m3 = m1 - s3 * aMm * t3;
+        double v3 = WindLoadEngine.VbaRound(s3 * aMm / (Math.Abs(lMm) > 1e-9 ? lMm : 1.0), 0);
+        double v2 = v1 + qd * (aMm / 2.0) * (2.0 + r);
+        return new Forces(m1, v1, m2, v2, m3, v3, s3, d1);
+    }
+
+    /// <summary>
+    /// 两处挠度（V31 0xD66109–0xD662D2 逐指令还原）：
+    /// r=A/L；n2=A²·V1·L/3；c1=1−4r²−3r³；b1=((1+r)n2−c1·A·qk·L³/24)/(EI)；
+    /// df2c=5qk·L⁴/(384EI)·(1−2.4r²)；df1=round3(b1)/2+round3(df2c)；
+    /// S4=V1−D(1−r)；n2b=A²·S4·L/3；b2=((1+r)n2b−c1·A·qk·L³/24)/(EI)；x2=S3·A·L²/16；
+    /// df2=round3(b2)/2+round3(df2c−x2/EI)。
+    /// </summary>
+    public static (double Df1, double Df2) Deflections(
+        double qk, double qd, double aMm, double lMm, double eMPa, double iMm4)
+    {
+        double ei = eMPa * iMm4;
+        if (Math.Abs(ei) < 1e-12) return (0.0, 0.0);
+
+        var f = InternalForces(qd, aMm, lMm);
+        double r = Math.Abs(lMm) > 1e-9 ? aMm / lMm : 0.0;
+        double l3 = Math.Pow(lMm, 3);
+        double l4 = Math.Pow(lMm, 4);
+        double c1 = 1.0 - 4.0 * r * r - 3.0 * r * r * r;
+
+        double n2 = aMm * aMm * f.Span1Shear * lMm / 3.0;
+        double b1 = ((1.0 + r) * n2 - c1 * aMm * qk * l3 / 24.0) / ei;
+        double df2c = 5.0 * qk * l4 / (384.0 * ei) * (1.0 - 2.4 * r * r);
+        double df1 = WindLoadEngine.VbaRound(b1, 3) / 2.0 + WindLoadEngine.VbaRound(df2c, 3);
+
+        double s4 = f.Span1Shear - f.D1 * (1.0 - r);
+        double n2b = aMm * aMm * s4 * lMm / 3.0;
+        double b2 = ((1.0 + r) * n2b - c1 * aMm * qk * l3 / 24.0) / ei;
+        double x2 = f.S3 * aMm * lMm * lMm / 16.0;
+        double df2 = WindLoadEngine.VbaRound(b2, 3) / 2.0
+                     + WindLoadEngine.VbaRound(df2c - x2 / ei, 3);
+
+        return (df1, df2);
+    }
 
     // ---------- 多跨静定梁几何 ----------
     /// <summary>
@@ -193,46 +265,19 @@ public sealed class MultiSpanStaticEngine
     public static IReadOnlyList<string> OpenQuestions { get; } = new[]
     {
         "风荷载标准值随几何变化：样本1 1.551，样本2 1.526（仅改跨数/跨间距/跨度）→ 荷载按面积/分格分摊，精确规则待 V35 运行期逐点验证（已确证：同分格宽时 M ∝ q·L²，比值误差 <1%）。",
-        "支座弯矩/跨中弯矩之比不是常数：样本1 67.841/62.316=1.0888，样本2 131.832/98.123=1.3436 → 与跨数相关（已按 N=5/15 双样本线性插值，见 RatioXxx）。",
-        "第1跨与第3跨弯矩之比不是常数：样本1 0.6735，样本2 0.6330 → 同上。",
+        "支座弯矩/跨中弯矩之比不是常数：样本1 67.841/62.316=1.0888，样本2 131.832/98.123=1.3436 —— **已解释**：由解析式 M2=qd·A(A+x)/2 与 M1=qd·x²/8 直接决定，非插值。",
+        "第1跨与第3跨弯矩之比不是常数：样本1 0.6735，样本2 0.6330 —— **已解释**：由 M3=M1−S3·A·t 决定。",
         "6063-T5 与 6063A-T5 的许用值是否相同（本样本 AT5 = 135/75/148.5，T5 那轮未抓到）。",
         "A002.CAC 材料性能表（f=A002(19)/fv=A002(20)）在 EXE 内，安装目录无此文件 → 全材质许用值表待续挖。",
     };
 
     // ============================================================
-    // 非基线几何的比例模型（V31 双样本实测比例，按总跨数 N 线性插值）
-    //   样本1 N=15 / A=660 / L=3100 / wk=1.551
-    //   样本2 N=5  / A=1000 / L=4000 / wk=1.526
-    // 相对值以「第1跨」为 1.0；绝对值需型材截面（参数库「立柱」表）与 q 假设，另行估算。
+    // ★ 2026-10-28 P16：原「双样本比例模型」（SupportBendingRatio / Span3BendingRatio /
+    //   SupportShearRatio / Span3ShearRatio / SecondSpanDeflectionRatio + Lerp）已**全部删除**。
+    //   原因：这些是「V31 输出比值反推」，不是程序公式。
+    //   现已用 V31 逐指令还原的解析公式（EffectiveSpan / InternalForces / Deflections）
+    //   直接实算，recon/verify_multispan.py 对 4 组样本 44 项 0 差异。
     // ============================================================
-
-    // 端点常数直接写成实测比值（不四舍五入），保证 N=5/N=15 端点零误差
-    /// <summary>支座抗弯 / 第1跨抗弯（实测：N=5→131.832/98.123，N=15→67.841/62.316）。</summary>
-    public static double SupportBendingRatio(int totalSpans)
-        => Lerp(5, 131.832 / 98.123, 15, 67.841 / 62.316, totalSpans);
-
-    /// <summary>第3跨抗弯 / 第1跨抗弯（实测：N=5→62.121/98.123，N=15→41.964/62.316）。</summary>
-    public static double Span3BendingRatio(int totalSpans)
-        => Lerp(5, 62.121 / 98.123, 15, 41.964 / 62.316, totalSpans);
-
-    /// <summary>支座抗剪 / 第1跨抗剪（实测：N=5→11.694/7.309，N=15→8.748/5.858）。</summary>
-    public static double SupportShearRatio(int totalSpans)
-        => Lerp(5, 11.694 / 7.309, 15, 8.748 / 5.858, totalSpans);
-
-    /// <summary>第3跨抗剪 / 第1跨抗剪（实测：N=5→1.37/7.309，N=15→0.982/5.858）。</summary>
-    public static double Span3ShearRatio(int totalSpans)
-        => Lerp(5, 1.37 / 7.309, 15, 0.982 / 5.858, totalSpans);
-
-    /// <summary>第2跨后挠度 / 第1跨挠度（实测：N=5→11.4645/29.697，N=15→3.8185/9.587）。</summary>
-    public static double SecondSpanDeflectionRatio(int totalSpans)
-        => Lerp(5, 11.4645 / 29.697, 15, 3.8185 / 9.587, totalSpans);
-
-    private static double Lerp(double x0, double y0, double x1, double y1, double x)
-    {
-        if (x <= x0) return y0;
-        if (x >= x1) return y1;
-        return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
-    }
 
     /// <summary>
     /// 线荷载 q（N/mm）= 风荷载标准值(KPa) × 分格宽度(mm) / 1000。
@@ -258,50 +303,59 @@ public sealed class MultiSpanStaticEngine
                                              double elasticModulusMPa = 70000.0)
     {
         double calcSpan = spanMm + supportMm;
-        double q = LineLoad(windKpa, bayWidthMm);
+        var (qk, qd) = LineLoads(windKpa, bayWidthMm);
         var allow = new MultiSpanStaticEngine();   // 默认许用值 135/75/148.5（6063-T5 系）
         var e = new MultiSpanEstimate
         {
             WindKpa = windKpa,
             TotalSpans = totalSpans,
             CalcSpanMm = calcSpan,
-            LineLoadNPerMm = q,
+            LineLoadNPerMm = qd,
             DeflectionLimitMm = DeflectionLimit(spanMm, supportMm),
             AllowBendingMPa = allow.AllowBending,
             AllowShearMPa = allow.AllowShear,
             AllowEquivalentMPa = allow.AllowEquivalent,
         };
-        // 挠度：df = 5/384 · q · calcSpan⁴ / (E·I)（简支跨估算；限值已确证）
-        // 挠度：df = 5/384 · q · L⁴ / (E·I)
-        // ★V35/V31 实测校正：多跨静定梁各段按「跨长 L」计算内力与挠度，
-        //   不是按 calcSpan=L+A（后者只用于挠度限值）。用 2026-10-24 V31 实机样本校正。
+        // 内力：x=(L²−A²)/L；M1=qd·x²/8；V1=qd·x/2；M2=qd·A(A+x)/2；
+        //       t=(1−(A/L)²)/2；D1=qd·A·t；S3=V1−D1；M3=M1−S3·A·t；V3=round0(S3·A/L)；V2=V1+qd(A/2)(2+A/L)
+        // 挠度：见 Deflections()（V31 0xD66109–0xD662D2 逐指令还原）。
+        var f = InternalForces(qd, supportMm, spanMm);
         if (section is not null)
         {
-            // 参数库「立柱」表单位：I [cm⁴] → mm⁴ 乘 10⁴；W [cm³] → mm³ 乘 10³
+            // 参数库「立柱」表单位：I [cm⁴] → mm⁴ 乘 10⁴；W [cm³] → mm³ 乘 10³；S [cm³] → mm³ 乘 10³
             double i = section.Ix * 1e4;
-            double span = spanMm;
-            e.DeflectionSpan1Mm = MeasuredFitDeflection * SimplySupportedAlpha * q * Math.Pow(span, 4)
-                                  / (elasticModulusMPa * i);
-            e.DeflectionSpan2AfterMm = e.DeflectionSpan1Mm * SecondSpanDeflectionRatio(totalSpans);
             double w = section.Wx1 * 1e3;
-            double m = MeasuredFitMoment * q * span * span / 8.0;    // 跨中弯矩（含悬挑放大系数）
-            e.BendingSpan1MPa = m / w;
-            e.BendingSpan3MPa = e.BendingSpan1MPa * Span3BendingRatio(totalSpans);
-            e.BendingSupportMPa = e.BendingSpan1MPa * SupportBendingRatio(totalSpans);
-            double v = MeasuredFitShear * q * span / 2.0;             // 支座剪力（含悬挑放大系数）
-            double s = section.StaticMoment * 1e3;         // 面积矩 cm³ → mm³
-            double t = section.ShearWebWidth;               // 受剪腹板总宽度 mm
-            double shear1 = v * s / (i * t);
-            e.ShearSpan1MPa = shear1;
-            e.ShearSpan3MPa = shear1 * Span3ShearRatio(totalSpans);
-            e.ShearSupportMPa = shear1 * SupportShearRatio(totalSpans);
-            e.EquivalentSpan3MPa = EquivalentStress(e.BendingSpan3MPa, e.ShearSpan3MPa);
-            e.EquivalentSupportMPa = EquivalentStress(e.BendingSupportMPa, e.ShearSupportMPa);
+            double s = section.StaticMoment * 1e3;
+            double tw = section.ShearWebWidth;
+
+            // 强度（σ=M/W，τ=V·S/(I·t)）：与 V31 一致先 round3，再进 σ_eq
+            double b1 = WindLoadEngine.VbaRound(f.Span1Moment / w, 3);
+            double b2 = WindLoadEngine.VbaRound(f.SupportMoment / w, 3);
+            double b3 = WindLoadEngine.VbaRound(f.Span3Moment / w, 3);
+            double v1 = WindLoadEngine.VbaRound(s * f.Span1Shear / (i * tw), 3);
+            double v2 = WindLoadEngine.VbaRound(s * f.SupportShear / (i * tw), 3);
+            double v3 = WindLoadEngine.VbaRound(s * f.Span3Shear / (i * tw), 3);
+            e.BendingSpan1MPa = b1;
+            e.BendingSupportMPa = b2;
+            e.BendingSpan3MPa = b3;
+            e.ShearSpan1MPa = v1;
+            e.ShearSupportMPa = v2;
+            e.ShearSpan3MPa = v3;
+
+            // 折算强度 = round3(√(round3(σ)² + round3(τ)²))（V31 实测顺序）
+            e.EquivalentSpan3MPa = WindLoadEngine.VbaRound(EquivalentStress(b3, v3), 3);
+            e.EquivalentSupportMPa = WindLoadEngine.VbaRound(EquivalentStress(b2, v2), 3);
+
+            // 挠度：用标准值 qk
+            var (df1, df2) = Deflections(qk, qd, supportMm, spanMm, elasticModulusMPa, i);
+            e.DeflectionSpan1Mm = df1;
+            e.DeflectionSpan2AfterMm = df2;
+
             e.SectionSummary = $"{section.Code}（Ix={section.Ix}cm⁴ Wx1={section.Wx1}cm³ S={section.StaticMoment}cm³ t={section.ShearWebWidth}mm）";
         }
         e.Note = section is null
-            ? "未选型材（请在立柱计算屏从参数库「立柱」95 行中选一行）：仅输出挠度限值与相对比例"
-            : "挠度/强度绝对值 = 跨长 L 简支公式 × 实测拟合系数（A/L=0.25 单点，非程序公式）+ N 插值比例；5/384、挠度限值三段、σ_eq、许用值为 V35 程序确证值";
+            ? "未选型材（请在立柱计算屏从参数库「立柱」95 行中选一行）：仅输出挠度限值与计算跨度"
+            : "内力/挠度按 V31 逐指令还原的解析公式实算（x=(L²−A²)/L、M1=qd·x²/8、M2=qd·A(A+x)/2、M3=M1−S3·A·t、df1/df2 见 Deflections）；挠度限值三段、σ_eq、许用值为 V35 程序确证值";
         return e;
     }
 

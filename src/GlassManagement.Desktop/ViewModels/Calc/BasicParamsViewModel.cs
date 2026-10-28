@@ -260,9 +260,14 @@ public partial class BasicParamsViewModel : ObservableObject
         double bayAvgM = (Math.Max(0.1, Session.BayColLeft) + Math.Max(0.1, Session.BayColRight)) / 2.0 / 1000.0;
         double area = bayAvgM * Math.Max(0.1, Session.ColumnSpanMm / 1000.0);
 
+        // 计算标高 z：未设置时回落 100.0 m —— ★ 非静默魔法数，V31 默认态实测就是标高 100
+        //   （见 MEMORY「V31 默认 = C 类地形 + 地区未选（回落北京 0.45kPa）+ 标高 100 + 50 年 …」）。
+        //   若上游未写入 CalcLevelM，按 V31 默认态取 100，保证与实机默认链一致。
         double z = Session.CalcLevelM > 0 ? Session.CalcLevelM : 100.0;
 
         // K1 地形修正系数 / K2 风向影响系数（GB55001-2021 4.6.6 / 4.6.7，一般各取 1.0）
+        //   ★ 未设置（≤0）时按规范默认值 1.0，不是凭空兜底：规范明文「一般各取 1.0」，
+        //     且 V31 默认态 K1=K2=1.0（ChainK1/ChainK2 显示链路可核）。
         double k1 = Session.TerrainFactor > 0 ? Session.TerrainFactor : 1.0;
         double k2 = Session.WindDirFactor > 0 ? Session.WindDirFactor : 1.0;
 

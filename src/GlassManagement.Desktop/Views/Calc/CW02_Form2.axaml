@@ -4,16 +4,16 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 幕墙计算-板块计算 | client 782x536 | 199 nodes (104 labels) | pairs=40 spread=5px dropped=0 declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="幕墙计算-板块计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙计算-板块计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="782" Height="536" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="782" Height="536" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 8 套 -->
       <TabControl Canvas.Left="6" Canvas.Top="10" Width="772" Height="503">
         <TabItem Header="背面预置螺母连接">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="447" Height="307" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="447" Height="307" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="16" Canvas.Top="139" Width="144" Height="13" Text="石材面板厚度t1        mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="16" Canvas.Top="158" Width="72" Height="13" Text="石材面板材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="16" Canvas.Top="178" Width="144" Height="13" Text="内背板厚度t2          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -36,7 +36,7 @@
         </TabItem>
         <TabItem Header="支承角码及锚栓计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="772" Height="503" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="772" Height="503" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="11" Canvas.Top="318" Width="150" Height="13" Text="支承角码厚度t          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="221" Canvas.Top="323" Width="48" Height="13" Text="锚栓直径" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="11" Canvas.Top="344" Width="150" Height="13" Text="面板偏心距e            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -51,7 +51,7 @@
         </TabItem>
         <TabItem Header="通长挂件连接">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="439" Height="233" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="439" Height="233" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="2" Canvas.Top="13" Width="185" Height="93"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="8" Canvas.Top="4" Text="面板强度参数"/>
           <Border Classes="hbFrame" Canvas.Left="48" Canvas.Top="15" Width="113" Height="59"/>
@@ -104,7 +104,7 @@
         </TabItem>
         <TabItem Header="短挂件连接">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="439" Height="233" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="439" Height="233" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="221" Canvas.Top="127" Width="168" Height="13" Text="面板槽口受剪面厚度        mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="221" Canvas.Top="147" Width="156" Height="13" Text="槽口剪切面总长度        mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="221" Canvas.Top="168" Width="108" Height="13" Text="每个板块上挂件总数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -115,7 +115,7 @@
         </TabItem>
         <TabItem Header="背栓连接">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="439" Height="233" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="439" Height="233" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="44" Canvas.Top="123" Width="108" Height="13" Text="每个板块上背栓总数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="28" Canvas.Top="168" Width="141" Height="26" Text="实测背栓受拉破坏承载力最小值N" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           </Canvas>
@@ -123,7 +123,7 @@
         </TabItem>
         <TabItem Header="重要说明">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="757" Height="499" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="757" Height="499" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="444" Canvas.Top="3" Width="310" Height="432" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBox Classes="hb" Canvas.Left="423" Canvas.Top="12" Width="329" Height="420" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBlock Classes="hb" Canvas.Left="204" Canvas.Top="191" Width="180" Height="13" Text="是否强制要求按集中荷载计算横梁" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -158,18 +158,18 @@
           <ComboBox Classes="hb" Canvas.Left="107" Canvas.Top="410" Width="60" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="6" Canvas.Top="414" Width="96" Height="13" Text="每板块承重挂件数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="121" Canvas.Top="414" Width="45" Height="18" FontSize="12" Text="125"/>
-          <Button Classes="hb" Canvas.Left="617" Canvas.Top="439" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="677" Canvas.Top="439" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="622" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="682" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="617" Canvas.Top="439" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="677" Canvas.Top="439" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="622" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="682" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <ComboBox Classes="hb" Canvas.Left="60" Canvas.Top="446" Width="136" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="6" Canvas.Top="450" Width="48" Height="13" Text="螺栓材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Button Classes="hb" Canvas.Left="471" Canvas.Top="453" Width="136" MinHeight="31" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="JGJ336规范中关于人造板材的相关要求" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
-          <Button Classes="hb" Canvas.Left="617" Canvas.Top="463" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="677" Canvas.Top="463" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="678" Canvas.Top="465" Width="58" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="622" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="682" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="617" Canvas.Top="463" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="677" Canvas.Top="463" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="678" Canvas.Top="465" Width="58" Height="22" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="622" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="682" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <ComboBox Classes="hb" Canvas.Left="57" Canvas.Top="470" Width="44" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="186" Canvas.Top="470" Width="44" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="6" Canvas.Top="474" Width="48" Height="13" Text="螺栓直径" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -179,7 +179,7 @@
         </TabItem>
         <TabItem Header="面板强度参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="217" Height="97" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="217" Height="97" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="27" Canvas.Top="7" Width="185" Height="105"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="33" Canvas.Top="0" Text="面板强度参数"/>
           <TextBox Classes="hb" Canvas.Left="103" Canvas.Top="16" Width="37" Height="18" FontSize="12" Text="3.72"/>
@@ -207,7 +207,7 @@
         </TabItem>
         <TabItem Header="面板尺寸参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="225" Height="217" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="225" Height="217" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="4" Canvas.Top="24" Width="120" Height="13" Text="板材总厚度        mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="4" Canvas.Top="48" Width="126" Height="13" Text="板材计算厚度       mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="4" Canvas.Top="73" Width="120" Height="13" Text="短边边长          mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>

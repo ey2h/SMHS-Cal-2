@@ -29,7 +29,9 @@ public sealed class GlassPanelEngine
     #endregion
 
     #region 原程序打印的精确系数表（四边支承，a/b 降序）
-    // 取自计算书 表6-3 / 表6-4（= JGJ102 表6.1.2-1 / 表6.1.3 原值）
+    // ⚠ 来源未取证：以下 4 张表按 JGJ102-2003 表6.1.2-1/-2/-3/-4 规范值录入，
+    //   未在 V31 常量池或运行期轨迹中找到对应实证（四边支承主链实际走 GlassEngine 的
+    //   m/μ/η 表）。本引擎现仅 Calc.Demo 使用，未接线计算线；系数待 V31 取证后再逐位对拍。
     private static readonly double[] AbRatio_4e = { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5 };
     private static readonly double[] M_4e       = { 0.0468, 0.0451, 0.0440, 0.0400, 0.0352, 0.0283 };
     private static readonly double[] Mu_4e      = { 0.00328, 0.00304, 0.00281, 0.00249, 0.00215, 0.00179 };

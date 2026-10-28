@@ -1,7 +1,9 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GlassManagement.Desktop.Views.Calc.BasicParamsView"
-             FontFamily="SimSun" FontSize="12">
+             FontFamily="SimSun" FontSize="12"
+             Width="907" Height="612"
+             Background="{DynamicResource HbFormBg}">
   <!--
     「幕墙计算-基本参数输入」MVVM 绑定版（V35 向导第 1 屏）。
     权威来源：V35 运行期控件树 hb_window_tree2.tsv → screen_幕墙计算-基本参数输入.json，
@@ -15,7 +17,7 @@
       <TextBlock Classes="hbTitleText" Text="幕墙计算-基本参数输入"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="907" Height="612" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="907" Height="612" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
       <!-- ── Frame 重现期 (11,102) 122x63 ── -->
       <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="102" Width="122" Height="63"/>
@@ -60,7 +62,8 @@
       <TextBox Classes="hb" Canvas.Left="258" Canvas.Top="182" Width="47" Height="18" FontSize="12"
                IsEnabled="{Binding ExternalManualEnabled}" Text="{Binding CoefExternalValueText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
       <Button Classes="hb" Canvas.Left="314" Canvas.Top="142" Width="44" Height="24" FontSize="12"
-              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"/>
+              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"
+              ToolTip.Tip="其它形式的建筑结构局部体型系数请参看《建筑结构荷载规范》GB50009-2012 原文 8.3 部分。"/>
 
       <!-- ── Frame 内部局部体型系数 (381,102) 264x105 ── -->
       <Border Classes="hbFrame" Canvas.Left="381" Canvas.Top="102" Width="264" Height="105"/>
@@ -190,14 +193,11 @@
                    HorizontalContentAlignment="Left" GroupName="抗震设防分类及场地类型(?)"
                    IsChecked="{Binding Session.SeismicModerate, Mode=TwoWay}" Content="适度设防类"/>
 
-      <!-- ── 荷载规范（V31 第一页下拉 (537,304)，实测三档；低矮/高层在立柱屏同值）── -->
-      <ComboBox Classes="hb" Canvas.Left="405" Canvas.Top="326" Width="105" Height="20" FontSize="10"
-                SelectedIndex="{Binding Session.LoadStandardIndex, Mode=TwoWay}">
-        <ComboBoxItem Content="全国荷载规范"/>
-        <ComboBoxItem Content="广东(≤45m)"/>
-        <ComboBoxItem Content="广东(&gt;45m)"/>
-      </ComboBox>
-      <TextBlock Classes="hb" Canvas.Left="405" Canvas.Top="327" Width="48" Height="13" Text="场地类型" FontSize="10"/>
+      <!-- ★2026-10-28 移除臆造控件：V31 运行期控件树（hb_window_tree2.tsv 帧 308,303 264x91）中
+           本帧只有 4 个设防类单选 + 1 个下拉(396,366 105x20 → 本页 469,325)，
+           没有「荷载规范」三档下拉，也没有「场地类型」标签。
+           原 (405,326) 下拉与 (405,327) 标签与真下拉重叠 41px，渲染成"全国荷载规范 II类场地"（错）。
+           广东荷载档位仍保留在 Session.LoadStandardIndex（引擎/用例用），只是 V31 第一页无此入口。 -->
       <ComboBox Classes="hb" Canvas.Left="469" Canvas.Top="325" Width="105" Height="20"
                 ItemsSource="{Binding Session.SiteClasses}" SelectedItem="{Binding Session.SiteClassSelected, Mode=TwoWay}"/>
 
@@ -236,11 +236,12 @@
       <TextBlock Classes="hb" Canvas.Left="502" Canvas.Top="380" Width="30" Height="13" Text="★按" FontSize="10"/>
       <TextBlock Classes="hb" Canvas.Left="762" Canvas.Top="380" Width="60" Height="13" Text="计算荷载" FontSize="10"/>
       <Button Classes="hb" Canvas.Left="826" Canvas.Top="374" Width="59" Height="24" FontSize="12"
-              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"/>
+              HorizontalContentAlignment="Center" Command="{Binding HelpCommand}" Content="帮助"
+              ToolTip.Tip="其它形式的建筑结构局部体型系数请参看《建筑结构荷载规范》GB50009-2012 原文 8.3 部分。"/>
       <!-- 地区参数表 = V35 参数库「地区参数」表全量 634 行（ParamLibrary 内嵌，列名与参数库一致）。
            DataGrid 的 Width 在 Avalonia 不生效 → 自绘表头 + ListBox 行；选中行 = 地区下拉当前值。 -->
-      <Border Canvas.Left="16" Canvas.Top="406" Width="873" Height="17" Background="#F0F0F0"
-              BorderBrush="#808080" BorderThickness="1"/>
+      <Border Canvas.Left="16" Canvas.Top="406" Width="873" Height="17" Background="{DynamicResource HbFormBg}"
+              BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1"/>
       <TextBlock Canvas.Left="20" Canvas.Top="408" Width="116" Text="地区名称" FontSize="12"/>
       <TextBlock Canvas.Left="140" Canvas.Top="408" Width="96" Text="50年基本风压" FontSize="11"/>
       <TextBlock Canvas.Left="240" Canvas.Top="408" Width="101" Text="100年基本风压" FontSize="11"/>
@@ -250,8 +251,8 @@
       <TextBlock Canvas.Left="595" Canvas.Top="408" Width="66" Text="极限温差" FontSize="11"/>
       <TextBlock Canvas.Left="665" Canvas.Top="408" Width="96" Text="50年基本雪压" FontSize="11"/>
       <TextBlock Canvas.Left="765" Canvas.Top="408" Width="101" Text="100年基本雪压" FontSize="11"/>
-      <Border Canvas.Left="16" Canvas.Top="423" Width="857" Height="148" Background="#FFFFFF"
-              BorderBrush="#646464" BorderThickness="1"/>
+      <Border Canvas.Left="16" Canvas.Top="423" Width="857" Height="148" Background="{DynamicResource HbControlBg}"
+              BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1"/>
       <ListBox Canvas.Left="16" Canvas.Top="423" Width="857" Height="148"
                ItemsSource="{Binding Session.RegionRows}" SelectedItem="{Binding Session.RegionSelected, Mode=TwoWay}"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -273,10 +274,10 @@
             </Setter>
           </Style>
           <Style Selector="ListBoxItem:selected /template/ Border#row">
-            <Setter Property="Background" Value="#C0FFFF"/>
+            <Setter Property="Background" Value="{DynamicResource HbResultBg}"/>
           </Style>
           <Style Selector="ListBoxItem:pointerover /template/ Border#row">
-            <Setter Property="Background" Value="#E0F7F7"/>
+            <Setter Property="Background" Value="{DynamicResource HbResultBgAlt}"/>
           </Style>
         </ListBox.Styles>
         <ListBox.ItemTemplate>
@@ -296,21 +297,22 @@
         </ListBox.ItemTemplate>
       </ListBox>
       <!-- 列分隔线（VB6 DataGrid 竖线） -->
-      <Border Canvas.Left="136" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="236" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="341" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="411" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="536" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="591" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="661" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
-      <Border Canvas.Left="761" Canvas.Top="423" Width="1" Height="148" Background="#808080"/>
+      <Border Canvas.Left="136" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="236" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="341" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="411" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="536" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="591" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="661" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="761" Canvas.Top="423" Width="1" Height="148" Background="{DynamicResource HbHeaderCellBg}"/>
       <!-- 竖滚动条（VB6 式 16px 滑道 + 上下三角） -->
-      <Border Canvas.Left="873" Canvas.Top="423" Width="16" Height="148" Background="#F0F0F0"
-              BorderBrush="#808080" BorderThickness="1"/>
-      <Path Canvas.Left="877" Canvas.Top="427" Fill="#000000" Data="M 0,7 L 8,0 L 8,7 Z"/>
-      <Path Canvas.Left="877" Canvas.Top="560" Fill="#000000" Data="M 0,0 L 8,0 L 8,7 Z"/>
-      <TextBlock Classes="hb" Canvas.Left="20" Canvas.Top="578" Width="860" Height="14" FontSize="11"
-                 Text="其它形式的建筑结构局部体型系数请参看《建筑结构荷载规范》GB50009-2012原文8.3部分；另外点本界面所处屏幕左下角“有问题点这里”，会有具体的提示信息供用户参考。" TextTrimming="CharacterEllipsis"/>
+      <Border Canvas.Left="873" Canvas.Top="423" Width="16" Height="148" Background="{DynamicResource HbFormBg}"
+              BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1"/>
+      <Path Canvas.Left="877" Canvas.Top="427" Fill="{DynamicResource HbTextStrong}" Data="M 0,7 L 8,0 L 8,7 Z"/>
+      <Path Canvas.Left="877" Canvas.Top="560" Fill="{DynamicResource HbTextStrong}" Data="M 0,0 L 8,0 L 8,7 Z"/>
+      <!-- ★2026-10-28 移除：这段长提示与底部按钮(580/583/585)抢同一行造成压字；
+           V31 控件树中本屏并无该 Label（它只是"有问题点这里"弹窗的正文）。
+           信息改挂到「帮助」按钮 ToolTip，不丢失。 -->
 
       <!-- ── 顶层按钮 / 复选（互斥视图：80℃温差 与 不考虑地震 同位置，此处按首视图显示前者） ── -->
       <Button Classes="hb" Canvas.Left="645" Canvas.Top="580" Width="59" Height="24" FontSize="12"

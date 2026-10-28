@@ -4,16 +4,16 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 埋件系统计算 | client 787x489 | 212 nodes (117 labels) | pairs=50 spread=11px dropped=0 declutter:drop=0 move=2 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="埋件系统计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="埋件系统计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="787" Height="489" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="787" Height="489" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 7 套 -->
       <TabControl Canvas.Left="6" Canvas.Top="7" Width="775" Height="456">
         <TabItem Header="焊缝计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="467" Height="449" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="467" Height="449" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="104" Canvas.Top="58" Width="60" Height="19" FontSize="12" Text="40.5"/>
           <Border Classes="hbFrame" Canvas.Left="3" Canvas.Top="63" Width="161" Height="183"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="9" Canvas.Top="54" Text="后锚固参数"/>
@@ -84,7 +84,7 @@
         </TabItem>
         <TabItem Header="埋件种类">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="161" Height="57" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="161" Height="57" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <ComboBox Classes="hb" Canvas.Left="88" Canvas.Top="11" Width="94" Height="20"/>
           <RadioButton Classes="hb" Canvas.Left="7" Canvas.Top="16" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="土建预埋" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="78" Canvas.Top="16" Width="73" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="后补锚栓" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
@@ -96,7 +96,7 @@
         </TabItem>
         <TabItem Header="槽型埋件">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="769" Height="452" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="769" Height="452" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="465" Canvas.Top="1" Width="296" Height="389" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBlock Classes="hb" Canvas.Left="26" Canvas.Top="15" Width="48" Height="13" Text="槽体材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="269" Canvas.Top="15" Width="48" Height="13" Text="锚筋材质" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -134,19 +134,19 @@
           <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="342" Width="160" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘为无筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="359" Width="201" Height="22" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="421" Canvas.Top="377" Width="322" Height="29" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="边缘配有φ≥12mm直筋及α≤100mm箍筋的开裂混凝土" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <Button Classes="hb" Canvas.Left="633" Canvas.Top="395" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="535" Canvas.Top="409" Width="92" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="复制到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="684" Canvas.Top="414" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="694" Canvas.Top="419" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="695" Canvas.Top="419" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="633" Canvas.Top="420" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="633" Canvas.Top="395" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="535" Canvas.Top="409" Width="92" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="复制到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="684" Canvas.Top="414" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="694" Canvas.Top="419" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="695" Canvas.Top="419" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="633" Canvas.Top="420" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBlock Classes="hb" Canvas.Left="434" Canvas.Top="428" Width="132" Height="13" Text="请选择要计算的结构位置" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="后锚固参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="769" Height="452" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="769" Height="452" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="516" Canvas.Top="136" Width="54" Height="13" Text="锚栓排数n" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="639" Canvas.Top="136" Width="54" Height="13" Text="锚栓列数m" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="10" Canvas.Top="147" Width="141" Height="65" Text="对于槽式埋件及后锚固计算，请先完善本界面其它所有参数，然后点上面按扭继续输入相关参数后返回，再按“预演”和“确定”继续……" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -166,7 +166,7 @@
         </TabItem>
         <TabItem Header="埋件厚度计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="467" Height="449" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="467" Height="449" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="32" Canvas.Top="234" Width="48" Height="13" Text="算法选择" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="32" Canvas.Top="258" Width="180" Height="13" Text="总弯矩M                   N.mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="336" Canvas.Top="281" Width="90" Height="13" Text="a=           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -188,7 +188,7 @@
         </TabItem>
         <TabItem Header="土建预埋参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="297" Height="242" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="297" Height="242" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <ComboBox Classes="hb" Canvas.Left="168" Canvas.Top="11" Width="94" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="0" Canvas.Top="13" Width="409" Height="39" Text="画出焊缝断面实际形状，参看左图示意的方法绘制有效截面（剖面线部分），之后做出面域，用SMHS截面计算功能求得参数后，输入到右侧的参数框中。（hf为焊脚高度，he=0.7hf为焊缝有效厚度），输入的焊缝有效抵抗矩取wx1与wx2两者中的较小值，注意单位。" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <DataGrid Classes="hb" Canvas.Left="0" Canvas.Top="15" Width="748" Height="93"/>
@@ -204,7 +204,7 @@
           <ComboBox Classes="hb" Canvas.Left="187" Canvas.Top="54" Width="60" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="145" Canvas.Top="60" Width="53" Height="20" FontSize="12" Text="5000"/>
           <TextBlock Classes="hb" Canvas.Left="91" Canvas.Top="64" Width="114" Height="13" Text="总剪力V           N" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="229" Canvas.Top="68" Width="40" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="229" Canvas.Top="68" Width="40" Height="20" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <ComboBox Classes="hb" Canvas.Left="62" Canvas.Top="76" Width="57" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="170" Canvas.Top="76" Width="60" Height="19" FontSize="12" Text="250"/>
           <ComboBox Classes="hb" Canvas.Left="216" Canvas.Top="76" Width="57" Height="20"/>
@@ -250,14 +250,14 @@
           <CheckBox Classes="hb" Canvas.Left="8" Canvas.Top="208" Width="276" Height="26" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="锚筋末端有符合规范要求的弯钩或机械锚固措施" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <TextBox Classes="hb" Canvas.Left="189" Canvas.Top="209" Width="57" Height="20" FontSize="12" Text="9550"/>
           <TextBlock Classes="hb" Canvas.Left="91" Canvas.Top="213" Width="180" Height="13" Text="焊缝有效抵抗矩            mm^3" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="172" Canvas.Top="213" Width="65" Height="20" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="参数说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="172" Canvas.Top="213" Width="65" Height="20" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="参数说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <ComboBox Classes="hb" Canvas.Left="115" Canvas.Top="214" Width="72" Height="20"/>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="对穿螺栓参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="297" Height="242" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="297" Height="242" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="28" Width="48" Height="13" Text="螺栓行数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="50" Width="48" Height="13" Text="螺栓列数" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="72" Width="90" Height="13" Text="最外排螺栓间距H" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>

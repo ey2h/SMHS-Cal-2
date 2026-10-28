@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.StaticCalcView"
+             x:DataType="vm:StaticCalcViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="常用建筑结构静力计算（按《建筑结构静力计算手册》第二版）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="梁类型" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding BeamTypeOptions}" SelectedIndex="{Binding BeamTypeIndex}" MinWidth="110"/>
+          <TextBlock Text="荷载类型" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding LoadTypeOptions}" SelectedIndex="{Binding LoadTypeIndex}" MinWidth="100"/>
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+        </StackPanel>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap" FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="6">
+        <TextBlock Text="输入参数" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" MaxWidth="420">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="跨度 L (mm)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding LengthText}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="悬臂长度 L2 (mm)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding OverhangText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="荷载 q(kN/m) / P(kN)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding LoadText}" Margin="4"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="弹性模量 E (MPa)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ElasticText}" Margin="4"/>
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="惯性矩 I (mm⁴)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding InertiaText}" Margin="4"/>
+        </Grid>
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="注：按《建筑结构静力计算手册》第二版公式计算。本工具为力学手册查询性质，结果仅供结构设计参考。"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

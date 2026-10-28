@@ -26,6 +26,20 @@ public sealed record SealantInputs
     /// <summary>结构胶变位能力 %（轨迹 0xC548C5 的 0.01）。</summary>
     public double SealantMovement { get; init; } = 0.01;
 
+    /// <summary>
+    /// 结构胶位移能力 δ —— V31 控件 (153,266) ComboBox，候选
+    /// <c>0.1 / 0.12 / 0.125 / 0.14 / 0.15</c>，默认 0.1。
+    /// 实测：改成 0.12 → 厚度最小值 5.475 → 4.974（与 <c>(2/B)·H/√(δ(δ+2))</c> 逐位吻合）。
+    /// ★ 只进厚度算式的分母，**不进宽度算式**（实测宽度 6.121 不随它变）。
+    /// </summary>
+    public double StructMovement { get; init; } = 0.1;
+
+    /// <summary>实际结构胶宽度 mm —— V31 (153,200) ComboBox（06~30），默认 08。</summary>
+    public double ActualWidth { get; init; } = 8;
+
+    /// <summary>实际结构胶厚度 mm —— V31 (153,178) ComboBox（06~12），默认 06。</summary>
+    public double ActualThickness { get; init; } = 6;
+
     /// <summary>风荷载分项系数（1.5）。</summary>
     public double WindFactor { get; init; } = 1.5;
 
@@ -135,9 +149,14 @@ public static class SealantEngine
                                    / x.SealantMovement);                            // 6.121
 
         // ── 结构胶厚度（0xC59177 / 0xC5941D–0xC5944B） ──
-        //   t = (2/分格宽)×层高 / √(变位×(变位+2))
-        double thickNum = (2.0 / x.BayWidth) * x.StoryHeight;                      // 2.50909
-        double thickDen = Math.Sqrt(0.1 * (2.0 + 0.1));                            // 0.458258
+        //   t = round3( round3((2/分格宽)×层高) / √(δ(δ+2)) )
+        //   ★ 分子必须先 round3：运行期轨迹 sealant_trace_vartrace.json #32
+        //     `0xC5944B Div R8(2.509, 0.4582575695)` —— 左操作数是 2.509，不是 2.5090909…
+        //     δ=0.1 时两种口径都得 5.475（所以以前没暴露）；δ=0.12 时
+        //     2.509/0.50438=4.9744 → 4.974（V31 实测），不先取整会得 4.975 ✗
+        //   ★ 变位 δ = 控件 (153,266)「结构胶位移能力」，实测 0.12 → 4.974 逐位吻合。
+        double thickNum = R((2.0 / x.BayWidth) * x.StoryHeight);                   // 2.509
+        double thickDen = Math.Sqrt(x.StructMovement * (2.0 + x.StructMovement));   // 0.458258
         double structuralThickness = R(thickNum / thickDen);                       // 5.475
 
         // ── 耐候胶宽度（0xC596D7–0xC5984B） ──
@@ -171,8 +190,8 @@ public static class SealantEngine
             WkPanelKpa: R(x.WkPanelKpa),
             StructuralWidth: structuralWidth,
             StructuralThickness: structuralThickness,
-            ActualWidth: 8,
-            ActualThickness: 6,
+            ActualWidth: x.ActualWidth,
+            ActualThickness: x.ActualThickness,
             WeatherWidth: weatherWidth,
             WeatherActual: 16,
             JointWidth: jointWidth,

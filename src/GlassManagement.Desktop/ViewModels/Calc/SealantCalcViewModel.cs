@@ -50,12 +50,47 @@ public partial class SealantCalcViewModel : ObservableObject
     public IReadOnlyList<string> CodeOptions { get; } = new[] { "按JGJ102规范", "按JGJ133规范" };
     [ObservableProperty] private int _codeIndex;
 
-    public IReadOnlyList<string> StructuralW { get; } = new[] { "06", "08", "10", "12" };
-    public IReadOnlyList<string> StructuralT { get; } = new[] { "06", "08", "10" };
-    [ObservableProperty] private int _structWidthIndex;       // 06
-    [ObservableProperty] private int _structThicknessIndex = 2; // 08
-    [ObservableProperty] private string _actualWidthText = "8";
-    [ObservableProperty] private string _actualThicknessText = "6";
+    // ── 结构胶参数：候选表全部是 V31 实机 CB_GETLBTEXT 直读，不是编的 ──
+    //    取证：local-data/recon/sealant_act_probe.py → v31runs/sealant_act_probe.txt
+    //    (153,178) 06..12 sel=0   (153,200) 06..30 sel=2
+    //    (153,222) 06/09/10/12/15 sel=0 en=0   (153,244) 06..30 sel=2 en=0
+    //    (153,266) 0.1/0.12/0.125/0.14/0.15 sel=0
+    //    (163,288) 0.01 单值      (163,310) 0.2 单值
+    public IReadOnlyList<string> StructThicknessOptions { get; } = Mm(6, 12);
+    public IReadOnlyList<string> StructWidthOptions { get; } = Mm(6, 30);
+    public IReadOnlyList<string> InsulationThicknessOptions { get; } = new[] { "06", "09", "10", "12", "15" };
+    public IReadOnlyList<string> InsulationWidthOptions { get; } = Mm(6, 30);
+    public IReadOnlyList<string> StructMovementOptions { get; } = new[] { "0.1", "0.12", "0.125", "0.14", "0.15" };
+    public IReadOnlyList<string> LongTermStrengthOptions { get; } = new[] { "0.01" };
+    public IReadOnlyList<string> ShortTermStrengthOptions { get; } = new[] { "0.2" };
+
+    [ObservableProperty] private int _structThicknessIndex;      // 0 → 06
+    [ObservableProperty] private int _structWidthIndex = 2;      // 2 → 08
+    [ObservableProperty] private int _insulationThicknessIndex;  // 0 → 06（en=0 只读）
+    [ObservableProperty] private int _insulationWidthIndex = 2;  // 2 → 08（en=0 只读）
+    [ObservableProperty] private int _structMovementIndex;       // 0 → 0.1
+    [ObservableProperty] private int _longTermStrengthIndex;     // 0 → 0.01
+    [ObservableProperty] private int _shortTermStrengthIndex;    // 0 → 0.2
+
+    /// <summary>"06"…"30" 形式的两位补零毫米档位（V31 下拉原文就是这个格式）。</summary>
+    private static string[] Mm(int from, int to)
+    {
+        var a = new string[to - from + 1];
+        for (var i = from; i <= to; i++) a[i - from] = i.ToString("00");
+        return a;
+    }
+
+    private static double Pick(IReadOnlyList<string> opts, int idx, double dflt)
+        => idx >= 0 && idx < opts.Count && double.TryParse(opts[idx], out var v) && v > 0 ? v : dflt;
+
+    /// <summary>实际结构胶宽度：V31 (153,200) 选值（"08" → 8）。</summary>
+    public double ActualWidthMm => Pick(StructWidthOptions, StructWidthIndex, 8);
+
+    /// <summary>实际结构胶厚度：V31 (153,178) 选值（"06" → 6）。</summary>
+    public double ActualThicknessMm => Pick(StructThicknessOptions, StructThicknessIndex, 6);
+
+    /// <summary>结构胶位移能力：V31 (153,266) 选值（默认 0.1）。</summary>
+    public double StructMovement => Pick(StructMovementOptions, StructMovementIndex, 0.1);
 
     [ObservableProperty] private string _weatherMovementText = "0.25";
     [ObservableProperty] private string _weatherActualText = "16";
@@ -78,7 +113,12 @@ public partial class SealantCalcViewModel : ObservableObject
 
     public bool HasResults => Results.Count > 0;
     public string PlaceholderText => HasResults ? "" : "点「预演」按当前胶类参数出计算结果";
-    public bool PreviewEnabled => true;
+
+    /// <summary>
+    /// ★ 门禁：胶类用**面板口径** wk（μsl=1.0 不折减），由第一页计算链写入。
+    /// 第一页没算过就不许预演 —— 不再用 1.37 这类常量顶替。
+    /// </summary>
+    public bool PreviewEnabled => Session.PanelWindReady;
 
     [ObservableProperty] private string _statusText = "就绪";
     [ObservableProperty] private bool _statusIsWarning;
@@ -86,11 +126,11 @@ public partial class SealantCalcViewModel : ObservableObject
 
     private void SyncFromSession()
     {
-        var wk = Session.PanelWindResolved ? Session.PanelWindKpa : Session.WindStandardKpa * 1.0;
-        Note = Session.PanelWindResolved
+        Note = Session.PanelWindReady
             ? $"wk={Session.PanelWindKpa:0.###}KPa（面板口径）｜{Session.ColumnBayWidthMm:0.###}mm"
-            : $"第一页未写面板 wk，暂用 {wk:0.###}KPa";
+            : CalcSession.UpstreamNotReadyText;
         OnPropertyChanged(nameof(Note));
+        OnPropertyChanged(nameof(PreviewEnabled));
     }
 
     private const string Sep45 = "*********************************************";
@@ -106,8 +146,8 @@ public partial class SealantCalcViewModel : ObservableObject
 
     public SealantInputs BuildInputs()
     {
-        // 面板口径：玻璃屏算完会写 PanelWindKpa；没有就按 V31 该工程的 1.37
-        double wkPanel = Session.PanelWindResolved ? Session.PanelWindKpa : 1.37;
+        // 面板口径：由第一页计算链写入 PanelWindKpa；没算过就是 0（PreviewEnabled 已挡住）。
+        double wkPanel = Session.PanelWindReady ? Session.PanelWindKpa : 0;
 
         return new SealantInputs
         {
@@ -118,6 +158,10 @@ public partial class SealantCalcViewModel : ObservableObject
             ClampArm = Parse(ClampArmText, 45),
             ClampWidth = Parse(ClampWidthText, 6),
             ClampSpacing = Parse(ClampPitchText, 350),
+            // 结构胶三件：全部来自界面下拉（V31 实测：它们既喂算式的分母，也进计算书表格）
+            StructMovement = StructMovement,
+            ActualWidth = ActualWidthMm,
+            ActualThickness = ActualThicknessMm,
         };
     }
 
@@ -128,8 +172,8 @@ public partial class SealantCalcViewModel : ObservableObject
         try
         {
             var r = SealantEngine.Compute(BuildInputs());
-            double actW = Parse(ActualWidthText, 8);
-            double actT = Parse(ActualThicknessText, 6);
+            double actW = r.ActualWidth;          // 来自 (153,200) 下拉，不再另存一份
+            double actT = r.ActualThickness;      // 来自 (153,178) 下拉
             double actWeather = Parse(WeatherActualText, 16);
             double actJoint = Parse(JointActualText, 20);
 

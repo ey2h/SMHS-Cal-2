@@ -3,10 +3,10 @@
              x:Class="GlassManagement.Desktop.Views.Calc.CW01_V350">
   <!-- 原程序 V35 MDI 主窗体：菜单树从解密后的 VB6 菜单记录提取（18 顶级 / 147 子项） -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="26" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="SMHS幕墙门窗结构计算软件V35.0  (已注册)" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="26" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="SMHS幕墙门窗结构计算软件V35.0  (已注册)" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
-    <Border DockPanel.Dock="Top" Height="24" Background="#F0F0F0" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
+    <Border DockPanel.Dock="Top" Height="24" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
       <Menu FontSize="12" Background="Transparent">
         <MenuItem Header="玻璃幕墙">
           <MenuItem Header="全隐框" Tag="YK"/>
@@ -257,11 +257,11 @@
         </MenuItem>
       </Menu>
     </Border>
-    <Border DockPanel.Dock="Bottom" Height="25" Background="#F0F0F0" BorderBrush="#A0A0A0" BorderThickness="0,1,0,0">
-      <TextBlock Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#4B5563"/>
+    <Border DockPanel.Dock="Bottom" Height="25" Background="{DynamicResource HbFormBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,1,0,0">
+      <TextBlock Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbTextMuted}"/>
     </Border>
-    <Border Background="#2E5F5C">
-      <TextBlock Text="SMHS幕墙门窗结构计算软件&#10;V35.0" FontSize="40" FontWeight="Bold" Foreground="#FFFFFF"
+    <Border Background="{DynamicResource HbFormBg}">
+      <TextBlock Text="SMHS幕墙门窗结构计算软件&#10;V35.0" FontSize="40" FontWeight="Bold" Foreground="{DynamicResource HbOnAccent}"
                  HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.35"/>
     </Border>
   </DockPanel>

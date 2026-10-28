@@ -29,11 +29,11 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="603" Height="330" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="603" Height="330" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 预览区（原 (6,10)587x229 与参数 Frame 完全重叠，移到按钮下方） ══ -->
         <Border Canvas.Left="11" Canvas.Top="245" Width="510" Height="80"
-                Background="White" BorderBrush="#9AA0A6" BorderThickness="1">
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
           <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                         Padding="4,2">
             <ItemsControl ItemsSource="{Binding Preview}">
@@ -54,8 +54,9 @@
         <TextBlock Canvas.Left="14" Canvas.Top="94" Text="幕墙类型" FontSize="11"/>
         <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="49" Width="233" Height="25"
                  Text="{Binding ProjectName, Mode=TwoWay}"/>
-        <TextBox Classes="hb" Canvas.Left="75" Canvas.Top="89" Width="233" Height="25"
-                 Text="{Binding ProjectSub, Mode=TwoWay}"/>
+        <ComboBox Canvas.Left="75" Canvas.Top="89" Width="233" Height="22"
+                  ItemsSource="{Binding Kinds}"
+                  SelectedIndex="{Binding KindIndex, Mode=TwoWay}"/>
 
         <TextBlock Canvas.Left="19" Canvas.Top="131" Text="Office优先级设置" FontSize="11"/>
         <ComboBox Canvas.Left="131" Canvas.Top="127" Width="161" Height="20"

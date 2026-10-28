@@ -18,6 +18,18 @@ public sealed record BookBlock(BookBlockKind Kind, string Text,
     public static BookBlock Table(string[] headers, string[][] rows)
         => new(BookBlockKind.Table, "", headers, rows);
 
+    /// <summary>封面用的大号居中标题——<b>不进目录</b>（不带大纲级别）。</summary>
+    public static BookBlock Title(string t) => new(BookBlockKind.Title, t);
+
+    /// <summary>正文号居中段（如「目录」标题），不进目录。</summary>
+    public static BookBlock Center(string t) => new(BookBlockKind.Center, t);
+
+    /// <summary>目录域：Word 打开后按 F9 更新即可列出全部 H1/H2/H3。</summary>
+    public static BookBlock Toc() => new(BookBlockKind.Toc, "");
+
+    /// <summary>空行（封面排版用，对应模板里的连续空段落）。</summary>
+    public static BookBlock Blank() => new(BookBlockKind.P, "");
+
     /// <summary>纯文本投影（测试与检索用；表格按「表头 + 行」摊平）。</summary>
     public string FlatText
     {
@@ -33,7 +45,7 @@ public sealed record BookBlock(BookBlockKind Kind, string Text,
     }
 }
 
-public enum BookBlockKind { H1, H2, H3, P, Table, PageBreak }
+public enum BookBlockKind { H1, H2, H3, P, Table, PageBreak, Title, Toc, Center }
 
 /// <summary>
 /// 生成计算书面板（V31 603×330，CW22）上的排版设置。
@@ -104,13 +116,22 @@ public static class CalcBookWriter
                     sb.Append("<w:p><w:r><w:br w:type=\"page\"/></w:r></w:p>");
                     break;
                 case BookBlockKind.H1:
-                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 8, true, true, setup));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 8, true, true, setup, 0));
                     break;
                 case BookBlockKind.H2:
-                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 3, true, false, setup));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 3, true, false, setup, 1));
                     break;
                 case BookBlockKind.H3:
-                    sb.Append(Para(b.Text, setup.BodyHalfPoints, true, false, setup));
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints, true, false, setup, 2));
+                    break;
+                case BookBlockKind.Title:
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints + 14, true, true, setup, -1));
+                    break;
+                case BookBlockKind.Center:
+                    sb.Append(Para(b.Text, setup.BodyHalfPoints, true, true, setup, -1));
+                    break;
+                case BookBlockKind.Toc:
+                    sb.Append(TocField(setup));
                     break;
                 case BookBlockKind.Table:
                     sb.Append(Table(b.Headers ?? Array.Empty<string>(),
@@ -186,13 +207,17 @@ public static class CalcBookWriter
     }
 
     private static string Para(string text, int halfPoints, bool bold, bool center,
-                               BookPageSetup setup)
+                               BookPageSetup setup, int outlineLvl = -1)
     {
         var sb = new StringBuilder();
         sb.Append("<w:p><w:pPr>");
-        if (center) sb.Append("<w:jc w:val=\"center\"/>");
+        // ★ CT_PPr 子元素顺序被 schema 固定：spacing → jc → outlineLvl → rPr。
+        //   顺序错了 Word 会报「内容有问题」，这里按序拼。
         if (setup.LineSpacingPt > 0)
             sb.Append($"<w:spacing w:line=\"{(int)Math.Round(setup.LineSpacingPt * 20)}\" w:lineRule=\"exact\"/>");
+        if (center) sb.Append("<w:jc w:val=\"center\"/>");
+        // 大纲级别（0=1级）：目录域 TOC \o "1-3" 靠它收集条目，缺了就是空目录
+        if (outlineLvl >= 0) sb.Append($"<w:outlineLvl w:val=\"{outlineLvl}\"/>");
         sb.Append("<w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
         sb.Append("<w:sz w:val=\"").Append(halfPoints).Append("\"/>");
         if (bold) sb.Append("<w:b/>");
@@ -209,6 +234,28 @@ public static class CalcBookWriter
             if (i < lines.Count - 1) sb.Append("<w:r><w:br/></w:r>");
         }
         sb.Append("</w:p>");
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 目录域。<c>dirty="true"</c> 让 Word 打开时自动提示更新；不更新时显示占位文字。
+    /// 条目来自带 <c>w:outlineLvl</c> 的标题段（H1/H2/H3）。对应模板 <c>jss\模板.doc</c> 里的 <c>indexindex</c> 占位。
+    /// </summary>
+    private static string TocField(BookPageSetup setup)
+    {
+        var sb = new StringBuilder();
+        sb.Append("<w:p><w:pPr>");
+        if (setup.LineSpacingPt > 0)
+            sb.Append($"<w:spacing w:line=\"{(int)Math.Round(setup.LineSpacingPt * 20)}\" w:lineRule=\"exact\"/>");
+        sb.Append("<w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
+        sb.Append($"<w:sz w:val=\"{setup.BodyHalfPoints}\"/></w:rPr></w:pPr>");
+        sb.Append("<w:r><w:fldChar w:fldCharType=\"begin\" w:dirty=\"true\"/></w:r>");
+        sb.Append("<w:r><w:instrText xml:space=\"preserve\"> TOC \\o \"1-3\" \\h \\z \\u </w:instrText></w:r>");
+        sb.Append("<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>");
+        sb.Append("<w:r><w:rPr><w:rFonts w:ascii=\"宋体\" w:eastAsia=\"宋体\" w:hAnsi=\"宋体\"/>");
+        sb.Append($"<w:sz w:val=\"{setup.BodyHalfPoints}\"/></w:rPr>");
+        sb.Append("<w:t xml:space=\"preserve\">（目录：在 Word 中按 Ctrl+A 后 F9 更新）</w:t></w:r>");
+        sb.Append("<w:r><w:fldChar w:fldCharType=\"end\"/></w:r></w:p>");
         return sb.ToString();
     }
 

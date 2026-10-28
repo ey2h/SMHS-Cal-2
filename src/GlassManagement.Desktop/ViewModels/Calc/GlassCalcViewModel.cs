@@ -312,10 +312,14 @@ public partial class GlassCalcViewModel : ObservableObject
     [ObservableProperty] private string _statusText = "";
     [ObservableProperty] private bool _statusIsWarning;
 
-    public bool PreviewEnabled => Session.PanelWindKpa > 0 && Session.GlassShortSpanMm > 0;
+    /// <summary>
+    /// ★ 玻璃用**面板口径** wk，门禁看 <see cref="CalcSession.PanelWindReady"/>。
+    /// 不能写 `PanelWindKpa &gt; 0`：必须同时确认第一页已算完（WindStandardResolved）。
+    /// </summary>
+    public bool PreviewEnabled => Session.PanelWindReady && Session.GlassShortSpanMm > 0;
 
-    public string PreviewBlockedReason => Session.PanelWindKpa <= 0
-        ? "上游未算出风荷载标准值，请先在第一页点「计算荷载」"
+    public string PreviewBlockedReason => !Session.PanelWindReady
+        ? CalcSession.UpstreamNotReadyText
         : Session.GlassShortSpanMm <= 0 ? "玻璃尺寸无效，请检查分格尺寸或自定义宽高" : "";
 
     /// <summary>诊断行开关（默认关，保证与 V31 结果区逐行一致）。</summary>

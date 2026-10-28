@@ -164,14 +164,18 @@ public partial class UnitBeamCalcViewModel : ObservableObject
     [ObservableProperty] private string _statusText = "";
     [ObservableProperty] private bool _statusIsWarning;
 
-    public bool PreviewEnabled => Session.WindStandardKpa > 0 && TopProfile is not null && BottomProfile is not null
+    /// <summary>
+    /// ★ 门禁看 <see cref="CalcSession.SupportWindReady"/>，不写 `WindStandardKpa &gt; 0`
+    /// （后者初值 1.0，门禁永远为真，等于放行假数据）。
+    /// </summary>
+    public bool PreviewEnabled => Session.SupportWindReady && TopProfile is not null && BottomProfile is not null
                                   && (!HasMidBeam || MidProfile is not null);
 
     public string PreviewBlockedReason
     {
         get
         {
-            if (Session.WindStandardKpa <= 0) return "上游未算出风荷载标准值，请先在第一页点「计算荷载」";
+            if (!Session.SupportWindReady) return CalcSession.UpstreamNotReadyText;
             if (TopProfile is null || BottomProfile is null) return "请先选择上/下横框型材";
             if (HasMidBeam && MidProfile is null) return "第一页为「有中横结构」，请先选择中横框型材";
             return "";

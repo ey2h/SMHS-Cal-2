@@ -4,24 +4,24 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 欢迎进入软件注册！ | client 684x413 | 13 nodes (3 labels) | pairs=6 spread=0px dropped=0 declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="欢迎进入软件注册！" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="欢迎进入软件注册！" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="684" Height="413" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="684" Height="413" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <TextBlock Classes="hb" Canvas.Left="225" Canvas.Top="7" Width="93" Height="26" Text="软件所监测到本机物理硬件" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
       <TextBox Classes="hb" Canvas.Left="11" Canvas.Top="15" Width="217" Height="18" FontSize="12" Text="您的电脑还没有注册!"/>
       <TextBlock Classes="hb" Canvas.Left="88" Canvas.Top="33" Width="360" Height="15" Text="http://www.huibaosoft.com（如遇网站故障，请通过微信或电话联系)" FontSize="11" TextWrapping="Wrap" LineHeight="14"/>
       <ComboBox Classes="hb" Canvas.Left="33" Canvas.Top="160" Width="619" Height="20"/>
       <RadioButton Classes="hb" Canvas.Left="59" Canvas.Top="207" Width="440" MinHeight="40" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="联网自动获取注册码（已注册用户升级或重做系统的，先选这个自动获得注册码，如不可用再选下面的申请注册码）" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></RadioButton>
-      <Button Classes="hb" Canvas.Left="571" Canvas.Top="207" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下载点1" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-      <Button Classes="hb" Canvas.Left="571" Canvas.Top="239" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下载点2" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="571" Canvas.Top="207" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下载点1" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="571" Canvas.Top="239" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下载点2" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <RadioButton Classes="hb" Canvas.Left="59" Canvas.Top="251" Width="168" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="申请注册码文件" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-      <Button Classes="hb" Canvas.Left="571" Canvas.Top="271" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下载点3" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="571" Canvas.Top="271" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下载点3" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
       <RadioButton Classes="hb" Canvas.Left="59" Canvas.Top="279" Width="315" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="已经收到注册码文件了，我要注册" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
       <TextBlock Classes="hb" Canvas.Left="13" Canvas.Top="317" Width="137" Height="13" Text="如有疑问请联系我：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-      <Button Classes="hb" Canvas.Left="540" Canvas.Top="319" Width="121" Height="33" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="检测环境是否兼容" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-      <Button Classes="hb" Canvas.Left="571" Canvas.Top="359" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="540" Canvas.Top="319" Width="121" Height="33" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="检测环境是否兼容" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+      <Button Classes="hb" Canvas.Left="571" Canvas.Top="359" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
     </Canvas>
     </ScrollViewer>
   </DockPanel>

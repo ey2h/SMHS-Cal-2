@@ -34,7 +34,7 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="936" Height="442" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 横梁材料 Frame (10,38) 930x36 ══ -->
         <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="38" Width="930" Height="36"/>
@@ -82,10 +82,10 @@
                   ItemsSource="{Binding TopProfiles}" SelectedItem="{Binding TopProfile, Mode=TwoWay}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   HeadersVisibility="Column" GridLinesVisibility="All"
-                  HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                  HorizontalGridLinesBrush="{DynamicResource HbBorderMid}" VerticalGridLinesBrush="{DynamicResource HbBorderMid}"
                   RowHeight="18" ColumnHeaderHeight="20" FontSize="11"
                   CanUserSortColumns="False" CanUserReorderColumns="False"
-                  Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1">
+                  Background="{DynamicResource HbControlBg}" BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1">
           <DataGrid.Columns>
             <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
             <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="90"/>
@@ -104,10 +104,10 @@
                   ItemsSource="{Binding BottomProfiles}" SelectedItem="{Binding BottomProfile, Mode=TwoWay}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   HeadersVisibility="Column" GridLinesVisibility="All"
-                  HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                  HorizontalGridLinesBrush="{DynamicResource HbBorderMid}" VerticalGridLinesBrush="{DynamicResource HbBorderMid}"
                   RowHeight="18" ColumnHeaderHeight="20" FontSize="11"
                   CanUserSortColumns="False" CanUserReorderColumns="False"
-                  Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1">
+                  Background="{DynamicResource HbControlBg}" BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1">
           <DataGrid.Columns>
             <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
             <DataGridTextColumn Header="Ix" Binding="{Binding Ix, StringFormat={}{0:0.###}}" Width="90"/>
@@ -126,10 +126,10 @@
                   ItemsSource="{Binding MidProfiles}" SelectedItem="{Binding MidProfile, Mode=TwoWay}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   HeadersVisibility="Column" GridLinesVisibility="All"
-                  HorizontalGridLinesBrush="#C8C8C8" VerticalGridLinesBrush="#C8C8C8"
+                  HorizontalGridLinesBrush="{DynamicResource HbBorderMid}" VerticalGridLinesBrush="{DynamicResource HbBorderMid}"
                   RowHeight="18" ColumnHeaderHeight="20" FontSize="11"
                   CanUserSortColumns="False" CanUserReorderColumns="False"
-                  Background="#FFFFFF" BorderBrush="#7A7A7A" BorderThickness="1"
+                  Background="{DynamicResource HbControlBg}" BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1"
                   ToolTip.Tip="中横框（参数库「单元横框三」）。第一页选「有中横结构」时追加 5 个量；选「无中横结构」时该段不出现在预演结果里">
           <DataGrid.Columns>
             <DataGridTextColumn Header="型材号" Binding="{Binding Code}" Width="110"/>
@@ -157,7 +157,7 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
             </ScrollViewer>
-            <TextBlock Text="{Binding PlaceholderText}" Margin="6,4" FontSize="12" Foreground="#6B6B6B"
+            <TextBlock Text="{Binding PlaceholderText}" Margin="6,4" FontSize="12" Foreground="{DynamicResource HbTextMuted}"
                        TextWrapping="Wrap" VerticalAlignment="Top" IsVisible="{Binding !HasResults}"/>
           </Grid>
         </Border>

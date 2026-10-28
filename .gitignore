@@ -39,3 +39,17 @@ docs/recon/template/
 
 # 桌面 VM headless 测试的独立输出目录
 .tmpbuild_dt/
+
+# 构建/运行产物（.build 为本项目约定的输出目录，out 为临时导出）
+.build/
+out/
+
+# IDA 崩溃转储（单文件数百 MB，绝不入库）
+*.dmp
+ida-*.dmp*
+
+# 反汇编/调试验证的本地中间件
+*.i64
+unpack/
+v31mem_clean/
+*.bin

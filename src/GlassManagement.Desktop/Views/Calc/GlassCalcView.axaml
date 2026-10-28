@@ -30,7 +30,7 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="936" Height="442" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 基本参数 Frame (9,29) 184x131 ══ -->
         <Border Classes="hbFrame" Canvas.Left="9" Canvas.Top="29" Width="184" Height="131"/>
@@ -168,7 +168,7 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
             </ScrollViewer>
-            <TextBlock Text="{Binding PlaceholderText}" Margin="6,4" FontSize="12" Foreground="#6B6B6B"
+            <TextBlock Text="{Binding PlaceholderText}" Margin="6,4" FontSize="12" Foreground="{DynamicResource HbTextMuted}"
                        TextWrapping="Wrap" VerticalAlignment="Top" IsVisible="{Binding !HasResults}"/>
           </Grid>
         </Border>

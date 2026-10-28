@@ -4,16 +4,16 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 门窗系统计算 | client 924x564 | 251 nodes (170 labels) | pairs=224 spread=14px dropped=0 declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="门窗系统计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="门窗系统计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="924" Height="564" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="924" Height="564" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 9 套 -->
       <TabControl Canvas.Left="6" Canvas.Top="10" Width="912" Height="527">
         <TabItem Header="连接件参数选择">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="912" Height="527" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="912" Height="527" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="447" Canvas.Top="67" Width="48" Height="13" Text="总宽(mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="447" Canvas.Top="91" Width="48" Height="13" Text="总高(mm)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="23" Canvas.Top="208" Width="342" Height="13" Text="整个门窗所用连接片数量          连接片钢板厚度         mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -27,14 +27,14 @@
         </TabItem>
         <TabItem Header="横向杆件参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="912" Height="527" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="912" Height="527" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="736" Canvas.Top="18" Width="54" Height="13" Text="组合方式:" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="竖向杆件参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="912" Height="526" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="912" Height="526" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="573" Canvas.Top="8" Width="333" Height="97"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="579" Canvas.Top="0" Text="计算门窗杆件时挠度取值"/>
           <ComboBox Classes="hb" Canvas.Left="792" Canvas.Top="14" Width="105" Height="20"/>
@@ -49,30 +49,30 @@
           <ComboBox Classes="hb" Canvas.Left="709" Canvas.Top="76" Width="57" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="829" Canvas.Top="76" Width="49" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="573" Canvas.Top="112" Width="331" Height="349" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
-          <Button Classes="hb" Canvas.Left="783" Canvas.Top="465" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="843" Canvas.Top="465" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="771" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="玻璃预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="832" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="783" Canvas.Top="465" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="843" Canvas.Top="465" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="771" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="玻璃预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="832" Canvas.Top="466" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Button Classes="hb" Canvas.Left="632" Canvas.Top="479" Width="113" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="关于玻璃最大面积控制的说明" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
-          <Button Classes="hb" Canvas.Left="680" Canvas.Top="480" Width="65" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单位说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="688" Canvas.Top="480" Width="65" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="单位说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="840" Canvas.Top="488" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="783" Canvas.Top="489" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="843" Canvas.Top="489" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="771" Canvas.Top="490" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="832" Canvas.Top="490" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="680" Canvas.Top="480" Width="65" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="单位说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="688" Canvas.Top="480" Width="65" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="单位说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="840" Canvas.Top="488" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="783" Canvas.Top="489" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="843" Canvas.Top="489" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="771" Canvas.Top="490" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="832" Canvas.Top="490" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="门窗系统横梃受力形式选择（此处图仅示意出横中梃，没有体现竖中梃）">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="912" Height="527" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="912" Height="527" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="门窗系统简图及玻璃参数(?)">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="912" Height="527" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="912" Height="527" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="583" Canvas.Top="56" Width="318" Height="13" Text="水平方向：相对挠度1/            绝对挠度           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Button Classes="hb" Canvas.Left="719" Canvas.Top="64" Width="130" MinHeight="25" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="&gt;&gt;选择横梃样式&lt;&lt;" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <TextBlock Classes="hb" Canvas.Left="583" Canvas.Top="80" Width="318" Height="13" Text="自重方向：相对挠度1/            绝对挠度           mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
@@ -100,13 +100,13 @@
         </TabItem>
         <TabItem Header="竖中梃参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="629" Height="205" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="629" Height="205" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="横中梃参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="625" Height="205" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="625" Height="205" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <RadioButton Classes="hb" Canvas.Left="487" Canvas.Top="7" Width="118" Height="33" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="玻纤增强聚氨酯" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="504" Canvas.Top="7" Width="118" Height="33" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="玻纤增强聚氨酯" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="170" Canvas.Top="13" Width="73" Height="20"/>
@@ -188,7 +188,7 @@
         </TabItem>
         <TabItem Header="钢框参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="625" Height="300" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="625" Height="300" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="144" Canvas.Top="104" Width="420" Height="13" Text="强度等级        树种        抗弯强度MPa   抗剪强度MPa      弹性模量MPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="56" Canvas.Top="163" Width="516" Height="13" Text="快速查找型材              ←请在此处输入待查找型材代号或其关键字，然后回车即可自动查找" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           </Canvas>
@@ -196,7 +196,7 @@
         </TabItem>
         <TabItem Header="内框参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="629" Height="297" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="629" Height="297" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="4" Canvas.Top="0" Width="561" Height="185"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="10" Canvas.Top="0" Text="连接片参数"/>
           <RadioButton Classes="hb" Canvas.Left="16" Canvas.Top="0" Width="62" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="样式7" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>

@@ -64,4 +64,31 @@ public class SealantEngineTests
         Assert.NotEqual(a.StructuralThickness.ToString("F3"),
                         b.StructuralThickness.ToString("F3"));
     }
+
+    /// <summary>
+    /// 结构胶位移能力进厚度算式 —— V31 实机实测（v31runs/sealant_act_probe.txt）：
+    /// 把 (153,266) 从 0.1 改成 0.12，厚度最小值 5.475 → **4.974**，宽度 6.121 不变。
+    /// ★ 4.974 只有「分子先 round3」才对：2.509/0.5043808=4.97440；
+    ///   若用未取整的 2.5090909 会得 4.9746 → 4.975，与 V31 差一个末位。
+    /// </summary>
+    [Fact]
+    public void 位移能力改0_12_厚度4_974_宽度不变()
+    {
+        var r = SealantEngine.Compute(SealantEngine.DefaultInputs() with { StructMovement = 0.12 });
+        Same("结构胶厚度最小值", r.StructuralThickness, 4.974);
+        Same("结构胶宽度不受位移能力影响", r.StructuralWidth, 6.121);
+    }
+
+    /// <summary>
+    /// 实际宽/厚来自界面下拉（V31 (153,200)=08、(153,178)=06），不是引擎里的常量。
+    /// 实测：把 (153,200) 改 08→09，输出「实际结构胶宽度取」8→9；改 (153,178) 06→07，厚度 6→7。
+    /// </summary>
+    [Fact]
+    public void 实际宽厚随界面下拉变化()
+    {
+        var r = SealantEngine.Compute(SealantEngine.DefaultInputs() with
+        { ActualWidth = 9, ActualThickness = 7 });
+        Same("实际结构胶宽度", r.ActualWidth, 9);
+        Same("实际结构胶厚度", r.ActualThickness, 7);
+    }
 }

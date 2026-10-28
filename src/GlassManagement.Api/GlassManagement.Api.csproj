@@ -28,8 +28,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GlassManagement.Core\GlassManagement.Core.csproj" />
-    <ProjectReference Include="..\GlassManagement.Calc\GlassManagement.Calc.csproj" />
-    <!-- Note: path works for both src/ and flat layout since relative path is same -->
+    <!-- 计算引擎项目在磁盘上的文件名是 GlassManagement.CalcCalc.csproj（AssemblyName 仍是
+         GlassManagement.Calc）。此前写成 GlassManagement.Calc.csproj 该文件并不存在，
+         导致本项目 MSB9008 警告 + CS0234/CS0246 three errors，整个 sln 也构建不了。 -->
+    <ProjectReference Include="..\GlassManagement.Calc\GlassManagement.CalcCalc.csproj" />
   </ItemGroup>
 
 </Project>

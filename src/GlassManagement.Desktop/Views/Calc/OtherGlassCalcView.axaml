@@ -13,6 +13,10 @@
       Frame 外片(19,259)/次外片(131,259)/次内片(243,259)/内片(355,259) 各 110x167
         厚度 ComboBox (x+40,279) 57x20；种类单选 y=306/328/351/373/396
       输出 (475,50) 277x377；按钮 预演(611,434) 下一步(671,458) 退出(611,458)
+      三个按钮 V31 侧 en 全为 1（2026-10-26 dump_otherglass.txt 复核）。
+      ★「下一步」不是终点：实机点它打开「生成计算书（支持微软office及金山wps office）」
+        屏（client 600x322），见 v31runs/otherglass_next.txt ⇒ 这里跳计算书面板。
+      尺寸 763×500 与今日实机 dump 完全一致，无需改。
     ⚠ 实机「基本参数」里还有两个 ComboBox (83,113)/(126,138) 含义未定位，暂未复刻。
   -->
   <DockPanel>
@@ -26,7 +30,7 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="763" Height="500" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="763" Height="500" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 外框 ══ -->
         <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="26" Width="745" Height="465"/>
@@ -134,7 +138,7 @@
 
         <!-- ══ 输出 (475,50) 277x377 ══ -->
         <Border Canvas.Left="475" Canvas.Top="50" Width="277" Height="377"
-                Background="White" BorderBrush="#808080" BorderThickness="1">
+                Background="White" BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1">
           <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Rows}" Margin="4,2">
               <ItemsControl.ItemTemplate>
@@ -152,9 +156,9 @@
                 Content="预演" Command="{Binding PreviewCommand}"
                 IsEnabled="{Binding PreviewEnabled}"/>
         <Button Classes="hb" Canvas.Left="671" Canvas.Top="458" Width="59" Height="24"
-                Content="下一步" IsEnabled="False"/>
+                Content="下一步" Click="OnNextClick"/>
         <Button Classes="hb" Canvas.Left="611" Canvas.Top="458" Width="59" Height="24"
-                Content="退出"/>
+                Content="退出" Click="OnExitClick"/>
 
       </Canvas>
     </ScrollViewer>

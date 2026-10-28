@@ -200,23 +200,44 @@ internal static class Program
         Console.WriteLine();
 
         // ============================================================
-        // [9] V31 双样本比例模型（N=5 / N=15 两点插值，端点必须复现实测比例）
+        // [9] 解析公式 × 4 组 V31 实机样本（recon/verify_multispan.py 44 项 0 差异）
+        //     型材：I=885950mm⁴ W=21452mm³ S=13606mm³ t=6mm BAY=1100mm E=70000MPa
+        //     取代此前的「双样本比例插值」——那批是反推值，已从引擎删除。
         // ============================================================
-        Console.WriteLine("[9] V31 双样本比例模型（端点复现实测比例）");
-        Check("N=5  支座抗弯比 = 131.832/98.123", MultiSpanStaticEngine.SupportBendingRatio(5), 131.832 / 98.123, 1e-4);
-        Check("N=15 支座抗弯比 = 67.841/62.316", MultiSpanStaticEngine.SupportBendingRatio(15), 67.841 / 62.316, 1e-4);
-        Check("N=5  第3跨抗弯比 = 62.121/98.123", MultiSpanStaticEngine.Span3BendingRatio(5), 62.121 / 98.123, 1e-4);
-        Check("N=15 第3跨抗弯比 = 41.964/62.316", MultiSpanStaticEngine.Span3BendingRatio(15), 41.964 / 62.316, 1e-4);
-        Check("N=5  支座抗剪比 = 11.694/7.309", MultiSpanStaticEngine.SupportShearRatio(5), 11.694 / 7.309, 1e-4);
-        Check("N=15 支座抗剪比 = 8.748/5.858", MultiSpanStaticEngine.SupportShearRatio(15), 8.748 / 5.858, 1e-4);
-        Check("N=5  第3跨抗剪比 = 1.37/7.309", MultiSpanStaticEngine.Span3ShearRatio(5), 1.37 / 7.309, 1e-4);
-        Check("N=15 第3跨抗剪比 = 0.982/5.858", MultiSpanStaticEngine.Span3ShearRatio(15), 0.982 / 5.858, 1e-4);
-        Check("N=5  第2跨后挠度比 = 11.4645/29.697", MultiSpanStaticEngine.SecondSpanDeflectionRatio(5), 11.4645 / 29.697, 1e-4);
-        Check("N=15 第2跨后挠度比 = 3.8185/9.587", MultiSpanStaticEngine.SecondSpanDeflectionRatio(15), 3.8185 / 9.587, 1e-4);
-        // 中间值必须落在两端点之间（插值单调性）
-        double mid = MultiSpanStaticEngine.SupportBendingRatio(10);
-        Note(mid > 1.0886 && mid < 1.3436, "N=10 支座抗弯比落在两端点之间",
-            $"{mid:0.0000} ∈ (1.0886, 1.3436)");
+        Console.WriteLine("[9] 解析公式 × 4 组 V31 实机样本（verify_multispan.py 44 项 0 差异）");
+        const double I9 = 885950.0, W9 = 21452.0, S9 = 13606.0, TW9 = 6.0, BAY9 = 1100.0;
+        var samples = new[]
+        {
+            (A: 600.0, L: 2700.0, Wk: 1.278, S1: 80.958, T1: 6.928, S2: 93.397, T2: 10.526,
+             S3: 52.972, T3: 1.198, Eq2: 93.988, Eq3: 52.986, Df1: 18.1775, Df2: 7.404),
+            (A: 600.0, L: 3000.0, Wk: 1.273, S1: 101.495, T1: 7.740, S2: 102.200, T2: 11.288,
+             S3: 69.017, T3: 1.239, Eq2: 102.821, Eq3: 69.028, Df1: 25.8395, Df2: 10.988),
+            (A: 600.0, L: 2400.0, Wk: 1.285, S1: 62.567, T1: 6.107, S2: 84.535, T2: 9.772,
+             S3: 39.105, T3: 1.144, Eq2: 85.098, Eq3: 39.122, Df1: 12.5275, Df2: 4.996),
+            (A: 800.0, L: 2700.0, Wk: 1.274, S1: 74.300, T1: 6.626, S2: 127.890, T2: 11.568,
+             S3: 43.316, T3: 1.382, Eq2: 128.412, Eq3: 43.338, Df1: 23.692, Df2: 9.7355),
+        };
+        foreach (var s in samples)
+        {
+            var (qk9, qd9) = MultiSpanStaticEngine.LineLoads(s.Wk, BAY9);
+            var f9 = MultiSpanStaticEngine.InternalForces(qd9, s.A, s.L);
+            string tag = $"A={s.A:0} L={s.L:0}";
+            Check($"{tag} σ1", f9.Span1Moment / W9, s.S1, 6e-4);
+            Check($"{tag} τ1", S9 * f9.Span1Shear / (I9 * TW9), s.T1, 6e-4);
+            Check($"{tag} σ2", f9.SupportMoment / W9, s.S2, 6e-4);
+            Check($"{tag} τ2", S9 * f9.SupportShear / (I9 * TW9), s.T2, 6e-4);
+            Check($"{tag} σ3", f9.Span3Moment / W9, s.S3, 6e-4);
+            Check($"{tag} τ3", S9 * f9.Span3Shear / (I9 * TW9), s.T3, 6e-4);
+            double b2r = WindLoadEngine.VbaRound(f9.SupportMoment / W9, 3);
+            double t2r = WindLoadEngine.VbaRound(S9 * f9.SupportShear / (I9 * TW9), 3);
+            double b3r = WindLoadEngine.VbaRound(f9.Span3Moment / W9, 3);
+            double t3r = WindLoadEngine.VbaRound(S9 * f9.Span3Shear / (I9 * TW9), 3);
+            Check($"{tag} eq2", WindLoadEngine.VbaRound(Math.Sqrt(b2r * b2r + t2r * t2r), 3), s.Eq2, 6e-4);
+            Check($"{tag} eq3", WindLoadEngine.VbaRound(Math.Sqrt(b3r * b3r + t3r * t3r), 3), s.Eq3, 6e-4);
+            var (df1, df2) = MultiSpanStaticEngine.Deflections(qk9, qd9, s.A, s.L, 70000.0, I9);
+            Check($"{tag} df1", df1, s.Df1, 6e-4, "mm");
+            Check($"{tag} df2", df2, s.Df2, 6e-4, "mm");
+        }
         Console.WriteLine();
 
         // ============================================================
@@ -242,17 +263,18 @@ internal static class Program
         Console.WriteLine("[11] 非基线几何估算（样本2 几何 N=5/A=1000/L=4000）");
         var est = MultiSpanStaticEngine.Estimate(5, 1000, 4000, 1.526, 1350, sec, 70000);
         Check("计算跨度 = L+A = 5000", est.CalcSpanMm, 5000, 1e-9);
-        Check("线荷载 q = 1.526×1350/1000", est.LineLoadNPerMm, 1.526 * 1350 / 1000.0, 1e-9);
+        // 设计线荷载 qd = round3(round3(wk,3)/1000×B)×1.5 = round3(2.06)×1.5 = 3.09
+        Check("设计线荷载 qd = round3(round3(wk)/1000×B)×1.5 = 3.09", est.LineLoadNPerMm, 3.09, 1e-9);
         Check("挠度限值 = 5000/250+7 = 27", est.DeflectionLimitMm, 27.0, 1e-9);
         Check("许用 抗弯 135", est.AllowBendingMPa, 135, 1e-9);
         Check("许用 抗剪 75", est.AllowShearMPa, 75, 1e-9);
         Check("许用 折算 148.5", est.AllowEquivalentMPa, 148.5, 1e-9);
-        Note(est.BendingSupportMPa > est.BendingSpan1MPa, "支座抗弯 > 第1跨抗弯（比例模型）",
+        Note(est.BendingSupportMPa > est.BendingSpan1MPa, "支座抗弯 > 第1跨抗弯（解析式 M2=qd·A(A+x)/2）",
             $"{est.BendingSupportMPa:0.0} > {est.BendingSpan1MPa:0.0}");
-        Note(est.DeflectionSpan1Mm > est.DeflectionSpan2AfterMm, "第2跨后挠度 < 第1跨挠度（比例模型）");
+        Note(est.DeflectionSpan1Mm > est.DeflectionSpan2AfterMm, "第2跨后挠度 < 第1跨挠度（解析式）");
         Note(Math.Abs(est.EquivalentSupportMPa
-             - Math.Sqrt(est.BendingSupportMPa * est.BendingSupportMPa + est.ShearSupportMPa * est.ShearSupportMPa)) < 1e-9,
-            "折算强度 = √(σ²+τ²)");
+             - Math.Sqrt(est.BendingSupportMPa * est.BendingSupportMPa + est.ShearSupportMPa * est.ShearSupportMPa)) < 1e-3,
+            "折算强度 = √(σ²+τ²)（round3 容差 1e-3）");
         Console.WriteLine($"      {est.Note}");
         Console.WriteLine($"      型材：{est.SectionSummary}");
         Console.WriteLine();
@@ -264,12 +286,15 @@ internal static class Program
         Console.WriteLine("[12] 风荷载 wk = w0·βgz·μz·[μs1·ψ(A)+μs内] —— V31 实机 5 点");
         const double w0Sh = 0.55;
         var terB = TerrainCategory.B;
-        Check("βgz(100,B)", WindLoadEngine.BetaGz(terB, 100), 1.495562, 1e-6, "");
-        Check("μz(100,B)", WindLoadEngine.MuZ(terB, 100), 1.995262, 1e-5, "");
+        // ★ 容差说明：以下期望值是 docs/V35_COLUMN_FORMULAS.md §13.1 的**理论未舍入值**，
+        //   而引擎按 V35 程序规则 round4（DigitsBeta=4，rtcRound @0xA703BC），
+        //   故允许 5e-4 的舍入差（这不是公式错，是"理论值 vs 程序舍入后值"的对比）。
+        Check("βgz(100,B)", WindLoadEngine.BetaGz(terB, 100), 1.495562, 5e-4, "");
+        Check("μz(100,B)", WindLoadEngine.MuZ(terB, 100), 1.995262, 5e-4, "");
         Check("βgz·μz(100,B)", WindLoadEngine.BetaGz(terB, 100) * WindLoadEngine.MuZ(terB, 100),
-              2.984039, 1e-5, "");
-        Check("ψ(3.30m²)", WindLoadEngine.Psi(3.30), 0.925817, 1e-5, "");
-        Check("ψ(6.00m²)", WindLoadEngine.Psi(6.00), 0.888672, 1e-5, "");
+              2.984039, 5e-4, "");
+        Check("ψ(3.30m²)", WindLoadEngine.Psi(3.30), 0.925817, 5e-4, "");
+        Check("ψ(6.00m²)", WindLoadEngine.Psi(6.00), 0.888672, 5e-4, "");
         // 5 个实测点，容差取程序显示精度 0.0005 kPa
         Check("wk 人工1.0 + 内0   (A=3.30)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.0, 3.30), 1.52, 0.0006, "kPa");
         Check("wk 人工1.0 + 封闭式(A=3.30)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30), 1.848, 0.0006, "kPa");
@@ -280,8 +305,9 @@ internal static class Program
             $"{WindLoadEngine.Wk(0.2, terB, 50, 0.5, 0.0, 3.3, applyFloor: false):0.####} → {WindLoadEngine.Wk(0.2, terB, 50, 0.5, 0.0, 3.3):0.###}");
         // K1 地形修正 / K2 风向影响（GB55001-2021 4.6.6 / 4.6.7，V31 帮助原文确认是乘进 wk）
         double wkBase = WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30);
-        Check("wk×K1(1.2)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30, k1: 1.2) / wkBase, 1.2, 1e-9, "倍");
-        Check("wk×K2(0.8)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30, k2: 0.8) / wkBase, 0.8, 1e-9, "倍");
+        // K1/K2 是乘进 wk 后整体 round4，故比值有 1e-4 级舍入差，容差 5e-4
+        Check("wk×K1(1.2)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30, k1: 1.2) / wkBase, 1.2, 5e-4, "倍");
+        Check("wk×K2(0.8)", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30, k2: 0.8) / wkBase, 0.8, 5e-4, "倍");
         Check("K1=0 兜底按 1.0", WindLoadEngine.Wk(w0Sh, terB, 100, 1.0, 0.2, 3.30, k1: 0) / wkBase, 1.0, 1e-9, "倍");
         Console.WriteLine();
 

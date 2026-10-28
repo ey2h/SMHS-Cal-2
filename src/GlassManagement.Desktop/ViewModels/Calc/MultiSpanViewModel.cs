@@ -134,14 +134,24 @@ public partial class MultiSpanViewModel : ObservableObject
         // ---- 非基线几何：挠度限值实算（已确证）+ 估算验算（如实标注） ----
         double lim = MultiSpanStaticEngine.DeflectionLimit(lMm, aMm);
         string bar = new string('*', 42);
-        // 分格宽取基本参数屏「立柱左分格宽度」（q = wk × 分格宽 / 1000）
-        double bayWidth = Session.BayColLeft > 0 ? Session.BayColLeft : 1350;
+        // 分格宽取基本参数屏「立柱左分格宽度」（q = wk × 分格宽 / 1000）。
+        // ★ 不设 1350 之类的兜底：分格宽也是第一页传下来的，缺失就停下来要用户回去算。
+        if (Session.BayColLeft <= 0)
+        {
+            Results.Clear();
+            OnPropertyChanged(nameof(HasResults));
+            StatusText = "分格宽度未从第一页传入——请回「基本参数输入」填写并完成计算";
+            return;
+        }
+        double bayWidth = Session.BayColLeft;
         var est = MultiSpanStaticEngine.Estimate(spans, aMm, lMm, Session.WindStandardKpa,
                                                  bayWidth, Session.ColumnProfile,
                                                  Session.ElasticModulusMpa);
 
         Add($"【复刻计算】几何 = 总跨数 {spans} / 跨长A {Fmt(aMm)} / 跨长L {Fmt(lMm)}（非实测基线）", ColorNote);
         Add(bar);
+        // ★ 这里的三元是「颜色语义」而非数值兜底：风荷载尚未算出（≤0）时用灰色提示色标出，
+        //   提醒用户上游未预演；不改变任何计算取值。（2026-10-27 全量清理确认，保留语义并登记）
         Add($"    风荷载标准值为:{Fmt(Session.WindStandardKpa)}KPa（来源：{Session.WindStandardSource}）",
             Session.WindStandardKpa > 0 ? ColorNormal : ColorNote);
         Add(bar);

@@ -1,8 +1,15 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text;
 using GlassManagement.Calc.Engines;
 using GlassManagement.Calc.Guifan;
+
+// ── 计算 API 的跨进程入口（给 Revit / 其它宿主调用）──
+// 放在最前：命中 --calc-api 就只做计算并退出，不跑下面的演示代码。
+if (args.Length > 0 && args[0] == "--calc-api")
+{
+    return GlassManagement.Calc.Demo.CalcCli.Run(args);
+}
 
 // 计算书 s1 玻璃工况（计算书 表6-1/6-3/6-4/6-5 + 表6-2.3/6-3 计算过程原值）
 const double a = 1200.0;      // 短边 mm
@@ -81,3 +88,6 @@ sb.AppendLine("- 表值(m/μ/α)与系数(guifan)此前已与原程序打印值�
 Console.WriteLine(sb.ToString());
 System.IO.File.WriteAllText(@"C:/code/Glass/local-data/recon/comparison_report.md", sb.ToString());
 Console.WriteLine("已写出 comparison_report.md");
+
+// 顶层语句必须所有路径有返回值（因为上面 --calc-api 分支返回 int）
+return 0;

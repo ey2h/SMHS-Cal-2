@@ -4,17 +4,17 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 杆件计算 | client 749x546 | 118 nodes (62 labels) | pairs=53 spread=6px dropped=0 declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="杆件计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="杆件计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="749" Height="546" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="749" Height="546" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <DataGrid Classes="hb" Canvas.Left="187" Canvas.Top="527" Width="537" Height="97"/>
       <!-- 互斥参数面板（源程序按选项切换显示），共 2 套 -->
       <TabControl Canvas.Left="7" Canvas.Top="10" Width="737" Height="512">
         <TabItem Header="《建筑结构荷载规范》GB50009-2012表8.3.3关于封闭式矩形平面房屋墙">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="737" Height="512" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="737" Height="512" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="399" Canvas.Top="1" Width="162" Height="130"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="405" Canvas.Top="0" Text="主龙骨截面参数"/>
           <Border Classes="hbFrame" Canvas.Left="564" Canvas.Top="1" Width="172" Height="130"/>
@@ -70,8 +70,8 @@
           <Button Classes="hb" Canvas.Left="564" Canvas.Top="453" Width="40" MinHeight="56" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text=" *   重要说明 *" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <Button Classes="hb" Canvas.Left="564" Canvas.Top="453" Width="40" MinHeight="56" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="*   重要说明 *" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
           <TextBox Classes="hb" Canvas.Left="586" Canvas.Top="455" Width="49" Height="18" FontSize="12" Text="500"/>
-          <Button Classes="hb" Canvas.Left="606" Canvas.Top="455" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="666" Canvas.Top="455" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="606" Canvas.Top="455" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="666" Canvas.Top="455" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="上一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBlock Classes="hb" Canvas.Left="551" Canvas.Top="458" Width="24" Height="13" Text="角度" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="69" Canvas.Top="468" Width="46" Height="18" FontSize="12" Text="1500"/>
           <RadioButton Classes="hb" Canvas.Left="226" Canvas.Top="468" Width="65" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="Q235" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
@@ -79,9 +79,9 @@
           <RadioButton Classes="hb" Canvas.Left="404" Canvas.Top="468" Width="65" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="Q235" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <RadioButton Classes="hb" Canvas.Left="476" Canvas.Top="468" Width="65" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="Q355" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBlock Classes="hb" Canvas.Left="9" Canvas.Top="471" Width="138" Height="13" Text="下分格高            mm" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="606" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="643" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="666" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="606" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="643" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="666" Canvas.Top="479" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="586" Canvas.Top="482" Width="49" Height="18" FontSize="12" Text="500"/>
           <TextBlock Classes="hb" Canvas.Left="533" Canvas.Top="485" Width="42" Height="13" Text="参数H/D" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBox Classes="hb" Canvas.Left="69" Canvas.Top="488" Width="46" Height="18" FontSize="12" Text="1500"/>
@@ -95,7 +95,7 @@
         </TabItem>
         <TabItem Header="采光顶参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="395" Height="389" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="395" Height="389" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbPanel" Canvas.Left="4" Canvas.Top="12" Width="384" Height="151"/>
           <Border Classes="hbPanel" Canvas.Left="8" Canvas.Top="13" Width="376" Height="150"/>
           <Border Classes="hbFrame" Canvas.Left="8" Canvas.Top="167" Width="381" Height="35"/>

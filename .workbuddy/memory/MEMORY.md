@@ -1,325 +1,44 @@
-# 项目长期记忆（Glass / 幕墙计算复刻，产品名 SMHS）
+# Glass / SMHS 幕墙计算复刻 — 长期记忆（索引）
 
-> 本文件只放**铁律 + 关键地址 + 当前状态**。细节全部在 `docs/` 与 `local-data/recon/`，按需读对应文档，不要往这里堆。
+> 全文细节已归档到同目录 `PROJECT_DETAIL.md`（地址总表、已闭合口径、工具坑），按需读；本文件只留铁律 + 状态。
+> **动手前先查 `docs/ACCEPTANCE_LEDGER.md`**（唯一进度源：✅已对拍 / 🟡引擎✅UI缺 / ⚠未取证 / ⬜未做 + 唯一 TODO 源）。本文件与日志只管过程，别拿日志当进度表。
 
 ## 一、铁律（违反即返工）
 
-1. **四面对拍**：任何量必须 `V31 实机 ｜ V35 实现 ｜ 复刻 ｜ 规范` 四列并排，缺一列不算验证完成。
-   取证顺序：**先挖 V35（脱壳镜像）→ 再 V31 实机 → 再规范条文**；V31≠V35 时以 V35 为准并登记差异。
-   优先级：**运行期实值 > 静态反汇编 > 程序文案 > 推测**。
-2. **严禁反推**（用户两次强调、一次警告）：不许用实测结果枚举/拟合/比值反推内部取值，再当 V35/V31 列。
-   取值只认三源：① V35/V31 代码 ② 参数库等数据文件 ③ 程序状态直读（槽数组/控件属性/内存实值）。
-   反推只能写「待验证假设」，**不得计入面数**。差一个末位也不许凑数 ⇒ 写「未定位」。
-3. **不看计算书推公式**：计算书/帮助/模板串只用于给分支贴标签，公式一律以代码为准。
-   已抓到反例：模板 `5qL⁴/384EI*(1-2.4(A/L)²)` vs 代码 `[5-24(A/L)²]`。
-4. **型材数据一律运行时读参数库**（`参数库.mdb` 导出 CSV），不许源码另编一套。
-5. **过程参数必须列表**：一列一个参数、四面并排、派生量给算式与代入值，不许只给最终结果。
-6. **逐面板复刻**：第一页 → 立柱 → 横梁 → 玻璃 → 连接 → 埋件焊缝 → 胶类。门禁 = 该页字段 100% ✅，
-   否则每个 ❌ 必须有 V31 地址或明确写「未定位」。判据 = **逐位一致（0 误差）**。
-7. 命名：复刻版不得出现 HuiBao/汇宝，用 **SMHS**；`Views.Calc` / `CW{NN}_*` / 项目 `GlassManagement.Calc` / 启动 `--calc`。
+1. **四面对拍**：`V31 实机 ｜ V35 实现 ｜ 复刻 ｜ 规范`，缺一列不算完成。优先级 **运行期实值 > 静态反汇编 > 程序文案 > 推测**；V31≠V35 以 V35 为准并登记差异。
+2. **严禁反推**：取值只认 ①代码 ②参数库数据文件 ③程序状态直读。反推只能写「待验证假设」；差一末位也不许凑数 ⇒ 写「未定位」。
+3. **公式以代码为准**，计算书/帮助/模板串只作分支标签，不作公式来源。
+4. 型材/材料数据一律**运行时读参数库**（`参数库.mdb` → `local-data/hb_mdb/*.csv`，59 表），不许源码另编。
+5. 逐面板复刻，门禁 = 该页字段 **100% 逐位一致（0 误差）**；过程参数一列一参数、四面并排。
+6. 命名只用 **SMHS**（禁 HuiBao/汇宝）；**界面载体只认 `XxxCalcView`**，`CW{NN}_*.axaml` 已弃用、不得接线。
+7. **「预演」是总开关**：不点则中间量/槽/输出全空。**所有测试从第一页开始**，wk 由第一页链产出下传，禁止后续屏覆盖凑数。
+   V31 默认 = C 类地形 + 地区未选（回落北京 0.45kPa）+ 标高 100 + 50 年 + 墙面区 1.0 + 封闭式 + wk≥1.0 下限。
 
-## 一之二、V31 驱动铁律：预演是总开关
+## 二、环境
 
-- **「预演」= 激活几乎所有计算的开关**（用户强调）。不点预演，中间量/公式分支根本不会执行，
-  读内存、读槽、读输出都拿不到东西；静态挖到的分支必须用预演去激活验证。
-- **多跨两个模型（多跨铰接连续静定梁 / 一次超静定梁）在立柱页点预演无效**：
-  必须先「下一步」进入多跨数据输入/计算新页面，在新页面点「预演」才会真算。
-- 驱动脚本：`v31_attach.ps1`（colbase/next-multi/grid-row 等）、`v31_model_probe2.ps1`（切模型→预演→抓图名）
+- 三套偏移**不可混用**：`unpack/unpacked_v31.exe` → `VA−0x400C00`；`v31mem_clean/*.bin` → `VA−0x401000`；V35 `unpack/unpacked_runtime.exe` → `VA−0x400000`。
+- **V31 启动（唯一正确姿势，2026-10-28 实测）**：`local-data/recon/v31_wait_trial.py`
+  ① 工作目录必须 = 安装目录（否则报「参数库文件（参数库.mdb）缺失，请重新安装本系统」→ 不出按钮 → 约 20s 自退 code=-1）
+  ② 环境变量必须完整（`CommonProgramFiles`/`ProgramFiles`/`LOCALAPPDATA`/`COMPUTERNAME`/`OS` 等；本 shell 被剥离，用 `v31_launch_clean.build_env()` 从注册表补齐）。
+     缺它 ⇒ COM 展不开 `%CommonProgramFiles%\System\msadc\msadce.dll` ⇒ `CoCreateInstance {3FF292B6-B204-11CF-8D23-00AA005FFE58}` 返回 0x80040154 ⇒ ADODC 连弹「Adodc1 没有注册类」。**这是启动方式造成的，不是注册表缺陷。**
+  ③ **先出 logo 介绍画面（ThunderRT6FormDC 567×281，无任何按钮），按钮约 T+21s 才出现**，超时要给 ≥120s，不得提前判定「按钮缺失」。
+  ④ **V31 点「试用软件」；V35 点「限期版本」（另有绑定主板/绑定硬盘）——两条通道互不通用，不可混用**（用户 2026-10-28 明确）。
+  ⑤ 进程必须后台常驻（本 shell 的子进程命令结束即被回收）：`v31_wait_trial.py --keep` 以后台任务跑。
+- msvbvm60 基址 **0x734D0000**；thunk 名表 `local-data/recon/v31_thunks.json`（语义统一 `out = c2 op c1`）。
+- IDA Pro 9.5，i64 `unpack/unpacked_v31.exe.i64`。
+- 构建：dotnet 用 `/c/Users/Jack/.dotnet/dotnet.exe`；仓库根有设备名 `nul` ⇒ 必须 `-p:OutputPath=`；换输出目录要 `-t:Rebuild`；`CS2012 锁定` → `taskkill //F //IM VBCSCompiler.exe`。
+- 点控件一律 **PostMessage**（`SendMessage` 遇 `DataGridWndClass`/模态框死锁）；V31 SetField 走剪贴板 + `EM_SETSEL` + `WM_PASTE`。
 
-## 二、环境与路径
+## 三、当前状态
 
-- V31（可运行、可脱壳、驱动对拍）：`local-data/recon/v31_keep.ps1`（托管启动）+ `v31_attach.ps1`（40+ action）
-- V31 脱壳 PE：`local-data/recon/unpack/unpacked_v31.exe`（24.8MB，3638 函数，ImageBase 0x400000）
-- V31 内存转储：`local-data/recon/v31mem_clean/v31_mem_00401000.bin`（base 0x401000，覆盖 0x401000–0x1CD0000）
-  **文件偏移 = VA − 0x400C00**（不是 −0x400000，后者偏 0x400 字节）
-- V35：运行 `MQJSSV35.EXE`（ASPack）；静态 `local-data/recon/unpack/unpacked_runtime.exe`（base 0x400000，偏移 = VA − 0x400000）
-  **V35 实机在本机不可用**（点计算即弹「未注册」+ 80010108 退出）⇒ V35 侧只能静态挖；按边界不碰注册。
-- 参数库：`C:\code\Glass\参数库.mdb` → `local-data/export_hb_mdb.ps1` → `local-data/hb_mdb/*.csv`（59 表）
-- msvbvm60 真实基址 **0x734D0000**（0x731F0000 是 comctl32）——判断指针归属必须用模块基址+RVA
-- IDA Pro 9.5 `C:\Program Files\IDA Professional 9.5`；MCP `ida` 条目待连接器管理页点"信任"
-
-## 三、关键地址（现役）
-
-| 对象 | 地址 |
-|---|---|
-| V31 立柱函数 `sub_18BD010` | `0x18BD010–0x18E9555`（181,573B / 43,508 指令 / 189 个 rtcRound）——**原判定不变**（曾据"断点未命中"想推翻，但断点自检 0 命中 ⇒ 那批未命中不作证据，已撤回）|
-| 面板函数分簇（旁证） | A 簇 `0x89EA1D/0x8C796E/0x8D70FD/0x8E7E5B/0x8F8F6D(+0x9066B3)` 引「抗弯矩预选/抗弯/抗剪」；B 簇 `0xD291C6/0xD34ED9/0xD418AF/0xD4CCE9` 引「惯性矩/挠度」；立柱输出跨两簇 ⇒ 非"一函数一面板" |
-| V35 对应立柱函数 | `0x1D442DA–0x1D70913`（181,817B，差 244）|
-| V31 跳板 → 立柱 | `vtable+0xA0 = 0x4579DC` → `e9 rel32` → 真函数；方法表 `0x41B40C`（+0x14=跳板）|
-| V31 槽数组 | `ds:[0x1C91168]`，16B/槽 VARIANT，BSTR 长度在 **ptr−4**；`[44]`A `[45]`lgA `[46]`μs1ψ `[47]`μs合 `[76]`g |
-| V31 立柱链变量区 | `0x1FBE400`（qk/qd/M/wReq/lim/iReq/σ/qdRaw/V，每次预演刷新）|
-| V31 常量池 | `0x401E88–0x401F78`；ψ 分母 1.4 @ `0x4017F8`（全镜像唯一）|
-| thunk 名表 | `local-data/recon/v31_thunks.json`（251 个）：rtcRound `0x41371A`、VarDiv `0x413708`、VarMul `0x413714`、VarPow `0x41370E`、rtcLog `0x4135B8` |
-| V31 风荷载函数 | `0xA6E000–0xA74000`（βgz/μz 四类块、内压分支）；V35 对应 `0xA62C07–0xA86FEE` |
-
-## 四、已闭合的公式（有代码地址，勿再猜）
-
-- `wk = w0·βgz(z)·μz(z)·[μs1·ψ(A) + μs_int]`；下限 w0≥0.3、wk≥1.0
-- **wk 按计算对象分两套（2026-10-25 定案）**：支承口径 = 立柱/横梁/连接/埋件（`μs1·ψ(A)`）；
-  面板口径 = 玻璃/胶类（`μsl=1.0` 不折减）。`P=w0·βgz·μz·K1·K2` 相同，只体型系数项分岔。
-  两屏读同一槽位 `slot[0x45]`（`0xA7CE09` 链），立柱填 0.926、玻璃填 1.0。详见 `docs/WIND_LOAD_TWO_SCOPES.md`
-- βgz `1+2·2.5·I10·(z/10)^−α`；β 下限 `max(βgz, 1+0.7/√μz)`（GB55001 4.6.5-2，曾漏）
-- μz = C·(z/10)^p；A/B/C/D 系数与截断高度见 `docs/WINDLOAD_CODE_MAP.md`
-- **ψ(A) 分母 = 1.4（不是 lg25）**：`slot[46]` 唯一写入点 `0x00E2CE3E`，链上 `0xE2CD45 fld 0x4017F8`
-- 广东规范两处差异：g 2.5→3.0（w0≥0.5 门槛）+ 封闭式内压 0.2→0.3
-- **取整必须单次×10^d + 半偶 + 除法**（见「四之二」）；βgz/μz/β 4 位、μsi/wk/qk/qd/σ/τ/lim 3 位
-- 立柱链顺序不可换：K1/K2 乘在 qk 取整**之后**；`lim` 先 round3 再算 iReq；抗剪用显示值 wk×1.65；抗弯用 raw wk
-- 单元式：`f1左=γ0·(N/2A1n + M·I1x/(I1x+I2x)/γW1nx)`；`q_k左 = round3(q_k·I1/(I1x+I2x))` 后算 df；抗弯取 min(Wx1,Wx2)
-- 多跨静定梁：内力按 L（非 L+A）、限值按 L+A、输出与 N 无关；限值 ≤4500→/180，>4500→/250+7
-- 玻璃：σ=6mηqa²/t²、df=ημqa⁴/D，D=Et³/11.52，η=1 或 θ^−0.5
-- **玻璃 7 构型全部闭合**（单片/中空/夹层/空+夹PVB/空+夹SGP/双中空/双夹层-中空）。
-  双夹层-中空是 **4 片**（外夹层2+腔+内夹层2），41 星、容许值无后缀。
-  两段独立代码口径相反：双中空的 qe 用 round6(qg)、θ round3、t_e round3；
-  双夹层-中空的 qe 用未取整 qg、θ round4、t_e 不 round3。
-  **份额 round6 遇平局必须走 decimal**（double ulp 会把 0.0003425 推成 0.000343）。
-
-## 五、当前状态（2026-10-25）
-
-- 第一页 40 案：**280/280 逐位**（B10 已随 qd 链定位闭合）
-- 立柱页：单跨简支（受拉/受压）、双跨梁、连续梁、多跨静定（**44/44**）、
-  多跨超静定（30/30）、**钢铝结合（60/60）** 均已逐位；型材矩阵 105/105、自定义材质 11/11
-- **横梁帮助**：安装目录 `html/B03.htm`「幕墙横梁计算」（三角形/梯形 45° 分配、非挂式承上分格、取最大跨）；
-- **横梁页**：界面 + 12 个输出量 + 函数区 **0x8ABD3A–0x8B7481**（42 个定稿点）已定位，
-  **横梁槽数组 `ds:[0x1C911A0]`**（与立柱 0x1C91184 分开）；
-  **预选Wx = round3(H·g·1.3)·B²/8/[σ]**（竖向简支）、
-  **预选Wy = (qd + round3(B·g·0.8·1.4)/2)·B²/12/[σ]**（水平固端）、B=1100/H=1380；
-  **竖向 g 来自参数库「幕墙自重参数」计算横梁时自重**（单片 300/中空夹层 550 N/m²）；
-  **水平向第二项是地震作用不是自重：`gp = round3(r·g·5αmax·1.4)/2`**，
-  `αmax` 来自参数库**「地区参数」表 αmax 列**（北京 8 度 0.16、上海 7 度 0.08），全局 `0x1C913D8`；
-  切上海实测 wk 1.285→1.571、Wy 2583.574→3007.074（`region_flow.py` 真实鼠标点地区表）；
-  已登记 bug：「计算中不考虑地震作用」开关**不控横梁页**地震项；
-  **两个方向挠度系数不同**：垂直 `5·(H·g)·B⁴/(384EIx)`、水平 `qk·B⁴/(120EIy)`；
-  限值也不同：垂直 B/250、水平 B/180；
-  **预选 Ix/Iy 与挠度同构**（解出 I、lim 要先 round3）；**抗剪输出标签 tx/ty 与实际方向相反**；
-  `V_v = H·(B·g·1.3)/2`（用 H 作跨度）、`V_h = 1.5·qk·B/4 + B·(B·g·0.8)/4·1.4/2`；
-  回归 `verify_beam.py` **30/30** + `verify_beam_trap.py` **53/53**（5 组尺寸含中间比、临界）；
-  **引擎 `HorizontalBeamEngine.cs` + `HorizontalBeamTests.cs`（7 例），Calc 单测 79/79**；
-  横梁 12 个输出量已全部逐位一致（`docs/V31_BEAM_UI.md` 四之三 + 水平向梯形分支）；
-  **尺寸取法**：B = 立柱左右两侧分格宽取大值、**自重高度取上分格（不平均）**；
-  **分布形式统一式**（`r=min(B,H)`、`u=r/(2B)`，两端连续）：
-  **`M_y = q_y·B²·(3−(r/B)²)/24`**（r=B→1/12、r→0→1/8）、
-  **`k_df = (3.125−5u²+2u⁴)/240`**（u=0.5→1/120）；
-  `qk = round3(r·wk/1000)`、**`q_y = round3(qd+gp)` 需二次取整**、
-  `V_h = 1.5·qk·B·(1−u)/2 + B·(r·g·0.8)·(1−u)/2·1.4·0.5`（风项用 B、自重项用 r）；
-  **B>H 分支整段换到 `0x8CDF34`**（B≤H 在 0x8AEA00）；
-  **第一页玻璃配置强联动**（改中空+夹层 → 竖向一组 +83%），取证必须固定第一页；
-  **单元式横梁 2026-10-26 全闭合**（上/下框 17 量 + 中横 5 量；水平链按 B、竖向按 H；
-  弯矩链取整 0.527 / 剪力链未取整 0.5265；输出 55 行逐字符复刻）→ `docs/V31_BEAM_UI.md` 第九节
-- **钢铝结合**：`docs/V31_ALLOY_CODE.md` + `Engines/AlloyColumnEngine.cs`；
-  函数区 `0xCE08FA–0xCE6BE2`；口径 M_钢 最后 /1.05、抵抗矩取 min(Wx1,Wx2)、钢份额用 qd
-- **横梁公式已全闭合**：`Engines/HorizontalBeamEngine.cs` + `docs/V31_BEAM_UI.md`（含梯形分支）
-- 玻璃/连接/埋件/胶类四面板：零实现（Pure XAML，0 Binding）
-- 待落盘：`ida_out` 产物生成脚本（可复现性）
-
-## 六、文档索引（细节看这里）
-
-- 规程 `docs/COMPARE_PROTOCOL_4WAY.md`；经验手册 `docs/RE_EXPERIENCE_PLAYBOOK.md`
-- 立柱 93 条公式表 `docs/V31_COLUMN_MODEL_FORMULAS.md`；代码地图 `docs/V31_COLUMN_CODE_MAP.md`
-- **立柱 45 分支（图号→公式）`docs/V31_MODEL_CASE_MAP.md`**：选择子 = `Form->[+54h]` 图名串，
-  01=悬臂15种 / 02=简支21种 / 03=带悬臂简支9种（依据帮助 B24 原文）；图号↔界面模型仍待定位
-- 取整对齐 `docs/ROUNDING_ALIGNMENT_V35.md`；第一页 40 案 `docs/COMPARE_BASIC_PAGE40.md`
-- 风荷载代码地图 `docs/WINDLOAD_CODE_MAP.md`；槽映射 `docs/V31_SLOT_MAP.md`；模板字典 `docs/FORMULA_TEMPLATE_DICTIONARY.md`
-- **钢铝结合 `docs/V31_ALLOY_CODE.md`**（含四面对拍 + 静力学形式对照 + 未闭合清单）
-- **横梁页 `docs/V31_BEAM_UI.md`**（界面坐标 + 输出清单 + 待取证项）
-- 材质表：**参数库 59 表没有型材材料许用值表**（连接串 `.\jss\参数库.mdb`），
-  铝/钢 f、fv 只能实机逐个切换读输出；板类表才有强度列（铝单板/钢板等，是板材不是型材）
-- 单元式 `docs/COMPARE_UNIT_COLUMN_CODE.md`；工具链 `docs/RE_TOOLCHAIN_SETUP.md`；流程参数表 `docs/PROCESS_PARAM_TABLE.md`
-
-## 七、工具（`local-data/recon/`）
-
-`v31_slice.py`（x87+Variant 符号执行，还原 111/189 定稿点算式）、`v31_thunk_names.py`、`compare_basic40.py`、
-`v31_attach.ps1`（basicsweep/colbase/psidisc/unitmid/midrig/hold）、`dump_v31_mem.py`、`v31_slot_probe_v2.py`、
-`ida_map.py`（风荷载索引）、`ida_blocks.py`（分块反编译）
-`ida_out/`：`v31_column_insns.txt`（43,508 行）、`v31_roundpoints_full.txt`、`v31_roundpoint_expr.tsv`
-
-## 七之二、调试器（2026-10-25 装）
-
-- 便携 **x64dbg**：`C://code//Glass//.tools//dbg//x64dbg//release//x32//x32dbg.exe`（32 位用 x32）
-  来源 `https://down.52pojie.cn/Tools/Debuggers/x64dbg_2026-05_27.zip`（直连可下，代理会 403）
-- 自建 ctypes 调试器 `local-data/recon/v31_bp_pic.py`（attach + 0xCC 断点 + 读寄存器/内存 + 看门狗强制 detach）
-- **血的教训**：调试器进程被打死时，Windows 会**连带杀掉被调试进程**（V31 因此死了 3 次）。
-  所以：单次运行必须 <15s、自带看门狗、绝不留后台调试器；杀掉 python 前先 detach。
-
-## 八、踩过的坑（速记）
-
-- V31 控件 `GetWindowTextW`/`WM_SETTEXT` 无效 → 读 `WM_GETTEXT(StringBuilder)`、写 剪贴板+`EM_SETSEL`+`WM_PASTE`
-- SetField 前必须自己 `Clipboard::SetText`，否则粘上残留 → 报「请输入正确数字」、输出全空
-- 立柱屏两套 Frame 坐标会撞 → 必须 `FindByRelStrict`（只认可见）
-- 长扫描每案立即落盘（丢过 37 案）；含中文 .ps1 必须 UTF-8 带 BOM
-- 构建坑：仓库根有设备名文件 `nul` → `dotnet build` 报 Stack overflow；用 `-p:OutputPath=C:/code/Glass/.tmpbuild/` 绕行
-- Avalonia UIA：Radio/Check 的 Content 必须是字符串；RDP 下鼠标点击对 Avalonia 无效，必须走 UIA
-
-## 二之二、git 推送授权（2026-10-25 配置）
-
-- 根因：`credential.helper=manager` 但机器上**没装 GCM 可执行文件** → `could not read Username`。
-- 已配 **SSH**：`~/.ssh/id_ed25519`（ed25519，无口令）+ `~/.ssh/config` 走 `ssh.github.com:443`
-  （22 端口不可用时用 443）；`git@github.com` 已验证可连通（Permission denied(publickey) = 能到）。
-- origin 已切为 `git@github.com:ey2h/SMHS-Cal-2.git`。
-- **需用户一次性操作**：把 `~/.ssh/id_ed25519.pub` 内容贴到 GitHub → Settings → SSH and GPG keys → New SSH key。
-- 之后 `git push origin feat/phase3-extend` 即可，无需再输密码。
-
-## 三之二、★ 立柱计算函数 = 0xD1E9E0（2026-10-25 Frida 实证，取代旧结论）
-
-- **实证方法**：Frida 挂 `rtcRound(0x41371A)`，取 `this.returnAddress` 统计 → 预演时命中集中在 **0xD2xxxx**；
-  反查函数首（0x55 8B EC）= **0xD1E9E0**（>46KB，含 1.5 引用 0xD233AF/0xD27E25/0xD2E74D）。
-- **qd 链（0xD23320–0xD23436）**：
-  `__vbaVarMul` → `rtcRound(.,3)` → 写 **slot[8]=qk**；`fld 1.5(VT_R8)` → `__vbaVarMul(slot[8]×1.5)` → `rtcRound(.,3)` → 写 **slot[9]=qd**；
-  槽数组基址 **dword_1C91184**（第三个槽数组）。
-- **实测类型**（hook 0xD23431）：slot7=**wk=0.001285 N/mm²**、slot8=**qk=1.414 (VT_R8)**、qd 输入=**2.121 (VT_R8)**。
-  ⇒ qk/qd 全是 **double**，乘法是 double×double，**不是 decimal**。
-- 旧结论 `sub_18BD010`/`sub_89EA1D` 均**不是**立柱计算本体（Frida 实测 0 命中；rtcRound 对照 3+ 次命中证明链路有效）。
-- B10 直接调 rtcRound 实测（v31_frida_round.py）：入参 double →
-  3.0495…→3.05 / 4.0515…→**4.052** / 4.1325…→**4.132** / 2.0475…→**2.047**。
-  这 4 个结果**同时**否定「double 就近」和「decimal 半偶」，舍入算法仍需用真实 qk 位模式复现。
-
-## 四之二、★ rtcRound 算法定案（**2026-10-26 修订，取代 10-25 版**，9/9 点位全等）
-
-```
-double VbaRound(x, d):
-    p = 10^d                       // 循环累乘，精确
-    y = x * p                      // ★ 只乘一次（不能拆成重复 ×10）
-    n = 四舍六入五成双(y)           // 半偶只对「恰好 .5」生效
-    return n / p                   // 除法，不是 n*10^-d
-```
-- 10-25 版说「必须逐次乘 10」**是错的**：逐次乘把 `0.5265000000000001×10³` 二次舍成**精确的 526.5**
-  → 半偶得 526，而实机是 527（单元式中横 σ 差 0.042 的根因）。单次乘得 526.5000000000001 → 527。
-- 缩放是 **IEEE double（SSE2）**，不是 x87 80 位：`4.1325×1000` 在 double 下舍回精确 4132.5（半偶→4132，合实机）；
-  80 位会得 4132.500000000000284 → 4133，与实机矛盾。
-- 实证：Frida 直接 call V31 `0x41371A` 读 VT_R8 位模式；并补上 2.7005…→2.701（单次乘天然正确，此前误记为做不到）。
-- 已实现：`WindLoadEngine.VbaRound`；单测 `VbaRoundTests`（含 4 个平局点位模式比对）。
-- ⚠ 此前"必须用 decimal"的结论作废（v35 侧另说，v31 实测是 R8）。
-- **复刻铁律**：参与计算的中间量一律 **double**（与 V31 的 VT_R8 对齐），**禁止 decimal 参与运算**；
-  decimal 只可用于显示/格式化。**运算顺序**必须与代码一致（N/mm²×mm、单次×10^d、n/10^d），否则差末位。
-
-## 四之二b、★ 单元式横梁（2026-10-26 全闭合）
-
-- 上/下框：**水平链按跨度 B**（不取 min(B,H)），竖向链按 H。`min(B,H)` 只属构件式（0x8CDF34）。
-- 中横框 5 量：**弯矩链与剪力链不同源** —— 弯矩用 `round3(round3(1350·g)×1.3)=0.527`，
-  剪力用未取整 `0.5265` → `V_v=289.575`（槽 [153] 直读）。τy = round3(289.575/115800/5)=1.497393。
-- 反汇编互证：`0x96A9AD`（τy）、`0x96AB43`（τx）、`0x9698A4`（slot119 取整）、`0x9699F8`（slot120）。
-- 输出文案逐字符复刻：前 3 个分隔符 35 星、抗剪段起 36 星、**中横抗弯后又回 35 星**；
-  实机原文 `v31runs/py_u_mid.txt`（有中横 55 行）/ `py_u_nomid.txt`（35 行）。
-- `ShowTrace` 默认 false：诊断行会破坏逐行一致。
-
-
-## 四之三、★ 第一页 40 案 = 280/280（2026-10-25 07:30）
-
-- 立柱函数 `0xD1E9E0`；qd 链 `0xD23320–0xD23436`；槽数组 `dword_1C91184`（slot7=wk(N/mm²)、8=qk、9=qd）。
-- **两步不同语义**（各自被实机钉死）：
-  * qk：十进制半偶（`2.7005000000000003 → 2.701`，B08/B09 证据）
-  * qd：`VbaRound`（逐次×10→半偶→`n/10^d`；B01/B08/B10/B12 位模式 4/4）
-- VbaRound **不是** rtcRound 全局等价（对"略高于平局"的 2.7005 会舍错），只在 qd 可达输入上等价。
-- 复刻基线生成：`dotnet run --project src/GlassManagement.Desktop -- --calc --selftest=basic40 --dump-preview=...`
-  再跑 `python local-data/recon/compare_basic40.py`；当前 **280/280 = 100.0%**。
-
-## 一之三、★ 铁律：所有测试必须从第一页开始（用户强调）
-
-- wk / μs / 场地 / 地区 / 地形 **全部由第一页计算链产出后传到立柱页**，
-  不允许在立柱页或测试代码里覆盖 wk 凑数（`--selftest` 里也禁止）。
-- 立柱页对拍前必须先确认第一页默认值与 V31 一致：V31 启动默认 = **C 类地形** + **地区未选
-  （回落参数库首行「北京」0.45kPa）** + 标高 100 + 50 年 + 墙面区 1.0 + 封闭式 + ≥1kPa 下限。
-  复刻曾默认 B 类 + 上海，导致 wk=1.848 而 V31=1.285，立柱屏全部对不上。
-
-## 三之三、★ 双跨梁 = 函数 0xD35D8C（2026-10-25 全链闭合，14/14）
-
-- 边界 0xD35D8C–0xD42762；槽数组 `dword_1C91184`（slot2=L1、3=a、4=b、19=-M、22..27=系数）。
-- 两跨：`a=L2, b=L1-L2`，**等跨时 a-1 / b+1**（L2=1500→1499/1501；L2=1200→1200/1800）。
-- `M=round3(qd(a³+b³)/8/L1)`；`V=max(a·qd/2+M/a, b·qd/2+M/b)`；`τ=Sx·round3(V)/I/t`；
-  `lim=Lc/180`；`df=qk·kf·Lc⁴/(24EI)`；`I_req` 同式但除 `round3(lim)`。
-- **kf 是一条 20 步的解析链**（k1..k12，含 Atn/Cos/Sqr，两个 π：3.14 与 3.1415926），
-  见 `docs/V31_DOUBLESPAN_CODE.md`；**k3=0.62475 不能取整**（取整会偏 0.24%）。
-- 完整实现：`src/GlassManagement.Calc/Engines/DoubleSpanColumnEngine.cs`；
-  单测 `tests/.../DoubleSpanColumnTests.cs`（4 例）；对拍 `compare_doublespan.py` → 14/14 = 100%。
-- 取证工具（新增）：`v31_frida_ops.py`（hook 全部 Variant helper 读实参）、`v31_frida_vars.py`
-  （读 [ebp-X] 局部量）、`v31_frida_rounds.py`（定稿点入出参）、`v31_model_run.ps1`（切模型+设跨度+预演落盘）。
-- helper 语义：Div/Mul/Pow/Add **一律 args[2] op args[1]**；Sub=0x41377A、Neg=0x413804、
-  Atn=0x4137FE、Cos=0x4137F2、Sqr=0x4137F8。
-
-## 三之四、立柱页矩阵对拍（2026-10-25，84/84 + 型材 3/3）
-
-- **矩阵**：单跨受拉×3 跨度 / 单跨受压×2 / 双跨梁×7 = 12 组 × 7 项 = **84/84 逐位一致**。
-  单跨受拉与受压在构件式下**结果完全相同**（V31 实测）。
-- **挠度限值有 20mm 上限**：`lim = min(L/180, 20)`（常量 `dbl_4019E0=20`，引用点 0xD3CBB3/0xD3DE6F）；
-  3600 是边界（=20），3700/4500/5000 都是 20；`I_req` 用截断后的 lim。
-- **L2 必须 < L1/2**：等于时自动 −1（→1499），大于时弹「无效输入」不计算。
-- **wk→qk 必须走十进制**：V31 slot[7]=0.0012650000000000001（比浮点 1.265/1000 大 1ulp），
-  → qk 输入 1.3915000000000002 → 1.392；double 直算得 1.391（错一档）。修法：wk 先 `Math.Round((decimal)wk3,3)`。
-- **型材**：4000 组 I/W/S/t 全从 `立柱.csv` 走；预选量（抗弯/惯性矩）与型材无关（V31 同）。
-- 工具：`v31_col_matrix.ps1`、`v31_limit_probe.ps1`、`v31_profile_run.ps1`、`v31_py.py`（纯 python 驱动）、
-  `kill_dialogs.py`、`compare_matrix.py`。
-- **驱动坑**：① 预演单次点击偶发不刷新 → 每组点两次；② L2≥L1/2 弹「无效输入」必须先收掉；
-  ③ 点控件用 PostMessage（SendMessage 遇模态框死锁）；④ python ctypes 需声明 GlobalAlloc restype=c_void_p。
-- 未完成：自定义材质（填值 ok，预演无输出）、连续梁、多跨（要「下一步」进「多跨数据输入」Frame）、钢铝结合。
-
-## 三之五、连续梁 = 函数 0xD42762；连续梁/自定义材质已闭合（2026-10-25）
-
-- **连续梁（四点三跨）**：`0xD42762–0xD4DB91`。
-  `M=round3(0.1·qd·L²)`、`V=0.6·qk_raw·L·1.5`、`df=qk·0.00677·L⁴/(E·I)`、
-  `I_req` 同式除 `round3(lim)`、`lim=min(L/180,20)`。
-  ★ **剪力和弯矩取的 q 不同**：剪力用未取整 qk_raw（bay×wk_Nmm2），弯矩用取整 qd，挠度用取整 qk。
-  系数全是代码字面量：0.1 / 0.6 / 0.00677 / 1.5。
-- **「其它材质」控件归属**（探针填 111/222/333 反查）：`(529,162)`=[σ]、`(529,185)`=[τ]、
-  `(529,140)`=E（禁用恒 70000）、`(391,162)` 不影响输出。实测 f=90 → `W_req=M/90`。
-  复刻字段：`Session.CustomMaterial/CustomElasticModulus/CustomAllowBending/CustomAllowShear`。
-- **矩阵总账 105/105**（15 组×7 项）：单跨受拉3 + 单跨受压2 + 双跨7 + 连续梁3。
-- **多跨**：必须「下一步」进 `Frame '多跨数据输入' (9,29)` 再预演；输出格式完全不同
-  （第1跨/第3跨/第2跨支座处 三段，含折算强度 √(σ²+τ²)，限值 18.333=3300/180）。
-  控件：DataGrid(329,157)、输入 (102,179)/(102,221)/(102,296)、确认数据(171,346)、预演(801,383)。
-  公式**未挖**，是下一步。
-- 钢铝结合也确认有独立 Frame `'钢铝结合型材参数' (9,29)`，同样要「下一步」。
-
-## 三之六、多跨铰接连续（静定）= 函数 0xD53595（2026-10-25 部分闭合 28/28）
-
-- 页面：立柱页点**预演无输出**，必须「下一步」进 `Frame '多跨数据输入' (9,29)`；
-  控件 总跨数(102,179)/跨长A₁(102,221)/跨长L₁(102,296)/确认数据(171,346)/预演(801,383)。
-  驱动：`v31_py.py multi --model 多跨静定 --n --a --l`（自带「上一步」回退）。
-- 函数 **0xD53595–0xD73EE5**（133KB）；已闭合（4 组样本 28/28，`verify_multispan.py`）：
-  * `X=(L²−A²)/L`（有效跨，`0xD5B301` 用 1−(A/L)²）
-  * `M1=qd·X²/8`、`V1=qd·X/2`
-  * `M2=qd·A(A+X)/2`、`V2=V1+qd·(A/2)(2+A/L)`
-  * `σ=M/W`、`τ=Sx·V/(I·t)`（Sx=13606）、`σ_eq=√(σ²+τ²)`（**不是** √(σ²+3τ²)）
-  * `lim=min((A₁+L₁)/180, 20)`；风荷载从属面积 `A_trib=(A₁+L₁)×分格宽`
-- **第3跨已闭合**（36/36）：记 `t=(1−(A/L)²)/2`，`S₃=V1−qd·A·t`、`M3=M1−S₃·A·t`、
-  `V3=rtcRound(S₃·A/L, 0)`（**0 位**取整，故恒为整数）。`Form+84h`=各跨剪力序列、
-  `+4Ch`=A、`+68h`=L（`v31_frida_arrays.py` 直读）。减数块取的是 `arr84[3]`。
-- 仍未闭合：两处挠度。程序自带文本 `"d~f1~=d~f1,mid~+d~f2,C~/2="`（`0xD662DF`），
-  实测 `df1=4.3485+13.829`、`df2=2.855+4.549`，两项来源未拆（局部量被多分支复用）。
-- ★ **thunk 名纠正**（用 IAT 指针−0x734D0000 对 msvbvm60 导出表）：0x41377A=`__vbaVarSub`、
-  0x4136BA=**`__vbaFreeVarList`**（此前误当 Add，209 条记录全是噪声）、0x4135BE=`__vbaVarCopy`、
-  0x4137F2/FE/F8=`rtcCos/rtcAtn/rtcSqr`。语义统一 `out=c2 op c1`。
-
-### 多跨静定 挠度（2026-10-25 续）
-- `df1 = df1mid + df₂C`；记 `r=A/L`：
-  `N₂ = A²·V1·L/3`、`c₁ = 1−4r²−3r³`、`c₂ = 1+r`、
-  `df1mid = [(1+r)N₂ − c₁·A·qk·L³/24]/(2EI)`、`df₂C = 5qkL⁴/(384EI)·(1−2.4r²)`。
-  证据：`0xD66109–0xD662D2`、`0xD65B27–0xD65BA1`。
-- `df2 = round3(bracket₂)/2 + round3(df₂C − X₂/EI)`，其中 `X₂ = S₃·A·L²/16`
-  （`0xD6B6FA` fdiv 16 确认）、`bracket₂` 用 `arr84[4] = V1 − D(1−r)`。
-- ★ **迭代规律**：`d₁ = D = qd·A·t`，`d_{k+1} = D − r·d_k`，`arr84[k] = V1 − d_{k−1}`；
-  不动点 `D/(1+r)`。
-- ★ **挠度必须分项取 3 位再相加**（V31 实测 `Add(4.3155, 21.524)`）：df1 同样 `round3(bracket₁)/2 + round3(df₂C)`。
-  全精度相加会差 5e-4 量级。⇒ 两处挠度 8/8 逐位。
-- 唯一残差：r=0.2（A=600/L=3000）第2跨支座折算强度 102.824 vs 102.821（3e-3），未定位。
-- 多跨静定总账 `verify_multispan.py` = **43/44**。
-
-## 三之七、多跨铰接连续**一次超静定** = 函数 0xD73EEF（2026-10-25 全闭合 30/30）
-
-- 函数 **0xD73EEF–0xD8EF31**（~110KB）；定位：挂 `__vbaVarMul` 统计返回地址 → 热点 0xD7Bxxx–0xD7Cxxx
-  （按跨数 ×10）→ 反查 `55 8B EC`。
-- 页面：**必须「下一步」**进 `Frame '多跨数据输入'`；**4 个输入框**（静定只有 3 个）：
-  总跨数(102,179)、跨长A₁(102,221)、**跨长A₂(102,258，默认600)**、跨长L₁(102,296)。
-- 运行期数组：`+0x4C`=A₁、`+0x12C`=A₂、`+0x110`=L、`+0xD8`=−M、`+0xF4`=M'（负）、`+0xA0`=P。
-  ★ A₁≠A₂ 是实机现象（A₁=400/A₂=700 两数组分别读出 400/700）。
-- 公式：
-  `M=qd·A₁²/2+P·A₁`；`T=(L³+A₂³)·6qd/24`；`M'=−(T−M·A₂/6)/2/(A₂+L)`；
-  `P=rtcRound(qd·L/2+M'/L, 0)`（**0 位整数**）；
-  控制截面 `max|M'| > max M` → 跨中控制（σ=|M'|/W，0xD816EC），否则支座控制（σ=M/W，0xD7E8DD）；
-  `q1=qd·A₁/2+|(−M)−M'|/A₂`；`V=max(q1, P+qd·A₁)`（支座）/ `max(q1, |qd·L/2+M'/L|)`（跨中）；
-  `τ=Sx·V/(I·t)`；`σeq=√(σ²+3τ²)`；`lim=min((A₁+L)/180,20)`；
-  `df=round3(num1/EI)−round3(num2/EI)/2`，`num1=5qkL⁴/384+M'L²/16`、
-  `num2=P·A₁³/3−A₁⁴qk/8+A₂⁴qk/24−M·A₂/3+M'·A₂/6`（**A₁/A₂ 混用**，A₁=A₂ 时看不出）。
-- 常量：4019A8=3、403C50=4、4018F8=2、4027F8=6、402F88=16、4019E0=20。
-- 对拍 **30/30 逐位**（6 组：L=2700/2750/2800、A₁=800/A₂=600、A₁=700/A₂=800、L=3000 跨中控制）。
-  实现 `Engines/IndeterminateColumnEngine.cs`；单测 6 例（总 60/60）。
-- 仍需确认：① 分支判据只有数值证据（未找到显式比较指令）；
-  ② 两候选取大的「物理意义」未解；③ A₁/A₂ 输入框的界面标签文字未取。
+- 测试基线：**Calc 582 / DesktopTests 135 全绿**（2026-10-28 16:15 实测；数字必须现跑，命令见 ACCEPTANCE_LEDGER §7）。引擎：Column / DoubleSpanColumn / IndeterminateColumn / HorizontalBeam / AlloyColumn / Glass / Connect / Embed / Sealant / WindLoad / Plate / StonePlate / ManmadePlate / BackboltPlate / FullGlass / DianshiGlass / UGlass / FloorGlass / Weld / BoltGroup / AnchorPlate / RebarAnchor / CornerColumn / ThermalStress / SmokeVent / WeightPerMeter / ThermalExpansion / Thread / SelfTappingScrew / PinBolt / LouverVent / OpeningVent / OtherGlass / MultiPointLock / Skylight / Awning / DoorConnector / DoorMullion / **ThermalGlass(CW26)** / **ThermalWall(CW27)** / VbaRound。**孤儿 `StructuralSealantEngine` 已于 2026-10-28 删除。**
+- 阶段 1（八屏补全）完成；阶段 2 = **B2 板材线**：金属板 ✅ → 石材 ✅ → 人造板 ✅ → 背栓点挂 ✅（8 种面板全闭合）。B2 完成。
+- **B3 玻璃变体**：全玻璃幕墙（8 构型）✅ / 点式肋（四点驳接）✅ / U型玻璃 ✅ / 地板玻璃 ✅。B3 核心 4 屏完成。
+- **B8 独立工具**：16 引擎闭环（焊缝/螺栓群/锚板厚度/植筋/转角立柱/热应力/排烟/米重/热应力伸缩/螺纹/自攻螺钉/扭剪钢销/百叶窗/开启扇/其它玻璃/多点锁）。**2026-10-28 独立工具线补全**：雷击181（LightningEngine，k·Ng·Ae + 524 城雷暴日 + **周边修正 10 档全对拍**：D 公式跟选项组走）、静力188（Api StaticCalcEngine 7 支撑条件下沉 Calc/Engines/StaticCalc + 桌面接线）、截面159（SectionTool Green 定理下沉 Calc/Engines/SectionCalc + 接线）、插值190/方程191（InterpolationEngine 线性插值 + EquationEngine 二次/三次卡尔丹）、牛腿170（CorbelEngine，V31 π=3.14 + 31 点 φ 表，**单一水平斜梁形态已完整闭合**；「样式二/三/竖直四」=历史误记已推翻）、型材优化192（CuttingStockEngine FFD，⚠非 V31 私有算法）。**★独立工具 15 项界面已于 2026-10-28 全部接线**（通用壳 `SimpleToolViewModel`+`SimpleToolView`+`ToolField`，ViewLocator 一条规则覆盖；守护 `SimpleToolVmTests` 18 条）。
+- **B4 门窗 ✅ 全选项组合闭环（2026-10-27）**：玻璃复用 GlassEngine；**DoorConnectorEngine 重写**（V=round3(1.5wk·H·B+地震项)、单点力 round3(round3(1.25V/n))、**r=1→min(f1,f2)**（旧「取f2」是假象）、r>1 插值÷连接片自身厚、承载力查表 铆钉5类型×5规格+自攻、膨胀结构侧常数 3956.4、附框 A 恒定3.5/1346、卡槽跳过边框块、不计算 0 输出；**输出行前缀**：边框块标题带「门窗」但快固件行前缀不带（door_conn_probe4a 40 case 逐字））；**DoorMullionEngine 材质 10 项全表**（E 链直读：塑钢2200/玻纤40000/Q235 206000）+ 挠度限值三模式（自动L/100、人工一致、不一致H=L/分母V=L/500）；杆件 wk 第二链 round6(w0·βgz·μz·**1.168**)=0.001333（0x14184AE，与玻璃 wk 0.00137 分链）；**隐藏 UI 全补齐**：新屏 `DoorWindowCalcView/VM`（5 Tab：玻璃参数/21样式/竖向杆件+内框12材质/横向杆件+钢框12材质/连接件全选项+钢附框）。V31 每预演按钮**重写输出框**（非追加）。**非 0 态已闭（probe10/11）**：地震链=7·αmax·Gk_area·H·B·0.5，**αmax 由第一页地区行下传（北京0.16/上海0.08=参数库αmax列）**、**Gk_area 仅由幕墙线预演写全局槽（=0.0004；门窗线单独恒 0）**；横梃垂直自重 σ 含 Mvert/Wx2 项（上海态 165.367 逐位）；杆件引擎参数 = SeismicAlphaMax+GkAreaNmm2/QgkAreaNmm2（默认 0 基线不变）。地区行选择=真实**单击**(grid+80,+12)一次；MDI 菜单需带重发；输出区读取不判可见性。盘点 `cw29_inventory.json` 243 控件、combo 列表 CB_GETLBTEXT 可读出（推翻旧「读空」结论）；**隐藏 OptionButton 必须帧标题+帧内相对坐标点击**（绝对坐标跨会话点空）。遗留：21 样式切换水平输出不变（已证）；断热/冷弯薄壁勾选 V31 无 diff。隐藏 Tab 操作铁律：**必须 ShowWindow 预演按钮本身 + 先点玻璃预演初始化 wk**；DataGrid 双击用客户区坐标、只双击 row1（row2 空行必崩 error13）。
+- **B5 采光顶** ✅ 单坡引擎+界面闭环（SkylightEngine，8 坡型共用）；**B6 雨篷** ✅ 引擎+界面闭环（AwningEngine 5 模块，悬臂梁/焊缝/玻璃/埋件逐位对拍）；**B7 热工（引擎线）** ✅：CW26 ThermalGlassEngine（K/SHGC/结露/框材质 9 项 Kf 程序内置：普通铝=钢9.139/断热3.318/聚氨酯塑钢带筋2.8/PVC 2.2·2.7·2.0/木1.8；湿度只进露点 φ 不进 te；Magnus 6.11/7.5/237.3）+ CW27 ThermalWallEngine（层热阻=参数库热工数值行 fp 位、+Rsi→round3、+R_air 不 round、+Rse→round5、K=round3(1/Σ)、tsi=R_air/R_total 链、采暖 t_i 18/非采暖 12）均逐位；**两屏界面已复刻（ThermalGlassCalcView/ThermalWallCalcView，#77）**；剩余：CW19 物理性能 17 项输出通道（#75）、隔声屏。城市选择消息级双击铁律（PostMessage DBLCLK 序列；真实鼠标点常被前台吃）；CB 条目读 CB_GETCOUNT/LBTEXT=0x0146/0x0148（勿误 0x018B/0x0189）。
+- **全表来源登记（2026-10-27 用户「所有表格都是要找来源」）**：`docs/DATA_SOURCE_REGISTER.md` = 复刻每张数据表的五级出处登记（参数库/安装目录.inx/程序内置/运行期直读/⚠规范值待取证）。已实锤：米重 钢材7850/铝材2700 = 下拉+切换计算直读（b8_mizhong_density.json）；U玻璃截面=参数库U型玻璃表行1换算；四点驳接 m/μ=常量池原文；**肋厚折减 15→17.0 是唯一反推点（待直读）**；⚠规范值未程序取证：GlassPanelEngine JGJ102 4 组表、ColumnSpanEngine 双跨 α 表、MultiSpanStaticEngine MeasuredFit*（均未接线仅 Demo，注释已标）。米重等独立工具屏子窗=ThunderRT6FormDC 隐藏类（b7_probe4 forms() 法，MDIChild 法失效）。
+- 屏尺寸：基本参数 902×540、立柱 936×442、横梁 949×425、铝板板块 795×530、石材板块 936×448、人造板板块 782×536、背栓板块 782×536、连接 796×510、埋件 788×490、胶类 784×537、玻璃 819×361。
+- 5 处静默常量兜底**已清理（2026-10-28 P1）**：BasicParams z=100/k1=k2=1.0 补出处注释（GB55001-2021「一般取 1.0」）、ColumnCalc:121-122 死代码 k1/k2 已删、MultiSpan:154 确认是颜色兜底非数值。
+- **2026-10-28 计划收官（P1-P16 闭环，仅 P17 计算书正文剩余）**：物理性能 16 子项（4 计算页+12 说明页，PhysicalPerformanceTexts 从 .mht 提取）、空气声隔声 8 构型（SoundInsulationEngine 质量定律+PVB 4.0+气隙 0.5）、外遮阳 134（ExternalShadingEngine GB50189 表 A.0.1）+ 加权计算器 136（WeightedAverageEngine）、热工扩展 4 项（居住/工业 K 限值）、CW26 多片玻璃 7 构型链、CW27 空气层 9 档 R 查表、玻璃肋厚 σ 折减表 9 档直读（6/8/10/12→19.5、15/19→17.0、20/22/25→14.0）、P16 多跨拟合系数全删改 V31 逐指令解析式。遗留：P17 计算书第 4-15 章（第 2/3 章已逐行守护）。详见 `.workbuddy/memory/2026-10-28.md` + `docs/ACCEPTANCE_LEDGER.md`。
+- 剩余业务屏（B5 采光顶 7 坡型界面、B7 热工声学、B8 牛腿/雷击）→ 计划 `C:\Users\Jack\.workbuddy\plans\radiant-vortex-curie-PjnmviJg.md`。B4 门窗全线闭环（玻璃/连接件/竖梃/横梃本体）。

@@ -1,0 +1,207 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.ThermalWallCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="{Binding Title}"/>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding CityNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding CityNote}"/>
+      </Grid>
+    </Border>
+
+    <Grid RowDefinitions="*">
+      <TabControl Background="{DynamicResource HbFormBg}" Padding="0">
+        <TabItem Header="热工参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Canvas Width="995" Height="500" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+              <!-- 组合结构（帧 468,319 → rel 5,12） -->
+              <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="12" Width="145" Height="77"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="5" Text="组合结构"/>
+              <TextBlock Canvas.Left="13" Canvas.Top="28" Text="朝向" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="88" Canvas.Top="25" Width="56" Height="20"
+                        ItemsSource="{Binding OrientationOptions}"
+                        SelectedIndex="{Binding OrientationIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="13" Canvas.Top="50" Text="分区" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="74" Canvas.Top="47" Width="70" Height="20"
+                        ItemsSource="{Binding RegionTypeOptions}"
+                        SelectedIndex="{Binding RegionTypeIndex, Mode=TwoWay}"/>
+              <TextBox Classes="hb" Canvas.Left="82" Canvas.Top="67" Width="48" Height="18"
+                       Text="{Binding CombStructText, Mode=TwoWay}"/>
+
+              <!-- 空气层参数（帧 615,319 → rel 152,12） -->
+              <Border Classes="hbFrame" Canvas.Left="152" Canvas.Top="12" Width="144" Height="96"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="158" Canvas.Top="5" Text="空气层参数"/>
+              <ComboBox Classes="hb" Canvas.Left="156" Canvas.Top="38" Width="128" Height="20"
+                        ItemsSource="{Binding AirGapTypeOptions}"
+                        SelectedIndex="{Binding AirGapTypeIndex, Mode=TwoWay}"/>
+              <ComboBox Classes="hb" Canvas.Left="156" Canvas.Top="60" Width="132" Height="20"
+                        ItemsSource="{Binding AirGapFlowOptions}"
+                        SelectedIndex="{Binding AirGapFlowIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="212" Canvas.Top="85" Text="200" FontSize="9"/>
+
+              <!-- 地区参数（帧 762,319 → rel 299,12） -->
+              <Border Classes="hbFrame" Canvas.Left="299" Canvas.Top="12" Width="242" Height="136"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="305" Canvas.Top="5" Text="地区参数"/>
+              <Button Classes="hb" Canvas.Left="363" Canvas.Top="21" Width="56" Height="20"
+                      Content="选择" Command="{Binding OpenCityFrameCommand}"/>
+              <ComboBox Classes="hb" Canvas.Left="364" Canvas.Top="40" Width="120" Height="20"
+                        ItemsSource="{Binding ClimateZoneOptions}"
+                        SelectedIndex="{Binding ZoneIndex, Mode=TwoWay}"/>
+              <ComboBox Classes="hb" Canvas.Left="364" Canvas.Top="62" Width="120" Height="20"
+                        ItemsSource="{Binding ClassOptions}"
+                        SelectedIndex="{Binding ClassIndex, Mode=TwoWay}"/>
+              <ComboBox Classes="hb" Canvas.Left="364" Canvas.Top="83" Width="60" Height="20"
+                        ItemsSource="{Binding HeightOptions}"
+                        SelectedIndex="{Binding HeightIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="307" Canvas.Top="105" Text="te(?)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="387" Canvas.Top="102" Width="44" Height="18"
+                       Text="{Binding TeManualText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="307" Canvas.Top="124" Width="228" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="te 手改语义未归因（probe12 tb(850,412) 登记）；主链 te 由城市行驱动。"/>
+
+              <!-- 体型系数（帧 1006,319 → rel 543,12） -->
+              <Border Classes="hbFrame" Canvas.Left="543" Canvas.Top="12" Width="120" Height="136"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="549" Canvas.Top="5" Text="体型系数"/>
+              <RadioButton Classes="hb" Canvas.Left="555" Canvas.Top="30" Content="给定" FontSize="9"/>
+              <RadioButton Classes="hb" Canvas.Left="555" Canvas.Top="52" Content="经计算得到：" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="607" Canvas.Top="28" Width="46" Height="18"
+                       Text="{Binding ShapeCoefText, Mode=TwoWay}"/>
+              <TextBox Classes="hb" Canvas.Left="608" Canvas.Top="77" Width="44" Height="18" Text="100"/>
+              <TextBox Classes="hb" Canvas.Left="608" Canvas.Top="100" Width="44" Height="18" Text="30"/>
+              <TextBox Classes="hb" Canvas.Left="608" Canvas.Top="123" Width="44" Height="18" Text="60"/>
+
+              <!-- 室内环境湿度（帧 468,402 → rel 5,95） -->
+              <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="95" Width="145" Height="53"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="88" Text="室内环境湿度"/>
+              <ComboBox Classes="hb" Canvas.Left="45" Canvas.Top="116" Width="60" Height="20"
+                        ItemsSource="{Binding HumidityOptions}"
+                        SelectedIndex="{Binding HumidityIndex, Mode=TwoWay}"/>
+
+              <!-- 房间采暖情况（帧 615,415 → rel 152,108） -->
+              <Border Classes="hbFrame" Canvas.Left="152" Canvas.Top="108" Width="144" Height="40"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="158" Canvas.Top="101" Text="房间采暖情况"/>
+              <ComboBox Classes="hb" Canvas.Left="160" Canvas.Top="121" Width="110" Height="20"
+                        ItemsSource="{Binding HeatingOptions}"
+                        SelectedIndex="{Binding HeatingIndex, Mode=TwoWay}"/>
+
+              <!-- 计算限制取值依据（帧 1128,319 → rel 665,12） -->
+              <Border Classes="hbFrame" Canvas.Left="665" Canvas.Top="12" Width="316" Height="70"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="671" Canvas.Top="5" Text="计算限制取值依据(?)"/>
+              <ComboBox Classes="hb" Canvas.Left="673" Canvas.Top="28" Width="250" Height="20"
+                        ItemsSource="{Binding LimitBasisOptions}"
+                        SelectedIndex="{Binding LimitBasisIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="671" Canvas.Top="54" Foreground="{DynamicResource HbTextMuted}" FontSize="9"
+                         Text="K 限值 0.8 W/(m2·K)（probe6 输出实录）"/>
+
+              <!-- 材料参数（帧 468,458 → rel 5,151；默认 3 行=参数库「热工数值」表行1-3） -->
+              <Border Classes="hbFrame" Canvas.Left="5" Canvas.Top="151" Width="655" Height="300"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="11" Canvas.Top="144"
+                         Text="材料参数（层表=参数库「热工数值」Adodc 数据源，probe11 fp 位实证）"/>
+              <Grid Canvas.Left="16" Canvas.Top="166" Width="630" RowDefinitions="Auto,*">
+                <Grid ColumnDefinitions="200,90,90,110,80">
+                  <TextBlock Text="材料名称" Foreground="{DynamicResource HbTextMuted}"/>
+                  <TextBlock Grid.Column="1" Text="厚度 mm" Foreground="{DynamicResource HbTextMuted}"/>
+                  <TextBlock Grid.Column="2" Text="λ W/(m·K)" Foreground="{DynamicResource HbTextMuted}"/>
+                  <TextBlock Grid.Column="3" Text="热阻 R=m2·K/W" Foreground="{DynamicResource HbTextMuted}"/>
+                  <TextBlock Grid.Column="4" Text="操作" Foreground="{DynamicResource HbTextMuted}"/>
+                </Grid>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Layers}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid ColumnDefinitions="200,90,90,110,80" Margin="0,2">
+                        <TextBox Classes="hb" Height="20" Text="{Binding Name, Mode=TwoWay}"/>
+                        <TextBox Classes="hb" Grid.Column="1" Height="20"
+                                 Text="{Binding ThkText, Mode=TwoWay}"/>
+                        <TextBox Classes="hb" Grid.Column="2" Height="20"
+                                 Text="{Binding LambdaText, Mode=TwoWay}"/>
+                        <TextBlock Grid.Column="3" VerticalAlignment="Center" FontSize="10"
+                                   Text="{Binding RText}"/>
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="4">
+                          <Button Classes="hb" Width="34" Height="20" Content="↑" FontSize="9"
+                                  Command="{Binding MoveUpCommand}"/>
+                          <Button Classes="hb" Width="34" Height="20" Content="↓" FontSize="9"
+                                  Command="{Binding MoveDownCommand}"/>
+                          <Button Classes="hb" Width="34" Height="20" Content="×" FontSize="9"
+                                  Command="{Binding RemoveSelfCommand}"/>
+                        </StackPanel>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Grid>
+              <Button Classes="hb" Canvas.Left="570" Canvas.Top="440" Width="76" Height="20"
+                      Content="添加层" Command="{Binding AddLayerCommand}"/>
+              <TextBlock Canvas.Left="16" Canvas.Top="464" Width="540" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="ΣR(t/1000/λ 不round)+Rsi(0.18)→round3 → +R_air(不round) → +Rse(0.04)→round5 → K=round3(1/R)（probe11 舍入序逐位）。"/>
+
+              <!-- 输出区（RichText：probe6 实采 K 段） -->
+              <Border Canvas.Left="665" Canvas.Top="86" Width="316" Height="330"
+                      Background="{DynamicResource HbResultBg}" BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1"/>
+              <ScrollViewer Canvas.Left="667" Canvas.Top="88" Width="312" Height="326">
+                <StackPanel Margin="4">
+                  <TextBlock Text="{Binding PlaceholderText}" Foreground="{DynamicResource HbTextMuted}"
+                             IsVisible="{Binding !HasResults}" TextWrapping="Wrap"/>
+                  <ItemsControl ItemsSource="{Binding Results}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding Text}" Foreground="{Binding Brush}"
+                                   FontFamily="SimSun" FontSize="10" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </ScrollViewer>
+
+              <!-- 按钮行（预演 1318,706 → rel 855,399） -->
+              <Button Classes="hb" Canvas.Left="855" Canvas.Top="425" Width="70" Height="24"
+                      Content="预演" Command="{Binding PreviewCommand}"/>
+              <Button Classes="hb" Canvas.Left="855" Canvas.Top="452" Width="60" Height="22"
+                      Content="下一步" Command="{Binding NextStepCommand}"/>
+              <Button Classes="hb" Canvas.Left="795" Canvas.Top="452" Width="56" Height="22"
+                      Content="退出" Command="{Binding ExitCommand}"/>
+              <Button Classes="hb" Canvas.Left="699" Canvas.Top="423" Width="150" Height="22"
+                      Content="节能计算使用前必读" FontSize="10"/>
+
+              <!-- 城市选择帧（隐藏帧复刻，同 CW26 消息级双击+确定语义） -->
+              <Border Canvas.Left="0" Canvas.Top="0" Width="995" Height="500"
+                      Background="{DynamicResource HbSurfaceSubtle}" IsVisible="{Binding CityFrameOpen}">
+                <Canvas>
+                  <Border Classes="hbFrame" Canvas.Left="6" Canvas.Top="6" Width="983" Height="488"/>
+                  <TextBlock Classes="hbFrameTitle" Canvas.Left="12" Canvas.Top="-1"
+                             Text="节能计算-工程所在城市选择（GB50176-2016）"/>
+                  <ListBox Canvas.Left="52" Canvas.Top="34" Width="90" Height="388"
+                           ItemsSource="{Binding ProvinceOptions}"
+                           SelectedIndex="{Binding ProvinceIndex, Mode=TwoWay}"/>
+                  <ListBox Canvas.Left="152" Canvas.Top="34" Width="241" Height="388"
+                           ItemsSource="{Binding CityList}"
+                           SelectedIndex="{Binding CityIndex, Mode=TwoWay}"/>
+                  <TextBlock Canvas.Left="410" Canvas.Top="40" Width="300" TextWrapping="Wrap"
+                             Foreground="{DynamicResource HbTextMuted}"
+                             Text="V31 铁律：市条目须双击选中 + 点「确定」（LB_SELECTSTRING 不算选中）；未选城市预演弹「请选择城市」。已选城市后重选行为特殊（probe12 登记）。"/>
+                  <TextBlock Canvas.Left="410" Canvas.Top="130" Width="430" TextWrapping="Wrap"
+                             Text="{Binding CityNote}"/>
+                  <ComboBox Canvas.Left="450" Canvas.Top="250" Width="250" Height="22"
+                            ItemsSource="{Binding CityRelationOptions}"
+                            SelectedIndex="{Binding CityRelationIndex, Mode=TwoWay}"/>
+                  <Button Classes="hb" Canvas.Left="822" Canvas.Top="440" Width="60" Height="22"
+                          Content="确定" Command="{Binding ConfirmCityCommand}"/>
+                  <Button Classes="hb" Canvas.Left="892" Canvas.Top="440" Width="60" Height="22"
+                          Content="返回" Command="{Binding BackFromCityCommand}"/>
+                </Canvas>
+              </Border>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </DockPanel>
+</UserControl>

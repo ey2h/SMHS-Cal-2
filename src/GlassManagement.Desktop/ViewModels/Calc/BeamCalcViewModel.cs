@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -50,8 +50,43 @@ public partial class BeamCalcViewModel : ObservableObject
                     Invalidate("上游参数已变化");
                     OnPropertyChanged(nameof(MaterialAllowText));
                     break;
+                // ★ 玻璃构型/厚度变了：「下片厚度」的可用性与取值都跟着变（见 GlassInnerEnabled）
+                case nameof(CalcSession.GlassMono):
+                case nameof(CalcSession.GlassInsulated):
+                case nameof(CalcSession.GlassLaminated):
+                case nameof(CalcSession.GlassInsulLam):
+                case nameof(CalcSession.GlassDoubleInsul):
+                case nameof(CalcSession.GlassDoubleLam):
+                case nameof(CalcSession.GlassOuterThicknessMm):
+                case nameof(CalcSession.GlassInnerThicknessMm):
+                    SyncGlassLayers();
+                    break;
             }
         };
+        SyncGlassLayers();
+    }
+
+    /// <summary>
+    /// 把第一页的玻璃构型/厚度同步到本屏两个厚度下拉。
+    /// <para>规则（V31 行为，用户确认）：**单片只有一片** ⇒ 下片禁用；
+    /// 中空 / 夹层 / 中空夹层 / 双中空 / 双夹层 都是两片 ⇒ 下片可用。</para>
+    /// </summary>
+    private void SyncGlassLayers()
+    {
+        int oi = IndexOfThickness(Session.GlassOuterThicknessMm);
+        if (oi >= 0) GlassOuterIndex = oi;
+        int ii = IndexOfThickness(Session.GlassInnerThicknessMm);
+        if (ii >= 0) GlassInnerIndex = ii;
+        OnPropertyChanged(nameof(GlassInnerEnabled));
+        OnPropertyChanged(nameof(GlassThicknessText));
+    }
+
+    private static int IndexOfThickness(double mm)
+    {
+        for (int i = 0; i < GlassThicknessList.Length; i++)
+            if (double.TryParse(GlassThicknessList[i], out var v) && Math.Abs(v - mm) < 1e-9)
+                return i;
+        return -1;   // 不在 10 档里（例如 3.2 以外的自定义值）→ 保留当前索引
     }
 
     // ---------------- 输入（绑定到共享会话） ----------------
@@ -76,6 +111,37 @@ public partial class BeamCalcViewModel : ObservableObject
     /// <summary>受力点到横梁与立柱连接点的距离 a（mm）。V31 默认 150。</summary>
     [ObservableProperty] private double _pointDistanceMm = 150;
 
+    // ────────────────────────────────────────────────────────────────
+    // 横梁屏「结构选型」开关 —— 全部经 V31 实机逐个开关实测（同参数跑 base/on 两遍）：
+    //   挂式结构      → 19 个输出**逐位不变** ⇒ 本构型不参与计算（界面可勾，计算不用它）
+    //   断热          → 同上，不参与计算
+    //   钢铝结合      → 勾上后「预演」按钮被**置灰**（en=False）⇒ 独占分支，需另一套参数面板（未复刻）
+    //   按集中力模型 / 计算抗扭 / 冷弯薄壁型钢 / 短悬臂结构 → 当前构型下 V31 恒禁用
+    // 依据：local-data/recon/beam_toggles_all.py → v31runs/beam_toggles_report.txt
+    // ────────────────────────────────────────────────────────────────
+
+    /// <summary>挂式结构。实测不影响本构型任何输出，仅作界面状态与计算书注明。</summary>
+    [ObservableProperty] private bool _hangingStructure;
+
+    /// <summary>断热。实测不影响本构型任何输出。</summary>
+    [ObservableProperty] private bool _thermalBreak;
+
+    /// <summary>钢铝结合（独占分支）：勾上后预演禁用，与 V31 一致。</summary>
+    [ObservableProperty] private bool _steelAluminumJoint;
+
+    /// <summary>以下四项在 V31 本构型下恒禁用（实机 en=False），复刻版保持禁用。</summary>
+    public bool CantileverOrTorqueEnabled => false;
+
+    partial void OnSteelAluminumJointChanged(bool value)
+    {
+        OnPropertyChanged(nameof(PreviewEnabled));
+        _wizard.StatusText = value
+            ? "钢铝结合为独占分支（V31 实机：预演置灰），复刻版未接该分支"
+            : "已取消钢铝结合";
+    }
+
+    partial void OnHangingStructureChanged(bool value) => Invalidate("挂式结构已切换（实测不影响本构型输出）");
+
     /// <summary>集中力参数是否可编辑（仅在勾选「玻璃自重为集中力」时启用，与 V31 en=False 行为对齐）。</summary>
     public bool PointDistanceEnabled => ConcentratedGravity;
 
@@ -98,7 +164,58 @@ public partial class BeamCalcViewModel : ObservableObject
     }
 
     /// <summary>玻璃厚度显示（V31 玻璃配置框只读，实际配置由第一页传入）。</summary>
-    public string GlassThicknessText => "—";
+    public string GlassThicknessText => GlassOuterThicknessText;
+
+    // ---------------- 玻璃配置（横梁屏**自己**的可调项） ----------------
+    //
+    // V31 实机（v31runs/dump_beam_client.txt + beam_glass_probe.txt）：
+    //   Frame 玻璃配置 (12,26) 113x125
+    //   ComboBox 上片厚度 (54, 59) **en=1**，10 档候选
+    //        ['3.2','4','5','6','8','10','12','15','19','20']，默认 sel=3 → 6
+    //   ComboBox 下片厚度 (54,104) **en=0**，同一份 10 档候选，默认 sel=3 → 6
+    // ★ 扰动实验：把上片从 6 依次换成其余 9 档，预演输出 **848 字一字不变**（9/9）。
+    //   ⇒ 这一项**可配置但不参与横梁计算**（横梁自重由第一页的玻璃构型决定，与单片厚度无关）。
+    //   所以不能像旧版那样写死成 "—"：V31 允许改，复刻版也必须允许改，
+    //   只是改了不影响本屏数值 —— 这点必须如实标注，不能假装有影响。
+
+    /// <summary>厚度下拉 10 档（与 V31 候选表逐项一致；注意 V31 文本里 4/5/6 带尾空格）。</summary>
+    public static readonly string[] GlassThicknessList =
+        { "3.2", "4", "5", "6", "8", "10", "12", "15", "19", "20" };
+
+    /// <summary>供 XAML 绑定（Avalonia 只能绑属性，静态字段绑不上 —— 曾因此两个下拉显示为空）。</summary>
+    public IReadOnlyList<string> GlassThicknessItems => GlassThicknessList;
+
+    /// <summary>上片厚度选中索引（默认 3 = 6mm，与第一页 + V31 一致）。</summary>
+    [ObservableProperty] private int _glassOuterIndex = 3;
+
+    /// <summary>下片厚度选中索引（初始化时由第一页 <c>GlassInnerThicknessMm</c> 决定）。</summary>
+    [ObservableProperty] private int _glassInnerIndex = 3;
+
+    public string GlassOuterThicknessText =>
+        GlassThicknessList[Math.Clamp(GlassOuterIndex, 0, GlassThicknessList.Length - 1)];
+
+    public string GlassInnerThicknessText =>
+        GlassThicknessList[Math.Clamp(GlassInnerIndex, 0, GlassThicknessList.Length - 1)];
+
+    partial void OnGlassOuterIndexChanged(int value) =>
+        OnPropertyChanged(nameof(GlassOuterThicknessText));
+
+    partial void OnGlassInnerIndexChanged(int value) =>
+        OnPropertyChanged(nameof(GlassInnerThicknessText));
+
+    /// <summary>
+    /// 下片厚度是否可用 —— **由第一页的玻璃构型决定**：
+    /// <list type="bullet">
+    ///   <item>单片（<see cref="CalcSession.GlassMono"/>）：只有一片 ⇒ <c>false</c>（V31 实测 en=0）</item>
+    ///   <item>中空 / 夹层 / 中空夹层 / 双中空 / 双夹层：两片 ⇒ <c>true</c></item>
+    /// </list>
+    /// 上片厚度则始终可改（V31 实测 en=1，10 档）。
+    /// </summary>
+    public bool GlassInnerEnabled => !Session.GlassMono;
+
+    /// <summary>下片不可用时的原因（可用时为空），供 ToolTip 用。</summary>
+    public string GlassInnerDisabledReason => GlassInnerEnabled
+        ? "" : "第一页玻璃构型为「单片」，只有一片玻璃，故下片厚度不可用";
 
     /// <summary>抗弯强度设计值文本（材质切换后刷新；V31 的 f 框）。</summary>
     public string BendingText => MaterialAllowables.Bending(Session.BeamMaterial).ToString("0.###");
@@ -106,15 +223,21 @@ public partial class BeamCalcViewModel : ObservableObject
     /// <summary>抗剪强度设计值文本（V31 的 fv 框）。</summary>
     public string ShearText => MaterialAllowables.Shear(Session.BeamMaterial).ToString("0.###");
 
-    /// <summary>预演是否可用（无 wk 时禁用，并给出原因 —— 与立柱屏同一套做法）。</summary>
-    public bool PreviewEnabled => Session.WindStandardKpa > 0 && SelectedProfile is not null;
+    /// <summary>
+    /// 预演是否可用。
+    /// ★ 门禁看 <see cref="CalcSession.SupportWindReady"/>（= 第一页已算完），
+    /// <b>不能</b>写 `WindStandardKpa &gt; 0` —— 该字段初值就是 1.0，那样门禁永远为真，
+    /// 第一页没算也能用假 1.0 出结果。
+    /// </summary>
+    public bool PreviewEnabled => Session.SupportWindReady && SelectedProfile is not null
+                               && !SteelAluminumJoint;   // 钢铝结合为独占分支：V31 勾上后预演置灰
 
     /// <summary>不能用预演时的原因（空 = 可用）。</summary>
     public string PreviewBlockedReason
     {
         get
         {
-            if (Session.WindStandardKpa <= 0) return "上游未算出风荷载标准值，请先在第一页点「计算荷载」";
+            if (!Session.SupportWindReady) return CalcSession.UpstreamNotReadyText;
             if (SelectedProfile is null) return "请先在型材表中选择一行";
             return "";
         }
@@ -312,6 +435,31 @@ public partial class BeamCalcViewModel : ObservableObject
     [RelayCommand] private void Prev() => _wizard.GoColumnCalc();
     [RelayCommand] private void Next() => _wizard.StepFromBeamNext();
     [RelayCommand] private void Exit() => _wizard.CloseForm();
+
+    // ---------------- 「单位说明」弹窗 ----------------
+    //
+    // V31 实机取证（v31runs/btn_beam_unit.txt，按钮 (564,179)「单位说明」en=1）：
+    //   弹 #32770，标题「单位说明：」，client 144×217，
+    //   Static (15,54) 91×82 正文（5 行，WM_GETTEXT 原文 repr 已确认 \n 分隔）：
+    //     '惯性矩单位cm^4\n抵抗矩单位cm^3\n壁厚单位mm\n截面积单位mm^2\n面积矩单位cm^3'
+    //   Button「确定」(35,174) 88×28。
+    // ⇒ 不是死按钮，是纯文本说明框；下面按原文逐字复刻，不做任何改写。
+
+    /// <summary>V31 原文，逐字；<c>\n</c> 位置与实机一致（不可合并成一行）。</summary>
+    public const string UnitNoteText =
+        "惯性矩单位cm^4\n抵抗矩单位cm^3\n壁厚单位mm\n截面积单位mm^2\n面积矩单位cm^3";
+
+    /// <summary>弹窗标题，含实机的全角冒号。</summary>
+    public const string UnitNoteTitle = "单位说明：";
+
+    /// <summary>供 XAML 绑定（const 不能直接绑）。</summary>
+    public string UnitNoteBody => UnitNoteText;
+    public string UnitNoteCaption => UnitNoteTitle;
+
+    [ObservableProperty] private bool _isUnitNoteOpen;
+
+    [RelayCommand] private void ShowUnitNote() => IsUnitNoteOpen = true;
+    [RelayCommand] private void CloseUnitNote() => IsUnitNoteOpen = false;
 
     private void Add(string text, IBrush color) => Results.Add(new PreviewLine(text, color));
 

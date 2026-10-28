@@ -1,0 +1,393 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.DoorWindowCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="门窗系统计算"/>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WkNote}"
+                   Margin="16,0,0,0" MaxWidth="480" ToolTip.Tip="{Binding WkNote}"/>
+      </Grid>
+    </Border>
+
+    <Grid RowDefinitions="Auto,*">
+      <!-- 五帧 Tab（V31 CW29 五个全尺寸重叠帧当页签；隐藏帧已补齐为可见页） -->
+      <TabControl Grid.Row="0" Background="{DynamicResource HbFormBg}" Padding="0">
+        <TabItem Header="简图及玻璃参数">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="470">
+            <Canvas Width="900" Height="470" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+              <!-- 杆件选择计算 -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="10" Width="180" Height="120"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="3" Text="杆件选择计算"/>
+              <CheckBox Classes="hb" Canvas.Left="18" Canvas.Top="26" Content="计算左图竖杆"
+                        IsChecked="{Binding CalcLeftMullion, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="18" Canvas.Top="48" Content="计算右图横杆"
+                        IsChecked="{Binding CalcRightTransom, Mode=TwoWay}"/>
+              <Button Classes="hb" Canvas.Left="18" Canvas.Top="78" Width="90" Height="22"
+                      Content="竖梃 预演" Command="{Binding MullionPreviewCommand}"/>
+              <Button Classes="hb" Canvas.Left="118" Canvas.Top="78" Width="90" Height="22"
+                      Content="横梃 预演" Command="{Binding TransomPreviewCommand}"/>
+
+              <!-- 竖梃参数 -->
+              <Border Classes="hbFrame" Canvas.Left="200" Canvas.Top="10" Width="150" Height="120"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="206" Canvas.Top="3" Text="竖梃参数"/>
+              <TextBlock Canvas.Left="208" Canvas.Top="30" Text="跨度" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="262" Canvas.Top="27" Width="60" Height="18"
+                       Text="{Binding MullionSpanText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="208" Canvas.Top="54" Text="间距" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="262" Canvas.Top="51" Width="60" Height="18"
+                       Text="{Binding MullionSpacingText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="208" Canvas.Top="78" Text="长度" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="262" Canvas.Top="75" Width="60" Height="18"
+                       Text="{Binding MullionLengthText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="208" Canvas.Top="102" Text="mm" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+
+              <!-- 横梃参数 -->
+              <Border Classes="hbFrame" Canvas.Left="360" Canvas.Top="10" Width="200" Height="120"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="366" Canvas.Top="3" Text="横梃参数"/>
+              <TextBlock Canvas.Left="368" Canvas.Top="30" Text="受荷宽度" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="452" Canvas.Top="27" Width="60" Height="18"
+                       Text="{Binding TransomLoadWidthText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="368" Canvas.Top="54" Text="跨度1" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="452" Canvas.Top="51" Width="60" Height="18"
+                       Text="{Binding TransomSpan1Text, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="368" Canvas.Top="78" Text="跨度2" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="452" Canvas.Top="75" Width="60" Height="18"
+                       Text="{Binding TransomSpan2Text, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="368" Canvas.Top="102" Text="mm" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+
+              <!-- 风荷载标准值 -->
+              <Border Classes="hbFrame" Canvas.Left="570" Canvas.Top="10" Width="180" Height="120"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="576" Canvas.Top="3" Text="风荷载标准值"/>
+              <RadioButton Classes="hb" Canvas.Left="578" Canvas.Top="30" Content="以计算为准"
+                           IsChecked="{Binding WindUseCalcOnly, Mode=TwoWay}" GroupName="wk"/>
+              <RadioButton Classes="hb" Canvas.Left="578" Canvas.Top="52" Content="不小于"
+                           IsChecked="{Binding WindUseManualMin, Mode=TwoWay}" GroupName="wk"/>
+              <TextBox Classes="hb" Canvas.Left="632" Canvas.Top="50" Width="60" Height="18"
+                       Text="{Binding WindMinPaText, Mode=TwoWay}"
+                       IsEnabled="{Binding WindUseManualMin}"/>
+              <TextBlock Canvas.Left="700" Canvas.Top="53" Text="Pa" FontSize="9"/>
+
+              <!-- 玻璃 -->
+              <Border Classes="hbFrame" Canvas.Left="760" Canvas.Top="10" Width="130" Height="120"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="766" Canvas.Top="3" Text="玻璃"/>
+              <Button Classes="hb" Canvas.Left="772" Canvas.Top="30" Width="106" Height="24"
+                      Content="玻璃预演" Command="{Binding GlassPreviewCommand}"/>
+              <TextBlock Canvas.Left="772" Canvas.Top="64" Width="106" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}" Text="wk 由玻璃预演 round6 下传（V31 必须先点）"/>
+
+              <!-- 计算门窗杆件时挠度取值 -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="140" Width="560" Height="110"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="133" Text="计算门窗杆件时挠度取值"/>
+              <ComboBox Classes="hb" Canvas.Left="18" Canvas.Top="158" Width="380" Height="20"
+                        ItemsSource="{Binding DeflLimitModes}"
+                        SelectedIndex="{Binding DeflLimitModeIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="186" Text="人工水平/一致分母" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="130" Canvas.Top="184" Width="60" Height="20"
+                        ItemsSource="{Binding DeflDivisorOptions}"
+                        SelectedIndex="{Binding DeflLimitDivisorIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="200" Canvas.Top="187" Text="垂直分母 500(下拉单选项)" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="212" Width="530" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="自动=L/100；人工一致=H=V=L/分母；不一致=H=L/分母、V=L/500（probe2 逐位：1600/150=10.667、1500/500=3）"/>
+
+              <!-- 输出区 -->
+              <Border Canvas.Left="10" Canvas.Top="260" Width="880" Height="200"
+                      Background="{DynamicResource HbResultBg}" BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="266" Text="计算结果" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+              <ScrollViewer Canvas.Left="12" Canvas.Top="282" Width="876" Height="174">
+                <StackPanel Margin="4">
+                  <TextBlock Text="{Binding PlaceholderText}" Foreground="{DynamicResource HbTextMuted}"
+                             IsVisible="{Binding !HasResults}" TextWrapping="Wrap"/>
+                  <ItemsControl ItemsSource="{Binding Results}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding Text}" Foreground="{Binding Brush}"
+                                   FontFamily="SimSun" FontSize="11" TextWrapping="Wrap"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </ScrollViewer>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="横梃受力形式">
+          <ScrollViewer Height="470">
+            <Canvas Width="900" Height="240" Background="{DynamicResource HbFormBg}">
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="10" Width="700" Height="180"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="3"
+                         Text="门窗系统横梃受力形式选择（样式1..21，V31 默认样式1）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="34" Text="样式序号" FontSize="9"/>
+              <ComboBox Name="StyleBox" Classes="hb" Canvas.Left="90" Canvas.Top="31" Width="120" Height="20" SelectedIndex="0">
+                <ComboBox.Items>
+                  <ComboBoxItem>样式1</ComboBoxItem><ComboBoxItem>样式2</ComboBoxItem>
+                  <ComboBoxItem>样式3</ComboBoxItem><ComboBoxItem>样式4</ComboBoxItem>
+                  <ComboBoxItem>样式5</ComboBoxItem><ComboBoxItem>样式6</ComboBoxItem>
+                  <ComboBoxItem>样式7</ComboBoxItem><ComboBoxItem>样式8</ComboBoxItem>
+                  <ComboBoxItem>样式9</ComboBoxItem><ComboBoxItem>样式10</ComboBoxItem>
+                  <ComboBoxItem>样式11</ComboBoxItem><ComboBoxItem>样式12</ComboBoxItem>
+                  <ComboBoxItem>样式13</ComboBoxItem><ComboBoxItem>样式14</ComboBoxItem>
+                  <ComboBoxItem>样式15</ComboBoxItem><ComboBoxItem>样式16</ComboBoxItem>
+                  <ComboBoxItem>样式17</ComboBoxItem><ComboBoxItem>样式18</ComboBoxItem>
+                  <ComboBoxItem>样式19</ComboBoxItem><ComboBoxItem>样式20</ComboBoxItem>
+                  <ComboBoxItem>样式21</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+              <TextBlock Canvas.Left="18" Canvas.Top="70" Width="660" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="V31 默认态样式1（Option 样式1 chk=1，matrix 遍历其余样式输出无 diff）：21 个样式控制横梃支座边界条件的示意图选择，默认 6063-T5 链未受其余样式影响（door_mullion_matrix 实证未采集样式切换）。"/>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="竖向杆件参数">
+          <ScrollViewer Height="470">
+            <Canvas Width="900" Height="420" Background="{DynamicResource HbFormBg}">
+              <!-- 竖中梃参数（含材质10项/断热/冷弯薄壁/截面库） -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="10" Width="620" Height="200"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="3"
+                         Text="竖中梃参数（截面库：立梃一（门窗用）50系列）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="30" Text="材质" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="60" Canvas.Top="27" Width="140" Height="20"
+                        ItemsSource="{Binding MaterialOptions}"
+                        SelectedItem="{Binding MullionMaterial, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="220" Canvas.Top="29" Content="断热"
+                        IsChecked="{Binding MullionThermalBreak, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="280" Canvas.Top="29" Content="冷弯薄壁型钢"
+                        IsChecked="{Binding MullionThinWall, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="60" Text="W(mm³)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="57" Width="70" Height="18"
+                       Text="{Binding MullionSectionW, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="170" Canvas.Top="60" Text="I(mm⁴)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="230" Canvas.Top="57" Width="80" Height="18"
+                       Text="{Binding MullionSectionI, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="330" Canvas.Top="60" Text="S(mm³)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="390" Canvas.Top="57" Width="70" Height="18"
+                       Text="{Binding MullionSectionS, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="480" Canvas.Top="60" Text="tw(mm)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="540" Canvas.Top="57" Width="50" Height="18"
+                       Text="{Binding MullionSectionTw, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="90" Width="580" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="材质 10 项全表已逐位对拍（f/fv/E 见 DoorMullionEngine.Materials；6061-T4 与 6063-T5 同值、玻纤 E=40000、塑钢 E=2200 挠度联动实证）；断热/冷弯薄壁勾选后 V31 输出无 diff（matrix 实证）；截面行选择=参数库 DataGrid 双击第一行（立梃一 50系列）。"/>
+              <Button Classes="hb" Canvas.Left="18" Canvas.Top="120" Width="100" Height="24"
+                      Content="竖梃 预演" Command="{Binding MullionPreviewCommand}"/>
+
+              <!-- 内框参数（隐藏帧补齐：12 材质 + 木材参数） -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="220" Width="620" Height="180"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="213"
+                         Text="内框参数（V31 隐藏帧补齐：断热型材内框，12 材质含木材/自定义）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="240" Text="内框材质" FontSize="9"/>
+              <ComboBox Name="InnerBox" Classes="hb" Canvas.Left="90" Canvas.Top="237" Width="150" Height="20" SelectedIndex="7">
+                <ComboBox.Items>
+                  <ComboBoxItem>6061-T4</ComboBoxItem><ComboBoxItem>6061-T6</ComboBoxItem>
+                  <ComboBoxItem>6063-T5</ComboBoxItem><ComboBoxItem>6063-T6</ComboBoxItem>
+                  <ComboBoxItem>6063A-T5</ComboBoxItem><ComboBoxItem>6063A-T6</ComboBoxItem>
+                  <ComboBoxItem>塑钢(仅塑材部分)</ComboBoxItem><ComboBoxItem>Q235</ComboBoxItem>
+                  <ComboBoxItem>Q355</ComboBoxItem><ComboBoxItem>6060-T66</ComboBoxItem>
+                  <ComboBoxItem>玻纤增强聚氨酯</ComboBoxItem><ComboBoxItem>木材</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+              <TextBlock Canvas.Left="18" Canvas.Top="270" Text="木材树种" FontSize="9"/>
+              <ComboBox Name="WoodBox" Classes="hb" Canvas.Left="90" Canvas.Top="267" Width="90" Height="20" SelectedIndex="0">
+                <ComboBox.Items>
+                  <ComboBoxItem>TC17A</ComboBoxItem><ComboBoxItem>TC17B</ComboBoxItem>
+                  <ComboBoxItem>TC15A</ComboBoxItem><ComboBoxItem>TC15B</ComboBoxItem>
+                  <ComboBoxItem>TC13A</ComboBoxItem><ComboBoxItem>TC13B</ComboBoxItem>
+                  <ComboBoxItem>TC11A</ComboBoxItem><ComboBoxItem>TC11B</ComboBoxItem>
+                  <ComboBoxItem>TB20</ComboBoxItem><ComboBoxItem>TB17</ComboBoxItem>
+                  <ComboBoxItem>TB15</ComboBoxItem><ComboBoxItem>TB13</ComboBoxItem>
+                  <ComboBoxItem>TB11</ComboBoxItem><ComboBoxItem>自定义</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+              <TextBlock Canvas.Left="200" Canvas.Top="270" Text="强度17 / 密度1.7 / E=10000" FontSize="9" Foreground="{DynamicResource HbTextMuted}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="300" Width="580" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="V31 实证：内框材质切换不进入竖梃/横梃链（door_mullion_matrix I-* 12 组输出 diff=0），属框材独立模块，此处补齐选项 UI。"/>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="横向杆件参数">
+          <ScrollViewer Height="470">
+            <Canvas Width="900" Height="420" Background="{DynamicResource HbFormBg}">
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="10" Width="620" Height="200"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="3"
+                         Text="横中梃参数（截面库：横梃一（门窗用）55系列）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="30" Text="材质" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="60" Canvas.Top="27" Width="140" Height="20"
+                        ItemsSource="{Binding MaterialOptions}"
+                        SelectedItem="{Binding TransomMaterial, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="220" Canvas.Top="29" Content="断热"
+                        IsChecked="{Binding TransomThermalBreak, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="280" Canvas.Top="29" Content="冷弯薄壁型钢"
+                        IsChecked="{Binding TransomThinWall, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="60" Text="水平W" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="57" Width="70" Height="18"
+                       Text="{Binding TransomSectionW, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="170" Canvas.Top="60" Text="水平I" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="230" Canvas.Top="57" Width="80" Height="18"
+                       Text="{Binding TransomSectionI, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="330" Canvas.Top="60" Text="水平S" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="390" Canvas.Top="57" Width="70" Height="18"
+                       Text="{Binding TransomSectionS, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="84" Text="垂直W2" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="81" Width="70" Height="18"
+                       Text="{Binding TransomVertW, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="170" Canvas.Top="84" Text="垂直I2" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="230" Canvas.Top="81" Width="80" Height="18"
+                       Text="{Binding TransomVertI, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="330" Canvas.Top="84" Text="垂直S2" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="390" Canvas.Top="81" Width="70" Height="18"
+                       Text="{Binding TransomVertS, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="480" Canvas.Top="84" Text="t(mm)" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="540" Canvas.Top="81" Width="50" Height="18"
+                       Text="{Binding TransomSectionTw, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <Button Classes="hb" Canvas.Left="18" Canvas.Top="120" Width="100" Height="24"
+                      Content="横梃 预演" Command="{Binding TransomPreviewCommand}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="156" Width="580" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="材质 10 项联动逐位（Q235→2.341、塑钢→219.134、玻纤→12.052）；垂直方向自重默认 0（组合型材链非 0 态未实测，诚实登记）。"/>
+
+              <!-- 钢框参数（隐藏帧补齐） -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="220" Width="620" Height="180"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="213"
+                         Text="钢框参数（V31 隐藏帧补齐：12 材质含木材）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="240" Text="钢框材质" FontSize="9"/>
+              <ComboBox Name="SteelBox" Classes="hb" Canvas.Left="90" Canvas.Top="237" Width="150" Height="20" SelectedIndex="7">
+                <ComboBox.Items>
+                  <ComboBoxItem>6061-T4</ComboBoxItem><ComboBoxItem>6061-T6</ComboBoxItem>
+                  <ComboBoxItem>6063-T5</ComboBoxItem><ComboBoxItem>6063-T6</ComboBoxItem>
+                  <ComboBoxItem>6063A-T5</ComboBoxItem><ComboBoxItem>6063A-T6</ComboBoxItem>
+                  <ComboBoxItem>塑钢(仅塑材部分)</ComboBoxItem><ComboBoxItem>Q235</ComboBoxItem>
+                  <ComboBoxItem>Q355</ComboBoxItem><ComboBoxItem>6060-T66</ComboBoxItem>
+                  <ComboBoxItem>玻纤增强聚氨酯</ComboBoxItem><ComboBoxItem>木材</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+              <TextBlock Canvas.Left="18" Canvas.Top="270" Width="580" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="V31 实证：钢框材质切换不进入横梃链（matrix G-* 12 组 diff=0），属框材独立模块，补齐选项 UI。"/>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="连接件参数选择">
+          <ScrollViewer Height="470">
+            <Canvas Width="900" Height="420" Background="{DynamicResource HbFormBg}">
+              <!-- 计算选择 / 安装形式 / 连接形式 -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="10" Width="140" Height="90"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="3" Text="计算选择"/>
+              <RadioButton Classes="hb" Canvas.Left="18" Canvas.Top="28" Content="计算连接件"
+                           IsChecked="{Binding CalcConnector, Mode=TwoWay}" GroupName="cn"/>
+              <RadioButton Classes="hb" Canvas.Left="18" Canvas.Top="52" Content="不计算连接件"
+                           IsChecked="{Binding NoCalcConnector, Mode=TwoWay}" GroupName="cn"/>
+
+              <Border Classes="hbFrame" Canvas.Left="160" Canvas.Top="10" Width="140" Height="90"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="166" Canvas.Top="3" Text="门窗安装形式"/>
+              <RadioButton Classes="hb" Canvas.Left="168" Canvas.Top="28" Content="无钢附框"
+                           IsChecked="{Binding NoSteelFrame, Mode=TwoWay}" GroupName="fr"/>
+              <RadioButton Classes="hb" Canvas.Left="168" Canvas.Top="52" Content="有钢附框"
+                           IsChecked="{Binding HasSteelFrame, Mode=TwoWay}" GroupName="fr"/>
+
+              <Border Classes="hbFrame" Canvas.Left="310" Canvas.Top="10" Width="170" Height="90"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="316" Canvas.Top="3" Text="连接片与边框连接形式"/>
+              <RadioButton Classes="hb" Canvas.Left="318" Canvas.Top="28" Content="螺钉或抽钉连接"
+                           IsChecked="{Binding ScrewConnection, Mode=TwoWay}" GroupName="cm"/>
+              <RadioButton Classes="hb" Canvas.Left="318" Canvas.Top="52" Content="卡槽连接"
+                           IsChecked="{Binding GrooveConnection, Mode=TwoWay}" GroupName="cm"/>
+
+              <!-- 整樘门窗洞口尺寸 -->
+              <Border Classes="hbFrame" Canvas.Left="490" Canvas.Top="10" Width="150" Height="90"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="496" Canvas.Top="3" Text="整樘门窗洞口尺寸"/>
+              <TextBlock Canvas.Left="498" Canvas.Top="30" Text="高" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="540" Canvas.Top="27" Width="60" Height="18"
+                       Text="{Binding OpeningHeightText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="498" Canvas.Top="56" Text="宽" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="540" Canvas.Top="53" Width="60" Height="18"
+                       Text="{Binding OpeningWidthText, Mode=TwoWay}"/>
+
+              <!-- 连接片参数 -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="110" Width="630" Height="170"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="103" Text="连接片参数"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="130" Text="连接点数" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="127" Width="50" Height="18"
+                       Text="{Binding ConnCountText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="160" Canvas.Top="130" Text="连接片数" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="230" Canvas.Top="127" Width="50" Height="18"
+                       Text="{Binding ConnPlateCount, StringFormat='{}{0:0.###}', Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="300" Canvas.Top="130" Text="结构侧片数" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="380" Canvas.Top="127" Width="50" Height="18"
+                       Text="{Binding ConnStructPlateText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="450" Canvas.Top="130" Text="连接片厚" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="520" Canvas.Top="127" Width="50" Height="18"
+                       Text="{Binding ConnPlateThkText, Mode=TwoWay}"/>
+
+              <TextBlock Canvas.Left="18" Canvas.Top="158" Text="薄壁件厚" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="90" Canvas.Top="155" Width="50" Height="18"
+                       Text="{Binding ConnWallThkText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="160" Canvas.Top="158" Text="边框材质" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="230" Canvas.Top="155" Width="130" Height="20"
+                        ItemsSource="{Binding ConnWallMaterials}"
+                        SelectedIndex="{Binding ConnWallMaterialIndex, Mode=TwoWay}"/>
+              <CheckBox Classes="hb" Canvas.Left="380" Canvas.Top="157" Content="射钉/膨胀螺钉(结构侧)"
+                        IsChecked="{Binding ConnExpansionFix, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="520" Canvas.Top="158" Text="结构钉径" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="580" Canvas.Top="155" Width="50" Height="20"
+                        SelectedIndex="{Binding ConnStructDiameterIndex, Mode=TwoWay}">
+                <ComboBox.Items>
+                  <ComboBoxItem>4.0</ComboBoxItem><ComboBoxItem>4.2</ComboBoxItem>
+                  <ComboBoxItem>4.5</ComboBoxItem><ComboBoxItem>5.2</ComboBoxItem>
+                  <ComboBoxItem>5.5</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+
+              <TextBlock Canvas.Left="18" Canvas.Top="186" Text="边框侧钉类型" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="100" Canvas.Top="183" Width="180" Height="20"
+                        ItemsSource="{Binding ConnFastenerTypes}"
+                        SelectedIndex="{Binding ConnFastenerTypeIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="300" Canvas.Top="186" Text="规格" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="340" Canvas.Top="183" Width="60" Height="20"
+                        ItemsSource="{Binding ConnDiameterOptions}"
+                        SelectedIndex="{Binding ConnScrewDiameterIndex, Mode=TwoWay}"/>
+              <Button Classes="hb" Canvas.Left="520" Canvas.Top="182" Width="110" Height="24"
+                      Content="连接件 预演" Command="{Binding ConnectorPreviewCommand}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="216" Width="600" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="全部组合已逐位对拍：材质11case、铆钉类型×规格25格、膨胀5格、片数除数、卡槽(跳过边框块)、不计算(0输出)、有钢附框(插两块)——DoorConnectorEngineTests。"/>
+
+              <!-- 钢附框参数（隐藏帧补齐） -->
+              <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="290" Width="630" Height="110"
+                      IsEnabled="{Binding HasSteelFrame}"/>
+              <TextBlock Classes="hbFrameTitle" Canvas.Left="16" Canvas.Top="283"
+                         Text="钢附框参数（V31 隐藏帧，勾选有钢附框生效）"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="312" Text="附框厚" FontSize="9"/>
+              <TextBox Classes="hb" Canvas.Left="80" Canvas.Top="309" Width="50" Height="18"
+                       Text="{Binding SteelFrameThkText, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="160" Canvas.Top="312" Text="螺钉类型" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="230" Canvas.Top="309" Width="120" Height="20"
+                        SelectedIndex="{Binding SteelFrameScrewTypeIndex, Mode=TwoWay}">
+                <ComboBox.Items>
+                  <ComboBoxItem>自攻螺钉</ComboBoxItem><ComboBoxItem>自攻自钻螺钉</ComboBoxItem>
+                </ComboBox.Items>
+              </ComboBox>
+              <TextBlock Canvas.Left="380" Canvas.Top="312" Text="规格" FontSize="9"/>
+              <ComboBox Classes="hb" Canvas.Left="420" Canvas.Top="309" Width="60" Height="20"
+                        ItemsSource="{Binding SteelFrameDiameterOptions}"
+                        SelectedIndex="{Binding SteelFrameScrewDiameterIndex, Mode=TwoWay}"/>
+              <TextBlock Canvas.Left="18" Canvas.Top="342" Width="600" FontSize="9" TextWrapping="Wrap"
+                         Foreground="{DynamicResource HbTextMuted}"
+                         Text="附框侧：A块(连接片↔附框)钉固定自攻自钻3.5 恒定；B块(附框↔边框)钉径联动逐位（1232.795/1301.343/1435.858/1589.136）。"/>
+            </Canvas>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+    </Grid>
+  </DockPanel>
+</UserControl>

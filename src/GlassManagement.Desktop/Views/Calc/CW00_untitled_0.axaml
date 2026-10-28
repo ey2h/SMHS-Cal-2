@@ -4,46 +4,46 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: untitled_0 | client 945x542 | 146 nodes (0 labels) |  declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="untitled_0" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="untitled_0" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="945" Height="542" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="945" Height="542" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 12 套 -->
       <TabControl Canvas.Left="6" Canvas.Top="16" Width="927" Height="512">
         <TabItem Header="多计算书文件合并(若觉得各章节的规范引用和附录冗余，可选择不输出，也可自己手工修">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="927" Height="493" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="927" Height="493" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="Frame1">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="558" Height="508" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="558" Height="508" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="百叶窗通风面积计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="569" Height="473" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="569" Height="473" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="地板玻璃计算(按JGJ113规范算法)">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="553" Height="493" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="553" Height="493" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="关于楼面均布活荷载标准值的规范要求">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="908" Height="480" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="908" Height="480" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="城市选择">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="913" Height="477" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="913" Height="477" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBox Classes="hb" Canvas.Left="559" Canvas.Top="2" Width="345" Height="416" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <ListBox Classes="hb" Canvas.Left="614" Canvas.Top="18" Width="273" Height="160"/>
           <Button Classes="hb" Canvas.Left="662" Canvas.Top="198" Width="185" MinHeight="40" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="编辑指定计算书在合并后的计算书文件中的章节标题" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></Button>
@@ -51,41 +51,41 @@
           <RadioButton Classes="hb" Canvas.Left="567" Canvas.Top="249" Width="213" MinHeight="32" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="左侧表格中没有工程所在城市或参数不正确，采用手工输入方式" FontSize="10" TextWrapping="Wrap" LineHeight="13"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="678" Canvas.Top="315" Width="100" Height="19" FontSize="12"/>
           <TextBox Classes="hb" Canvas.Left="678" Canvas.Top="339" Width="58" Height="19" FontSize="12"/>
-          <Button Classes="hb" Canvas.Left="760" Canvas.Top="427" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="693" Canvas.Top="432" Width="76" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="643" Canvas.Top="441" Width="99" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="复制到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="760" Canvas.Top="452" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="819" Canvas.Top="452" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="760" Canvas.Top="427" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="预演" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="693" Canvas.Top="432" Width="76" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="确定" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="643" Canvas.Top="441" Width="99" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="复制到剪贴板" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="760" Canvas.Top="452" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="819" Canvas.Top="452" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="排烟面积计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="563" Height="472" Background="#F0F0F0" ClipToBounds="True">
-          <Button Classes="hb" Canvas.Left="51" Canvas.Top="442" Width="129" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="合并计算书" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="219" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Canvas Width="563" Height="472" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+          <Button Classes="hb" Canvas.Left="51" Canvas.Top="442" Width="129" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="合并计算书" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="219" Canvas.Top="442" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="退出" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="337" Canvas.Top="450" Width="57" Height="19" FontSize="12" Text="1500"/>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="钢销/螺栓(扭+剪)计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="563" Height="472" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="563" Height="472" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="工程基本参数">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="547" Height="72" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="547" Height="72" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <ComboBox Classes="hb" Canvas.Left="1" Canvas.Top="7" Width="193" Height="20"/>
-          <Button Classes="hb" Canvas.Left="398" Canvas.Top="7" Width="139" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="活荷载取值介绍" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="398" Canvas.Top="7" Width="139" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="活荷载取值介绍" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="314" Canvas.Top="8" Width="57" Height="19" FontSize="12" Text="100"/>
           <TextBox Classes="hb" Canvas.Left="297" Canvas.Top="9" Width="73" Height="25" FontSize="12" Text="1500"/>
           <TextBox Classes="hb" Canvas.Left="417" Canvas.Top="9" Width="73" Height="25" FontSize="12" Text="25"/>
           <TextBox Classes="hb" Canvas.Left="150" Canvas.Top="17" Width="65" Height="18" FontSize="12" Text="2"/>
           <ComboBox Classes="hb" Canvas.Left="96" Canvas.Top="18" Width="97" Height="20"/>
-          <Button Classes="hb" Canvas.Left="96" Canvas.Top="21" Width="124" Height="19" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="选择" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="432" Canvas.Top="24" Width="57" Height="25" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="96" Canvas.Top="21" Width="124" Height="19" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="选择" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="432" Canvas.Top="24" Width="57" Height="25" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="314" Canvas.Top="28" Width="57" Height="19" FontSize="12" Text="80"/>
           <TextBox Classes="hb" Canvas.Left="316" Canvas.Top="30" Width="53" Height="20" FontSize="12" Text="1500"/>
           <TextBox Classes="hb" Canvas.Left="193" Canvas.Top="39" Width="73" Height="25" FontSize="12" Text="10"/>
@@ -106,7 +106,7 @@
         </TabItem>
         <TabItem Header="水下玻璃">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="545" Height="449" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="545" Height="449" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <RadioButton Classes="hb" Canvas.Left="7" Canvas.Top="368" Width="505" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当建筑物的高等于或大于100m，同时其周边在2H范围内有比它高的其他建筑物时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBox Classes="hb" Canvas.Left="73" Canvas.Top="374" Width="257" Height="20" FontSize="12" Text="上海XX大厦外装饰工程"/>
           <ComboBox Classes="hb" Canvas.Left="461" Canvas.Top="374" Width="57" Height="20"/>
@@ -116,14 +116,14 @@
           <RadioButton Classes="hb" Canvas.Left="7" Canvas.Top="407" Width="505" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当建筑物各部位的高不同时(应沿建筑物周边逐点算出最大扩大宽度)" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <Border Classes="hbFrame" Canvas.Left="392" Canvas.Top="410" Width="145" Height="53"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="398" Canvas.Top="401" Text="备注"/>
-          <Button Classes="hb" Canvas.Left="472" Canvas.Top="418" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="472" Canvas.Top="418" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="327" Canvas.Top="425" Width="57" Height="19" FontSize="12" Text="150"/>
           </Canvas>
           </ScrollViewer>
         </TabItem>
         <TabItem Header="牛腿计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="534" Height="321" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="534" Height="321" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <Border Classes="hbFrame" Canvas.Left="0" Canvas.Top="0" Width="937" Height="511"/>
           <ListBox Classes="hb" Canvas.Left="0" Canvas.Top="0" Width="601" Height="160"/>
           <ListBox Classes="hb" Canvas.Left="145" Canvas.Top="0" Width="49" Height="376"/>
@@ -169,7 +169,7 @@
           <ComboBox Classes="hb" Canvas.Left="72" Canvas.Top="123" Width="154" Height="20"/>
           <RadioButton Classes="hb" Canvas.Left="1" Canvas.Top="135" Width="505" Height="17" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="当建筑物的高度小于100m时" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <ComboBox Classes="hb" Canvas.Left="228" Canvas.Top="135" Width="70" Height="20"/>
-          <Button Classes="hb" Canvas.Left="0" Canvas.Top="139" Width="161" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="选择需要合并的计算书文件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="0" Canvas.Top="139" Width="161" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="选择需要合并的计算书文件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="360" Canvas.Top="142" Width="73" Height="18" FontSize="12" Text="5000"/>
           <TextBox Classes="hb" Canvas.Left="408" Canvas.Top="144" Width="49" Height="18" FontSize="12" Text="2916"/>
           <ComboBox Classes="hb" Canvas.Left="91" Canvas.Top="151" Width="57" Height="20"/>
@@ -177,7 +177,7 @@
           <TextBox Classes="hb" Canvas.Left="314" Canvas.Top="159" Width="43" Height="19" FontSize="12" Text="11.3"/>
           <TextBox Classes="hb" Canvas.Left="203" Canvas.Top="163" Width="417" Height="20" FontSize="12"/>
           <TextBox Classes="hb" Canvas.Left="360" Canvas.Top="168" Width="57" Height="18" FontSize="12" Text="60"/>
-          <Button Classes="hb" Canvas.Left="0" Canvas.Top="171" Width="161" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="取消表中选定的计算书文件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="0" Canvas.Top="171" Width="161" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="取消表中选定的计算书文件" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <Border Classes="hbFrame" Canvas.Left="152" Canvas.Top="184" Width="177" Height="129"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="158" Canvas.Top="175" Text="主梁截面参数"/>
           <Border Classes="hbFrame" Canvas.Left="352" Canvas.Top="184" Width="177" Height="129"/>
@@ -223,7 +223,7 @@
         </TabItem>
         <TabItem Header="螺钉和螺纹(螺钉直接旋进型材)受力计算">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="534" Height="321" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="534" Height="321" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>

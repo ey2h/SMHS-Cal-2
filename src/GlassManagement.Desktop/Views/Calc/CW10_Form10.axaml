@@ -4,16 +4,16 @@
              FontFamily="SimSun" FontSize="12">
   <!-- VB6 form: 幕墙计算-基本参数输入 | client 907x612 | 102 nodes (55 labels) | pairs=58 spread=0px dropped=0 declutter:drop=0 move=0 -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="幕墙计算-基本参数输入" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="幕墙计算-基本参数输入" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="907" Height="612" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="907" Height="612" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <!-- 互斥参数面板（源程序按选项切换显示），共 3 套 -->
       <TabControl Canvas.Left="8" Canvas.Top="10" Width="890" Height="576">
         <TabItem Header="《建筑结构荷载规范》GB50009-2012表8.3.3关于封闭式矩形平面房屋墙">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="890" Height="576" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="890" Height="576" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="114" Canvas.Top="0" Width="93" Height="15" Text="mm" FontSize="12" TextWrapping="Wrap" LineHeight="15"/>
           <Border Classes="hbFrame" Canvas.Left="3" Canvas.Top="73" Width="122" Height="63"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="9" Canvas.Top="64" Text="重现期(?)"/>
@@ -37,7 +37,7 @@
           <RadioButton Classes="hb" Canvas.Left="651" Canvas.Top="107" Width="113" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按实际计算结果" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <TextBlock Classes="hb" Canvas.Left="825" Canvas.Top="109" Width="18" Height="13" Text="KPa" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <RadioButton Classes="hb" Canvas.Left="135" Canvas.Top="113" Width="65" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="B类地形" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
-          <Button Classes="hb" Canvas.Left="306" Canvas.Top="113" Width="44" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="306" Canvas.Top="113" Width="44" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <RadioButton Classes="hb" Canvas.Left="226" Canvas.Top="115" Width="86" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="墙角边区" FontSize="12" TextTrimming="CharacterEllipsis"/></RadioButton>
           <CheckBox Classes="hb" Canvas.Left="11" Canvas.Top="118" Width="105" Height="15" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="雪荷载敏感结构" FontSize="12" TextTrimming="CharacterEllipsis"/></CheckBox>
           <RadioButton Classes="hb" Canvas.Left="381" Canvas.Top="121" Width="249" Height="15" FontSize="11" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="仅一面墙有主导洞口,0.30≥开孔率&gt;0.10" FontSize="11" TextTrimming="CharacterEllipsis"/></RadioButton>
@@ -95,20 +95,20 @@
           <TextBlock Classes="hb" Canvas.Left="397" Canvas.Top="299" Width="48" Height="13" Text="场地类型" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <Border Classes="hbFrame" Canvas.Left="2" Canvas.Top="329" Width="887" Height="220"/>
           <TextBlock Classes="hbFrameTitle" Canvas.Left="8" Canvas.Top="320" Text="地区参数(新版GB18306-2015中，抗震参数细分到街道与乡镇，表中地震参数仅供参考，以结构说明或新版规范为准)"/>
-          <Button Classes="hb" Canvas.Left="18" Canvas.Top="345" Width="105" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="查找并定位地区" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="818" Canvas.Top="345" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="18" Canvas.Top="345" Width="105" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="查找并定位地区" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="818" Canvas.Top="345" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="帮助" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <ComboBox Classes="hb" Canvas.Left="529" Canvas.Top="347" Width="220" Height="20"/>
           <TextBox Classes="hb" Canvas.Left="133" Canvas.Top="348" Width="65" Height="18" FontSize="12"/>
           <TextBlock Classes="hb" Canvas.Left="215" Canvas.Top="351" Width="252" Height="13" Text="←请在此处输入待查找城市名(或城市名关键字)" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="502" Canvas.Top="351" Width="300" Height="13" Text="★按                                      计算荷载" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <DataGrid Classes="hb" Canvas.Left="8" Canvas.Top="377" Width="873" Height="165"/>
           <TextBlock Classes="hb" Canvas.Left="205" Canvas.Top="402" Width="487" Height="31" Text="其它形式的建筑结构局部体型系数请参看《建筑结构荷载规范》GB50009-2012原文8.3部分；另外点本界面所处屏幕左下角“有问题点这里”，会有具体的提示信息供用户参考。" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="808" Canvas.Top="472" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="808" Canvas.Top="472" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBox Classes="hb" Canvas.Left="234" Canvas.Top="481" Width="81" Height="25" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
           <TextBox Classes="hb" Canvas.Left="370" Canvas.Top="529" Width="25" Height="17" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" IsReadOnly="True"/>
-          <Button Classes="hb" Canvas.Left="637" Canvas.Top="551" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="697" Canvas.Top="551" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
-          <Button Classes="hb" Canvas.Left="19" Canvas.Top="554" Width="89" Height="18" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="自重参数预置" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="637" Canvas.Top="551" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="返回" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="697" Canvas.Top="551" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="下一步" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="19" Canvas.Top="554" Width="89" Height="18" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="自重参数预置" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <CheckBox Classes="hb" Canvas.Left="155" Canvas.Top="556" Width="200" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="按幕墙规范考虑80℃极限温差" FontSize="10" TextTrimming="CharacterEllipsis"/></CheckBox>
           <CheckBox Classes="hb" Canvas.Left="155" Canvas.Top="556" Width="167" Height="12" FontSize="10" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="计算中不考虑地震作用" FontSize="10" TextTrimming="CharacterEllipsis"/></CheckBox>
           </Canvas>
@@ -116,13 +116,13 @@
         </TabItem>
         <TabItem Header="有地震作用效应组合时的分项系数和组合系数(?)">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="890" Height="65" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="890" Height="65" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           <TextBlock Classes="hb" Canvas.Left="4" Canvas.Top="10" Width="96" Height="13" Text="立柱左分格宽度：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="186" Canvas.Top="10" Width="96" Height="13" Text="横框上分格高度：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <ComboBox Classes="hb" Canvas.Left="176" Canvas.Top="16" Width="217" Height="20"/>
           <ComboBox Classes="hb" Canvas.Left="432" Canvas.Top="16" Width="249" Height="20"/>
           <TextBlock Classes="hb" Canvas.Left="8" Canvas.Top="20" Width="168" Height="13" Text="分项系数和组合系数取值依据：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
-          <Button Classes="hb" Canvas.Left="816" Canvas.Top="24" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Left"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
+          <Button Classes="hb" Canvas.Left="816" Canvas.Top="24" Width="59" Height="24" FontSize="12" HorizontalContentAlignment="Center"><TextBlock Classes="hb" Text="说明" FontSize="12" TextTrimming="CharacterEllipsis"/></Button>
           <TextBlock Classes="hb" Canvas.Left="4" Canvas.Top="30" Width="96" Height="13" Text="立柱右分格宽度：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <TextBlock Classes="hb" Canvas.Left="186" Canvas.Top="30" Width="96" Height="13" Text="横框下分格高度：" FontSize="10" TextWrapping="Wrap" LineHeight="13"/>
           <ComboBox Classes="hb" Canvas.Left="88" Canvas.Top="39" Width="65" Height="20"/>
@@ -138,7 +138,7 @@
         </TabItem>
         <TabItem Header="有地震作用效应组合时的分项系数和组合系数(?)">
           <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-          <Canvas Width="890" Height="65" Background="#F0F0F0" ClipToBounds="True">
+          <Canvas Width="890" Height="65" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
           </Canvas>
           </ScrollViewer>
         </TabItem>

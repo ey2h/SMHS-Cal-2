@@ -1,0 +1,170 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GlassManagement.Desktop.Views.Calc.SkylightCalcView"
+             FontFamily="SimSun" FontSize="12">
+  <UserControl.Styles>
+    <Style Selector="ComboBox">
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="FontFamily" Value="SimSun"/>
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="单坡采光顶杆件"/>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Classes="hbStatusBar">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="hbStatus" Text="{Binding StatusText}"
+                   Classes.warning="{Binding StatusIsWarning}" ToolTip.Tip="{Binding StatusText}"/>
+        <TextBlock Grid.Column="1" Classes="hbStatusHint" Text="{Binding WindNote}"
+                   Margin="16,0,0,0" MaxWidth="420" ToolTip.Tip="{Binding WindNote}"/>
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <Canvas Width="749" Height="546" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
+
+        <!-- 采光顶参数 (7,32) 395x389 -->
+        <Border Classes="hbFrame" Canvas.Left="7" Canvas.Top="32" Width="395" Height="389"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="13" Canvas.Top="25" Text="采光顶参数"/>
+
+        <TextBlock Canvas.Left="15" Canvas.Top="50" Text="坡度角" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="95" Canvas.Top="47" Width="46" Height="18"
+                 Text="{Binding SlopeText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="143" Canvas.Top="50" Text="度" FontSize="9"/>
+
+        <!-- 活荷载选项 -->
+        <Border Classes="hbFrame" Canvas.Left="15" Canvas.Top="199" Width="381" Height="35"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="21" Canvas.Top="192" Text="活荷载选项"/>
+        <RadioButton Classes="hb" Canvas.Left="23" Canvas.Top="214" Width="85" Height="15" FontSize="10"
+                     Content="不上人屋面" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="111" Canvas.Top="214" Width="73" Height="15" FontSize="10"
+                     Content="上人屋面"/>
+        <RadioButton Classes="hb" Canvas.Left="191" Canvas.Top="214" Width="73" Height="15" FontSize="10"
+                     Content="给定荷载"/>
+        <TextBox Classes="hb" Canvas.Left="286" Canvas.Top="212" Width="49" Height="18"
+                 Text="{Binding LiveText, Mode=TwoWay}"/>
+
+        <!-- 恒荷载选项 -->
+        <Border Classes="hbFrame" Canvas.Left="15" Canvas.Top="234" Width="380" Height="35"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="21" Canvas.Top="227" Text="恒荷载选项(?)"/>
+        <RadioButton Classes="hb" Canvas.Left="21" Canvas.Top="249" Width="78" Height="15" FontSize="10"
+                     Content="软件默认" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="100" Canvas.Top="249" Width="73" Height="15" FontSize="10"
+                     Content="人工给定"/>
+        <TextBox Classes="hb" Canvas.Left="176" Canvas.Top="247" Width="49" Height="18"
+                 Text="{Binding DeadText, Mode=TwoWay}"/>
+
+        <!-- 体型位置 -->
+        <Border Classes="hbFrame" Canvas.Left="15" Canvas.Top="269" Width="384" Height="66"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="21" Canvas.Top="262" Text="体型位置(?)"/>
+        <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="285" Width="140" Height="12" FontSize="10"
+                     Content="封闭式矩形结构屋面" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="301" Width="140" Height="12" FontSize="10"
+                     Content="开敞式屋面结构"/>
+        <RadioButton Classes="hb" Canvas.Left="32" Canvas.Top="317" Width="140" Height="12" FontSize="10"
+                     Content="人工给定"/>
+
+        <!-- 积雪系数 -->
+        <Border Classes="hbFrame" Canvas.Left="15" Canvas.Top="335" Width="380" Height="35"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="21" Canvas.Top="328" Text="屋面积雪分布系数(?)"/>
+        <RadioButton Classes="hb" Canvas.Left="21" Canvas.Top="351" Width="78" Height="15" FontSize="10"
+                     Content="软件默认" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="100" Canvas.Top="351" Width="73" Height="15" FontSize="10"
+                     Content="人工给定"/>
+        <TextBox Classes="hb" Canvas.Left="176" Canvas.Top="349" Width="49" Height="18" Text="0.85"/>
+
+        <!-- 面板类型 -->
+        <Border Classes="hbFrame" Canvas.Left="15" Canvas.Top="370" Width="379" Height="48"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="21" Canvas.Top="363" Text="面板类型"/>
+        <RadioButton Classes="hb" Canvas.Left="87" Canvas.Top="382" Width="72" Height="15" FontSize="10"
+                     Content="单片玻璃" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="172" Canvas.Top="382" Width="70" Height="15" FontSize="10"
+                     Content="中空玻璃"/>
+        <RadioButton Classes="hb" Canvas.Left="87" Canvas.Top="397" Width="70" Height="15" FontSize="10"
+                     Content="夹层玻璃"/>
+        <RadioButton Classes="hb" Canvas.Left="172" Canvas.Top="397" Width="83" Height="15" FontSize="10"
+                     Content="中空+夹层"/>
+
+        <!-- 主龙骨截面参数 (406,30) 162x130 -->
+        <Border Classes="hbFrame" Canvas.Left="406" Canvas.Top="30" Width="162" Height="130"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="412" Canvas.Top="23" Text="主龙骨截面参数"/>
+        <ComboBox Classes="hb" Canvas.Left="412" Canvas.Top="53" Width="103" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="槽钢［5"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="412" Canvas.Top="80" Text="面积 A" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="470" Canvas.Top="77" Width="63" Height="18" Text="692.8" IsReadOnly="True"/>
+        <TextBlock Canvas.Left="412" Canvas.Top="106" Text="抵抗矩 W" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="478" Canvas.Top="103" Width="63" Height="18" Text="10.4" IsReadOnly="True"/>
+        <TextBlock Canvas.Left="412" Canvas.Top="131" Text="惯性矩 I" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="478" Canvas.Top="128" Width="63" Height="18" Text="26" IsReadOnly="True"/>
+
+        <!-- 副龙骨截面参数 (571,30) 172x130 -->
+        <Border Classes="hbFrame" Canvas.Left="571" Canvas.Top="30" Width="172" Height="130"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="577" Canvas.Top="23" Text="副龙骨截面参数"/>
+        <ComboBox Classes="hb" Canvas.Left="577" Canvas.Top="46" Width="103" Height="20" SelectedIndex="0">
+          <ComboBox.Items><ComboBoxItem Content="角钢∠45*3"/></ComboBox.Items>
+        </ComboBox>
+        <TextBlock Canvas.Left="577" Canvas.Top="70" Text="抵抗矩 Wx" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="651" Canvas.Top="67" Width="63" Height="18" Text="1.58" IsReadOnly="True"/>
+        <TextBlock Canvas.Left="577" Canvas.Top="92" Text="抵抗矩 Wy" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="651" Canvas.Top="89" Width="63" Height="18" Text="1.58" IsReadOnly="True"/>
+        <TextBlock Canvas.Left="577" Canvas.Top="115" Text="惯性矩 I" FontSize="9"/>
+        <TextBox Classes="hb" Canvas.Left="651" Canvas.Top="112" Width="63" Height="18" Text="5.17" IsReadOnly="True"/>
+
+        <!-- 主龙骨材料选择 (395,162) -->
+        <Border Classes="hbFrame" Canvas.Left="395" Canvas.Top="165" Width="173" Height="119"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="401" Canvas.Top="158" Text="主龙骨材料选择"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="185" Width="65" Height="17" FontSize="10"
+                     Content="6063-T5" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="205" Width="65" Height="17" FontSize="10"
+                     Content="6063-T6"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="225" Width="65" Height="17" FontSize="10"
+                     Content="6061-T4"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="245" Width="65" Height="17" FontSize="10"
+                     Content="Q235"/>
+
+        <!-- 副龙骨材料选择 (395,289) -->
+        <Border Classes="hbFrame" Canvas.Left="395" Canvas.Top="290" Width="173" Height="119"/>
+        <TextBlock Classes="hbFrameTitle" Canvas.Left="401" Canvas.Top="283" Text="副龙骨材料选择"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="310" Width="65" Height="17" FontSize="10"
+                     Content="6063-T5" IsChecked="True"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="330" Width="65" Height="17" FontSize="10"
+                     Content="6063-T6"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="350" Width="65" Height="17" FontSize="10"
+                     Content="6061-T4"/>
+        <RadioButton Classes="hb" Canvas.Left="411" Canvas.Top="370" Width="65" Height="17" FontSize="10"
+                     Content="Q235"/>
+
+        <!-- 输出 RichText (7,425) 736x85 -->
+        <Border Classes="hbResultPanel" Canvas.Left="7" Canvas.Top="425" Width="736" Height="85"/>
+        <TextBlock Canvas.Left="11" Canvas.Top="429" Text="计算结果" FontSize="10" Foreground="{DynamicResource HbTextMuted}"/>
+        <ScrollViewer Canvas.Left="9" Canvas.Top="447" Width="732" Height="60">
+          <ItemsControl ItemsSource="{Binding Results}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Text}" FontFamily="Consolas" FontSize="11"
+                           Foreground="{Binding Color}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+        <TextBlock Canvas.Left="11" Canvas.Top="447" Text="{Binding PlaceholderText}"
+                   FontSize="11" Foreground="{DynamicResource HbTextSubtle}" TextWrapping="Wrap" MaxWidth="720"
+                   IsVisible="{Binding HasResults, Converter={x:Static BoolConverters.Not}}"/>
+
+        <!-- 按钮 -->
+        <Button Classes="hb" Canvas.Left="613" Canvas.Top="484" Width="59" Height="24"
+                Content="预演" Command="{Binding PreviewCommand}"/>
+        <Button Classes="hb" Canvas.Left="673" Canvas.Top="484" Width="59" Height="24"
+                Content="上一步" Command="{Binding PrevCommand}"/>
+        <Button Classes="hb" Canvas.Left="673" Canvas.Top="508" Width="59" Height="24"
+                Content="下一步" Command="{Binding NextCommand}"/>
+        <Button Classes="hb" Canvas.Left="613" Canvas.Top="508" Width="59" Height="24"
+                Content="退出" Command="{Binding ExitCommand}"/>
+
+      </Canvas>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

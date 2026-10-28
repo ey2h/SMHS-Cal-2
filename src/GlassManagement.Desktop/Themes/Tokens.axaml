@@ -1,0 +1,151 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="using:System">
+  <!--
+    ════════════════════════════════════════════════════════════════════
+      L0 设计令牌 —— 全项目唯一允许出现十六进制色值 / 字号字面量的地方
+    ════════════════════════════════════════════════════════════════════
+    分层（见 docs/UI_STYLE_SYSTEM_PLAN.md 与 docs/DESIGN.md）：
+      L0 令牌（本文件）→ L1 组件类（App.axaml）→ L2 外壳（HbShell）→ L3 页面
+
+    硬规则：
+      · 视图（Views/**/*.axaml）禁止写 "#RRGGBB"，一律 {DynamicResource HbXxx}
+      · 组件样式（App.axaml 的 Setter）同样只引用令牌
+      · 字号只允许 DESIGN.md 第 3 节定义的刻度（9/10/11/12/13/14/16/18/22/40）
+      · 新增颜色/字号必须先在此登记，否则由 StyleGovernanceTests 拦下
+
+    数值来源：**全部等于改造前的实际在用值**，保证迁移视觉零变化。
+    复刻界面基准取自 V31 运行期实测（hb_window_tree2.tsv）：窗体底 #F0F0F0、
+    标题条 #E8EEF7、结果框 #C0FFFF、边框 #A0A0A0 / #808080。
+  -->
+
+  <!-- ══════════════════ 1. 颜色 · 表面 ══════════════════ -->
+  <SolidColorBrush x:Key="HbAppBg"       Color="#006600"/>  <!-- 主窗客户区深绿（V31 观感，勿改变量名） -->
+  <SolidColorBrush x:Key="HbBrandGreen"  Color="#0A7A0A"/>  <!-- 绿色区里的水印/次级绿 -->
+  <SolidColorBrush x:Key="HbFormBg"      Color="#F0F0F0"/>  <!-- 窗体/分组框底（V31 实测） -->
+  <SolidColorBrush x:Key="HbPanelBg"     Color="#FBFBFD"/>  <!-- 内容面板底（较窗体略亮） -->
+  <SolidColorBrush x:Key="HbControlBg"   Color="#FFFFFF"/>  <!-- 输入框/列表/表格底 -->
+  <SolidColorBrush x:Key="HbResultBg"    Color="#C0FFFF"/>  <!-- 结果输出框底（V31 实测青底） -->
+  <SolidColorBrush x:Key="HbResultBgAlt" Color="#E0F7F7"/>  <!-- 结果区交替行/次级青底 -->
+  <SolidColorBrush x:Key="HbStatusBarBg" Color="#F0F0F0"/>  <!-- 状态栏底 -->
+  <SolidColorBrush x:Key="HbTitleBarBg"  Color="#E8EEF7"/>  <!-- 标题条底（高 19） -->
+  <SolidColorBrush x:Key="HbWarnBg"      Color="#FEF3C7"/>  <!-- 提示/警告条底 -->
+  <SolidColorBrush x:Key="HbSurfaceAlt"  Color="#EDEDED"/>  <!-- 交替行/次级面 -->
+  <SolidColorBrush x:Key="HbSurfaceSubtle" Color="#E8E8E8"/><!-- 更浅的分区底 -->
+  <SolidColorBrush x:Key="HbHeaderCellBg" Color="#808080"/> <!-- 表头/对比列底（深灰，白字） -->
+
+  <!-- ══════════════════ 2. 颜色 · 边框与分隔 ══════════════════ -->
+  <SolidColorBrush x:Key="HbBorder"       Color="#A0A0A0"/> <!-- 通用边框、分隔线 -->
+  <SolidColorBrush x:Key="HbBorderStrong" Color="#808080"/> <!-- 结果框等需要加重的外框 -->
+  <SolidColorBrush x:Key="HbBorderSoft"   Color="#CCCCCC"/> <!-- 表格内细线 -->
+  <SolidColorBrush x:Key="HbBorderMid"    Color="#C8C8C8"/> <!-- 输入框静态边 -->
+  <SolidColorBrush x:Key="HbBorderDeep"   Color="#7A7A7A"/> <!-- 强调外框（焦点/主框） -->
+  <SolidColorBrush x:Key="HbBorderHairline" Color="#E2E8F0"/><!-- 极浅分隔（新屏遗留，收敛用） -->
+  <SolidColorBrush x:Key="HbFrameBorder"  Color="#9AA5B1"/> <!-- 兼容历史：早期 Frame 边框 -->
+  <SolidColorBrush x:Key="HbFrameLine"    Color="#8A8A8A"/> <!-- 菜单条与状态栏的上下边线 -->
+
+  <!-- ══════════════════ 3. 颜色 · 文字 ══════════════════ -->
+  <SolidColorBrush x:Key="HbText"         Color="#1F2937"/> <!-- 正文 -->
+  <SolidColorBrush x:Key="HbTextMuted"    Color="#6B6B6B"/> <!-- 次要说明、单位 -->
+  <SolidColorBrush x:Key="HbTextSubtle"   Color="#808080"/> <!-- 三级文字（表头旁注/占位） -->
+  <SolidColorBrush x:Key="HbTextDisabled" Color="#9A9A9A"/> <!-- 禁用态 -->
+  <SolidColorBrush x:Key="HbTextHint"     Color="#6B7280"/> <!-- 状态栏提示（偏冷灰） -->
+  <SolidColorBrush x:Key="HbTextStrong"   Color="#000000"/> <!-- 分组标题等需要顶格黑 -->
+  <SolidColorBrush x:Key="HbTextMenu"     Color="#111111"/> <!-- 菜单文字 -->
+  <SolidColorBrush x:Key="HbTextBody"     Color="#333333"/> <!-- 状态栏文字 -->
+  <SolidColorBrush x:Key="HbTitleText"    Color="#24405E"/> <!-- 标题条文字 -->
+  <SolidColorBrush x:Key="HbTitleTextDeep" Color="#12315A"/> <!-- 标题条文字（深） -->
+  <SolidColorBrush x:Key="HbOnAccent"     Color="#FFFFFF"/> <!-- 强调底上的文字 -->
+  <SolidColorBrush x:Key="HbOnAccentMuted" Color="#E2E8F0"/> <!-- 强调底上的次要文字 -->
+
+  <!-- ══════════════════ 4. 颜色 · 交互与状态 ══════════════════ -->
+  <SolidColorBrush x:Key="HbButtonBg" Color="#E3E3E3"/>     <!-- 普通按钮底 -->
+  <SolidColorBrush x:Key="HbHover"    Color="#DEE7F5"/>     <!-- 悬停 -->
+  <SolidColorBrush x:Key="HbPressed"  Color="#C8D6EA"/>     <!-- 按下 -->
+  <SolidColorBrush x:Key="HbAccent"   Color="#2F6FED"/>     <!-- 强调/选中/链接/焦点环 -->
+  <SolidColorBrush x:Key="HbMenuHover" Color="#CDE4F7"/>    <!-- 菜单项悬停 -->
+  <!-- 判定色（结论行：满足/不满足/提示）—— 唯一允许出现的语义色 -->
+  <SolidColorBrush x:Key="HbSuccess"     Color="#10B981"/>   <!-- 满足 (√) -->
+  <SolidColorBrush x:Key="HbSuccessDeep" Color="#008000"/>   <!-- 满足（复刻屏深绿） -->
+  <SolidColorBrush x:Key="HbDanger"      Color="#EF4444"/>   <!-- 不满足 (×) / 错误 -->
+  <SolidColorBrush x:Key="HbWarn"        Color="#F59E0B"/>   <!-- 警告（橙色文字） -->
+  <SolidColorBrush x:Key="HbFocusRing"   Color="#2F6FED"/>   <!-- 焦点环（与强调同值，语义分离） -->
+  <SolidColorBrush x:Key="HbInvalid"     Color="#EF4444"/>   <!-- 校验失败边框 -->
+
+  <!-- ══════════════════ 5. 字体 ══════════════════
+       中文正文唯一族 = SimSun（宋体，V31 实测 9pt=12px）；等宽 = Consolas（输出/公式）。
+       字号刻度直接来自改造前实际用量分布：12(3028) / 10(1604) / 11(810) / 9(269) / 14 / 16 / 18 / 22 / 40。
+       只允许这 10 个值，新增必须先登记。
+  -->
+  <sys:Double x:Key="HbFontMicro">9</sys:Double>      <!-- 角标 / 极密注释 -->
+  <sys:Double x:Key="HbFontDense">10</sys:Double>     <!-- 表格 / 密集字段 -->
+  <sys:Double x:Key="HbFontCompact">11</sys:Double>   <!-- 页签 / 标题条 / 紧凑标签 -->
+  <sys:Double x:Key="HbFontBody">12</sys:Double>      <!-- 正文（默认） -->
+  <sys:Double x:Key="HbFontEmphasis">14</sys:Double>  <!-- 强调数值 -->
+  <sys:Double x:Key="HbFontSection">16</sys:Double>   <!-- 分区标题 -->
+  <sys:Double x:Key="HbFontLarge">18</sys:Double>     <!-- 大号结论 -->
+  <sys:Double x:Key="HbFontTitle">22</sys:Double>     <!-- 页面标题 -->
+  <sys:Double x:Key="HbFontDisplay">40</sys:Double>   <!-- 起始页水印 -->
+
+  <!-- 行高（与字号成对，避免各屏手写 LineHeight） -->
+  <sys:Double x:Key="HbLineMicro">12</sys:Double>
+  <sys:Double x:Key="HbLineDense">13</sys:Double>
+  <sys:Double x:Key="HbLineCompact">14</sys:Double>
+  <sys:Double x:Key="HbLineBody">15</sys:Double>
+  <sys:Double x:Key="HbLineRelaxed">20</sys:Double>
+
+  <!-- ══════════════════ 6. 间距刻度（4 的倍数） ══════════════════ -->
+  <Thickness x:Key="HbGapXxs">2</Thickness>
+  <Thickness x:Key="HbGapXs">4</Thickness>
+  <Thickness x:Key="HbGapS">8</Thickness>
+  <Thickness x:Key="HbGapM">12</Thickness>
+  <Thickness x:Key="HbGapL">16</Thickness>
+  <Thickness x:Key="HbGapXl">24</Thickness>
+
+  <!-- ══════════════════ 7. 圆角（复刻皮肤一律 0） ══════════════════ -->
+  <CornerRadius x:Key="HbRadiusNone">0</CornerRadius>
+  <CornerRadius x:Key="HbRadiusSm">2</CornerRadius>
+  <CornerRadius x:Key="HbRadiusMd">4</CornerRadius>
+  <CornerRadius x:Key="HbRadiusLg">8</CornerRadius>
+
+  <!-- ══════════════════ 8. 层级与阴影（平铺为主，仅卡片用） ══════════════════ -->
+  <BoxShadows x:Key="HbShadowCard">0 2 8 0 #0A000000</BoxShadows>
+  <BoxShadows x:Key="HbShadowSoft">0 1 4 0 #08000000</BoxShadows>
+  <BoxShadows x:Key="HbShadowNone">0 0 0 0 #00000000</BoxShadows>
+
+  <!-- ══════════════════ 9. 动效时长（ms） ══════════════════ -->
+  <sys:Double x:Key="HbMotionFast">100</sys:Double>   <!-- 悬停/按下反馈 -->
+  <sys:Double x:Key="HbMotionBase">160</sys:Double>   <!-- 展开/切换 -->
+
+  <!-- ══════════════════ 10. 主页/通用外壳色（绿色族，禁止紫色） ══════════════════
+       历史包袱：这批键原名「Modern*」，曾用紫色强调色 #2f27ce（Avalonia Fluent 默认审美）。
+       2026-10-28 按用户要求统一为 **V31 绿色复刻**：应用只有一个视觉谱系，
+       全站主色 = 深绿 #006600（客户区）/ #0A7A0A（品牌绿），不再保留紫色分支。
+       键名保留只为兼容既有引用，值已全部改为绿系；新代码请直接用 Hb* 令牌。
+  -->
+  <Color x:Key="ModernPageBg">#F7FAF7</Color>
+  <Color x:Key="ModernCardBg">#FFFFFF</Color>
+  <Color x:Key="ModernAccent">#0A7A0A</Color>          <!-- ← 原紫色 #2f27ce，已换绿 -->
+  <Color x:Key="ModernAccentLight">#E6F4E6</Color>     <!-- ← 原淡紫 #e8e7fa，已换淡绿 -->
+  <Color x:Key="ModernTextPrimary">#1F2937</Color>
+  <Color x:Key="ModernTextSecondary">#6B6B6B</Color>
+  <Color x:Key="ModernBorder">#C9D3C9</Color>
+  <Color x:Key="ModernSuccess">#10B981</Color>
+  <Color x:Key="ModernStepFuture">#D1D5DB</Color>
+  <Color x:Key="ModernStepFutureText">#9CA3AF</Color>
+  <Color x:Key="ModernResultBg">#C0FFFF</Color>        <!-- 与复刻结果框同色，避免两套青 -->
+  <Color x:Key="ModernStatusBarBg">#F0F0F0</Color>
+  <Color x:Key="ModernDanger">#EF4444</Color>
+
+  <!-- ══════════════════ 11. Fluent 系统强调色覆盖（关键：阻断 Avalonia 默认紫） ══════════════════
+       不覆盖这几项时，ToggleSwitch / ProgressBar / 滚动条滑块 / 部分控件模板
+       会回落到 Fluent 的紫色强调色，与绿灰复刻皮肤冲突。
+  -->
+  <Color x:Key="SystemAccentColor">#0A7A0A</Color>
+  <Color x:Key="SystemAccentColorLight1">#1C8F1C</Color>
+  <Color x:Key="SystemAccentColorLight2">#3FA33F</Color>
+  <Color x:Key="SystemAccentColorLight3">#6FBF6F</Color>
+  <Color x:Key="SystemAccentColorDark1">#076007</Color>
+  <Color x:Key="SystemAccentColorDark2">#054A05</Color>
+  <Color x:Key="SystemAccentColorDark3">#033803</Color>
+</ResourceDictionary>

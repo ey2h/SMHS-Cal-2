@@ -165,7 +165,14 @@ public partial class ConnectCalcViewModel : ObservableObject
 
     public bool HasResults => Results.Count > 0;
     public string PlaceholderText => HasResults ? "" : "点「预演」按当前连接参数出计算结果";
-    public bool PreviewEnabled => SelectedColumnBolt is not null && SelectedFrameBolt is not null
+
+    /// <summary>
+    /// ★ 门禁：连接计算的 wk / 跨度 / 层高全部来自第一页计算链，
+    /// 第一页没算过就<b>不允许</b>预演（不再用 0.001285 之类的常量顶替）。
+    /// </summary>
+    public bool PreviewEnabled => Session.SupportWindReady
+                                  && SelectedColumnBolt is not null
+                                  && SelectedFrameBolt is not null
                                   && SelectedMainBolt is not null;
 
     [ObservableProperty] private string _statusText = "就绪";
@@ -173,10 +180,10 @@ public partial class ConnectCalcViewModel : ObservableObject
 
     private void SyncFromSession()
     {
-        WkNote = Session.WindStandardKpa > 0
+        WkNote = Session.SupportWindReady
             ? $"wk={Session.WindStandardKpa:0.###}KPa（支承口径）｜"
               + $"跨度 {Session.BeamSpanMm:0.###}mm｜层高 {Session.BeamUpperGridHeightMm:0.###}mm"
-            : "第一页尚未算出风荷载";
+            : CalcSession.UpstreamNotReadyText;
         OnPropertyChanged(nameof(WkNote));
         OnPropertyChanged(nameof(PreviewEnabled));
     }
@@ -200,8 +207,10 @@ public partial class ConnectCalcViewModel : ObservableObject
 
         return new ConnectInputs
         {
-            // 支承口径：连接屏与立柱/横梁/埋件共用同一个 wk
-            Wk = Session.WindStandardKpa > 0 ? Session.WindStandardKpa / 1000.0 : 0.001285,
+            // 支承口径：连接屏与立柱/横梁/埋件共用同一个 wk。
+            // ★ 不走常量兜底：Session.SupportWindReady 为 false 时 PreviewEnabled 已挡住，
+            //   这里取到的必然是第一页算出来的值（万一被绕过，宁可 0 也不会静默用 1.285）。
+            Wk = Session.SupportWindReady ? Session.WindStandardKpa / 1000.0 : 0,
             BeamSpan = Session.BeamSpanMm,
             StoryHeight = Session.BeamUpperGridHeightMm,
             PanelWidth = Session.ColumnBayWidthMm,

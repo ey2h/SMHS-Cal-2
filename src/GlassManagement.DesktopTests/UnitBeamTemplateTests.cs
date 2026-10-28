@@ -28,9 +28,8 @@ public class UnitBeamTemplateTests
 
     private static string[] RenderOnce(bool mid, double hMm)
     {
-        var wiz = new CalcWizardViewModel();
-        var s = wiz.Session;
-        s.WindStandardKpa = 1.285;
+        // ★ 铁律一之三：从第一页起算。
+        var (s, wiz) = FirstPage.Run();
         s.BeamLeftBayMm = 1100;
         s.BeamRightBayMm = 1100;
         s.BeamUpperGridHeightMm = hMm;

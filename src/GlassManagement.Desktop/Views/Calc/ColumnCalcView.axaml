@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GlassManagement.Desktop.Views.Calc.ColumnCalcView"
              FontFamily="SimSun" FontSize="12">
@@ -13,7 +13,7 @@
       <TextBlock Classes="hbTitleText" Text="幕墙计算-立柱计算"/>
     </Border>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="936" Height="442" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
       <!-- 预演结果面板：V35 的 RichText 控件就在 rel(633,32) 292x352，底色 V31 实测 #C0FFFF -->
       <Border Classes="hbResultPanel" Canvas.Left="633" Canvas.Top="32" Width="292" Height="352">
@@ -30,7 +30,7 @@
         </ScrollViewer>
       </Border>
       <TextBlock Canvas.Left="641" Canvas.Top="40" Text="{Binding PlaceholderText}"
-                 FontFamily="SimSun" FontSize="12" Foreground="#6B6B6B"
+                 FontFamily="SimSun" FontSize="12" Foreground="{DynamicResource HbTextMuted}"
                  TextWrapping="Wrap" Width="276" IsVisible="{Binding !HasResults}"/>
 
       <!-- ── Frame 力学模型 (15,33) 615x81 ── -->
@@ -168,10 +168,10 @@
       <!-- 型材表 = V35 参数库「立柱」表全量 95 行（ParamLibrary 内嵌）。
            列宽按参数库 9 列排布：型材代号/Ix/Iy/Wx1/Wx2/壁厚/截面积/面积矩/受剪腹板总宽度。
            Avalonia DataGrid 的 Width 不生效（被当 Auto/0）→ 自绘表头 + ListBox 行，1:1 还原 VB6 外观。 -->
-      <Border Canvas.Left="20" Canvas.Top="271" Width="604" Height="157" Background="#FFFFFF"
-              BorderBrush="#646464" BorderThickness="1"/>
-      <Border Canvas.Left="20" Canvas.Top="271" Width="604" Height="17" Background="#F0F0F0"
-              BorderBrush="#808080" BorderThickness="1"/>
+      <Border Canvas.Left="20" Canvas.Top="271" Width="604" Height="157" Background="{DynamicResource HbControlBg}"
+              BorderBrush="{DynamicResource HbBorderDeep}" BorderThickness="1"/>
+      <Border Canvas.Left="20" Canvas.Top="271" Width="604" Height="17" Background="{DynamicResource HbFormBg}"
+              BorderBrush="{DynamicResource HbBorderStrong}" BorderThickness="1"/>
       <TextBlock Canvas.Left="24" Canvas.Top="273" Width="164" Text="型材代号" FontSize="12"/>
       <TextBlock Canvas.Left="192" Canvas.Top="273" Width="48" Text="Ix惯性矩" FontSize="11"/>
       <TextBlock Canvas.Left="244" Canvas.Top="273" Width="46" Text="Iy惯性矩" FontSize="11"/>
@@ -181,7 +181,7 @@
       <TextBlock Canvas.Left="430" Canvas.Top="273" Width="44" Text="截面积" FontSize="11"/>
       <TextBlock Canvas.Left="478" Canvas.Top="273" Width="42" Text="面积矩" FontSize="11"/>
       <TextBlock Canvas.Left="524" Canvas.Top="273" Width="96" Text="受剪腹板总宽度" FontSize="11"/>
-      <Border Canvas.Left="20" Canvas.Top="288" Width="588" Height="140" Background="#FFFFFF"/>
+      <Border Canvas.Left="20" Canvas.Top="288" Width="588" Height="140" Background="{DynamicResource HbControlBg}"/>
       <ListBox Canvas.Left="20" Canvas.Top="288" Width="588" Height="140"
                ItemsSource="{Binding Columns}" SelectedItem="{Binding SelectedColumn, Mode=TwoWay}"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -203,10 +203,10 @@
             </Setter>
           </Style>
           <Style Selector="ListBoxItem:selected /template/ Border#row">
-            <Setter Property="Background" Value="#C0FFFF"/>
+            <Setter Property="Background" Value="{DynamicResource HbResultBg}"/>
           </Style>
           <Style Selector="ListBoxItem:pointerover /template/ Border#row">
-            <Setter Property="Background" Value="#E0F7F7"/>
+            <Setter Property="Background" Value="{DynamicResource HbResultBgAlt}"/>
           </Style>
         </ListBox.Styles>
         <ListBox.ItemTemplate>
@@ -226,14 +226,14 @@
         </ListBox.ItemTemplate>
       </ListBox>
       <!-- 列分隔线（VB6 DataGrid 竖线）：按新列宽 168/52/50/50/50/36/48/46/88 累计 -->
-      <Border Canvas.Left="188" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="240" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="290" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="340" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="390" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="426" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="474" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
-      <Border Canvas.Left="520" Canvas.Top="288" Width="1" Height="140" Background="#808080"/>
+      <Border Canvas.Left="188" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="240" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="290" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="340" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="390" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="426" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="474" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
+      <Border Canvas.Left="520" Canvas.Top="288" Width="1" Height="140" Background="{DynamicResource HbHeaderCellBg}"/>
 
       <!-- ── 顶层导航按钮（V35 #54~#57：801/382、861/382、801/406、861/406）── -->
       <Button Classes="hb" Canvas.Left="801" Canvas.Top="382" Width="59" Height="24" FontSize="12"

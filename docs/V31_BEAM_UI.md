@@ -700,3 +700,45 @@ slot[155]=1.497      τy = round3(V_v·Sx/(Ix·tx))
 1. 单元式下「玻璃自重为集中力」等开关的可用性与构件式是否一致，未逐一验证。
 2. 中横框 `V_h` 的 `(B·g·kq·1.4)·B/8` 项在 `ignoreSeismic` 下是否同步归零，未单独实测（当前按同一 kq 联动）。
 
+
+---
+
+## 十、「单位说明」弹窗（2026-10-26 实机取证，已复刻）
+
+按钮 `(564,179) 65x25`，V31 侧 `en=1`（旧注释把它当"未复刻分支"置灰，是错的）。
+
+点它弹标准 Win32 消息框：
+
+| 项 | 实测值 |
+|---|---|
+| 窗口类 | `#32770` |
+| 标题 | `单位说明：`（**全角冒号**） |
+| client | 144×217 |
+| Static | `(15,54) 91x82`，正文 5 行 |
+| Button | `确定 (35,174) 88x28`，唯一出口 |
+
+正文 `WM_GETTEXT` 原文（`repr` 直读，`\n` 分隔，**没有** VB 的 `\r\n`）：
+
+```
+'惯性矩单位cm^4\n抵抗矩单位cm^3\n壁厚单位mm\n截面积单位mm^2\n面积矩单位cm^3'
+```
+
+即：
+
+```
+惯性矩单位cm^4
+抵抗矩单位cm^3
+壁厚单位mm
+截面积单位mm^2
+面积矩单位cm^3
+```
+
+要点：`^4/^3/^2` 是**半角插入符+数字**（不是上标字符）；`cm`/`mm` 全小写。
+
+取证脚本：`local-data/recon/btn_popup_probe.py --form 横梁计算 --btn 单位说明 --tag beam_unit`
+（该脚本必须把 `tops(pid)` **自身**也纳入窗体扫描，否则 `#32770` 永远看不到；
+ 另 `v31_py.read_ctrl` 会把 `\r\n` 换成空格，取原文必须直接 `SendMessageW(WM_GETTEXT)`。）
+
+复刻：`BeamCalcViewModel.UnitNoteText / UnitNoteTitle` +
+`BeamCalcView.axaml` 覆盖层（根 `Panel` 包 `DockPanel`，不改任何既有坐标）。
+断言：`DesktopTests/BeamUnitNoteTests.cs`（5 条，含"恰好 5 行"与全角冒号）。

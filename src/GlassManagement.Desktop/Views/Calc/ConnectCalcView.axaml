@@ -54,7 +54,7 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="796" Height="510" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="796" Height="510" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 连接形式 Frame (10,31) 415x36 ══ -->
         <Border Classes="hbFrame" Canvas.Left="10" Canvas.Top="31" Width="415" Height="36"/>
@@ -102,7 +102,7 @@
         <!-- ══ 立柱与角片连接螺栓表 (15,173) 405x85 ══ -->
         <StackPanel Canvas.Left="15" Canvas.Top="173" Width="405">
           <TextBlock Text="立柱与角片连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
-                     Background="#E8E8E8"/>
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
           <DataGrid Width="405" Height="67"
                   ItemsSource="{Binding ColumnBoltRows}"
                   SelectedItem="{Binding SelectedColumnBolt, Mode=TwoWay}"
@@ -125,7 +125,7 @@
         <!-- ══ 横框与角片连接螺栓表 (15,261) 405x85 ══ -->
         <StackPanel Canvas.Left="15" Canvas.Top="261" Width="405">
           <TextBlock Text="横框与角片连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
-                     Background="#E8E8E8"/>
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
           <DataGrid Width="405" Height="67"
                   ItemsSource="{Binding FrameBoltRows}"
                   SelectedItem="{Binding SelectedFrameBolt, Mode=TwoWay}"
@@ -172,7 +172,7 @@
         <!-- ══ 立柱与主体连接螺栓表 (15,409) 404x85 ══ -->
         <StackPanel Canvas.Left="15" Canvas.Top="409" Width="404">
           <TextBlock Text="立柱与主体连接螺栓" TextAlignment="Center" Height="16" FontSize="11"
-                     Background="#E8E8E8"/>
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
           <DataGrid Width="404" Height="67"
                   ItemsSource="{Binding MainBoltRows}"
                   SelectedItem="{Binding SelectedMainBolt, Mode=TwoWay}"
@@ -194,7 +194,7 @@
 
         <!-- ══ 输出区 (435,33) 346x407 ══ -->
         <Border Canvas.Left="435" Canvas.Top="33" Width="346" Height="407"
-                Background="White" BorderBrush="#9AA0A6" BorderThickness="1">
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
           <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                         Padding="4,2">
             <ItemsControl ItemsSource="{Binding Results}">
@@ -207,7 +207,7 @@
           </ScrollViewer>
         </Border>
         <TextBlock Canvas.Left="439" Canvas.Top="40" Text="{Binding PlaceholderText}"
-                   Foreground="#808080" FontSize="12" IsHitTestVisible="False"/>
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="12" IsHitTestVisible="False"/>
 
         <!-- ══ 按钮 ══ -->
         <Button Classes="hb" Canvas.Left="657" Canvas.Top="452" Width="59" Height="24"

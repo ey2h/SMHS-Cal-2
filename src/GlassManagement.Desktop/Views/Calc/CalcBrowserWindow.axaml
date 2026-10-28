@@ -4,22 +4,22 @@
         Title="原程序 V35 界面 1:1 复刻 — 窗体浏览"
         Width="1280" Height="820"
         WindowStartupLocation="CenterScreen"
-        Background="#FFFFFF">
+        Background="{DynamicResource HbControlBg}">
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="44" Background="#0F172A">
+    <Border DockPanel.Dock="Top" Height="44" Background="{DynamicResource HbFormBg}">
       <DockPanel Margin="16,0" VerticalAlignment="Center">
         <TextBlock DockPanel.Dock="Left" Text="SMHS幕墙门窗结构计算软件 V35.0 — 界面复刻（从程序窗体对象/设计记录提取）"
-                   Foreground="#E2E8F0" FontSize="13" VerticalAlignment="Center"/>
-        <TextBlock x:Name="InfoText" DockPanel.Dock="Right" Text="" Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"/>
+                   Foreground="{DynamicResource HbOnAccentMuted}" FontSize="13" VerticalAlignment="Center"/>
+        <TextBlock x:Name="InfoText" DockPanel.Dock="Right" Text="" Foreground="{DynamicResource HbTextSubtle}" FontSize="12" VerticalAlignment="Center"/>
       </DockPanel>
     </Border>
-    <Border DockPanel.Dock="Left" Width="280" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+    <Border DockPanel.Dock="Left" Width="280" Background="{DynamicResource HbPanelBg}" BorderBrush="{DynamicResource HbBorderHairline}" BorderThickness="0,0,1,0">
       <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="窗体列表（34）" Margin="14,12,14,6" FontSize="12" Foreground="#64748B"/>
+        <TextBlock DockPanel.Dock="Top" Text="窗体列表（34）" Margin="14,12,14,6" FontSize="12" Foreground="{DynamicResource HbTextMuted}"/>
         <ListBox x:Name="FormList" Margin="6,0,6,6" FontSize="12"/>
       </DockPanel>
     </Border>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#E9EDF3">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="{DynamicResource HbFormBg}">
       <ContentControl x:Name="Host" Margin="16"/>
     </ScrollViewer>
   </DockPanel>

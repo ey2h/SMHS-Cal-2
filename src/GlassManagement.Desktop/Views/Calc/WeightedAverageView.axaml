@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.WeightedAverageView"
+             x:DataType="vm:WeightedAverageViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="节能(热工)-民用建筑节能计算加权计算器"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+          <Button Content="清空" Command="{Binding ClearCommand}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="20">
+          <StackPanel Spacing="2">
+            <TextBlock Text="Σ权重(面积)"/>
+            <TextBox Text="{Binding SumWeight}" Width="120" IsReadOnly="True"/>
+          </StackPanel>
+          <StackPanel Spacing="2">
+            <TextBlock Text="值1 加权平均"/>
+            <TextBox Text="{Binding WeightedA}" Width="120" IsReadOnly="True"/>
+          </StackPanel>
+          <StackPanel Spacing="2">
+            <TextBlock Text="值2 加权平均"/>
+            <TextBox Text="{Binding WeightedB}" Width="120" IsReadOnly="True"/>
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <Grid Margin="12" ColumnDefinitions="Auto,*,*,*" RowDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="权重(面积)" FontWeight="Bold" Margin="4"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="值1" FontWeight="Bold" Margin="4"/>
+        <TextBlock Grid.Row="0" Grid.Column="3" Text="值2" FontWeight="Bold" Margin="4"/>
+
+        <ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Grid ColumnDefinitions="24,*,*,*" Margin="0,2">
+                <TextBlock Grid.Column="0" Text="行" VerticalAlignment="Center" Opacity="0.6"/>
+                <TextBox Grid.Column="1" Text="{Binding Weight}" Margin="4"/>
+                <TextBox Grid.Column="2" Text="{Binding ValueA}" Margin="4"/>
+                <TextBox Grid.Column="3" Text="{Binding ValueB}" Margin="4"/>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Grid>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

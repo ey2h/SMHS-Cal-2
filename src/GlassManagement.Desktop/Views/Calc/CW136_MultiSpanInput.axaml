@@ -10,13 +10,13 @@
     本宿主标题栏 + 面板按同一尺寸还原，便于与 V31 截图逐像素对照。
   -->
   <DockPanel>
-    <Border DockPanel.Dock="Top" Height="19" Background="#E8EEF7" BorderBrush="#A0A0A0" BorderThickness="0,0,0,1">
-      <TextBlock Text="全隐框玻璃幕墙计算-立柱计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#1F2937"/>
+    <Border DockPanel.Dock="Top" Height="19" Background="{DynamicResource HbTitleBarBg}" BorderBrush="{DynamicResource HbBorder}" BorderThickness="0,0,0,1">
+      <TextBlock Text="全隐框玻璃幕墙计算-立柱计算" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbText}"/>
     </Border>
-    <Border DockPanel.Dock="Top" Height="18" Background="#F0F0F0">
-      <TextBlock x:Name="StatusText" Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="#24405E"/>
+    <Border DockPanel.Dock="Top" Height="18" Background="{DynamicResource HbFormBg}">
+      <TextBlock x:Name="StatusText" Text="就绪" FontSize="11" Margin="8,0" VerticalAlignment="Center" Foreground="{DynamicResource HbTitleText}"/>
     </Border>
-    <Canvas Width="936" Height="442" Background="#F0F0F0" ClipToBounds="True">
+    <Canvas Width="936" Height="442" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
       <views:MultiSpanInputView x:Name="Panel" Canvas.Left="9" Canvas.Top="29"/>
     </Canvas>
   </DockPanel>

@@ -32,6 +32,16 @@ public partial class CalcWizardViewModel : ObservableObject
     private ConnectCalcViewModel? _connect;
     private EmbedCalcViewModel? _embed;
     private SealantCalcViewModel? _sealant;
+    private MetalPlateCalcViewModel? _plate;
+    private StonePlateCalcViewModel? _stonePlate;
+    private ManmadePlateCalcViewModel? _manmadePlate;
+    private BackboltPlateCalcViewModel? _backboltPlate;
+    private FullGlassCalcViewModel? _fullGlass;
+    private DianshiGlassCalcViewModel? _dianshiGlass;
+    private UGlassCalcViewModel? _uGlass;
+    private FloorGlassCalcViewModel? _floorGlass;
+    private SkylightCalcViewModel? _skylight;
+    private AwningCalcViewModel? _awning;
     private CalcBookPanelViewModel? _bookPanel;
 
     /// <summary>菜单点击入口。返回 true 表示已走向导链；false 表示调用方应走静态窗体。</summary>
@@ -43,6 +53,15 @@ public partial class CalcWizardViewModel : ObservableObject
 
         // 玻璃幕墙 → 全隐框：V35 向导第一屏 = 幕墙计算-基本参数输入（907×612）
         if (top == "玻璃幕墙" && (string.IsNullOrWhiteSpace(sub) || sub == "全隐框"))
+        {
+            GoBasic();
+            return true;
+        }
+
+        // 板材线（金属板 / 天然石材 / 人造板材 / 背栓式点挂）：同一向导链，
+        // 只是第 4 屏换成「板块计算」（横梁 → 板块 → 连接 → 埋件），见 StepFromBeamNext。
+        // 屏尺寸见 local-data/recon/v31runs/chain_metal6.txt。
+        if (Session.IsPlateWallMenu)
         {
             GoBasic();
             return true;
@@ -123,6 +142,26 @@ public partial class CalcWizardViewModel : ObservableObject
     }
 
     /// <summary>
+    /// 诊断/回归：参数化全链路（地区 / 地形 / 标高 可指定）——
+    /// 第一页 Recalculate →「下一步」→ 立柱屏「预演」，返回 (wk, 立柱输出文本)。
+    /// 与真实按钮同一命令路径（ResolveWindStandard → StepFromBasicNext → PreviewCommand）。
+    /// </summary>
+    public (double Wk, string ColumnText, double ChainZ, double ChainMuZ) RunFlow(string region, char terrain, string levelText)
+    {
+        Session.EnterMenu("玻璃幕墙", "全隐框");
+        if (!string.IsNullOrWhiteSpace(region)) Session.RegionSelected = region;
+        Session.TerrainA = terrain == 'A';
+        Session.TerrainB = terrain == 'B';
+        Session.TerrainC = terrain == 'C';
+        Session.TerrainD = terrain == 'D';
+        GoBasic();
+        _basic!.CalcLevelText = levelText;
+        _basic.NextCommand.Execute(null);      // 内含 Recalculate + 导航到立柱屏
+        _column!.PreviewCommand.Execute(null);
+        return (Session.WindStandardKpa, DumpColumnPreviewText(), _basic.ChainZ, _basic.ChainMuZ);
+    }
+
+    /// <summary>
     /// 诊断入口（--selftest=beam）：第一屏 →「下一步」→ 立柱屏 →「下一步」→ 横梁屏 →「预演」。
     /// 走的是与真实按钮完全相同的命令链，不覆盖任何参数。
     /// </summary>
@@ -156,6 +195,323 @@ public partial class CalcWizardViewModel : ObservableObject
     /// <summary>把横梁屏预演结果拼成纯文本（对拍/落盘用）。</summary>
     public string DumpBeamPreviewText()
         => _beam is null ? "" : string.Join("\n", _beam.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=plate）：板材菜单 第一页 →「下一步」→ 立柱 →「下一步」→ 横梁
+    /// →「下一步」→ <b>板块屏</b> → 预演。用于与 V31 实机（795×530 那块屏）逐位对拍。
+    /// </summary>
+    public void SelfTestPlatePreview()
+    {
+        Session.EnterMenu("金属板幕墙", "铝单板");
+        GoBasic();
+        _basic?.NextCommand.Execute(null);     // → 立柱屏（内含 ResolveWindStandard）
+        _column?.NextCommand.Execute(null);    // → 横梁屏
+        StepFromBeamNext();                    // → 板块屏（板材线分流）
+        _plate?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把板块屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpPlatePreviewText()
+        => _plate is null ? "" : string.Join("\n", _plate.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=stone）：天然石材菜单 第一页 →「下一步」→ 立柱 →「下一步」→ 横梁
+    /// →「下一步」→ <b>石材板块屏</b> → 预演。用于与 V31 实机（936×448 那块屏）逐位对拍。
+    /// </summary>
+    public void SelfTestStonePreview()
+    {
+        Session.EnterMenu("天然石材幕墙", "花岗岩：短槽连接");
+        GoBasic();
+        _basic?.NextCommand.Execute(null);     // → 立柱屏
+        _column?.NextCommand.Execute(null);    // → 横梁屏
+        StepFromBeamNext();                    // → 石材板块屏（石材线分流）
+        _stonePlate?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把石材板块屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpStonePreviewText()
+        => _stonePlate is null ? "" : string.Join("\n", _stonePlate.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=manmade）：人造板材菜单 第一页 →「下一步」→ 立柱 →「下一步」→ 横梁
+    /// →「下一步」→ <b>人造板板块屏</b> → 预演。用于与 V31 实机（782×536 那块屏）逐位对拍。
+    /// </summary>
+    public void SelfTestManmadePreview()
+    {
+        Session.EnterMenu("人造板材幕墙", "瓷板：短挂件连接");
+        GoBasic();
+        _basic?.NextCommand.Execute(null);     // → 立柱屏
+        _column?.NextCommand.Execute(null);    // → 横梁屏
+        StepFromBeamNext();                    // → 人造板板块屏（人造板材线分流）
+        _manmadePlate?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把人造板板块屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpManmadePreviewText()
+        => _manmadePlate is null ? "" : string.Join("\n", _manmadePlate.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=backbolt）：背栓式点挂菜单 第一页 →「下一步」→ 立柱 →「下一步」→ 横梁
+    /// →「下一步」→ <b>背栓板块屏</b> → 预演。用于与 V31 实机（782×536 那块屏）逐位对拍。
+    /// </summary>
+    public void SelfTestBackboltPreview()
+    {
+        Session.EnterMenu("背栓式点挂幕墙", "花岗岩");
+        GoBasic();
+        _basic?.NextCommand.Execute(null);     // → 立柱屏
+        _column?.NextCommand.Execute(null);    // → 横梁屏
+        StepFromBeamNext();                    // → 背栓板块屏（背栓式点挂线分流）
+        _backboltPlate?.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把背栓板块屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpBackboltPreviewText()
+        => _backboltPlate is null ? "" : string.Join("\n", _backboltPlate.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=fullglass）：全玻璃幕墙设计计算屏（独立菜单，不走向导链）。
+    /// 直接构造 VM 并预演，用于与 V31 实机（903×438 那块屏）逐位对拍。
+    /// </summary>
+    public void SelfTestFullGlassPreview()
+    {
+        // 全玻璃幕墙有独立第一页，这里直读 Session 默认面板口径（北京 0.45→面板 1.37KPa）
+        Session.EnterMenu("全玻璃(含吊挂)", null);
+        Session.WindStandardResolved = true;
+        Session.PanelWindRawKpa = 1.37;
+        Session.PanelWindKpa = 1.37;
+
+        _fullGlass ??= new FullGlassCalcViewModel(Session, this);
+        MirrorStatus(_fullGlass);
+        CurrentContent = _fullGlass;
+        _fullGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>诊断入口（--selftest=fullglass-insulated）：中空玻璃构型（外片10+内片10，总厚度32）对拍。</summary>
+    public void SelfTestFullGlassInsulated()
+    {
+        Session.EnterMenu("全玻璃(含吊挂)", null);
+        Session.WindStandardResolved = true;
+        Session.PanelWindRawKpa = 1.37;
+        Session.PanelWindKpa = 1.37;
+        // 第一页玻璃配置 → 中空玻璃
+        Session.GlassMono = false;
+        Session.GlassInsulated = true;
+
+        _fullGlass ??= new FullGlassCalcViewModel(Session, this);
+        MirrorStatus(_fullGlass);
+        CurrentContent = _fullGlass;
+        _fullGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>诊断入口（--selftest=fullglass-cfg=N）：指定大面玻璃构型（0-7）对拍。</summary>
+    public void SelfTestFullGlassConfig(int cfg)
+    {
+        Session.EnterMenu("全玻璃(含吊挂)", null);
+        Session.WindStandardResolved = true;
+        Session.PanelWindRawKpa = 1.37;
+        Session.PanelWindKpa = 1.37;
+        Session.FullGlassConfigIndex = cfg;
+        // 构型 → 总厚度默认值（玻璃和 + 中空层数×12）
+        Session.FullGlassTotalThicknessMm = cfg switch
+        {
+            0 => 10,
+            1 or 2 => 32,
+            3 => 54,
+            _ => 54,
+        };
+
+        _fullGlass ??= new FullGlassCalcViewModel(Session, this);
+        MirrorStatus(_fullGlass);
+        CurrentContent = _fullGlass;
+        _fullGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把全玻璃设计计算屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpFullGlassPreviewText()
+        => _fullGlass is null ? "" : string.Join("\n", _fullGlass.Results.Select(r => r.Text));
+
+    /// <summary>
+    /// 诊断入口（--selftest=dianshi）：点式肋（无肋）驳接设计计算屏（独立菜单，不走向导链）。
+    /// 直接构造 VM 并预演，用于与 V31 实机逐位对拍。
+    /// </summary>
+    public void SelfTestDianshiPreview()
+    {
+        Session.EnterMenu("点式玻璃幕墙", "点式肋（无肋）驳接");
+        Session.WindStandardResolved = true;
+        Session.PanelWindRawKpa = 1.37;
+        Session.PanelWindKpa = 1.37;
+
+        _dianshiGlass ??= new DianshiGlassCalcViewModel(Session, this);
+        MirrorStatus(_dianshiGlass);
+        CurrentContent = _dianshiGlass;
+        _dianshiGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把点式肋设计计算屏预演结果拼成纯文本（对拍/落盘用）。</summary>
+    public string DumpDianshiPreviewText()
+        => _dianshiGlass is null ? "" : string.Join("\n", _dianshiGlass.Results.Select(r => r.Text));
+
+    /// <summary>诊断入口（--selftest=uglass）：U型玻璃设计计算屏对拍。</summary>
+    public void SelfTestUGlass()
+    {
+        Session.EnterMenu("U玻/地板玻璃/水下玻璃", "U型玻璃");
+        Session.WindStandardResolved = true;
+        Session.PanelWindRawKpa = 1.37;
+        Session.PanelWindKpa = 1.37;
+        _uGlass ??= new UGlassCalcViewModel(Session, this);
+        MirrorStatus(_uGlass);
+        CurrentContent = _uGlass;
+        _uGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把 U 型玻璃设计计算屏预演结果拼成纯文本。</summary>
+    public string DumpUGlassPreviewText()
+        => _uGlass is null ? "" : string.Join("\n", _uGlass.Results.Select(r => r.Text));
+
+    /// <summary>诊断入口（--selftest=floor）：地板玻璃结构计算屏对拍。</summary>
+    public void SelfTestFloorGlass()
+    {
+        Session.EnterMenu("U玻/地板玻璃/水下玻璃", "地板玻璃");
+        _floorGlass ??= new FloorGlassCalcViewModel(Session, this);
+        MirrorStatus(_floorGlass);
+        CurrentContent = _floorGlass;
+        _floorGlass.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把地板玻璃结构计算屏预演结果拼成纯文本。</summary>
+    public string DumpFloorGlassPreviewText()
+        => _floorGlass is null ? "" : string.Join("\n", _floorGlass.Results.Select(r => r.Text));
+
+    /// <summary>点式玻璃幕墙「点式肋（无肋）驳接」设计计算屏（独立菜单，两屏链的第二屏）。</summary>
+    public void GoDianshi()
+    {
+        _dianshiGlass ??= new DianshiGlassCalcViewModel(Session, this);
+        MirrorStatus(_dianshiGlass);
+        CurrentContent = _dianshiGlass;
+        StatusText = "点式肋（无肋）驳接幕墙设计计算"
+                   + $"（板宽 {Session.DianshiGlassShortSideMm:0.###}×板高 {Session.DianshiGlassLongSideMm:0.###}mm"
+                   + $"｜肋宽 {Session.DianshiRibHeightMm:0} 肋高 {Session.DianshiRibSpanMm:0}mm"
+                   + $"｜wk={Session.PanelWindKpa:0.###}KPa）";
+    }
+
+    /// <summary>U型玻璃「U型玻璃结构设计计算」屏（独立菜单，三屏链的第二屏）。</summary>
+    public void GoUGlass()
+    {
+        _uGlass ??= new UGlassCalcViewModel(Session, this);
+        MirrorStatus(_uGlass);
+        CurrentContent = _uGlass;
+        StatusText = "U型玻璃结构设计计算（简支梁线构件）";
+    }
+
+    /// <summary>地板玻璃「地板玻璃结构计算」屏（独立菜单，单屏）。</summary>
+    public void GoFloorGlass()
+    {
+        _floorGlass ??= new FloorGlassCalcViewModel(Session, this);
+        MirrorStatus(_floorGlass);
+        CurrentContent = _floorGlass;
+        StatusText = "地板玻璃结构计算（按 JGJ113 规范算法）";
+    }
+
+    /// <summary>采光顶「单坡采光顶杆件」屏（两屏链的第二屏）。</summary>
+    public void GoSkylight()
+    {
+        _skylight ??= new SkylightCalcViewModel(Session, this);
+        MirrorStatus(_skylight);
+        CurrentContent = _skylight;
+        StatusText = "单坡采光顶杆件（主龙骨+副龙骨双向受力）";
+    }
+
+    /// <summary>诊断入口（--selftest=skylight）：单坡采光顶杆件屏对拍。</summary>
+    public void SelfTestSkylight()
+    {
+        Session.EnterMenu("采光顶", "单坡采光顶");
+        _skylight ??= new SkylightCalcViewModel(Session, this);
+        MirrorStatus(_skylight);
+        CurrentContent = _skylight;
+        _skylight.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把采光顶杆件屏预演结果拼成纯文本。</summary>
+    public string DumpSkylightPreviewText()
+        => _skylight is null ? "" : string.Join("\n", _skylight.Results.Select(r => r.Text));
+
+    /// <summary>雨篷（雨蓬）计算屏（菜单「雨蓬计算」）。</summary>
+    public void GoAwning()
+    {
+        _awning ??= new AwningCalcViewModel(Session, this);
+        MirrorStatus(_awning);
+        CurrentContent = _awning;
+        StatusText = "雨篷计算（悬臂梁+焊缝+玻璃+埋件 5 模块）";
+    }
+
+    /// <summary>诊断入口（--selftest=awning）：雨篷计算屏对拍。</summary>
+    public void SelfTestAwning()
+    {
+        Session.EnterMenu("雨篷", "雨蓬计算");
+        _awning ??= new AwningCalcViewModel(Session, this);
+        MirrorStatus(_awning);
+        CurrentContent = _awning;
+        _awning.PreviewCommand.Execute(null);
+    }
+
+    /// <summary>把雨篷屏预演结果拼成纯文本。</summary>
+    public string DumpAwningPreviewText()
+        => _awning is null ? "" : string.Join("\n", _awning.Results.Select(r => r.Text));
+
+    private DoorWindowCalcViewModel? _doorWindow;
+
+    /// <summary>门窗系统计算屏（菜单「门窗」，V31 CW29）。</summary>
+    public void GoDoorWindow()
+    {
+        _doorWindow ??= new DoorWindowCalcViewModel(Session, this);
+        MirrorStatus(_doorWindow);
+        CurrentContent = _doorWindow;
+        StatusText = "门窗系统计算（玻璃wk下传 → 竖梃/横梃本体 + 连接件全选项）";
+    }
+
+    /// <summary>诊断入口（--selftest=door）：第一屏「下一步」（ResolveWindStandard 下传 wk）
+    /// → 回门窗屏 → 玻璃 wk → 竖梃 → 横梃 → 连接件 逐位对拍。
+    /// ★ 门窗屏默认参数即 V31 默认态（洞口 2500×2000、n=24、t=1.5 等已内置），杆件 wk=0.001333
+    ///   由 WkRodNmm2 内置（V31 玻璃预演第二条链）；第一屏预演仅为满足计算链门禁。</summary>
+    public void SelfTestDoorWindow()
+    {
+        Session.EnterMenu("门窗", "门窗系统计算");
+        var wiz = new CalcWizardViewModel();
+        var basic = new BasicParamsViewModel(wiz.Session, wiz);
+        basic.Recalculate();               // 真算第一页链（wk 门禁），不做后续屏覆盖
+        Session.EnterMenu("门窗", "门窗系统计算");
+        _doorWindow ??= new DoorWindowCalcViewModel(Session, this);
+        // 杆件 wk 由第一页链产出下传：round6(w0·βgz·μz·1.168)（V31 0x14184AE 链）
+        _doorWindow.SetWkFromChain(basic.ChainW0, basic.ChainBetaGz, basic.ChainMuZ);
+        MirrorStatus(_doorWindow);
+        CurrentContent = _doorWindow;
+        // V31 每个预演按钮各自重写输出框（door_conn_matrix baseline 实证：连接件预演后框内
+        // 只剩玻璃行+连接件块）。逐块对拍需在每次点击后取快照串接（各块单独逐位已在
+        // DoorWindowPageTests / DoorConnector/DoorMullionEngineTests 断言）。
+        var sb = new System.Text.StringBuilder();
+        void Snap(string label)
+        {
+            sb.Append("===").Append(label).AppendLine("===");
+            sb.AppendLine(string.Join("\n", _doorWindow.Results.Select(r => r.Text)));
+        }
+        _doorWindow.GlassPreviewCommand.Execute(null);
+        Snap("玻璃预演");
+        _doorWindow.MullionPreviewCommand.Execute(null);
+        Snap("竖梃预演");
+        _doorWindow.TransomPreviewCommand.Execute(null);
+        Snap("横梃预演");
+        _doorWindow.ConnectorPreviewCommand.Execute(null);
+        Snap("连接件预演");
+        _doorWindowSelfTestDump = sb.ToString();
+    }
+
+    private string _doorWindowSelfTestDump = "";
+
+    /// <summary>把门窗屏预演结果拼成纯文本（selftest 时为四段快照串接）。</summary>
+    public string DumpDoorWindowPreviewText()
+        => !string.IsNullOrEmpty(_doorWindowSelfTestDump)
+            ? _doorWindowSelfTestDump
+            : _doorWindow is null ? "" : string.Join("\n", _doorWindow.Results.Select(r => r.Text));
 
     /// <summary>
     /// 反面对照（--selftest=column-only）：直接进立柱屏并预演，**故意跳过第一屏**。
@@ -720,8 +1076,66 @@ public partial class CalcWizardViewModel : ObservableObject
                    + $"｜wk={Session.PanelWindKpa:0.###}KPa）";
     }
 
-    /// <summary>横梁屏「下一步」：横梁之后是玻璃页。</summary>
-    public void StepFromBeamNext() => GoGlassCalc();
+    /// <summary>横梁屏「下一步」：玻璃幕墙线进玻璃页；板材线（金属板/石材/人造板/背栓）进板块页。</summary>
+    public void StepFromBeamNext()
+    {
+        if (Session.IsPlateWallMenu) GoPlateCalc();
+        else GoGlassCalc();
+    }
+
+    /// <summary>
+    /// 向导 4′（板材线）：板块计算屏。
+    /// <para>菜单为天然石材幕墙时进石材屏（936×448，StonePlateEngine）；人造板材幕墙时进
+    /// 人造板屏（782×536，ManmadePlateEngine）；其余板材线（金属板/背栓式点挂）进铝单板板块屏
+    /// （795×530，PlateEngine）。</para>
+    /// </summary>
+    [RelayCommand]
+    public void GoPlateCalc()
+    {
+        if (Session.CurrentTopMenu == "天然石材幕墙")
+        {
+            _stonePlate ??= new StonePlateCalcViewModel(Session, this);
+            MirrorStatus(_stonePlate);
+            CurrentContent = _stonePlate;
+            StatusText = "向导 4：石材幕墙计算-板块计算"
+                       + $"（{Session.CurrentTopMenu}｜石板 {Session.StoneLongSideMm:0.###}×"
+                       + $"{Session.StoneShortSideMm:0.###}mm｜t={Session.StoneThicknessMm:0.###}mm"
+                       + $"｜wk={Session.PanelWindKpa:0.###}KPa）";
+            return;
+        }
+
+        if (Session.CurrentTopMenu == "人造板材幕墙")
+        {
+            _manmadePlate ??= new ManmadePlateCalcViewModel(Session, this);
+            MirrorStatus(_manmadePlate);
+            CurrentContent = _manmadePlate;
+            StatusText = "向导 4：人造板材幕墙计算-板块计算"
+                       + $"（{Session.CurrentTopMenu}｜{Session.ManmadeSpecies} "
+                       + $"{Session.ManmadeLongSideMm:0.###}×{Session.ManmadeShortSideMm:0.###}mm"
+                       + $"｜t={Session.ManmadeThicknessMm:0.###}mm｜wk={Session.PanelWindKpa:0.###}KPa）";
+            return;
+        }
+
+        if (Session.CurrentTopMenu == "背栓式点挂幕墙")
+        {
+            _backboltPlate ??= new BackboltPlateCalcViewModel(Session, this);
+            MirrorStatus(_backboltPlate);
+            CurrentContent = _backboltPlate;
+            StatusText = "向导 4：背栓式点挂幕墙计算-板块计算"
+                       + $"（{Session.CurrentTopMenu}｜{Session.BackboltSpecies} "
+                       + $"{Session.BackboltLongSideMm:0.###}×{Session.BackboltShortSideMm:0.###}mm"
+                       + $"｜t={Session.BackboltThicknessMm:0.###}mm｜wk={Session.PanelWindKpa:0.###}KPa）";
+            return;
+        }
+
+        _plate ??= new MetalPlateCalcViewModel(Session, this);
+        MirrorStatus(_plate);
+        CurrentContent = _plate;
+        StatusText = "向导 4：铝单板幕墙计算-板块计算"
+                   + $"（{Session.CurrentTopMenu}｜板 {Session.PlateShortSideMm:0.###}×"
+                   + $"{Session.PlateLongSideMm:0.###}mm·{Session.PlateLongSideDivision} 等分"
+                   + $"｜t={Session.PlateThicknessMm:0.###}mm｜wk={Session.PanelWindKpa:0.###}KPa）";
+    }
 
     /// <summary>向导 5：连接计算屏（MVVM 版，计算在 ConnectEngine）。</summary>
     [RelayCommand]
@@ -763,7 +1177,7 @@ public partial class CalcWizardViewModel : ObservableObject
     /// <summary>埋件屏「下一步」：埋件之后是胶类页。</summary>
     public void StepFromEmbedNext() => GoSealantCalc();
 
-    /// <summary>向导 8：生成计算书面板（V31 603×330，CW22）。</summary>
+    /// <summary>向导 8：生成计算书面板（我做的 CalcBookPanelView，603×330）。</summary>
     [RelayCommand]
     public void GoBookPanel()
     {
@@ -782,7 +1196,8 @@ public partial class CalcWizardViewModel : ObservableObject
     public string? GenerateCalcBook(string? outputPath = null,
                                     BookPageSetup? setup = null,
                                     bool noAppendix = false,
-                                    CalcBookMeta? meta = null)
+                                    CalcBookMeta? meta = null,
+                                    string kind = "全隐框玻璃幕墙")
     {
         try
         {
@@ -839,7 +1254,19 @@ public partial class CalcWizardViewModel : ObservableObject
                 ColumnSummary = Session.LastColumnSummary,
                 BeamSummary = Session.LastBeamSummary,
                 GlassSummary = Session.LastGlassSummary,
+                Kind = kind,
                 NoAppendix = noAppendix,
+                // ── 第 2 章正文要用到的地区/抗震实算值（模板里只把这些换掉）──
+                Region = Session.CurrentRegion?.Name ?? "",
+                TerrainCategory = Session.TerrainA ? "A" : Session.TerrainB ? "B"
+                                : Session.TerrainD ? "D" : "C",
+                SeismicCategory = Session.SeismicSpecial ? "特殊设防类"
+                                : Session.SeismicKey ? "重点设防类"
+                                : Session.SeismicModerate ? "适度设防类" : "标准设防类",
+                SeismicIntensity = Session.CurrentRegion?.SeismicIntensity ?? 0,
+                PeakAccel = Session.CurrentRegion?.PeakAccel ?? 0,
+                AlphaMaxII = Session.CurrentRegion?.AlphaMax ?? 0,
+                AlphaMax = Session.CurrentRegion?.AlphaMax ?? 0,
                 Connect = Session.LastConnectResult,
                 Embed = Session.LastEmbedResult as GlassManagement.Calc.Engines.EmbedResult?,
                 Sealant = Session.LastSealantResult as GlassManagement.Calc.Engines.SealantResult?,

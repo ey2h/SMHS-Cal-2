@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.EquationView"
+             x:DataType="vm:EquationViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="方程求解（一元二次 / 一元三次）"/>
+    </Border>
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="10">
+        <TextBlock Text="一元二次方程 ax² + bx + c = 0" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBox Text="{Binding A2Text}" Width="80"/>
+          <TextBox Text="{Binding B2Text}" Width="80"/>
+          <TextBox Text="{Binding C2Text}" Width="80"/>
+          <Button Content="求解" Command="{Binding SolveQuadraticCommand}"/>
+        </StackPanel>
+        <TextBlock Text="{Binding QuadResult}"/>
+
+        <TextBlock Text="一元三次方程 ax³ + bx² + cx + d = 0" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBox Text="{Binding A3Text}" Width="80"/>
+          <TextBox Text="{Binding B3Text}" Width="80"/>
+          <TextBox Text="{Binding C3Text}" Width="80"/>
+          <TextBox Text="{Binding D3Text}" Width="80"/>
+          <Button Content="求解" Command="{Binding SolveCubicCommand}"/>
+        </StackPanel>
+        <TextBlock Text="{Binding CubicResult}" TextWrapping="Wrap"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

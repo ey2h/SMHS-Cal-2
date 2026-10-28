@@ -118,8 +118,9 @@ public partial class ColumnCalcViewModel : ObservableObject
             //   故取 WindStandardKpa（= round3(主式×K1×K2)）作为唯一起点。
             double wkMain = Session.WindStandardKpa;
             double wk = Session.WindStandardKpa;                       // 仅用于显示
-            double k1 = Session.TerrainFactor > 0 ? Session.TerrainFactor : 1.0;
-            double k2 = Session.WindDirFactor > 0 ? Session.WindDirFactor : 1.0;
+            // ★ 原此处有 k1/k2 两个局部变量（Session.TerrainFactor/WindDirFactor 兜底 1.0），
+            //   声明后从未使用（2026-10-27 全量清理确认死代码）——立柱链的 K1·K2 已并入
+            //   WindStandardKpa（= round3(主式×K1×K2)），不需要在这里再取一次，已删除。
             double bay = Session.ColumnBayWidthMm;                     // 立柱从属宽度 mm
             double L = Session.ColumnSpanMm;                           // 立柱跨度 mm
             double E = double.TryParse(ElasticModulusText, out double e) && e > 0

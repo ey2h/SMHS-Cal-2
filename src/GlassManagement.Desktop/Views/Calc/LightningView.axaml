@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GlassManagement.Desktop.ViewModels.Calc"
+             x:Class="GlassManagement.Desktop.Views.Calc.LightningView"
+             x:DataType="vm:LightningViewModel">
+  <DockPanel>
+    <Border Classes="hbTitleBar" DockPanel.Dock="Top">
+      <TextBlock Classes="hbTitleText" Text="建筑预计雷击次数计算（GB50057-2010 附录 A）"/>
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Padding="12" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource HbBorderDeep}">
+      <StackPanel Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Button Content="计算" Command="{Binding CalcCommand}"/>
+          <TextBlock Text="校正系数" VerticalAlignment="Center"/>
+          <ComboBox ItemsSource="{Binding KFactorOptions}" SelectedIndex="{Binding KFactorIndex}" MinWidth="220"/>
+        </StackPanel>
+        <Border IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Padding="10" Background="{DynamicResource HbResultBg}" CornerRadius="4">
+          <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap" FontFamily="Consolas,Microsoft YaHei,monospace" FontSize="12"/>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer>
+      <StackPanel Margin="12" Spacing="6">
+        <TextBlock Text="工程基本参数" FontWeight="Bold"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" MaxWidth="420">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="城市（自动填雷暴日）" VerticalAlignment="Center" Margin="4"/>
+          <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CityOptions}" SelectedIndex="{Binding CityIndex}" Margin="4"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="长 L (m)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LengthText}" Margin="4"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="宽 W (m)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WidthText}" Margin="4"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="高 H (m)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding HeightText}" Margin="4"/>
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="年平均雷暴日 Td (d/a)" VerticalAlignment="Center" Margin="4"/>
+          <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TdText}" Margin="4"/>
+        </Grid>
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="N = k·Ng·Ae；Ng = 0.1·Td；Ae = [LW+2(L+W)D+πD²]×10⁻⁶（D=√(H(200-H))，H≥100m 时 D=H）。雷暴日数据来自 pic\\热工\\规范\\leiji\\*.inx（524 城）。"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

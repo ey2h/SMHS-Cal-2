@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GlassManagement.Calc.Engines;
@@ -81,6 +81,20 @@ public partial class CalcSession : ObservableObject
     /// </summary>
     [ObservableProperty] private bool _windStandardResolved;
 
+    /// <summary>
+    /// 门禁提示文案：第一页未算出 wk 时，下游各屏统一显示这句并禁用「预演」。
+    /// <para>★ 用户强调「要从第一个面板一直传过来的数据计算」——
+    /// 所以任何一屏都<b>不允许</b>用 <c>Session.X &gt; 0 ? Session.X : 常量</c> 静默顶替。</para>
+    /// </summary>
+    public const string UpstreamNotReadyText =
+        "请先在『基本参数输入』页点「预演」——wk 必须由第一页计算链传入，本页不取任何默认值顶替。";
+
+    /// <summary>支承口径 wk 是否可用（= <see cref="WindStandardResolved"/>，语义更直白）。</summary>
+    public bool SupportWindReady => WindStandardResolved;
+
+    /// <summary>面板口径 wk 是否可用（须先走完第一页，且面板值已写入）。</summary>
+    public bool PanelWindReady => WindStandardResolved && PanelWindKpa > 0;
+
     // ---------- C5：当前菜单路径（每个幕墙类型/子项都有自己的第一页）----------
     /// <summary>当前顶级菜单，如「玻璃幕墙」「金属板幕墙」。</summary>
     [ObservableProperty] private string _currentTopMenu = "";
@@ -102,6 +116,16 @@ public partial class CalcSession : ObservableObject
         CurrentSubMenu = sub ?? "";
         WindStandardResolved = false;
         WindStandardSource = "待前置屏计算";
+        // ★ 切换菜单必须回到 V31 启动默认态，否则上一屏的标高/地区/地形会串到新菜单
+        //   （2026-10-28 矩阵测试发现：切菜单后 CalcLevelM 残留 150，C/100m 算出 150m 的风压）
+        CalcLevelM = 100;
+        RegionSelected = null;                     // 未选地区 → 回落参数库首行（北京 0.45kPa）
+        TerrainA = false;
+        TerrainB = false;
+        TerrainD = false;
+        TerrainC = true;                           // V31 默认 C 类地形
+        TerrainFactor = 1.0;
+        WindDirFactor = 1.0;
         OnPropertyChanged(nameof(CurrentMenuPath));
     }
 
@@ -564,6 +588,23 @@ public partial class CalcSession : ObservableObject
     public bool PanelWindResolved => PanelWindKpa > 0;
 
     /// <summary>
+    /// 面板口径 wk 的 <b>N/mm²</b> 表示（保留 6 位小数），供板材屏等把 wk 直接带进算式的地方使用。
+    ///
+    /// <para><b>★ 为什么不能写 <c>PanelWindKpa / 1000</c></b>：V31 内部以 N/mm² 参与运算，
+    /// 其 wk 的位型就是 double 最接近 <c>0.00137</c> 的那个值（Frida 轨迹原文
+    /// <c>0.00137×460=0.6302</c>、<c>0.00137×690=0.9453</c>）。而
+    /// <c>1.37/1000</c> 比 <c>0.00137</c> <b>大 1 个 ulp</b>（0x…652 vs 0x…651），
+    /// 传到 <c>qd = round6(1.5wk + 0.7eq)</c> 就把正好落在半值上的
+    /// <c>0.0021005</c>（1e6 倍后 = 2100.5）推成 2100.5000000000005，
+    /// 半偶进位于是给出 <b>0.002101</b>，而 V31 给 <b>0.0021</b>
+    /// ⇒ t=3 时 A 板强度会算成 46.567，实机是 <b>46.545</b>。</para>
+    ///
+    /// <para>取 raw kPa（未取整）再 round6 到 N/mm²，等价于 V31 在 N/mm² 域内的 6 位取整，
+    /// 且避免了「先按 kPa 取 3 位、再除回去」的二次舍入。</para>
+    /// </summary>
+    public double PanelWindNmm2 => WindLoadEngine.VbaRound(PanelWindRawKpa / 1000.0, 6);
+
+    /// <summary>
     /// 面板局部体型系数 μsl —— V31 恒取 1.0。
     /// <para>行为判定（非数值反推）：改玻璃尺寸 1100×1380 → 1100×1500，
     /// 屏上 wk 恒为 1.37 不变，说明面板口径<b>不按面板面积折减 ψ</b>，即 μsl 与 A 无关。</para>
@@ -732,6 +773,384 @@ public partial class CalcSession : ObservableObject
     partial void OnBeamLeftBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
     partial void OnBeamRightBayMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
     partial void OnBeamUpperGridHeightMmChanged(double value) => OnPropertyChanged(nameof(GlassSizeCandidates));
+
+    // ============================================================
+    // ⑨ 板材线「板块计算」屏（金属板幕墙 / 天然石材 / 人造板材共用壳）
+    //    控件坐标见 local-data/recon/v31runs/chain_metal6.txt 第 4 屏（客户区 795×530）
+    //    算式与四面对拍见 docs/V31_PLATE_UI.md
+    // ============================================================
+
+    /// <summary>当前菜单是否属于板材线（金属板 / 石材 / 人造板）——决定「横梁→下一步」进板块页而不是玻璃页。</summary>
+    public bool IsPlateWallMenu => CurrentTopMenu is "金属板幕墙" or "天然石材幕墙" or "人造板材幕墙" or "背栓式点挂幕墙";
+
+    /// <summary>板块屏短边尺寸 mm（实机默认 1100，与第一页分格短边一致）。</summary>
+    [ObservableProperty] private double _plateShortSideMm = 1100;
+
+    /// <summary>板块屏长边尺寸 mm（实机默认 1380）。</summary>
+    [ObservableProperty] private double _plateLongSideMm = 1380;
+
+    /// <summary>长边等分数 n（实机下拉 sel 0..3 → 1..4）。</summary>
+    [ObservableProperty] private int _plateLongSideDivision = 1;
+
+    /// <summary>板厚 mm（DataGrid 选中行）。</summary>
+    [ObservableProperty] private double _plateThicknessMm = 2.5;
+
+    /// <summary>板抗弯强度设计值 MPa（参数库「铝单板」表；1060 H14/H24 t=2.5 → 54）。</summary>
+    [ObservableProperty] private double _plateAllowableStressMpa = 54;
+
+    /// <summary>板抗剪强度设计值 MPa（同上表，t=2.5 → 32）。</summary>
+    [ObservableProperty] private double _plateAllowableShearMpa = 32;
+
+    /// <summary>是否计算加强肋（实机默认「计算肋」）。</summary>
+    [ObservableProperty] private bool _plateUseRib = true;
+
+    /// <summary>加强肋算法二（实机默认「算法一」）。</summary>
+    [ObservableProperty] private bool _plateRibAlgorithmTwo;
+
+    /// <summary>板挠度限值分母：60（默认，短边/60）或 90（短边/90）。</summary>
+    [ObservableProperty] private double _plateDeflectionDivisor = 60;
+
+    /// <summary>肋挠度限值分母：250 / 180（默认）/ 120。</summary>
+    [ObservableProperty] private double _plateRibDeflectionDivisor = 180;
+
+    /// <summary>肋截面惯性矩 I mm⁴（界面「肋参数」默认 25340）。</summary>
+    [ObservableProperty] private double _plateRibInertiaMm4 = 25340;
+
+    /// <summary>肋截面抵抗矩 W mm³（界面「肋参数」默认 2028）。</summary>
+    [ObservableProperty] private double _plateRibSectionModulusMm3 = 2028;
+
+    /// <summary>
+    /// 肋与面板接触面宽度 mm（界面「肋参数」第三格，实机默认 50）。
+    /// <para>★ 算法一预演链上**未观察到读取点**（见 docs/V31_PLATE_UI.md §6），
+    /// 故当前只保存、不参与计算。</para>
+    /// </summary>
+    [ObservableProperty] private double _plateRibContactWidthMm = 50;
+
+    /// <summary>肋材质名称（实机 8 选 + 冷弯薄壁型钢，默认 6063-T5）。</summary>
+    [ObservableProperty] private string _plateRibMaterial = "6063-T5";
+
+    /// <summary>肋抗弯强度设计值 MPa（由材质 + 冷弯薄壁解析，6063-T5 → 90）。</summary>
+    [ObservableProperty] private double _plateRibAllowableStressMpa = 90;
+
+    /// <summary>
+    /// 肋材质附加选项「冷弯薄壁型钢」（实机 CheckBox，(176,482) 115×14）。
+    /// <para>已实证：钢 Q235 [σ] 215→205、Q355 315→310，且 γ 1.05→1.00；铝不受影响。
+    /// 映射见 <c>PlateEngine.RibProps</c>。</para>
+    /// </summary>
+    [ObservableProperty] private bool _plateRibColdFormed;
+
+    /// <summary>板材线板块屏最近一次预演结果。</summary>
+    public object? LastPlateResult { get; set; }
+
+    /// <summary>板材线板块屏最近一次输出区文本摘要（供计算书取用）。</summary>
+    public string? LastPlateSummary { get; set; }
+
+    /// <summary>Lx（B板/C板）= 长边 / 等分数，实机两个 en=0 回显框。</summary>
+    public double PlateLx => PlateLongSideDivision <= 0 ? PlateLongSideMm : PlateLongSideMm / PlateLongSideDivision;
+
+    // ============================================================
+    // ⑩ 石材线「板块计算」屏（天然石材幕墙 · 短槽连接）
+    //    控件坐标见 local-data/recon/v31runs/chain_stone_slot.txt 第 4 屏（客户区 936×448）
+    //    算式与四面对拍见 docs/V31_STONE_PLATE_UI.md
+    // ============================================================
+
+    /// <summary>石板长边 A mm（实机默认 900，槽2）。</summary>
+    [ObservableProperty] private double _stoneLongSideMm = 900;
+
+    /// <summary>石板短边 B mm（实机默认 800，槽3）。</summary>
+    [ObservableProperty] private double _stoneShortSideMm = 800;
+
+    /// <summary>石板厚度 t mm（实机默认 25，槽17）。</summary>
+    [ObservableProperty] private double _stoneThicknessMm = 25;
+
+    /// <summary>石板抗弯强度设计值 [σ] MPa（实机默认 3.72，界面 (240,59)）。</summary>
+    [ObservableProperty] private double _stoneAllowableBendingMpa = 3.72;
+
+    /// <summary>石板抗剪强度设计值 [τ] MPa（实机默认 1.86，界面 (240,86)）。</summary>
+    [ObservableProperty] private double _stoneAllowableShearMpa = 1.86;
+
+    /// <summary>连接方式：true=两侧连接（默认，已闭合），false=四边连接（未定位）。</summary>
+    [ObservableProperty] private bool _stoneModeIsTwoSide = true;
+
+    /// <summary>短槽中心到板块边距 mm（实机默认 150，槽36，界面 (181,219)）。</summary>
+    [ObservableProperty] private double _stoneEdgeDistanceMm = 150;
+
+    /// <summary>短槽槽口宽度 mm（实机默认 6，槽24，界面 (181,288)）。</summary>
+    [ObservableProperty] private double _stoneSlotMouthMm = 6;
+
+    /// <summary>单个槽底总长度 mm（实机默认 80，槽25，界面 (181,310)）。</summary>
+    [ObservableProperty] private double _stoneSlotBottomLengthMm = 80;
+
+    /// <summary>每块板块短托板个数（实机默认 4，界面 (181,402)）。</summary>
+    [ObservableProperty] private int _stoneLugCount = 4;
+
+    /// <summary>托板材料抗剪强度设计值 MPa（实机默认 100，界面 (181,379)）。</summary>
+    [ObservableProperty] private double _stoneLugAllowableShearMpa = 100;
+
+    /// <summary>挂件宽度 B mm（实机默认 80，界面 (396,288)）。</summary>
+    [ObservableProperty] private double _stoneHangerWidthMm = 80;
+
+    /// <summary>挂件厚度 t mm（实机默认 3，界面 (396,311)）。</summary>
+    [ObservableProperty] private double _stoneHangerThicknessMm = 3;
+
+    /// <summary>挂件螺栓中心到板边距离 e mm（实机默认 30，界面 (515,288)）。</summary>
+    [ObservableProperty] private double _stoneHangerEccentricityMm = 30;
+
+    /// <summary>挂件长度 L mm（实机默认 60，界面 (515,311)）。</summary>
+    [ObservableProperty] private double _stoneHangerLengthMm = 60;
+
+    /// <summary>挂件材质（8 项，实机默认 316不锈钢，界面 (398,264)）。</summary>
+    [ObservableProperty] private string _stoneHangerMaterial = "316不锈钢";
+
+    /// <summary>每板块水平荷载挂件数（实机默认 2，界面 (473,334)）。</summary>
+    [ObservableProperty] private int _stoneHorizontalHangerCount = 2;
+
+    /// <summary>每板块承重挂件数（实机默认 2，界面 (437,357)）。</summary>
+    [ObservableProperty] private int _stoneLoadHangerCount = 2;
+
+    /// <summary>每挂件螺栓数（实机默认 1，界面 (539,414)）。</summary>
+    [ObservableProperty] private int _stoneBoltPerHanger = 1;
+
+    /// <summary>螺栓材质（11 项，实机默认 碳钢：4.6-C级，界面 (389,390)）。</summary>
+    [ObservableProperty] private string _stoneBoltMaterial = "碳钢：4.6-C级";
+
+    /// <summary>螺栓公称直径 mm（5/6/7/8/10，实机默认 8，界面 (389,414)）。</summary>
+    [ObservableProperty] private double _stoneBoltDiameterMm = 8;
+
+    /// <summary>石材板块屏最近一次预演结果。</summary>
+    public object? LastStoneResult { get; set; }
+
+    /// <summary>石材板块屏最近一次输出区文本摘要（供计算书取用）。</summary>
+    public string? LastStoneSummary { get; set; }
+
+    // ⑩ 人造板材线「板块计算」屏（瓷板/陶板/微晶玻璃 · 短挂件连接，782×536）
+
+    /// <summary>面板种类（瓷板/陶板/微晶玻璃板），决定重度 γ 与默认强度。</summary>
+    [ObservableProperty] private string _manmadeSpecies = "瓷板";
+
+    /// <summary>板材总厚度 L mm（实机默认 25，界面 (100,126)）。</summary>
+    [ObservableProperty] private double _manmadeThicknessMm = 25;
+
+    /// <summary>短边边长 mm（实机默认 800，界面 (92,170)）。</summary>
+    [ObservableProperty] private double _manmadeShortSideMm = 800;
+
+    /// <summary>长边边长 mm（实机默认 900，界面 (92,191)）。</summary>
+    [ObservableProperty] private double _manmadeLongSideMm = 900;
+
+    /// <summary>板小支承点间距 B mm（实机默认 650，界面 (129,213)）。</summary>
+    [ObservableProperty] private double _manmadeSmallSupportMm = 650;
+
+    /// <summary>板大支承点间距 mm（实机默认 900，界面 (129,235)）。</summary>
+    [ObservableProperty] private double _manmadeLargeSupportMm = 900;
+
+    /// <summary>面板抗弯强度设计值 f MPa（瓷板默认 15，界面 (322,56)）。</summary>
+    [ObservableProperty] private double _manmadeAllowableBendingMpa = 15;
+
+    /// <summary>面板抗剪强度设计值 fv MPa（瓷板默认 7.5，界面 (322,80)）。</summary>
+    [ObservableProperty] private double _manmadeAllowableShearMpa = 7.5;
+
+    /// <summary>面板槽口宽度剪面厚度 t mm（实机默认 3，界面 (347,157)）。</summary>
+    [ObservableProperty] private double _manmadeSlotMouthMm = 3;
+
+    /// <summary>槽口剪切面总长度 fSG mm（实机默认 56，界面 (337,176)）。</summary>
+    [ObservableProperty] private double _manmadeSlotShearLengthMm = 56;
+
+    /// <summary>每个板块挂件总数 n（实机默认 4，界面 (350,195)）。</summary>
+    [ObservableProperty] private int _manmadeHangerTotalCount = 4;
+
+    /// <summary>金属挂件抗剪强度设计值 fv MPa（实机默认 100，界面 (369,216) 禁用回显）。</summary>
+    [ObservableProperty] private double _manmadeHangerAllowableShearMpa = 100;
+
+    /// <summary>单个挂件抗剪截面积 Av mm²（实机默认 240，界面 (345,237) 禁用回显）。</summary>
+    [ObservableProperty] private double _manmadeHangerShearAreaMm2 = 240;
+
+    /// <summary>挂件宽度 mm（实机默认 80，界面 (79,373)）。</summary>
+    [ObservableProperty] private double _manmadeHangerWidthMm = 80;
+
+    /// <summary>挂件厚度 mm（实机默认 3，界面 (79,396)）。</summary>
+    [ObservableProperty] private double _manmadeHangerThicknessMm = 3;
+
+    /// <summary>挂件螺栓中心到板边距离 e mm（实机默认 30，界面 (171,373)）。</summary>
+    [ObservableProperty] private double _manmadeHangerEccentricityMm = 30;
+
+    /// <summary>挂件长度 L mm（实机默认 60，界面 (171,396)）。</summary>
+    [ObservableProperty] private double _manmadeHangerLengthMm = 60;
+
+    /// <summary>挂件材质（8 项，实机默认 316不锈钢，界面 (81,348)）。</summary>
+    [ObservableProperty] private string _manmadeHangerMaterial = "316不锈钢";
+
+    /// <summary>每板块水平荷载挂件数（实机默认 2，界面 (119,442)）。</summary>
+    [ObservableProperty] private int _manmadeHorizontalHangerCount = 2;
+
+    /// <summary>每板块承重挂件数（实机默认 2，界面 (156,419)）。</summary>
+    [ObservableProperty] private int _manmadeLoadHangerCount = 2;
+
+    /// <summary>每挂件螺栓数（实机默认 1，界面 (198,502)）。</summary>
+    [ObservableProperty] private int _manmadeBoltPerHanger = 1;
+
+    /// <summary>螺栓材质（11 项，实机默认 碳钢：4.6-C级，界面 (72,478)）。</summary>
+    [ObservableProperty] private string _manmadeBoltMaterial = "碳钢：4.6-C级";
+
+    /// <summary>螺栓公称直径 mm（5/6/7/8/10，实机默认 8，界面 (69,502)）。</summary>
+    [ObservableProperty] private double _manmadeBoltDiameterMm = 8;
+
+    /// <summary>人造板材板块屏最近一次预演结果。</summary>
+    public object? LastManmadeResult { get; set; }
+
+    /// <summary>人造板材板块屏最近一次输出区文本摘要。</summary>
+    public string? LastManmadeSummary { get; set; }
+
+    // ⑪ 背栓式点挂幕墙线「板块计算」屏（石材/瓷板/陶板/… 8 种面板，782×536）
+
+    /// <summary>面板种类（石材/瓷板/陶板/轻质陶瓷板/微晶玻璃板/纤维水泥板/木纤维板/玻璃纤维板）。</summary>
+    [ObservableProperty] private string _backboltSpecies = "石材";
+
+    /// <summary>板材总厚度 L mm（实机默认 25，界面 (284,65)）。</summary>
+    [ObservableProperty] private double _backboltThicknessMm = 25;
+
+    /// <summary>板材计算厚度 mm（实机默认 25，界面 (295,89)）。</summary>
+    [ObservableProperty] private double _backboltCalcThicknessMm = 25;
+
+    /// <summary>短边边长 mm（实机默认 800，界面 (276,114)）。</summary>
+    [ObservableProperty] private double _backboltShortSideMm = 800;
+
+    /// <summary>长边边长 mm（实机默认 900，界面 (276,138)）。</summary>
+    [ObservableProperty] private double _backboltLongSideMm = 900;
+
+    /// <summary>较小支承点间距 mm（实机默认 650，界面 (316,163)）。</summary>
+    [ObservableProperty] private double _backboltSmallSupportMm = 650;
+
+    /// <summary>较大支承点间距 mm（实机默认 800，界面 (316,187)）。</summary>
+    [ObservableProperty] private double _backboltLargeSupportMm = 800;
+
+    /// <summary>背栓在面板中钻孔深度 d mm（实机默认 6，界面 (369,236)）。</summary>
+    [ObservableProperty] private double _backboltDrillDepthMm = 6;
+
+    /// <summary>背栓在面板中前端拓孔直径 D mm（实机默认 15，界面 (348,211)）。</summary>
+    [ObservableProperty] private double _backboltHoleDiameterMm = 15;
+
+    /// <summary>面板抗弯强度设计值 f MPa（石材默认 3.72，界面 (126,78)）。</summary>
+    [ObservableProperty] private double _backboltAllowableBendingMpa = 3.72;
+
+    /// <summary>面板抗剪强度设计值 fv MPa（石材默认 1.86，界面 (126,99)）。</summary>
+    [ObservableProperty] private double _backboltAllowableShearMpa = 1.86;
+
+    /// <summary>实测背栓受拉破坏承载力最小值 N（N，实机默认 8000，界面 (90,227)）。</summary>
+    [ObservableProperty] private double _backboltTensionCapacityN = 8000;
+
+    /// <summary>每个板块上背栓总数 n（实机默认 4，界面 (87,170)）。</summary>
+    [ObservableProperty] private int _backboltTotalCount = 4;
+
+    /// <summary>挂件宽度 mm（实机默认 80，界面 (79,373)）。</summary>
+    [ObservableProperty] private double _backboltHangerWidthMm = 80;
+
+    /// <summary>挂件厚度 mm（实机默认 3，界面 (79,396)）。</summary>
+    [ObservableProperty] private double _backboltHangerThicknessMm = 3;
+
+    /// <summary>挂件螺栓中心到板边距离 e mm（实机默认 30，界面 (171,373)）。</summary>
+    [ObservableProperty] private double _backboltHangerEccentricityMm = 30;
+
+    /// <summary>挂件长度 L mm（实机默认 60，界面 (171,396)）。</summary>
+    [ObservableProperty] private double _backboltHangerLengthMm = 60;
+
+    /// <summary>挂件材质（8 项，实机默认 316不锈钢，界面 (81,348)）。</summary>
+    [ObservableProperty] private string _backboltHangerMaterial = "316不锈钢";
+
+    /// <summary>每板块水平荷载挂件数（实机默认 2，界面 (156,419)）。</summary>
+    [ObservableProperty] private int _backboltHorizontalHangerCount = 2;
+
+    /// <summary>每板块承重挂件数（实机默认 2，界面 (119,442)）。</summary>
+    [ObservableProperty] private int _backboltLoadHangerCount = 2;
+
+    /// <summary>每挂件螺栓数（实机默认 1，界面 (198,502)）。</summary>
+    [ObservableProperty] private int _backboltBoltPerHanger = 1;
+
+    /// <summary>螺栓材质（11 项，实机默认 碳钢：4.6-C级，界面 (72,478)）。</summary>
+    [ObservableProperty] private string _backboltBoltMaterial = "碳钢：4.6-C级";
+
+    /// <summary>螺栓公称直径 mm（5/6/7/8/10，实机默认 8，界面 (69,502)）。</summary>
+    [ObservableProperty] private double _backboltBoltDiameterMm = 8;
+
+    /// <summary>背栓式点挂板块屏最近一次预演结果。</summary>
+    public object? LastBackboltResult { get; set; }
+
+    /// <summary>背栓式点挂板块屏最近一次输出区文本摘要。</summary>
+    public string? LastBackboltSummary { get; set; }
+
+    // ⑫ 全玻璃幕墙线「设计计算」屏（903×438，两对边简支 + 玻璃肋）
+
+    /// <summary>玻璃板短边（玻璃肋间距 a，mm，实机默认 1500，界面 (59,50)）。</summary>
+    [ObservableProperty] private double _fullGlassShortSideMm = 1500;
+
+    /// <summary>玻璃板长边 / 玻璃肋跨度 L（mm，实机默认 4000，界面 (59,71)）。</summary>
+    [ObservableProperty] private double _fullGlassRibSpanMm = 4000;
+
+    /// <summary>大面玻璃厚度 t（mm，默认 10）。</summary>
+    [ObservableProperty] private double _fullGlassThicknessMm = 10;
+
+    /// <summary>玻璃肋厚度 t肋（mm，实机默认 12，界面 (467,192)）。</summary>
+    [ObservableProperty] private double _fullGlassRibThicknessMm = 12;
+
+    /// <summary>玻璃肋实际截面高度 h（mm，实机默认 200，界面 (459,408)）。</summary>
+    [ObservableProperty] private double _fullGlassRibHeightMm = 200;
+
+    /// <summary>内片玻璃厚度（mm，默认 10）。中空/夹层/三玻构型启用（实机界面 (338,224)）。</summary>
+    [ObservableProperty] private double _fullGlassInnerThicknessMm = 10;
+
+    /// <summary>中片玻璃厚度（mm，默认 10）。中空+夹层外/内、三玻双中空、三玻双夹层构型启用（实机界面 (198,223)）。</summary>
+    [ObservableProperty] private double _fullGlassMidThicknessMm = 10;
+
+    /// <summary>外片第二片厚度（mm，默认 10）。仅「双夹层-中空」构型启用（实机界面 (89,247)，隐藏副本）。</summary>
+    [ObservableProperty] private double _fullGlassOuter2ThicknessMm = 10;
+
+    /// <summary>内片第二片厚度（mm，默认 10）。仅「双夹层-中空」构型启用（实机界面 (338,247)，隐藏副本）。</summary>
+    [ObservableProperty] private double _fullGlassInner2ThicknessMm = 10;
+
+    /// <summary>含玻璃及中空层的玻璃面板总厚度（mm，默认 32）。
+    /// <para>★ 纯校验参数：须 &gt; 各片玻璃厚度之和（正确值 = 玻璃厚度和 + 中空层数×12），
+    /// 否则 V31 弹「玻璃厚度参数无效」。切构型后需手动更新。</para></summary>
+    [ObservableProperty] private double _fullGlassTotalThicknessMm = 32;
+
+    /// <summary>全玻璃大面玻璃构型（第二页 8 选一）：0单片 1中空 2夹层 3双夹层-中空 4中空+夹层外 5中空+夹层内 6三玻双中空 7三玻双夹层。</summary>
+    [ObservableProperty] private int _fullGlassConfigIndex = 0;
+
+    /// <summary>全玻璃设计计算屏最近一次预演结果。</summary>
+    public object? LastFullGlassResult { get; set; }
+
+    /// <summary>全玻璃设计计算屏最近一次输出区文本摘要。</summary>
+    public string? LastFullGlassSummary { get; set; }
+
+    // ⑬ 点式玻璃幕墙线「点式肋（无肋）驳接幕墙设计计算」屏（903×438，四点驳接模型 + 玻璃肋）
+
+    /// <summary>玻璃板短边 a（mm，默认 1500，界面 (74,102)）。</summary>
+    [ObservableProperty] private double _dianshiGlassShortSideMm = 1500;
+
+    /// <summary>玻璃板长边（mm，默认 1800，界面 (194,102)）。</summary>
+    [ObservableProperty] private double _dianshiGlassLongSideMm = 1800;
+
+    /// <summary>肋间距 1（mm，默认 1250，界面 (160,123)）。</summary>
+    [ObservableProperty] private double _dianshiRibSpacing1Mm = 1250;
+
+    /// <summary>肋间距 2（mm，默认 1550，界面 (160,143)）。玻璃计算跨度 a=此值。</summary>
+    [ObservableProperty] private double _dianshiRibSpacing2Mm = 1550;
+
+    /// <summary>大面玻璃厚度 t（mm，默认 10，界面 (93,295)）。</summary>
+    [ObservableProperty] private double _dianshiGlassThicknessMm = 10;
+
+    /// <summary>玻璃肋厚度 t肋（mm，默认 12，界面 (483,191)）。</summary>
+    [ObservableProperty] private double _dianshiRibThicknessMm = 12;
+
+    /// <summary>玻璃肋实际截面高度/宽度（mm，默认 200，界面 (486,383)）。</summary>
+    [ObservableProperty] private double _dianshiRibHeightMm = 200;
+
+    /// <summary>玻璃肋跨度 L（mm，默认 4000，界面 (486,404)）。</summary>
+    [ObservableProperty] private double _dianshiRibSpanMm = 4000;
+
+    /// <summary>点式肋设计计算屏最近一次预演结果。</summary>
+    public object? LastDianshiResult { get; set; }
+
+    /// <summary>点式肋设计计算屏最近一次输出区文本摘要。</summary>
+    public string? LastDianshiSummary { get; set; }
 }
 
 /// <summary>玻璃构造分支（决定玻璃屏用哪个引擎方法）。</summary>

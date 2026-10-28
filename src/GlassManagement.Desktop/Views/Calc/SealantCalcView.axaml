@@ -41,7 +41,7 @@
     </Border>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-      <Canvas Width="784" Height="537" Background="#F0F0F0" ClipToBounds="True">
+      <Canvas Width="784" Height="537" Background="{DynamicResource HbFormBg}" ClipToBounds="True">
 
         <!-- ══ 公用参数 (11,29) 395x77 ══ -->
         <Border Classes="hbFrame" Canvas.Left="11" Canvas.Top="29" Width="395" Height="77"/>
@@ -72,26 +72,40 @@
         <Border Classes="hbFrame" Canvas.Left="19" Canvas.Top="170" Width="213" Height="163"/>
         <TextBlock Classes="hbFrameTitle" Canvas.Left="25" Canvas.Top="163" Text="结构胶参数"/>
 
-        <TextBlock Canvas.Left="27" Canvas.Top="181" Text="宽(计算)"/>
+        <!-- ══ 结构胶参数 子Frame (19,170) 213x163 ══
+             7 条标签 = VB6 窗体资源原文（CW18_Form18.axaml 65~73 行）
+             7 个控件 = V31 实机 dump（v31runs/dump_sealant_after.txt 35~48 行，全是 ComboBox）
+             坐标换算：复刻版 x=27（V31 是 153/163），y = V31 + 3
+             候选表 = CB_GETLBTEXT 直读（v31runs/sealant_act_probe.txt）
+             (153,222)/(153,244) 在 V31 侧 en=0，故保留 IsEnabled=False -->
+        <TextBlock Canvas.Left="27" Canvas.Top="181" FontSize="10" Text="与铝框连接结构胶厚度"/>
         <ComboBox Canvas.Left="153" Canvas.Top="178" Width="73" Height="20"
-                  ItemsSource="{Binding StructuralW}"
-                  SelectedIndex="{Binding StructWidthIndex, Mode=TwoWay}"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="203" Text="厚(计算)"/>
-        <ComboBox Canvas.Left="153" Canvas.Top="200" Width="73" Height="20"
-                  ItemsSource="{Binding StructuralT}"
+                  ItemsSource="{Binding StructThicknessOptions}"
                   SelectedIndex="{Binding StructThicknessIndex, Mode=TwoWay}"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="225" Text="宽(实际)"/>
-        <ComboBox Canvas.Left="153" Canvas.Top="222" Width="73" Height="20" IsEnabled="False"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="247" Text="厚(实际)"/>
-        <ComboBox Canvas.Left="153" Canvas.Top="244" Width="73" Height="20" IsEnabled="False"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="269" Text="变位能力"/>
-        <TextBox Canvas.Left="153" Canvas.Top="266" Width="73" Height="18"
-                  Text="{Binding WeatherMovementText, Mode=TwoWay}"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="291" Text="位移(%)"/>
-        <TextBox Canvas.Left="153" Canvas.Top="288" Width="73" Height="18"/>
-        <TextBlock Canvas.Left="27" Canvas.Top="313" Text="实际宽/厚"/>
-        <TextBox Canvas.Left="163" Canvas.Top="310" Width="63" Height="18"
-                  Text="{Binding ActualWidthText, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="203" FontSize="10" Text="与铝框连接结构胶宽度"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="200" Width="73" Height="20"
+                  ItemsSource="{Binding StructWidthOptions}"
+                  SelectedIndex="{Binding StructWidthIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="225" FontSize="10" Text="中空层结构胶厚度"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="222" Width="73" Height="20" IsEnabled="False"
+                  ItemsSource="{Binding InsulationThicknessOptions}"
+                  SelectedIndex="{Binding InsulationThicknessIndex}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="247" FontSize="10" Text="中空层结构胶宽度"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="244" Width="73" Height="20" IsEnabled="False"
+                  ItemsSource="{Binding InsulationWidthOptions}"
+                  SelectedIndex="{Binding InsulationWidthIndex}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="269" FontSize="10" Text="结构胶位移能力"/>
+        <ComboBox Canvas.Left="153" Canvas.Top="266" Width="73" Height="20"
+                  ItemsSource="{Binding StructMovementOptions}"
+                  SelectedIndex="{Binding StructMovementIndex, Mode=TwoWay}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="291" FontSize="10" Text="长期荷载强度设计值(MPa)"/>
+        <ComboBox Canvas.Left="163" Canvas.Top="288" Width="63" Height="20"
+                  ItemsSource="{Binding LongTermStrengthOptions}"
+                  SelectedIndex="{Binding LongTermStrengthIndex}"/>
+        <TextBlock Canvas.Left="27" Canvas.Top="313" FontSize="10" Text="短期荷载强度设计值(MPa)"/>
+        <ComboBox Canvas.Left="163" Canvas.Top="310" Width="63" Height="20"
+                  ItemsSource="{Binding ShortTermStrengthOptions}"
+                  SelectedIndex="{Binding ShortTermStrengthIndex}"/>
 
         <!-- 耐候胶胶缝 子Frame (237,122) 161x68 -->
         <Border Classes="hbFrame" Canvas.Left="237" Canvas.Top="122" Width="161" Height="68"/>
@@ -153,10 +167,10 @@
         <!-- 压板截面表（实机 DataGrid 383x124）：三行常用压板规格 -->
         <StackPanel Canvas.Left="19" Canvas.Top="392" Width="383">
           <TextBlock Text="压板规格" TextAlignment="Center" Height="16" FontSize="11"
-                     Background="#E8E8E8"/>
-          <Border Background="White" BorderBrush="#9AA0A6" BorderThickness="1" Height="104">
+                     Background="{DynamicResource HbSurfaceSubtle}"/>
+          <Border Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1" Height="104">
             <StackPanel>
-              <Grid ColumnDefinitions="60,70,70,70,80" Height="20" Background="#F5F5F5">
+              <Grid ColumnDefinitions="60,70,70,70,80" Height="20" Background="{DynamicResource HbFormBg}">
                 <TextBlock Grid.Column="0" Text="型号" FontSize="10" TextAlignment="Center"
                            VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="1" Text="宽度" FontSize="10" TextAlignment="Center"
@@ -195,7 +209,7 @@
 
         <!-- ══ 输出 (411,34) 364x423 ══ -->
         <Border Canvas.Left="411" Canvas.Top="34" Width="364" Height="423"
-                Background="White" BorderBrush="#9AA0A6" BorderThickness="1">
+                Background="White" BorderBrush="{DynamicResource HbBorder}" BorderThickness="1">
           <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                         Padding="4,2">
             <ItemsControl ItemsSource="{Binding Results}">
@@ -209,7 +223,7 @@
           </ScrollViewer>
         </Border>
         <TextBlock Canvas.Left="415" Canvas.Top="40" Text="{Binding PlaceholderText}"
-                   Foreground="#808080" FontSize="11" IsHitTestVisible="False"/>
+                   Foreground="{DynamicResource HbTextSubtle}" FontSize="11" IsHitTestVisible="False"/>
 
         <!-- ══ 按钮 ══ -->
         <Button Classes="hb" Canvas.Left="659" Canvas.Top="476" Width="59" Height="24"

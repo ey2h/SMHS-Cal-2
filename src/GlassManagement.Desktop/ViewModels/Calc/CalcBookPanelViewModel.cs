@@ -37,8 +37,22 @@ public partial class CalcBookPanelViewModel : ObservableObject
     /// <summary>工程名称（面板 (75,49) 233×25）。</summary>
     [ObservableProperty] private string _projectName = "北京xx幕墙装饰工程";
 
-    /// <summary>幕墙类型 / 子标题（面板 (75,89) 233×25）。</summary>
-    [ObservableProperty] private string _projectSub = "全隐框玻璃幕墙";
+    /// <summary>幕墙类型（面板 (75,89)）—— 直接决定计算书章节骨架。</summary>
+    public IReadOnlyList<string> Kinds => BookSkeletons.AllKinds;
+
+    [ObservableProperty] private int _kindIndex;
+
+    /// <summary>当前类型名（封面副标题 + 骨架键）。</summary>
+    public string Kind => BookSkeletons.AllKinds[
+        Math.Clamp(KindIndex, 0, BookSkeletons.AllKinds.Length - 1)];
+
+    partial void OnKindIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(Kind));
+        Preview.Clear();
+        foreach (var l in BuildOutline()) Preview.Add(l);
+        OnPropertyChanged(nameof(HasPreview));
+    }
 
     [ObservableProperty] private string _company = "";
     [ObservableProperty] private string _designer = "";
@@ -112,27 +126,15 @@ public partial class CalcBookPanelViewModel : ObservableObject
             new("计算书将按 V31 样本（全隐框玻璃幕墙计算书.DOC）的章节骨架输出：", ColorRule),
             new("", ColorNormal),
         };
-        string[] chapters =
+        list.Add(new PreviewLine($"【{Kind}】共 {BookSkeletons.For(Kind).Length} 章（骨架取自 V31 样本 DOC）：", ColorRule));
+        var skel = BookSkeletons.For(Kind);
+        for (int i = 0; i < skel.Length; i++)
         {
-            "封面（工程名称 / 幕墙类型 / 设计计算书 / 设计·校对·审核·批准 / 单位）",
-            "1 计算引用的规范、标准及资料（来源：样本 DOC 正文，共 " + BookSpecs.All.Count + " 条）",
-            "2 基本参数（所在地区 / 地面粗糙度 / 抗震设防）",
-            "3 幕墙承受荷载计算（风荷载两口径 / 地震作用 / 作用效应组合）",
-            "4 幕墙立柱计算（6 小节）",
-            "5 幕墙横梁计算（6 小节）",
-            "6 幕墙玻璃的选用与校核（3 小节）",
-            "7 连接件计算（横梁与角码 / 角码与立柱 / 立柱与主结构）",
-            "8 幕墙埋件计算（荷载 / 埋件 / 锚板校核 / 锚筋长度）",
-            "9 幕墙转接件强度计算（受力 / 强度 / 挠度）",
-            "10 幕墙焊缝计算（受力 / 特性参数 / 校核）",
-            "11 全隐框玻璃幕墙胶类及伸缩缝计算（5 小节）",
-            "12 幕墙板块压板计算（弯矩 / 应力 / 螺栓）",
-            "13 玻璃副框计算（未实现，标注）",
-            "14 玻璃承托件计算（未实现，标注）",
-            "15 附录 常用材料的力学及其它物理性能" + (NoAppendix ? "（已勾选不输出）" : ""),
-            "结论",
-        };
-        foreach (var c in chapters) list.Add(new PreviewLine(c, ColorNormal));
+            var t = skel[i];
+            if (NoAppendix && t.Contains("附录")) continue;
+            list.Add(new PreviewLine($"{i + 1} {t}", ColorNormal));
+        }
+        list.Add(new PreviewLine("结论", ColorNormal));
         list.Add(new PreviewLine("", ColorNormal));
         list.Add(new PreviewLine(
             $"字体：{FontName}｜左边距 {MarginLeftText}cm｜右边距 {MarginRightText}cm"
@@ -162,9 +164,9 @@ public partial class CalcBookPanelViewModel : ObservableObject
     [RelayCommand]
     private void Generate()
     {
-        var meta = new CalcBookMeta(ProjectName, ProjectSub, Company,
+        var meta = new CalcBookMeta(ProjectName, Kind, Company,
                                     Designer, Checker, Approver, Ratifier);
-        var path = _wizard.GenerateCalcBook(null, BuildSetup(), NoAppendix, meta);
+        var path = _wizard.GenerateCalcBook(null, BuildSetup(), NoAppendix, meta, Kind);
         if (string.IsNullOrEmpty(path))
         {
             StatusIsWarning = true;
